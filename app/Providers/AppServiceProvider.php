@@ -7,7 +7,8 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Assets\Js;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
-
+use Filament\Support\Facades\FilamentView;
+use Illuminate\Contracts\View\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,12 @@ class AppServiceProvider extends ServiceProvider
         // FilamentAsset::register([
         //     Js::make('admin-sw', '/resources/js/admin-sw.js'),
         // ]);
+        FilamentView::registerRenderHook(
+            'panels::head.end',
+            fn (): View => view('filament.meta.meta'),
+        );
+
+
     }
 
 
