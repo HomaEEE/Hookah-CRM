@@ -10,7 +10,7 @@ use Filament\Pages\Dashboard as BasePage;
 use App\Models\{Tip, Place};
 
 use Auth;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
@@ -21,9 +21,6 @@ use Filament\Support\Enums\Alignment;
 
 class Dashboard extends BasePage
 {
-
-    use HasPageShield;
-
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
