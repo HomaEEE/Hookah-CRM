@@ -1,0 +1,137 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
+
+class Place extends Model
+{
+    use HasFactory,  HasTranslations;
+
+    protected $fillable = ['name', 'city', 'address', 'phone', 'opened', 'instagram', 'sufix', 'time', 'settings', 'properties', 'pays'];
+
+    public $translatable = ['city', 'address'];
+
+    protected $casts = ['opened' => 'boolean', 'time' => 'array', 'properties' => 'array', 'settings' => 'array', 'pays' => 'array'];
+
+    public $timestamps = false;
+
+    public function meters()
+    {
+        return $this->hasMany(Meter::class, 'place_id');
+    }
+
+    public function bill()
+    {
+        return $this->HasMany(Bill::class, 'place_id');
+    }
+
+    public function supplier()
+    {
+        return $this->hasMany(Supplier::class, 'place_id');
+    }
+
+    public function suppliers()
+    {
+        return $this->belongsToMany(User::class, 'place_supplier', 'supplier_id', 'place_id');
+    }
+
+       //Показания счетчиков
+    public function indications()
+    {
+        return $this->hasMany(Indication::class, 'place_id');
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'place_id');
+    }
+
+    public function seets()
+    {
+        return $this->hasMany(Seet::class, 'place_id');
+    }
+
+    public function bills()
+    {
+        return $this->hasMany(Bill::class, 'place_id');
+    }
+
+    public function storage()
+    {
+        return $this->hasMany(Storage::class, 'place_id');
+    }
+
+    public function workshops()
+    {
+        return $this->hasMany(Workshop::class, 'place_id');
+    }
+
+    public function wages()
+    {
+        return $this->hasMany(Wage::class, 'place_id');
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'place_id');
+    }
+
+    public function excises()
+    {
+        return $this->hasMany(Excise::class, 'place_id');
+    }
+
+    public function docs()
+    {
+        return $this->hasMany(Doc::class, 'place_id');
+    }
+
+    public function expensecategories()
+    {
+        return $this->hasMany(ExpenseCategory::class, 'place_id');
+    }
+
+    public function menu()
+    {
+        return $this->hasOne(Menu::class, 'place_id');
+    }
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'place_user', 'user_id', 'place_id');
+    }
+
+    // public function childs()
+    // {
+    //     return $this->hasMany(Category::class, 'parent_category', 'category_id');
+    // }
+
+    // public function parent()
+    // {
+    //     return $this->hasOne(Category::class, 'category_id', 'parent_category');
+    // }
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, ['category_id', 'palce_id']);
+    }
+
+    public function scopeVisibleMenu($query, $value)
+    {
+        return $query->where('visible_menu', $value);
+    }
+
+
+    public function getNameCityAttribute()
+    {
+        return $this->name.' '.$this->city;
+    }
+}

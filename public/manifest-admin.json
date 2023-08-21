@@ -1,0 +1,82 @@
+{
+  "name": "Noire CRM",
+  "short_name": "NOIRE CRM",
+  "start_url": "https://noire.ee/admin/",
+  "display": "fullscreen",
+  "description": "Учет финансов Noire",
+  "lang": "ru",
+  "dir": "auto",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/imgs/pwa/icons/142x142-icon.png",
+      "type": "image/png",
+      "sizes": "142x142",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/imgs/pwa/icons/176x176-icon.png",
+      "type": "image/png",
+      "sizes": "176x176",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/imgs/pwa/icons/64x64-icon.png",
+      "type": "image/png",
+      "sizes": "64x64",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/imgs/pwa/icons/72x72-icon.png",
+      "type": "image/png",
+      "sizes": "72x72",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/imgs/pwa/icons/192x192-icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/imgs/pwa/icons/256x256-icon.png",
+      "type": "image/png",
+      "sizes": "256x256",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/imgs/pwa/icons/512x512-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://www.pwabuilder.com/assets/screenshots/screen1.png",
+      "sizes": "2880x1800",
+      "type": "image/png",
+      "description": "A screenshot of the home page"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "windows",
+      "url": "https://noire.ee/admin"
+    }
+  ],
+  "prefer_related_applications": "false",
+  "shortcuts": [
+    {
+      "name": "Добавить поставку",
+      "url": "https://noire.ee/admin/supplies",
+      "description": "Новая поставка"
+    },
+
+    {
+      "name": "Добавить задачу",
+      "url": "https://noire.ee/admin/tasks",
+      "description": "Новая задача"
+    }
+  ]
+}
