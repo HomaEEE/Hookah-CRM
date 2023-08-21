@@ -1,0 +1,81 @@
+{
+  "name": "Noire CRM",
+  "short_name": "NOIRE",
+  "start_url": "https://noire.ee/",
+  "display": "fullscreen",
+  "description": "Noire Smoke Different",
+  "lang": "uk",
+  "dir": "auto",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/imgs/icons/pwa/142x142-icon.png",
+      "type": "image/png",
+      "sizes": "142x142",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/imgs/icons/pwa/176x176-icon.png",
+      "type": "image/png",
+      "sizes": "176x176",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/imgs/icons/pwa/64x64-icon.png",
+      "type": "image/png",
+      "sizes": "64x64",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/imgs/icons/pwa/72x72-icon.png",
+      "type": "image/png",
+      "sizes": "72x72",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/imgs/icons/pwa/192x192-icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/imgs/icons/pwa/256x256-icon.png",
+      "type": "image/png",
+      "sizes": "256x256",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/imgs/icons/pwa/512x512-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/imgs/pwa/splash.jpg",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "description": "A screenshot of the home page"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "windows",
+      "url": "https://noire.ee/"
+    }
+  ],
+  "prefer_related_applications": "false",
+  "shortcuts": [
+    {
+      "name": "Menu Odessa",
+      "url": "/od/menu",
+      "description": "Меню Одесса"
+    },
+    {
+      "name": "Menu Mykolayiv",
+      "url": "/mk/menu",
+      "description": "Меню Николаев"
+    }
+  ]
+}

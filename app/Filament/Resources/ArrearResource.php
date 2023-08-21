@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\ArrearResource\Pages;
+use App\Models\{Arrear,User};
+
+use Auth;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Forms\Get;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+
+use Filament\Infolists\Components;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\Tabs;
+
+class ArrearResource extends Resource
+{
+    protected static ?string $model = Arrear::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Place');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Arrears');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Arrears');
+    }
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Hidden::make('user_id')->default(Auth::user()->id),
+                Select::make('place_id')->label(__('Place'))
+                    ->options(
+                        Auth::user()->place->pluck('nameCity', 'id')
+                    )
+                    ->reactive()
+                    ->afterStateUpdated(fn (callable $set) => $set('table_id', null))
+                    ->required(),
+                Select::make('from_user_id')->label(__('From User'))
+                    ->hidden(fn (Get $get) => $get('place_id') == null)
+                    ->options(function (callable $get) {
+                        return User::whereHas('places', function ($query) use ($get) {
+                            $query->where('place_id', $get('place_id'));
+                        })->get()
+                            ->pluck('name', 'id');
+                    })
+                    ->searchable(),
+                TextInput::make('arrear')->label(__('Arrear')),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('place.city')->translateLabel()->toggleable(),
+                TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                    ->size('sm')
+                    ->description(fn (Arrear $record): string => $record->user->name),
+                TextColumn::make('fromUser.name')->label(__('From User')),
+                TextColumn::make('arrear')->translateLabel(),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->filters([
+                //
+            ])
+            ->actions([
+                Action::make('approve')->button()->label(__('Refund'))
+                ->icon('heroicon-s-check')
+                ->color('success')
+                ->action(function (Arrear $record): void {
+                    $record->update(
+                        [
+                            'refund' => 1,
+                        ]
+                    );
+                    $record->save();
+                })->visible(fn (Arrear $record) => $record->refund == '0'),
+
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ManageArrears::route('/'),
+        ];
+    }
+}
