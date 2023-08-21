@@ -307,6 +307,7 @@ class ShiftResource extends Resource
                     TextInput::make('total')->label(__('Total Poster'))
                         ->reactive()
                         ->numeric()
+                        ->disabled()
                         ->default(0)
 
                         ->afterStateUpdated(

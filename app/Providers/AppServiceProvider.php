@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Http;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,7 +40,9 @@ class AppServiceProvider extends ServiceProvider
             fn (): View => view('filament.meta.meta'),
         );
 
-
+        Http::macro('posterApi', function () {
+            return Http::baseUrl('https://joinposter.com/api');
+        });
     }
 
 
