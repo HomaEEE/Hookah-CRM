@@ -10,7 +10,7 @@ use Filament\Pages\Dashboard as BasePage;
 use App\Models\{Tip, Place};
 
 use Auth;
-
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
@@ -22,6 +22,8 @@ use Filament\Support\Enums\Alignment;
 class Dashboard extends BasePage
 {
 
+    use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
     protected static string $view = 'filament.pages.dashboard';
@@ -30,18 +32,6 @@ class Dashboard extends BasePage
 
     protected int | string | array $columnSpan = 'full';
 
-    public function getColumns(): int | array
-    {
-        return [
-            'md' => 2,
-            'xl' => 2,
-        ];
-    }
-
-    public function getContentMaxWidth(): ?string
-    {
-        return 'full';
-    }
 
     public function getTitle(): string | Htmlable
     {
@@ -131,37 +121,34 @@ class Dashboard extends BasePage
                     (new PosterApiController())->openShift($data);
                 }),
 
-            Action::make('closeShift')
-                ->label(__('Close Shift'))
+            // Action::make('closeShift')
+            //     ->label(__('Close Shift'))
+            //     ->color('danger')
+            //     ->modalWidth('xs')
+            //     ->icon('heroicon-o-lock-closed')
 
-                ->visible(auth()->user()->can('view_any'))
+            //     ->modalHeading(__('Close Shift'))
+            //     ->modalWidth('xs')
+            //     ->slideOver()
+            //     ->form([
 
-                ->color('danger')
-                ->size('lg')
-                ->icon('heroicon-o-lock-closed')
-
-                ->modalHeading(__('Close Shift'))
-                ->modalWidth('xs')
-                ->slideOver()
-                ->form([
-
-                    Select::make('place_id')->label(__('Place'))
-                        ->native(false)
-                        ->options(
-                            Auth::user()->place->pluck('city', 'id')
-                        )->reactive()
-                        ->required()
-                        ->reactive(),
-                    TextInput::make('shift')
-                        ->label(__('Add Sum'))
-                        ->numeric()
-                        ->required(),
-                    TextInput::make('comment')
-                        ->label(__('Comment'))
-                ])
-                ->action(function (array $data): void {
-                    (new PosterApiController())->closeShift($data);
-                }),
+            //         Select::make('place_id')->label(__('Place'))
+            //             ->native(false)
+            //             ->options(
+            //                 Auth::user()->place->pluck('city', 'id')
+            //             )->reactive()
+            //             ->required()
+            //             ->reactive(),
+            //         TextInput::make('shift')
+            //             ->label(__('Add Sum'))
+            //             ->numeric()
+            //             ->required(),
+            //         TextInput::make('comment')
+            //             ->label(__('Comment'))
+            //     ])
+            //     ->action(function (array $data): void {
+            //         (new PosterApiController())->closeShift($data);
+            //     }),
 
         ];
     }
