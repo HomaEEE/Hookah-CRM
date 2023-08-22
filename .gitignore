@@ -10,5 +10,5 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 /storage/framework/*
-/app/Policies
-/public/storage
+app/Policies
+public/storage
