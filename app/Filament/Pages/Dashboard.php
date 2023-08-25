@@ -69,6 +69,8 @@ class Dashboard extends BasePage
                 ->color('success')
                 ->icon('heroicon-o-banknotes')
                 ->modalHeading(__('Add Tips'))
+                ->slideOver()
+                ->requiresConfirmation()
 
                 ->form([
                     Hidden::make('place_id')
@@ -96,7 +98,7 @@ class Dashboard extends BasePage
                 ->label(__('Open Shift'))
                 ->color('info')
                 ->icon('heroicon-o-lock-open')
-
+                ->slideOver()
                 ->modalHeading(__('Open Shift'))
                 ->requiresConfirmation()
                 ->form([
