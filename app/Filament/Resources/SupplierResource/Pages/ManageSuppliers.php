@@ -20,6 +20,7 @@ class ManageSuppliers extends ManageRecords
         ];
     }
 
+
     public function getTabs(): array
     {
 
