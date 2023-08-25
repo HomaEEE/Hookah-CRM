@@ -21,6 +21,11 @@ class ListShifts extends ListRecords
         ];
     }
 
+    protected function getTableQuery(): Builder
+    {
+        return Shift::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
+    }
+
     public function getTabs(): array
     {
 

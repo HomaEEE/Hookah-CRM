@@ -67,13 +67,10 @@ class Dashboard extends BasePage
             Action::make('addTips')
                 ->label(__('Add Tips'))
                 ->color('success')
-                ->size('lg')
                 ->icon('heroicon-o-banknotes')
                 ->modalHeading(__('Add Tips'))
-                ->modalWidth('sm')
-                ->modalAlignment(Alignment::Start)
-                ->form([
 
+                ->form([
                     Hidden::make('place_id')
                         ->label(__('Place'))
                         ->default(Auth::user()->place[0]['id'])
@@ -98,11 +95,9 @@ class Dashboard extends BasePage
             Action::make('openShift')
                 ->label(__('Open Shift'))
                 ->color('info')
-                ->size('lg')
                 ->icon('heroicon-o-lock-open')
 
                 ->modalHeading(__('Open Shift'))
-                ->modalWidth('xs')
                 ->requiresConfirmation()
                 ->form([
                     Select::make('place_id')->label(__('Place'))
@@ -112,7 +107,7 @@ class Dashboard extends BasePage
                         )->reactive()
                         ->required()
                         ->reactive(),
-                ])->slideOver()
+                ])
                 ->action(function (array $data): void {
                     (new PosterApiController())->openShift($data);
                 }),
