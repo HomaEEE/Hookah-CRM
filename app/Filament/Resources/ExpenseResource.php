@@ -125,6 +125,7 @@ class ExpenseResource extends Resource
                                     ->image()
                                     ->multiple()
                                     ->imageResizeTargetWidth('1600')
+                                    ->imageResizeMode('cover')
                                     ->reorderable()
                                     ->openable()
                                     ->imagePreviewHeight('250')

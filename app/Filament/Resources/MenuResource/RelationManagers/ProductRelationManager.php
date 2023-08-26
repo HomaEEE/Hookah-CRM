@@ -74,8 +74,9 @@ class ProductRelationManager extends RelationManager
                     SpatieMediaLibraryFileUpload::make('media')
                     ->collection('products')
                     ->image()
-                    ->imagePreviewHeight('250')
-
+                    ->imagePreviewHeight('400')
+                    ->imageResizeTargetWidth('400')
+                    ->imageResizeMode('contain')
                     // ->imageResizeMode('contain')
                     // ->imageResizeTargetHeight('400')
 
