@@ -141,9 +141,10 @@ class SupplyResource extends Resource
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
                                     ->multiple()
-                                    ->maxFiles(10)
-                                    ->imagePreviewHeight('250')
-                                    ->openable(),
+                                    ->imageResizeTargetWidth('1920')
+                                    ->imagePreviewHeight(350)
+                                    ->reorderable()
+                                    ->openable()
                             ])
 
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
