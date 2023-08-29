@@ -82,6 +82,7 @@ class ExpenseResource extends Resource
                                     ->hidden(fn (Get $get) => $get('place_id') == null)
                                     ->searchable()
                                     ->required()
+                                    ->reactive()
                                     ->options(function (callable $get) {
                                         if (null == ($get('place_id'))) {
                                             return null;

@@ -8,6 +8,7 @@ use Auth;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
+
 use Illuminate\Database\Eloquent\Builder;
 
 class ListShifts extends ListRecords
