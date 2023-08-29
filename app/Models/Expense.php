@@ -22,7 +22,7 @@ class Expense extends Model implements HasMedia
 
     public function user()
     {
-        return $this->HasOne(User::class, 'id', 'usr_id');
+        return $this->HasOne(User::class, 'id', 'user_id');
     }
 
     public function categories()

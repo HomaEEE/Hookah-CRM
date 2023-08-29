@@ -80,9 +80,10 @@ class AdminPanelProvider extends PanelProvider
             // ])
             ->plugins([
                     FilamentLanguageSwitchPlugin::make(),
-                    SpatieLaravelTranslatablePlugin::make(),
+                    SpatieLaravelTranslatablePlugin::make()
+                    ->defaultLocales(['en', 'ru', 'uk']),
                     \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-                    FilamentProgressbarPlugin::make()->color('#29b'),
+                    FilamentProgressbarPlugin::make()->color('#f59e0b'),
                     BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true),

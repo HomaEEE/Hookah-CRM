@@ -5,7 +5,7 @@
 
         <meta name="application-name" content="{{ config('site.name') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no,  user-scalable=no">
         <title>@yield('page') - {{ env('SITE_NAME') }} - {{$place->city}},{{$place->address}}</title>
         <link rel="preload" href="/assets/fonts/PhonkSans-Light.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="/assets/fonts/PhonkSans-LightItalic.woff2" as="font" type="font/woff2" crossorigin>

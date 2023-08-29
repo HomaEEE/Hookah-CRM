@@ -145,7 +145,7 @@ class ExpenseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-                    ->size('sm')
+                    ->size('md')
                     ->badge()
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
 
@@ -153,7 +153,8 @@ class ExpenseResource extends Resource
                   ->badge()
                    ->description(fn (Expense $record): string => $record->category->name ?? ''),
 
-                   TextColumn::make('supply_id')->badge()
+                   TextColumn::make('supply_id')->badge()->translateLabel()
+                   ->wrap()
                    ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
                    TextColumn::make('sum')->label(__('Sum'))->money('uah', true)
