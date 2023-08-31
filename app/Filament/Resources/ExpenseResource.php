@@ -54,7 +54,7 @@ class ExpenseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('category', 'user', 'supply');
+        return parent::getEloquentQuery()->with('category', 'user', 'supply')->whereIn('place_id', Auth::user()->place->pluck('id'));;
     }
 
     public static function form(Form $form): Form

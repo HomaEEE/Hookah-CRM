@@ -7,7 +7,6 @@ use App\Models\Expense;
 use Auth;
 use Carbon\Carbon;
 use Filament\Infolists\Components\Tabs\Tab;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Widgets\TableWidget as BaseWidget;

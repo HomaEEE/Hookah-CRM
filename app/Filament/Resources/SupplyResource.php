@@ -62,7 +62,7 @@ class SupplyResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('supplier', 'user');
+        return parent::getEloquentQuery()->with('supplier', 'user')->whereIn('place_id', Auth::user()->place->pluck('id'));
     }
 
     public static function form(Form $form): Form
