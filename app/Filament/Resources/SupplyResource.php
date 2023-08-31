@@ -62,7 +62,7 @@ class SupplyResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('supplier', 'user');
+        return parent::getEloquentQuery()->with('supplier', 'user')->whereIn('place_id', Auth::user()->place->pluck('id'));
     }
 
     public static function form(Form $form): Form
@@ -141,9 +141,11 @@ class SupplyResource extends Resource
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
                                     ->multiple()
-                                    ->maxFiles(10)
-                                    ->imagePreviewHeight('250')
-                                    ->openable(),
+                                    ->imageResizeTargetWidth('1600')
+                                    ->imageResizeMode('cover')
+                                    ->imagePreviewHeight(350)
+                                    ->reorderable()
+                                    ->openable()
                             ])
 
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),

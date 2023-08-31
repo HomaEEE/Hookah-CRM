@@ -18,10 +18,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Concerns\Translatable;
 
 class MenuResource extends Resource
 {
     protected static ?string $model = Menu::class;
+
+    use Translatable;
 
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
 

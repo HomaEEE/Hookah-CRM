@@ -39,6 +39,7 @@ class Dashboard extends BasePage
         return [
             \App\Filament\Widgets\Dashboard\OpenShift::class,
             \App\Filament\Widgets\Dashboard\TipsShift::class,
+            \App\Filament\Widgets\Dashboard\SupplyToPay::class,
         ];
     }
 
@@ -69,6 +70,8 @@ class Dashboard extends BasePage
                 ->color('success')
                 ->icon('heroicon-o-banknotes')
                 ->modalHeading(__('Add Tips'))
+                ->slideOver()
+                ->requiresConfirmation()
 
                 ->form([
                     Hidden::make('place_id')
@@ -96,7 +99,7 @@ class Dashboard extends BasePage
                 ->label(__('Open Shift'))
                 ->color('info')
                 ->icon('heroicon-o-lock-open')
-
+                ->slideOver()
                 ->modalHeading(__('Open Shift'))
                 ->requiresConfirmation()
                 ->form([

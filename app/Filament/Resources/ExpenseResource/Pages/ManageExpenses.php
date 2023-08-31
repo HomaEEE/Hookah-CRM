@@ -37,7 +37,7 @@ class ManageExpenses extends ManageRecords
 
     protected function getTableRecordActionUsing(): ?Closure
     {
-        return fn () => 'edit';
+        return fn () => 'view';
     }
 
 

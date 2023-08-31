@@ -33,6 +33,12 @@ class ShiftUser extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'id', 'user_id');
+    }
+
     public function scopeTodayOnShift($query)
     {
         return $query->whereDate('created_at', Carbon::today());

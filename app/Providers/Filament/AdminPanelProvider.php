@@ -24,6 +24,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
+use Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -43,11 +44,6 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-            ])
-            ->navigationGroups([
-                'Place',
-                'Statistics',
-                'Menu',
             ])
             ->navigationGroups([
                 NavigationGroup::make()
@@ -84,8 +80,10 @@ class AdminPanelProvider extends PanelProvider
             // ])
             ->plugins([
                     FilamentLanguageSwitchPlugin::make(),
-                    SpatieLaravelTranslatablePlugin::make(),
-                   // \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+                    SpatieLaravelTranslatablePlugin::make()
+                    ->defaultLocales(['en', 'ru', 'uk']),
+                    \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+                    FilamentProgressbarPlugin::make()->color('#f59e0b'),
                     BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true),

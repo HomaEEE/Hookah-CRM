@@ -26,13 +26,13 @@ use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Resources\RelationManagers\Concerns\Translatable;
 
 use Livewire\Component as Livewire;
 
 class ProductRelationManager extends RelationManager
 {
     protected static string $relationship = 'products';
-
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -74,8 +74,9 @@ class ProductRelationManager extends RelationManager
                     SpatieMediaLibraryFileUpload::make('media')
                     ->collection('products')
                     ->image()
-                    ->imagePreviewHeight('250')
-
+                    ->imagePreviewHeight('400')
+                    ->imageResizeTargetWidth('400')
+                    ->imageResizeMode('contain')
                     // ->imageResizeMode('contain')
                     // ->imageResizeTargetHeight('400')
 

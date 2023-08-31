@@ -43,6 +43,8 @@ use Filament\Infolists\Infolist;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Fieldset as InfolistFeildSet;
+use Filament\Resources\Pages\ListRecords\Tab;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Grouping\Group;
 
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -111,11 +113,15 @@ class ShiftResource extends Resource
                     ->size('xl')->translateLabel(),
 
                 TextColumn::make('terminal')->translateLabel()
+                ->numeric()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+
                 TextColumn::make('cash')->translateLabel()
+                ->numeric()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('expense')->translateLabel()
+                ->numeric()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('wages')->translateLabel(),
@@ -123,12 +129,14 @@ class ShiftResource extends Resource
                     ->badge()
                     ->money('uah', true)->translateLabel(),
 
+               //   TextColumn::make('shift_users.user_id')->badge(),
+
             ])->defaultSort('id', 'desc')
             ->filters([
                     Filter::make('created_at')
                     ->form([
-                        DatePicker::make('created_from'),
-                        DatePicker::make('created_until'),
+                        DatePicker::make('created_from')->native(false),
+                        DatePicker::make('created_until')->native(false),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -644,6 +652,12 @@ class ShiftResource extends Resource
 
         ]);
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery();
+    }
+
     public static function getPages(): array
     {
         return [

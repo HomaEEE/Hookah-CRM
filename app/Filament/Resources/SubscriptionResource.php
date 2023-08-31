@@ -7,6 +7,7 @@ use App\Enums\Subscription as SubscriptionEnum;
 use App\Filament\Resources\SubscriptionResource\Pages;
 use App\Models\{Expense, ExpenseCategory, Subscription};
 use Auth;
+use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -150,7 +151,7 @@ class SubscriptionResource extends Resource
 
                         $record->update(
                             [
-                                'next_date' => $record->next_date->addMonth(),
+                                'next_date' => Carbon::parse($record->next_date)->addMonth(),
                             ]
                         );
                         $record->save();

@@ -54,7 +54,7 @@ class ExpenseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('category', 'user', 'supply');
+        return parent::getEloquentQuery()->with('category', 'user', 'supply')->whereIn('place_id', Auth::user()->place->pluck('id'));;
     }
 
     public static function form(Form $form): Form
@@ -82,6 +82,7 @@ class ExpenseResource extends Resource
                                     ->hidden(fn (Get $get) => $get('place_id') == null)
                                     ->searchable()
                                     ->required()
+                                    ->reactive()
                                     ->options(function (callable $get) {
                                         if (null == ($get('place_id'))) {
                                             return null;
@@ -122,7 +123,18 @@ class ExpenseResource extends Resource
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
-                                    ->image(),
+                                    ->image()
+                                    ->multiple()
+                                    ->imageResizeTargetWidth('1600')
+                                    ->imageResizeMode('cover')
+                                    ->reorderable()
+                                    ->openable()
+                                    ->imagePreviewHeight('250')
+                                    ->loadingIndicatorPosition('left')
+                                    ->removeUploadedFileButtonPosition('right')
+                                    ->uploadButtonPosition('left')
+                                    ->uploadProgressIndicatorPosition('left')
+
                             ]),
                     ]),
             ])->columns(2);
@@ -133,7 +145,7 @@ class ExpenseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-                    ->size('sm')
+                    ->size('md')
                     ->badge()
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
 
@@ -141,7 +153,8 @@ class ExpenseResource extends Resource
                   ->badge()
                    ->description(fn (Expense $record): string => $record->category->name ?? ''),
 
-                   TextColumn::make('supply_id')->badge()
+                   TextColumn::make('supply_id')->badge()->translateLabel()
+                   ->wrap()
                    ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
                    TextColumn::make('sum')->label(__('Sum'))->money('uah', true)

@@ -3,14 +3,14 @@
 namespace App\Filament\Widgets\Shift;
 
 use App\Enums\Bill as BillEnum;
-use App\Models\Expense as Record;
+use App\Models\Expense;
 use Auth;
 use Carbon\Carbon;
 use Filament\Infolists\Components\Tabs\Tab;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 
 class ExpensesShift extends BaseWidget
@@ -18,9 +18,16 @@ class ExpensesShift extends BaseWidget
 
     protected int | string | array $columnSpan = 'full';
 
+
+    protected function getTableHeading(): string | Htmlable
+    {
+        return __('Expenses of Shift');
+    }
+
     protected function getTableQuery(): Builder
     {
-        return Record::query()->whereIn('place_id', Auth::user()->place->pluck('id'))->whereDate('added_at', Carbon::today());
+        return Expense::query()->whereIn('place_id', Auth::user()->place->pluck('id'))
+        ->whereDate('added_at', Carbon::today())->with('category', 'user', 'supply');
     }
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
@@ -43,11 +50,17 @@ class ExpensesShift extends BaseWidget
         return [
             TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                 ->size('sm')
-                ->description(fn (Record $record): string => $record->user->name ?? ''),
+                ->description(fn (Expense $record): string => $record->user->name ?? ''),
                 TextColumn::make('place.city')->label(__('City')),
-                TextColumn::make('category.name')->label(__('Category')),
+                TextColumn::make('category.name')->label(__('Category'))->badge()
+                ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
-                TextColumn::make('type_pay')->translateLabel()
+                TextColumn::make('type_pay')->translateLabel()->badge()
+                ->formatStateUsing(
+                 fn (string $state): string => match ($state) {
+                     '0' => __('Cash'),
+                     '1' => __('Card'),
+                 }),
         ];
     }
 
@@ -60,21 +73,5 @@ class ExpensesShift extends BaseWidget
                     Auth::user()->place->pluck('nameCity', 'id')
                 ),
         ];
-    }
-
-    public function getTabs(): array
-    {
-
-        $tabs = [null => Tab::make(__('All'))];
-
-        $places = Auth::user()->place;
-
-        foreach ($places as $place) {
-            $tabs[$place->city] = Tab::make()->query(function ($query) use ($place) {
-                $query->where('place_id', $place->id);
-            });
-        }
-
-        return $tabs;
     }
 }

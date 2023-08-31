@@ -49,7 +49,7 @@ class TaskResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->withoutGlobalScope(SoftDeletingScope::class);
+        return parent::getEloquentQuery()->whereIn('place_id', Auth::user()->place->pluck('id'));
     }
 
 
