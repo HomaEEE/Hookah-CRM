@@ -32,7 +32,7 @@ class SupplyToPay extends BaseWidget
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
     {
-        return 20;
+        return 10;
     }
 
     protected function getDefaultTableSortColumn(): ?string

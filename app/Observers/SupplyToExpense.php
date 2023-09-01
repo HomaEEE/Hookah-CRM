@@ -20,7 +20,6 @@ class SupplyToExpense
                     'sum' => $supply->sum,
                     'type_pay' => $supply->type_pay,
                     'comment' => $supply->comment,
-
                 ]
             );
         }

@@ -123,7 +123,6 @@ class ExpenseResource extends Resource
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
-                                    ->image()
                                     ->multiple()
                                     ->imageResizeTargetWidth('1600')
                                     ->imageResizeMode('cover')
@@ -134,7 +133,6 @@ class ExpenseResource extends Resource
                                     ->removeUploadedFileButtonPosition('right')
                                     ->uploadButtonPosition('left')
                                     ->uploadProgressIndicatorPosition('left')
-
                             ]),
                     ]),
             ])->columns(2);

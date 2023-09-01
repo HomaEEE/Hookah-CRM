@@ -38,6 +38,12 @@ class Place extends Model
         return $this->belongsToMany(User::class, 'place_supplier', 'supplier_id', 'place_id');
     }
 
+
+    public function service()
+    {
+        return $this->hasMany(Service::class, 'place_id');
+    }
+
        //Показания счетчиков
     public function indications()
     {
