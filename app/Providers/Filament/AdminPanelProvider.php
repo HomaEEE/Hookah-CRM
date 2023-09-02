@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Place;
 use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -83,7 +84,6 @@ class AdminPanelProvider extends PanelProvider
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),
                     \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-                    FilamentProgressbarPlugin::make()->color('#f59e0b'),
                     BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true),

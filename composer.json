@@ -21,7 +21,6 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.0",
-        "njxqlus/filament-progressbar": "^1.0",
         "vemcogroup/laravel-translation": "*"
     },
     "require-dev": {
