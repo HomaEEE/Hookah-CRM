@@ -116,6 +116,11 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Shift::class);
     }
 
+    public function supplies()
+    {
+        return $this->hasMany(Supply::class);
+    }
+
     public function categories()
     {
         return $this->belongsTo(Category::class, ['category_id', 'palce_id']);
