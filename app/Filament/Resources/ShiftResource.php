@@ -98,9 +98,6 @@ class ShiftResource extends Resource
                             ->schema(static::getFormSchema('shift'))
                             ->visible(fn (Get $get) => $get('terminal') != null),
                     ]),
-                //  ->columnSpan(['lg' => fn (?Order $record) => $record === null ? 3 : 2]),
-
-
             ]);
     }
 
