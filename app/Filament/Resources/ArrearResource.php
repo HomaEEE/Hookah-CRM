@@ -69,7 +69,6 @@ class ArrearResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel()->toggleable(),
                 TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('sm')
                     ->description(fn (Arrear $record): string => $record->user->name),

@@ -137,9 +137,8 @@ class ExpenseResource extends Resource
                     ->badge()
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
 
-                TextColumn::make('place.city')->label(__('City'))
-                  ->badge()
-                   ->description(fn (Expense $record): string => $record->category->name ?? ''),
+                TextColumn::make('category.name')->label(__('Supplier'))
+                   ->badge(),
 
                    TextColumn::make('supply_id')->badge()->translateLabel()
                    ->wrap()

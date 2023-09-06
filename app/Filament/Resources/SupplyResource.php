@@ -148,10 +148,10 @@ class SupplyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                    ->badge()
                     ->size('sm')
                     ->description(fn (Supply $record): string => $record->user->name ?? ''),
-                TextColumn::make('supplier.company')->label(__('Supplier'))
-                ->description(fn (Supply $record): string => $record->place->city ?? ''),
+                TextColumn::make('supplier.company')->label(__('Supplier')),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),

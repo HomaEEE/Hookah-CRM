@@ -26,7 +26,7 @@ class ExpensesShift extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Expense::query()->whereIn('place_id', Auth::user()->place->pluck('id'))
+        return Expense::query()
         ->whereDate('added_at', Carbon::today())->with('category', 'user', 'supply');
     }
 
@@ -48,9 +48,9 @@ class ExpensesShift extends BaseWidget
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-                ->size('sm')
-                ->description(fn (Expense $record): string => $record->user->name ?? ''),
+                TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                    ->size('sm')
+                    ->description(fn (Expense $record): string => $record->user->name ?? ''),
                 TextColumn::make('place.city')->label(__('City')),
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),

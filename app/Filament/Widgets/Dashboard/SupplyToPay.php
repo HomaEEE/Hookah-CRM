@@ -49,7 +49,7 @@ class SupplyToPay extends BaseWidget
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                 ->size('sm')
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->label(__('Category'))->badge()

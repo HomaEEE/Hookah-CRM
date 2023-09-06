@@ -161,11 +161,6 @@ class ShiftResource extends Resource
 
             ])
 
-            ->groups([
-                Group::make('place.city')
-                ->label(__('Place city')),
-            ])
-
             ->actions([
                 // Tables\Actions\Action::make('close_shift')
                 // ->icon('heroicon-o-badge-check')
