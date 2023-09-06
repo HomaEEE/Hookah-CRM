@@ -211,8 +211,7 @@ class ShiftResource extends Resource
             return [
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Section::make()->schema([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id)
-                        ->reactive(),
+                    Hidden::make('place_id')->default(Filament::getTenant()->id),
                     Actions::make([
                         Action::make('load_poster')->translateLabel()
                             ->icon('heroicon-s-cloud-arrow-down')
@@ -321,7 +320,6 @@ class ShiftResource extends Resource
                     TextInput::make('cash')->label(__('Cash Poster'))
                         ->numeric()
                         ->default(0)
-
                         ->reactive(),
 
                     TextInput::make('terminal')->label(__('Terminal Poster'))
@@ -333,7 +331,7 @@ class ShiftResource extends Resource
                         ->numeric()
                         ->default(0)
 
-                ])->hidden(fn (Get $get): bool => !$get('cash')),
+                ])->hidden(fn (Get $get): bool => !$get('total')),
 
 
                     Fieldset::make(__('Workshops'))
@@ -357,7 +355,7 @@ class ShiftResource extends Resource
                             ->default(0)
                             ->hidden(fn (Get $get) => $get('kitchen') == 0),
                     ])->columns(3)
-                    ->hidden(fn (Get $get): bool => !$get('cash'))
+                    ->hidden(fn (Get $get): bool => !$get('total'))
             ];
         }
 
