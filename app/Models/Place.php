@@ -83,17 +83,17 @@ class Place extends Model implements HasAvatar
 
     public function expenses()
     {
-        return $this->hasMany(Expense::class, 'place_id');
+        return $this->hasMany(Expense::class);
     }
 
     public function excises()
     {
-        return $this->hasMany(Excise::class, 'place_id');
+        return $this->hasMany(Excise::class);
     }
 
     public function docs()
     {
-        return $this->hasMany(Doc::class, 'place_id');
+        return $this->hasMany(Doc::class);
     }
 
     public function expensecategories()
