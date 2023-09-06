@@ -40,20 +40,4 @@ class ManageExpenses extends ManageRecords
         return fn () => 'view';
     }
 
-
-    public function getTabs(): array
-    {
-
-        $tabs = [null => Tab::make(__('All'))];
-
-        $places = Auth::user()->place;
-
-        foreach ($places as $place) {
-            $tabs[$place->city] = Tab::make()->query(function ($query) use ($place) {
-                $query->where('place_id', $place->id);
-            });
-        }
-
-        return $tabs;
-    }
 }

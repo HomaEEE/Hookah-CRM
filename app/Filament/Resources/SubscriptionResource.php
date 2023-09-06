@@ -8,6 +8,7 @@ use App\Filament\Resources\SubscriptionResource\Pages;
 use App\Models\{Expense, ExpenseCategory, Subscription};
 use Auth;
 use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -48,11 +49,7 @@ class SubscriptionResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )
-                    ->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('category_id')->label(__('Category'))
                     ->searchable()
                     ->preload()

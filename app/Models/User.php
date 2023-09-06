@@ -11,9 +11,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenants
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -52,6 +54,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     ];
 
 
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->place;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->place->contains($tenant);
+    }
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -72,16 +83,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function place()
     {
         return $this->BelongsToMany(Place::class);
-    }
-
-    public function placeId()
-    {
-        return $this->BelongsTo(Place::class);
-    }
-
-    public function places()
-    {
-        return $this->belongsToMany(Place::class, 'place_user', 'user_id', 'place_id');
     }
 
     public function wages()

@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Translatable\HasTranslations;
 
-class Place extends Model
+class Place extends Model implements HasAvatar
 {
     use HasFactory,  HasTranslations;
 
     protected $fillable = ['name', 'city', 'address', 'phone', 'opened', 'instagram', 'sufix', 'time', 'settings', 'properties', 'pays'];
 
-    public $translatable = ['city', 'address'];
+    public $translatable = ['name','city', 'address'];
 
     protected $casts = ['opened' => 'boolean', 'time' => 'array', 'properties' => 'array', 'settings' => 'array', 'pays' => 'array'];
 
@@ -35,9 +37,8 @@ class Place extends Model
 
     public function suppliers()
     {
-        return $this->belongsToMany(User::class, 'place_supplier', 'supplier_id', 'place_id');
+        return $this->belongsToMany(Supplier::class);
     }
-
 
     public function service()
     {
@@ -105,25 +106,10 @@ class Place extends Model
         return $this->hasOne(Menu::class, 'place_id');
     }
 
-    public function user()
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class);
     }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'place_user', 'user_id', 'place_id');
-    }
-
-    // public function childs()
-    // {
-    //     return $this->hasMany(Category::class, 'parent_category', 'category_id');
-    // }
-
-    // public function parent()
-    // {
-    //     return $this->hasOne(Category::class, 'category_id', 'parent_category');
-    // }
 
     public function categories()
     {
@@ -139,5 +125,10 @@ class Place extends Model
     public function getNameCityAttribute()
     {
         return $this->name.' '.$this->city;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
     }
 }

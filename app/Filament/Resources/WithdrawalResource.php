@@ -6,6 +6,7 @@ use App\Filament\Resources\WithdrawalResource\Pages;
 use App\Models\Place;
 use App\Models\Withdrawal;
 use Auth;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -44,13 +45,7 @@ class WithdrawalResource extends Resource
         return $form
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )
-                    ->reactive()
-                    ->afterStateUpdated(fn (callable $set) => $set('sum', null))
-                    ->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('sum')->label(__('Sum'))->numeric(),
             ]);
     }
@@ -59,7 +54,6 @@ class WithdrawalResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
                 TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel(),
                 TextColumn::make('sum')->translateLabel(),
             ])

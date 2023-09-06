@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ExciseResource\Pages;
 use App\Models\Excise;
 use Auth;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
@@ -54,10 +55,7 @@ class ExciseResource extends Resource
                         Section::make()
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
-                                Select::make('place_id')->label(__('Place'))
-                                    ->options(
-                                        Auth::user()->place->pluck('nameCity', 'id')
-                                    ),
+                                Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 DateTimePicker::make('added_at')->label(__('Date Added'))->maxDate(now())->default(now()),
                                 TextInput::make('title')->translateLabel()->required(),
                                 Select::make('volume')->translateLabel()->required()
@@ -91,8 +89,7 @@ class ExciseResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
-                TextColumn::make('added_at')->dateTime('d/m/Y')->translateLabel(),
+                TextColumn::make('added_at')->dateTime('d/m/Y')->badge()->translateLabel(),
                 TextColumn::make('title')->translateLabel(),
                 TextColumn::make('volume')->translateLabel(),
                 TextColumn::make('portions')->translateLabel(),

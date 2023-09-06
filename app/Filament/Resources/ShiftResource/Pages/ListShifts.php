@@ -22,24 +22,24 @@ class ListShifts extends ListRecords
         ];
     }
 
-    protected function getTableQuery(): Builder
-    {
-        return Shift::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
-    }
+    // protected function getTableQuery(): Builder
+    // {
+    //     return Shift::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
+    // }
 
-    public function getTabs(): array
-    {
+        // public function getTabs(): array
+        // {
 
-        $tabs = [null => Tab::make(__('All'))];
+        //     $tabs = [null => Tab::make(__('All'))];
 
-        $places = Auth::user()->place;
+        //     $places = Auth::user()->place;
 
-        foreach ($places as $place) {
-            $tabs[$place->city] = Tab::make()->query(function ($query) use ($place) {
-                $query->where('place_id', $place->id);
-            });
-        }
+        //     foreach ($places as $place) {
+        //         $tabs[$place->city] = Tab::make()->query(function ($query) use ($place) {
+        //             $query->where('place_id', $place->id);
+        //         });
+        //     }
 
-        return $tabs;
-    }
+        //     return $tabs;
+        // }
 }

@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Auth;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -47,10 +49,7 @@ class ServiceResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name')),
                 TextInput::make('phone')->label(__('Phone'))
                     ->tel()
@@ -67,7 +66,6 @@ class ServiceResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
                 TextColumn::make('name')->label(__('Name'))
                     ->searchable()
                     ->alignLeft()

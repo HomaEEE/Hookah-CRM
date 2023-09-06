@@ -38,7 +38,6 @@ class SuppliesShift extends BaseWidget
             TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                 ->size('sm')
                 ->description(fn (Record $record): string => $record->user->name ?? ''),
-            TextColumn::make('place.city')->label(__('City'))->badge(),
             TextColumn::make('supplier.company')->label(__('Supplier')),
             TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
             TextColumn::make('type_pay')->label(__('Type pay'))

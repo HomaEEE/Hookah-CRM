@@ -13,11 +13,6 @@ class ManageWriteoffs extends ManageRecords
 {
     protected static string $resource = WriteoffResource::class;
 
-    protected function getTableQuery(): Builder
-    {
-        return Writeoff::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
-    }
-
     protected function getActions(): array
     {
         return [
