@@ -113,7 +113,7 @@ class Place extends Model implements HasAvatar
 
     public function shifts(): BelongsToMany
     {
-        return $this->belongsToMany(Shift::class);
+        return $this->belongsToMany(Shift::class, 'shifts');
     }
 
     public function categories()
