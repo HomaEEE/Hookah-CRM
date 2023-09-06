@@ -7,7 +7,8 @@ use App\Filament\Resources\TechcardResource\RelationManagers;
 use App\Models\{Ingredient, Techcard, Workshop};
 
 use Auth;
-
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -54,13 +55,7 @@ class TechcardResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )
-                    ->reactive()
-                    ->required(),
-
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('workshop_id')->label(__('Workshop'))
                     ->options(function (Get $get) {
                         return Workshop::where('place_id', $get('place_id'))->get()->pluck('name', 'id');
@@ -87,19 +82,12 @@ class TechcardResource extends Resource
                                 }
                             })
                             ->createOptionForm([
-                                Select::make('place_id')->label(__('Place'))
-                                    ->options(
-                                        Auth::user()->place->pluck('nameCity', 'id')
-                                    )
-                                    ->reactive()
-                                    ->required(),
-
-                                Select::make('workshop_id')->label(__('Workshop'))
-                                    ->options(function (Get $get) {
-                                        return Workshop::where('place_id', $get('place_id'))->get()->pluck('name', 'id');
-                                    })
-                                    ->reactive()
-                                    ->required(),
+                                TextInput::make('place_id')->default(Filament::getTenant()->id),
+                                TextInput::make('workshop_id')->default(
+                                    function (Get $get) {
+                                        return  $get('../../workshop_id');
+                                    }
+                                ),
 
                                 TextInput::make('ingredient')->label(__('ingredient'))
                                     ->required(),
@@ -126,8 +114,6 @@ class TechcardResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel()
-                    ->badge(),
                 TextColumn::make('workshop.name')->translateLabel(),
                 TextColumn::make('product_name')->translateLabel(),
                 TextColumn::make('time')->translateLabel(),

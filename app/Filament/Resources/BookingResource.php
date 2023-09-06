@@ -104,7 +104,6 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel()->toggleable(),
                 TextColumn::make('name')->translateLabel()->searchable()
                     ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
                 TextColumn::make('time')->since()->translateLabel(),

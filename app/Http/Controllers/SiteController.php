@@ -28,16 +28,16 @@ class SiteController extends Controller
         return view('site.index', compact('places'));
     }
 
-    public function index($suffix)
+    public function index($slug)
     {
-        $place = Place::where('sufix', $suffix)->first();
+        $place = Place::where('slug', $slug)->first();
 
         return view('site.index', compact('place'));
     }
 
-    public function menu($suffix)
+    public function menu($slug)
     {
-        $place = Place::where('sufix', $suffix)->first();
+        $place = Place::where('slug', $slug)->first();
 
         $categories = Category::where('place_id', $place->id)
             ->where('parent_category', '<', $place->settings['parent_category'])
@@ -46,32 +46,32 @@ class SiteController extends Controller
         return view('site.menu', compact('place', 'categories'));
     }
 
-    public function booking($suffix)
+    public function booking($slug)
     {
-        $place = Place::where('sufix', $suffix)->first();
+        $place = Place::where('slug', $slug)->first();
 
         return view('site.booking', compact('place'));
     }
 
-     public function pays($suffix)
+     public function pays($slug)
      {
-         $place = Place::where('sufix', $suffix)->first();
+         $place = Place::where('slug', $slug)->first();
 
          return view('site.pays', compact('place'));
      }
 
-    public function feedbacks($suffix)
+    public function feedbacks($slug)
     {
 
-        $place = Place::where('sufix', $suffix)->first();
+        $place = Place::where('slug', $slug)->first();
         $feedbacks = Feedback::where('place_id', $place->id)->get();
 
         return view('site.feedbacks', compact('place', 'feedbacks'));
     }
 
-    public function contacts($suffix)
+    public function contacts($slug)
     {
-        $place = Place::where('sufix', $suffix)->first();
+        $place = Place::where('slug', $slug)->first();
 
         return view('site.contacts', compact('place'));
     }

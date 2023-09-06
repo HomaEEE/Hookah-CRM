@@ -6,6 +6,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\Supply;
 use Auth;
 use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -26,13 +27,13 @@ class SupplyToPay extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Supply::query()->whereIn('place_id', Auth::user()->place->pluck('id'))
+        return Supply::query()->where('place_id', Filament::getTenant()->id)
         ->where('pay', 0);
     }
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
     {
-        return 20;
+        return 10;
     }
 
     protected function getDefaultTableSortColumn(): ?string
@@ -51,7 +52,6 @@ class SupplyToPay extends BaseWidget
             TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                 ->size('sm')
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
-                TextColumn::make('place.city')->label(__('City')),
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                 ->description(fn (Supply $record): string => $record->supplier->company ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true),

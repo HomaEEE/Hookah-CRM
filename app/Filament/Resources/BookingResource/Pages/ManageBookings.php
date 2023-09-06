@@ -20,8 +20,8 @@ class ManageBookings extends ManageRecords
         ];
     }
 
-    protected function getTableQuery(): Builder
-    {
-        return Booking::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
-    }
+    // protected function getTableQuery(): Builder
+    // {
+    //     return Booking::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
+    // }
 }

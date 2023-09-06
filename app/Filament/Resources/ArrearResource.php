@@ -7,6 +7,7 @@ use App\Models\{Arrear,User};
 
 use Auth;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -50,17 +51,11 @@ class ArrearResource extends Resource
         return $form
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )
-                    ->reactive()
-                    ->afterStateUpdated(fn (callable $set) => $set('table_id', null))
-                    ->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('from_user_id')->label(__('From User'))
                     ->hidden(fn (Get $get) => $get('place_id') == null)
                     ->options(function (callable $get) {
-                        return User::whereHas('places', function ($query) use ($get) {
+                        return User::whereHas('place', function ($query) use ($get) {
                             $query->where('place_id', $get('place_id'));
                         })->get()
                             ->pluck('name', 'id');

@@ -8,6 +8,7 @@ use App\Models\Bill;
 use App\Models\Supplier;
 use App\Models\Supply;
 use Auth;
+use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 
@@ -74,17 +75,10 @@ class SupplyResource extends Resource
                         Section::make()
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
-                                DateTimePicker::make('added_at')
+                                Hidden::make('place_id')->default(Filament::getTenant()->id),                                DateTimePicker::make('added_at')
                                 ->label(__('Date Added'))
                                 ->native(false)
                                 ->maxDate(now())->default(now()),
-                                Select::make('place_id')->label(__('Place'))
-                                    ->options(
-                                        Auth::user()->place->pluck('nameCity', 'id')
-                                    )
-                                    ->native(false)
-                                    ->reactive()
-                                    ->afterStateUpdated(fn (callable $set) => $set('contact_id', null)),
                                 Select::make('supplier_id')->label(__('Supplier'))
                                     ->relationship('supplier', 'company')
                                     ->hidden(fn (Get $get) => $get('place_id') == null)
@@ -102,12 +96,7 @@ class SupplyResource extends Resource
                                     ->createOptionForm([
                                         Section::make()
                                             ->schema([
-                                                Select::make('place_id')->label(__('Place'))
-                                                ->options(
-                                                    Auth::user()->place->pluck('nameCity', 'id')
-                                                )
-                                                ->native(false)
-                                                ->required(),
+                                                Hidden::make('place_id')->default(Filament::getTenant()->id),
                                                 TextInput::make('name')->label(__('Name')),
                                                 TextInput::make('phone')->label(__('Phone')),
                                                 TextInput::make('company')->label(__('Company')),

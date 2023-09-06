@@ -72,7 +72,6 @@ class DocResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
                 TextColumn::make('name')->translateLabel(),
                 TextColumn::make('type')->translateLabel()
                 ->formatStateUsing(

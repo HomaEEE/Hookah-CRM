@@ -33,6 +33,8 @@ class PlaceResource extends Resource
 {
     use Translatable;
 
+    protected static ?string $tenantOwnershipRelationshipName = 'users';
+
     public static function getTranslatableLocales(): array
     {
         return ['ru', 'uk', 'en'];
@@ -73,7 +75,7 @@ class PlaceResource extends Resource
                     TextInput::make('address')->label(__('Address')),
                     TextInput::make('phone')->label(__('Phone')),
                     TextInput::make('instagram')->label(__('Instagram')),
-                    TextInput::make('sufix')->label(__('Sufix for place')),
+                    TextInput::make('slug')->label(__('Sufix for place')),
                     Toggle::make('opened')->inline(),
                 ]),
             Section::make()

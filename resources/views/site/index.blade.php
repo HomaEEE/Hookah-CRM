@@ -36,12 +36,12 @@
                 <h3><span class="icon-mobile"></span> <a href="tel:{{$place->phone}}" target="_blank">{{$place->phone}}</a></h3>
                 <h3><span class="icon-instagram"></span> <a href="https://instagram.com/{{$place->instagram}}"  target="_blank">{{$place->instagram}}</a></h3>
                 @if ($place->opened == 1)
-                <a href="/{{$place->sufix}}/menu" class="btn">{{__('Go to Menu')}}</a>
+                <a href="/{{$place->slug}}/menu" class="btn">{{__('Go to Menu')}}</a>
                 @else
                     <span class="closed">{{__('Closed')}}</span>
                 @endif
             </div>
-            <img src="/assets/imgs/places/{{$place->sufix}}/home.jpg" alt="">
+            <img src="/assets/imgs/places/{{$place->slug}}/home.jpg" alt="">
         </div>
         @endforeach
     </div>

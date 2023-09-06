@@ -2,17 +2,17 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Place;
 use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Widgets;
-use Filament\Navigation\NavigationGroup;
 
+use App\Filament\Pages\Tenancy\EditPlaceProfile;
+use Filament\Navigation\NavigationGroup;
 
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -24,7 +24,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
-use Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin;
+use Filament\Support\Colors\Color;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -35,6 +35,11 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('web')
+            ->colors([
+                'primary' => Color::Emerald
+            ])
+            ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
+            ->tenantProfile(EditPlaceProfile::class)
             ->login()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -45,45 +50,44 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
-            ->navigationGroups([
-                NavigationGroup::make()
-                ->label('Dashboard')
-                ->icon('heroicon-o-shopping-cart'),
-                NavigationGroup::make()
-                     ->label('Place')
-                     ->icon('heroicon-o-shopping-cart'),
-                NavigationGroup::make()
-                    ->label('Blog')
-                    ->icon('heroicon-o-pencil'),
-                NavigationGroup::make()
-                    ->label(fn (): string => __('navigation.settings'))
-                    ->icon('heroicon-o-cog-6-tooth')
-                    ->collapsed(),
-            ])
             // ->navigationGroups([
             //     NavigationGroup::make()
-            //     ->label('Place'),
+            //     ->label('Dashboard')
+            //     ->icon('heroicon-o-shopping-cart'),
             //     NavigationGroup::make()
-            //     ->label('Statistics'),
+            //          ->label('Place')
+            //          ->icon('heroicon-o-shopping-cart'),
             //     NavigationGroup::make()
-            //     ->label('Menu'),
+            //         ->label('Blog')
+            //         ->icon('heroicon-o-pencil'),
             //     NavigationGroup::make()
-            //     ->label('Stocks'),
-            //     NavigationGroup::make()
-            //     ->label('Finance'),
-            //     NavigationGroup::make()
-            //     ->label('Manage'),
-            //     NavigationGroup::make()
-            //     ->label('Data'),
-            //     NavigationGroup::make()
-            //     ->label('Settings')
+            //         ->label(fn (): string => __('navigation.settings'))
+            //         ->icon('heroicon-o-cog-6-tooth')
+            //         ->collapsed(),
             // ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                ->label('Place'),
+                NavigationGroup::make()
+                ->label('Statistics'),
+                NavigationGroup::make()
+                ->label('Menu'),
+                NavigationGroup::make()
+                ->label('Stocks'),
+                NavigationGroup::make()
+                ->label('Finance'),
+                NavigationGroup::make()
+                ->label('Manage'),
+                NavigationGroup::make()
+                ->label('Data'),
+                NavigationGroup::make()
+                ->label('Settings')
+            ])
             ->plugins([
                     FilamentLanguageSwitchPlugin::make(),
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),
                     \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-                    FilamentProgressbarPlugin::make()->color('#f59e0b'),
                     BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true),

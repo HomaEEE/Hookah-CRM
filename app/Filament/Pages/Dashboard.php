@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\Alignment;
@@ -74,10 +75,7 @@ class Dashboard extends BasePage
                 ->requiresConfirmation()
 
                 ->form([
-                    Hidden::make('place_id')
-                        ->label(__('Place'))
-                        ->default(Auth::user()->place[0]['id'])
-                        ->required(),
+                    Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')
                         ->label('')
                         ->numeric()
@@ -103,11 +101,7 @@ class Dashboard extends BasePage
                 ->modalHeading(__('Open Shift'))
                 ->requiresConfirmation()
                 ->form([
-                    Select::make('place_id')->label(__('Place'))
-                        ->native(false)
-                        ->options(
-                            Auth::user()->place->pluck('city', 'id')
-                        )->reactive()
+                    Hidden::make('place_id')->default(Filament::getTenant()->id)
                         ->required()
                         ->reactive(),
                 ])

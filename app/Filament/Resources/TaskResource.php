@@ -94,7 +94,6 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.nameCity')->label(__('Place')),
                 TextColumn::make('name')->label(__('Task')),
                 TextColumn::make('forUser.name')->label(__('For User')),
             ])->defaultSort('created_at', 'desc')

@@ -13,7 +13,7 @@ use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Models\{Place, Workshop, Shift, User, Wage};
-
+use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -108,9 +108,8 @@ class ShiftResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
                 TextColumn::make('created_at')->dateTime('d/m/Y')
-                    ->size('xl')->translateLabel(),
+                    ->badge()->translateLabel(),
 
                 TextColumn::make('terminal')->translateLabel()
                 ->numeric()
@@ -212,12 +211,7 @@ class ShiftResource extends Resource
             return [
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Section::make()->schema([
-                    Select::make('place_id')->label(__('Place'))
-                        ->native(false)
-                        ->options(
-                            Auth::user()->place->pluck('city', 'id')
-                        )->reactive()
-                        ->required()
+                    Hidden::make('place_id')->default(Filament::getTenant()->id)
                         ->reactive(),
                     Actions::make([
                         Action::make('load_poster')->translateLabel()
@@ -375,7 +369,7 @@ class ShiftResource extends Resource
                     ->schema([
                         Select::make('user_id')->translateLabel()
                             ->options(function (callable $get) {
-                                return User::whereHas('places', function ($query) use ($get) {
+                                return User::whereHas('place', function ($query) use ($get) {
                                     $query->where('place_id', $get('../../place_id'));
                                 })->get()
                                     ->pluck('name', 'id');

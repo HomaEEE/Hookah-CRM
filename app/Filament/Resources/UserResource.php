@@ -67,12 +67,10 @@ class UserResource extends Resource
                     ]),
             ]),
             Section::make([
-                Select::make('place_user')->label(__('Place'))
-                    //->options(Place::all()->pluck('city', 'id'))
-                    ->relationship('place', 'city')
-                    ->native(false)
-                    ->preload()
-                    ->multiple(),
+                CheckboxList::make('place_user')->label(__('Places'))
+                    ->relationship('place', 'name')
+                    ->columns(2)
+                    ->required(),
 
                 CheckboxList::make('roles')->label(__('Access'))
                     ->relationship('roles', 'name')

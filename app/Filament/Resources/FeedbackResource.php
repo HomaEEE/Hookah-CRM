@@ -57,7 +57,6 @@ class FeedbackResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
                 TextColumn::make('name')->translateLabel(),
                 TextColumn::make('contact')->label(__('Phone')),
                 TextColumn::make('text')->wrap(),

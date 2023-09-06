@@ -6,6 +6,7 @@ use App\Filament\Resources\WriteoffResource\Pages;
 use App\Models\Workshop;
 use App\Models\Writeoff;
 use Auth;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -47,12 +48,7 @@ class WriteoffResource extends Resource
         return $form
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn (callable $set) => $set('workshop_id', null)),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
 
                 Select::make('workshop_id')->label(__('Workshop'))
                     ->options(function (callable $get) {
@@ -73,7 +69,6 @@ class WriteoffResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('user.name')->translateLabel(),
-                TextColumn::make('place.nameCity')->translateLabel(),
                 TextColumn::make('workshop.name')->translateLabel(),
             ])->defaultSort('created_at', 'desc')
             ->filters([

@@ -8,6 +8,7 @@ use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Models\{Expense,ExpenseCategory};
 use Auth;
 use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -54,7 +55,7 @@ class ExpenseResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('category', 'user', 'supply')->whereIn('place_id', Auth::user()->place->pluck('id'));;
+        return parent::getEloquentQuery()->with('category', 'user', 'supply');
     }
 
     public static function form(Form $form): Form
@@ -66,17 +67,11 @@ class ExpenseResource extends Resource
                         Section::make()
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
+                                Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 DateTimePicker::make('added_at')
                                 ->label(__('Date Added'))
                                 ->native(false)
                                 ->maxDate(now())->default(now()),
-                                Select::make('place_id')->label(__('Place'))
-                                    ->options(
-                                        Auth::user()->place->pluck('city', 'id')
-                                    )
-                                    ->native(false)
-                                    ->reactive()
-                                    ->afterStateUpdated(fn (callable $set) => $set('category_id', null)),
                                 Select::make('category_id')->label(__('Category'))
                                     ->relationship('categories', 'name')
                                     ->hidden(fn (Get $get) => $get('place_id') == null)
@@ -93,12 +88,7 @@ class ExpenseResource extends Resource
                                     ->createOptionForm([
                                         Section::make()
                                             ->schema([
-                                                TextInput::make('place_id')->translateLabel()
-                                                ->live(onBlur: true)
-
-                                                ->default(function (Get $get) {
-                                                    return $get('place_id');
-                                                }),
+                                                Hidden::make('place_id')->default(Filament::getTenant()->id),
                                                 TextInput::make('name')->translateLabel(),
                                                 TextInput::make('category_id')->translateLabel()->default(0),
                                             ]),
@@ -123,7 +113,6 @@ class ExpenseResource extends Resource
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
-                                    ->image()
                                     ->multiple()
                                     ->imageResizeTargetWidth('1600')
                                     ->imageResizeMode('cover')
@@ -134,7 +123,6 @@ class ExpenseResource extends Resource
                                     ->removeUploadedFileButtonPosition('right')
                                     ->uploadButtonPosition('left')
                                     ->uploadProgressIndicatorPosition('left')
-
                             ]),
                     ]),
             ])->columns(2);

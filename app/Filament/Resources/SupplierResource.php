@@ -5,12 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SupplierResource\Pages;
 use App\Models\Supplier;
 use Auth;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 
 use Filament\Forms;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
@@ -34,7 +36,7 @@ class SupplierResource extends Resource
 
     public static function getPluralModelLabel(): string
     {
-        return __('Supplier');
+        return __('Suppliers');
     }
 
     public static function getNavigationGroup(): ?string
@@ -51,10 +53,7 @@ class SupplierResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name')),
                 TextInput::make('phone')->label(__('Phone'))
                     ->tel()
@@ -76,7 +75,6 @@ class SupplierResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel(),
                 TextColumn::make('name')->label(__('Name'))
                     ->searchable()
                     ->alignLeft()
