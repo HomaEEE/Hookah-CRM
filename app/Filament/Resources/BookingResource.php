@@ -81,7 +81,7 @@ class BookingResource extends Resource
                         }
                     }),
                 DateTimePicker::make('time')->label(__('Booking Time'))
-                    ->reactive()->required()
+                    ->reactive()->required()->native(false)
                     ->hidden(fn (Get $get) => $get('place_id') == null),
                 TextInput::make('name')->label(__('Name'))->required(),
                 TextInput::make('phone')->label(__('Phone'))
