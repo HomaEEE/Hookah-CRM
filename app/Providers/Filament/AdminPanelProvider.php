@@ -89,11 +89,6 @@ class AdminPanelProvider extends PanelProvider
                     ->defaultLocales(['en', 'ru', 'uk']),
                     \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
                     BreezyCore::make()
-                    ->myProfile(
-                        shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true),
-                        shouldRegisterNavigation: false, // Adds a main navigation item for the My Profile page (default = false)
-                        hasAvatars: false // enables the avatar upload form component. (default = false)
-                    )
                 ])
             ->authGuard('web')
             ->middleware([

@@ -40,6 +40,11 @@ class Place extends Model implements HasAvatar
         return $this->belongsToMany(Supplier::class);
     }
 
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class);
+    }
+
     public function service()
     {
         return $this->hasMany(Service::class, 'place_id');

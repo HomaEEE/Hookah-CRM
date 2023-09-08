@@ -9,6 +9,7 @@ use App\Models\Place;
 use App\Models\Seet;
 use Auth;
 use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -69,13 +70,7 @@ class BookingResource extends Resource
         return $form
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )
-                    ->reactive()
-                    ->afterStateUpdated(fn (callable $set) => $set('table_id', null))
-                    ->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('table_id')->label(__('Table'))
                     ->hidden(fn (Get $get) => $get('place_id') == null)
                     ->options(function (callable $get) {
