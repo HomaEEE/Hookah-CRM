@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Booking;
 use App\Models\Supply;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Observers\SupplyToExpense;
+use App\Observers\BookingToGuest;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,7 +21,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-            SupplyToExpense::class
+            SupplyToExpense::class,
+            BookingToGuest::class
+
         ],
     ];
 
@@ -29,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Supply::observe(SupplyToExpense::class);
-
+        Booking::observe(BookingToGuest::class);
     }
 
     /**

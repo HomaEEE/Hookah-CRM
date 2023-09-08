@@ -40,7 +40,7 @@ class Dashboard extends BasePage
         return [
             \App\Filament\Widgets\Dashboard\OpenShift::class,
             \App\Filament\Widgets\Dashboard\TipsShift::class,
-            \App\Filament\Widgets\Dashboard\SupplyToPay::class,
+            \App\Filament\Widgets\Dashboard\TabWidget::class,
         ];
     }
 

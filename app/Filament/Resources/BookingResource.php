@@ -71,7 +71,15 @@ class BookingResource extends Resource
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                Select::make('table_id')->label(__('Table'))
+
+                TextInput::make('name')->label(__('Name'))->required(),
+                TextInput::make('phone')->label(__('Phone'))
+                    ->tel()
+                    ->mask(RawJs::make(<<<'JS'
+                        $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
+                    JS))
+                    ->translateLabel(),
+                    Select::make('table_id')->label(__('Table'))
                     ->hidden(fn (Get $get) => $get('place_id') == null)
                     ->options(function (callable $get) {
                         if (null == ($get('place_id'))) {
@@ -82,15 +90,9 @@ class BookingResource extends Resource
                     }),
                 DateTimePicker::make('time')->label(__('Booking Time'))
                     ->reactive()->required()->native(false)
-                    ->hidden(fn (Get $get) => $get('place_id') == null),
-                TextInput::make('name')->label(__('Name'))->required(),
-                TextInput::make('phone')->label(__('Phone'))
-                    ->tel()
-                    ->mask(RawJs::make(<<<'JS'
-                        $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
-                    JS))
-                    ->translateLabel(),
-                TextInput::make('person')->label(__('Person'))->numeric(),
+                    ->seconds(false)
+                    ->minDate(now())->default(now()),
+                TextInput::make('person')->label(__('Person'))->numeric()->default(1),
                 Textarea::make('comment')->label(__('Comment')),
             ]);
     }

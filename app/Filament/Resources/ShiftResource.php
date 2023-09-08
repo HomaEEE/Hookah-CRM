@@ -540,7 +540,7 @@ class ShiftResource extends Resource
                     ->reactive(),
                 ])->columns(3),
 
-                FieldSet::make('Expenses & Income')->schema([
+                FieldSet::make('Shift')->schema([
 
                 Placeholder::make('total_shift')->translateLabel()
                     ->content(function (Set $set, Get $get) {

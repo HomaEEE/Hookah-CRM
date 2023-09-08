@@ -45,6 +45,11 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Booking::class);
     }
 
+    public function guests()
+    {
+        return $this->hasMany(Guest::class);
+    }
+
     public function service()
     {
         return $this->hasMany(Service::class, 'place_id');
