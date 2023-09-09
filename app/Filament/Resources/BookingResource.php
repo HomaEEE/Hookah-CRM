@@ -73,7 +73,7 @@ class BookingResource extends Resource
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
 
                 TextInput::make('name')->label(__('Name'))->required(),
-                TextInput::make('phone')->label(__('Phone'))
+                TextInput::make('phone')->label(__('Phone'))->required()
                     ->tel()
                     ->mask(RawJs::make(<<<'JS'
                         $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'

@@ -25,8 +25,9 @@ class TaskWidget extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Task::query();
+        return Task::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
     }
+
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
     {
@@ -46,7 +47,8 @@ class TaskWidget extends BaseWidget
     protected function getTableColumns(): array
     {
         return [
-
+            TextColumn::make('name')->label(__('Task')),
+            TextColumn::make('forUser.name')->label(__('For User')),
         ];
     }
 

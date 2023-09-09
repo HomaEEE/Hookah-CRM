@@ -26,7 +26,7 @@ class BookingWidget extends BaseWidget
     protected function getTableQuery(): Builder
     {
         return Booking::query()
-        ->whereBetween('time', [Carbon::today()->format('d-m-Y H:i'),  Carbon::today()->subDays(10)]);
+        ->whereDate('time', '>=', Carbon::today());
     }
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
