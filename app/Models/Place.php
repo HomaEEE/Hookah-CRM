@@ -136,6 +136,12 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Task::class);
     }
 
+
+    public function writeoffs()
+    {
+        return $this->hasMany(Writeoff::class);
+    }
+
     public function techcards()
     {
         return $this->hasMany(Techcard::class);
