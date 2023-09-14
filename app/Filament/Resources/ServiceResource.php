@@ -78,7 +78,7 @@ class ServiceResource extends Resource
                     ->label(__('Phone'))
                     ->copyable()
                     ->searchable()
-                    ->copyMessage('Phone copied')
+                    ->copyMessage(__('Phone copied'))
                     ->copyMessageDuration(1500)
                     ->alignLeft(),
             ])

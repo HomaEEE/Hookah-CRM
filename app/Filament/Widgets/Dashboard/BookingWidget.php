@@ -36,7 +36,7 @@ class BookingWidget extends BaseWidget
 
     protected function getDefaultTableSortColumn(): ?string
     {
-        return 'created_at';
+        return 'time';
     }
 
     protected function getDefaultTableSortDirection(): ?string

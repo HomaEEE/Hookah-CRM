@@ -131,6 +131,17 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Supply::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function techcards()
+    {
+        return $this->hasMany(Techcard::class);
+    }
+
+
     public function categories()
     {
         return $this->belongsTo(Category::class, ['category_id', 'palce_id']);

@@ -8,6 +8,7 @@ use App\Models\{Ingredient, Techcard, Workshop};
 
 use Auth;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,18 +18,19 @@ use Filament\Tables\Table;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 
-use Forms\Components\Actions\Action;
-
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TechcardResource extends Resource
 {
@@ -63,47 +65,47 @@ class TechcardResource extends Resource
                     ->reactive()
                     ->required(),
                 TextInput::make('techcard')->translateLabel(),
-                TimePicker::make('time')->translateLabel(),
 
+                Group::make()
+                    ->schema([
+                        Section::make()
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('photo')
+                                    ->collection('techcard')
+                                    ->multiple()
+                                    ->imageResizeTargetWidth('1200')
+                                    ->imageResizeMode('cover')
+                                    ->imagePreviewHeight(350)
+                                    ->openable()
+                            ])
+                            ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
+                    ])->columns(2),
                 Textarea::make('process')->label(__('Process')),
                 Repeater::make('ingredients')
+                    ->relationship()
                     ->schema([
                         Select::make('ingredient_id')->label(__('ingredient'))
-                            ->searchable()
+                        ->relationship('ingredient', 'ingredient')
                             ->native(false)
-                            ->preload()
                             ->required()
-                        //    ->hidden(fn (Get $get) => $get('workshop_id') == null)
                             ->options(function (callable $get) {
-                                if (null == ($get('workshop_id'))) {
-                                    return null;
-                                } else {
-                                    return Ingredient::get()->pluck('ingredient', 'id');
-                                }
+                                    return Ingredient::where('place_id', $get('place_id'))->get()->pluck('ingredient', 'id');
                             })
                             ->createOptionForm([
-                                TextInput::make('place_id')->default(Filament::getTenant()->id),
-                                TextInput::make('workshop_id')->default(
-                                    function (Get $get) {
-                                        return  $get('../../workshop_id');
-                                    }
-                                ),
-
-                                TextInput::make('ingredient')->label(__('ingredient'))
-                                    ->required(),
-
+                                Hidden::make('place_id')->default(Filament::getTenant()->id),
+                                TextInput::make('ingredient')->label(__('ingredient'))->required(),
                                 Select::make('unit')
                                     ->options([
-                                        'kg' => 'Kg',
-                                        'gr' => 'Gr',
-                                        'l' => 'L',
-                                        'ml' => 'Ml',
-                                        'unit' => 'Unit',
+                                        'kg' => __('Kg'),
+                                        'gr' => __('Gr'),
+                                        'l' => __('L'),
+                                        'ml' => __('Ml'),
+                                        'unit' => __('Unit'),
                                     ])
                                     ->required()
                             ]),
 
-                        TextInput::make('heft')->label(__('Heft'))
+                        TextInput::make('heft')->label(__('Heft'))->suffix('.com')
                     ])
 
 
@@ -115,7 +117,7 @@ class TechcardResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('workshop.name')->translateLabel(),
-                TextColumn::make('product_name')->translateLabel(),
+                TextColumn::make('techcard')->translateLabel(),
                 TextColumn::make('time')->translateLabel(),
             ])
             ->filters([
@@ -169,6 +171,24 @@ class TechcardResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+        ->schema([
+            TextEntry::make('techcard')->translateLabel(),
+            TextEntry::make('time')->translateLabel(),
+            TextEntry::make('process')->translateLabel(),
+
+            RepeatableEntry::make('ingredients')
+            ->schema([
+                TextEntry::make('ingredient')
+            ])
+            ->grid(2)
+        ]);
+    }
+
 
     public static function getRelations(): array
     {

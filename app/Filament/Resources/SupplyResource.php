@@ -63,7 +63,7 @@ class SupplyResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('supplier', 'user')->whereIn('place_id', Auth::user()->place->pluck('id'));
+        return parent::getEloquentQuery()->with('supplier', 'user');
     }
 
     public static function form(Form $form): Form
@@ -75,7 +75,8 @@ class SupplyResource extends Resource
                         Section::make()
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
-                                Hidden::make('place_id')->default(Filament::getTenant()->id),                                DateTimePicker::make('added_at')
+                                Hidden::make('place_id')->default(Filament::getTenant()->id),
+                                DateTimePicker::make('added_at')
                                 ->label(__('Date Added'))
                                 ->native(false)
                                 ->maxDate(now())->default(now()),

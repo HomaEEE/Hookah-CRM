@@ -24,6 +24,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
+use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
+
 use Filament\Support\Colors\Color;
 
 class AdminPanelProvider extends PanelProvider
@@ -84,6 +86,9 @@ class AdminPanelProvider extends PanelProvider
                 ->label('Settings')
             ])
             ->plugins([
+                    QuickCreatePlugin::make()->includes([
+                        \App\Filament\Resources\SupplyResource::class,
+                    ])->slideOver(),
                     FilamentLanguageSwitchPlugin::make(),
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),

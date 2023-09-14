@@ -29,13 +29,18 @@ class Techcard extends Model implements HasMedia
         return $this->belongsTo(User::class, 'user_id');
     }
 
-     public function ingredient()
+    public function ingredient()
     {
-        return $this->belongsTo(Ingredient::class);
+        return $this->belongsTo(TechcardIngredient::class, 'ingredient_id');
     }
 
     public function ingredients()
     {
-        return $this->belongsTo(Ingredient::class);
+        return $this->hasMany(TechcardIngredient::class, 'techcard_id');
+    }
+
+    public function workshop()
+    {
+        return $this->belongsTo(Workshop::class);
     }
 }

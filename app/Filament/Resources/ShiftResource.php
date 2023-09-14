@@ -50,6 +50,8 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Filters\Filter;
 
+use function Laravel\Prompts\text;
+
 class ShiftResource extends Resource
 {
     protected static ?string $model = Shift::class;
@@ -203,6 +205,33 @@ class ShiftResource extends Resource
             return [
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Section::make()->schema([
+
+                    // FieldSet::make('Calculator')->schema([
+                    //     Repeater::make('coupurs')->hiddenLabel()->schema([
+                    //         Select::make('value')->options([
+                    //             '1000' => '1000',
+                    //             '500' => '500',
+                    //             '200' => '200',
+                    //             '100' => '100',
+                    //             '50' => '50',
+                    //             '20' => '20',
+                    //             '10' => '10',
+                    //             '5' => '5',
+                    //             '2' => '2',
+                    //             '1' => '1',
+                    //         ])->selectablePlaceholder(false)->reactive(),
+                    //         TextInput::make('count')->translateLabel()
+                    //         ->afterStateUpdated(
+                    //             function (Set $set, Get $get, $state) {
+                    //                 if ($get('value') != 0 || $get('count') != null) {
+                    //                 $set('sum', $get('value') * $get('count'));
+                    //                 }
+                    //             }
+                    //         )->reactive(),
+                    //         TextInput::make('sum')->translateLabel(),
+                    //     ])->reactive()->columns(3)
+                    // ]),
+
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     Actions::make([
                         Action::make('load_poster')->translateLabel()
@@ -439,12 +468,6 @@ class ShiftResource extends Resource
                             ->selectablePlaceholder(false)
                             ->default('0')
                             ->rules(['required'])
-
-                            ->default(
-                                function (Set $set) {
-                                    $set('days', 0);
-                                }
-                            )
                             ->afterStateUpdated(
                                 function (Set $set, Get $get, $state) {
                                     $wage = Wage::where('id', $get('wage_id'))->first();
@@ -539,6 +562,18 @@ class ShiftResource extends Resource
                     })
                     ->reactive(),
                 ])->columns(3),
+
+
+
+                Placeholder::make('coupurs_calc')->translateLabel()
+                ->content(function (Set $set, $get) {
+                    $total = collect($get('coupurs'))
+                        ->pluck('sum')
+                        ->sum();
+                    $set('shift', $total);
+                    return $total;
+                })
+                ->reactive(),
 
                 FieldSet::make('Shift')->schema([
 
