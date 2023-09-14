@@ -12,6 +12,8 @@ use Filament\Notifications\Notification;
 use App\Models\Place;
 use App\Models\User;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 
@@ -26,12 +28,13 @@ class ListMenus extends ListRecords
 
             Action::make('update')
                 ->label(__('Update menu'))
+                ->slideOver()
+                ->modalHeading(__('Update menu'))
+                ->requiresConfirmation()
                 ->form([
-                    Select::make('place_id')
-                        ->label(__('Place'))
-                        ->options(
-                            Place::all()->pluck('nameCity', 'id')
-                        )
+                    Hidden::make('place_id')->default(Filament::getTenant()->id)
+                    ->required()
+                    ->reactive()
                 ])
                 ->action(function (array $data): void {
                     if (blank($data['place_id'])) {
