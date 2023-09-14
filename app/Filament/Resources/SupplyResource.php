@@ -8,6 +8,7 @@ use App\Models\Bill;
 use App\Models\Supplier;
 use App\Models\Supply;
 use Auth;
+use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -18,6 +19,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -152,9 +154,9 @@ class SupplyResource extends Resource
                     ->badge()
                     ->size('sm')
                     ->description(fn (Supply $record): string => $record->user->name ?? ''),
-                TextColumn::make('supplier.company')->label(__('Supplier')),
+                TextColumn::make('supplier.company')->label(__('Supplier'))->searchable(),
 
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable(),
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
                 TextColumn::make('type_pay')->label(__('Type pay'))
                 ->badge()
@@ -195,43 +197,52 @@ class SupplyResource extends Resource
                     ->label(__('Place'))
                 // build the filter form
                     ->form([
-                        Select::make('place_id')->label(__('Place'))
-                            ->searchable()
-                            ->options(
-                                Auth::user()->place->pluck('nameCity', 'id')
-                            )
-                            ->afterStateUpdated(
-                                function (callable $set) {
-                                    $set('supplier_id', null);
-                                }
-                            ),
                         Select::make('supplier_id')->label(__('Supplier'))
                             ->searchable()
-                            ->hidden(fn (Get $get) => $get('place_id') == null)
                             ->preload()
-                            ->options(function (callable $get) {
-                                if (null == ($get('place_id'))) {
-                                    return null;
-                                } else {
-                                    return Supplier::where('place_id', $get('place_id'))->pluck('company', 'id');
-                                }
-                            }),
+                            ->options(
+                                Supplier::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
+                                ),
                     ])
                     ->query(function (Builder $query, array $data) {
-                        $place_id = (int) $data['place_id'];
+                        $place_id = (int) Filament::getTenant()->id;
                         $supplier_id = (int) $data['supplier_id'];
 
                         if (! empty($supplier_id)) {
                             $query->where('supplier_id', '=', $supplier_id);
 
                         }
-
-                        if (! empty($place_id)) {
-                            $query->where('place_id', '=', $place_id);
-                        }
                     }
                     ),
+                    Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from'),
+                        DatePicker::make('created_until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', Carbon::createFromFormat('Y-m-d', $date)),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', Carbon::createFromFormat('Y-m-d', $date)),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
 
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Created from ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Created until ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
                 SelectFilter::make('type_pay')->translateLabel()
                     ->options(
                         [
@@ -241,38 +252,22 @@ class SupplyResource extends Resource
                     )
                     ->attribute('type_pay'),
 
-                // Filter::make('created_at')
-                //     ->form([
-                //         Forms\Components\DatePicker::make('added_at')->label(__('Added at'))
-                //             ->nullable(),
-                //     ])
-                //     ->query(function (Builder $query, array $data): Builder {
-                //         return $query
-                //             ->when(
-                //                 $data['added_at'],
-                //                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '=', $date),
-                //             );
-                //     }),
 
-                TernaryFilter::make('pay')->label(__('Pay'))
-                    ->placeholder((__('All')))
+                    TernaryFilter::make('pay')
+                    ->translateLabel()
+                    ->nullable()
+                    ->placeholder(__('All'))
                     ->trueLabel(__('Paid'))
-                    ->falseLabel(__('Not Pay'))
-                    ->queries(
-                        true: fn (Builder $query) => $query->Paid(),
-                        false: fn (Builder $query) => $query->NotPaid(),
-                        blank: fn (Builder $query) => $query->AllPaid(),
-                    ),
-                TernaryFilter::make('poster')->translateLabel()
-                    ->placeholder((__('All')))
-                    ->trueLabel(__('In Poster'))
-                    ->falseLabel(__('Not in Poster'))
-                    ->queries(
-                        true: fn (Builder $query) => $query->InPoster(),
-                        false: fn (Builder $query) => $query->NotPoster(),
-                        blank: fn (Builder $query) => $query->AllPoster(),
-                    ),
+                    ->falseLabel(__('Not Pay')),
+
+                    TernaryFilter::make('poster')
+                    ->translateLabel()
+                    ->nullable()
+                    ->placeholder(__('All'))
+                    ->falseLabel(__('In Poster'))
+                    ->trueLabel(__('Not in Poster')),
             ])
+
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make()->slideOver(),

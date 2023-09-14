@@ -34,6 +34,7 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TernaryFilter;
 
 class ExpenseResource extends Resource
 {
@@ -183,41 +184,21 @@ class ExpenseResource extends Resource
 
                 SelectFilter::make('Place')
                     ->label(__('Place'))
-                    // build the filter form
                     ->form([
-                        Select::make('place_id')->label(__('Place'))
-                            ->searchable()
-                            ->options(
-                                Auth::user()->place->pluck('nameCity', 'id')
-                            )
-                            ->afterStateUpdated(
-                                function (callable $set) {
-                                    $set('category_id', null);
-                                }
-                            ),
                         Select::make('category_id')->label(__('Category'))
                             ->searchable()
-                            ->hidden(fn (Get $get) => $get('place_id') == null)
                             ->preload()
-                            ->options(function (callable $get) {
-                                if (null == ($get('place_id'))) {
-                                    return null;
-                                } else {
-                                    return ExpenseCategory::where('place_id', $get('place_id'))->pluck('name', 'id');
-                                }
-                            }),
+                            ->options(
+                                ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
+                            ),
                     ])
                     ->query(
                         function (Builder $query, array $data) {
-                            $place_id = (int) $data['place_id'];
+                            $place_id = (int) Filament::getTenant()->id;
                             $category_id = (int) $data['category_id'];
 
                             if (!empty($category_id)) {
                                 $query->where('category_id', '=', $category_id);
-                            }
-
-                            if (!empty($place_id)) {
-                                $query->where('place_id', '=', $place_id);
                             }
                         }
                     ),
@@ -253,14 +234,47 @@ class ExpenseResource extends Resource
                     }),
 
                     SelectFilter::make('type_pay')->translateLabel()
-                        ->options(
-                            [
-                                0 => __('Cash'),
-                                1 => __('Card')
-                            ]
-                        )
-                        ->attribute('type_pay'),
+                    ->options(
+                        [
+                            0 => __('Cash'),
+                            1 => __('Card')
+                        ]
+                    )
+                    ->attribute('type_pay'),
 
+                    TernaryFilter::make('pay')
+                    ->translateLabel()
+                    ->nullable()
+                    ->placeholder(__('All'))
+                    ->trueLabel(__('Paid'))
+                    ->falseLabel(__('Not Pay')),
+
+                    TernaryFilter::make('poster')
+                    ->translateLabel()
+                    ->nullable()
+                    ->placeholder(__('All'))
+                    ->falseLabel(__('In Poster'))
+                    ->trueLabel(__('Not in Poster')),
+
+
+                // TernaryFilter::make('pay')->label(__('Pay'))
+                //     ->placeholder((__('All')))
+                //     ->trueLabel(__('Paid'))
+                //     ->falseLabel(__('Not Pay'))
+                //     ->queries(
+                //         true: fn (Builder $query) => $query->Paid(),
+                //         false: fn (Builder $query) => $query->NotPaid(),
+                //         blank: fn (Builder $query) => $query->AllPaid(),
+                //     ),
+                // TernaryFilter::make('poster')->translateLabel()
+                //     ->placeholder((__('All')))
+                //     ->trueLabel(__('In Poster'))
+                //     ->falseLabel(__('Not in Poster'))
+                //     ->queries(
+                //         true: fn (Builder $query) => $query->InPoster(),
+                //         false: fn (Builder $query) => $query->NotPoster(),
+                //         blank: fn (Builder $query) => $query->AllPoster(),
+                //     ),
 
             ])
             ->actions([
