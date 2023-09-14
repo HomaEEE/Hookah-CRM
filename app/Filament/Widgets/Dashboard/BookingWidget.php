@@ -41,7 +41,7 @@ class BookingWidget extends BaseWidget
 
     protected function getDefaultTableSortDirection(): ?string
     {
-        return 'desc';
+        return 'asc';
     }
 
     protected function getTableColumns(): array
@@ -51,7 +51,10 @@ class BookingWidget extends BaseWidget
             ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
             TextColumn::make('time')->since()->translateLabel(),
             TextColumn::make('seet.table_id')->translateLabel()->toggleable(),
-            TextColumn::make('phone')->translateLabel()->searchable(),
+            TextColumn::make('phone')->translateLabel()->searchable()
+            ->copyable()
+                ->copyMessage(__('Phone copied'))
+                ->copyMessageDuration(1500),
             TextColumn::make('person')->translateLabel()->toggleable(),
         ];
     }
