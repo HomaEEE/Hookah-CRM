@@ -565,15 +565,15 @@ class ShiftResource extends Resource
 
 
 
-                Placeholder::make('coupurs_calc')->translateLabel()
-                ->content(function (Set $set, $get) {
-                    $total = collect($get('coupurs'))
-                        ->pluck('sum')
-                        ->sum();
-                    $set('shift', $total);
-                    return $total;
-                })
-                ->reactive(),
+                // Placeholder::make('coupurs_calc')->translateLabel()
+                // ->content(function (Set $set, $get) {
+                //     $total = collect($get('coupurs'))
+                //         ->pluck('sum')
+                //         ->sum();
+                //     $set('shift', $total);
+                //     return $total;
+                // })
+                // ->reactive(),
 
                 FieldSet::make('Shift')->schema([
 
