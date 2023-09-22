@@ -639,22 +639,22 @@ class ShiftResource extends Resource
 
             ])->columns(['md' => 2, 'xl' => 3]),
 
-            InfolistFeildSet::make('workshops')->translateLabel()
+            InfolistFeildSet::make('Workshops')->translateLabel()
             ->schema([
-                TextEntry::make('hookah')->translateLabel()
+                TextEntry::make('hookahs')->translateLabel()
                 ->getStateUsing(fn (Shift $record): int => $record->bulbs + $record->hookah ?? ''),
                 TextEntry::make('bar')->translateLabel(),
                 TextEntry::make('kitchen')->translateLabel()
             ])->columns(3),
 
-            InfolistFeildSet::make('expenses')->translateLabel()
+            InfolistFeildSet::make('Expenses')->translateLabel()
             ->schema([
                 TextEntry::make('wages')->translateLabel(),
                 TextEntry::make('expense')->translateLabel(),
                 TextEntry::make('tips')->translateLabel()
             ])->columns(3)->columnSpanFull(),
 
-            InfolistFeildSet::make('report')->translateLabel()
+            InfolistFeildSet::make('Reports')->translateLabel()
             ->schema([
                 TextEntry::make('report.x-report-terminal')->badge()
                 ->label(__('X report terminal')),

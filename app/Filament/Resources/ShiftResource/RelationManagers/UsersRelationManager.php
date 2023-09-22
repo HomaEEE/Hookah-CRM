@@ -15,14 +15,6 @@ class UsersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'user_id';
 
-    public array $data_list = [
-        'calc_columns' => [
-            'wage',
-            'procent_day',
-            'cashout',
-        ],
-    ];
-
     public function form(Form $form): Form
     {
         return $form
@@ -48,13 +40,10 @@ class UsersRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make(),
-
-                // Tables\Actions\CreateAction::make(),
             ])
         ->actions([
             Tables\Actions\EditAction::make(),
-        //     Tables\Actions\DetachAction::make(),
-        //     Tables\Actions\DeleteAction::make(),
+            Tables\Actions\DetachAction::make(),
         ]);
         // ->bulkActions([
         //     Tables\Actions\DetachBulkAction::make(),

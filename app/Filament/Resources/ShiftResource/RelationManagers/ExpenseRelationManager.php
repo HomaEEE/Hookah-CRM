@@ -16,6 +16,10 @@ class ExpenseRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'added_at';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Expenses');
+    }
 
     public function table(Table $table): Table
     {
