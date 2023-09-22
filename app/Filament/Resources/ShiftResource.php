@@ -545,6 +545,7 @@ class ShiftResource extends Resource
                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                     ->numeric()->default(0),
                 TextInput::make('withdrawal')->translateLabel()
+                    ->disabled()
                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
 
                     ->hidden(fn (Get $get) => $get('withdrawal') == 0)

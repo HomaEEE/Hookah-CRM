@@ -167,8 +167,6 @@ class SupplyResource extends Resource
                 ->toggleable()
                 ->defaultImageUrl(url('/images/placeholder.png'))
                 ->visibleFrom('md'),
-
-
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
                 TextColumn::make('type_pay')->label(__('Type pay'))
                 ->badge()
@@ -203,7 +201,7 @@ class SupplyResource extends Resource
                         $record->update([
                             $name => ! $record->$name,
                         ]);
-                    })                    
+                    })
                 ->visibleFrom('md'),
 
             ])->defaultSort('added_at', 'desc')
