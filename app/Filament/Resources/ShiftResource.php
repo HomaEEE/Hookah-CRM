@@ -576,7 +576,7 @@ class ShiftResource extends Resource
                 // })
                 // ->reactive(),
 
-                FieldSet::make('Shift')->schema([
+                FieldSet::make('Shift')->translateLabel()->schema([
 
                 Placeholder::make('total_shift')->translateLabel()
                     ->content(function (Set $set, Get $get) {
@@ -592,7 +592,7 @@ class ShiftResource extends Resource
                 ->content(function ( Get $get) {
                     if ($get('shift') != null) {
                     $different =
-                    $get('shift') -$get('calc_shift');
+                    $get('shift') - $get('calc_shift');
                         return $different;
                     } else {
                         return 0;
