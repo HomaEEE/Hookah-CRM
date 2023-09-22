@@ -34,6 +34,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
@@ -155,8 +156,19 @@ class SupplyResource extends Resource
                     ->size('sm')
                     ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->searchable(),
-
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable(),
+                SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
+                ->collection('supplies')
+                ->circular()
+                ->stacked()
+                ->limit(3)
+                ->limitedRemainingText()
+                ->height(30)
+                ->toggleable()
+                ->defaultImageUrl(url('/images/placeholder.png'))
+                ->visibleFrom('md'),
+
+
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
                 TextColumn::make('type_pay')->label(__('Type pay'))
                 ->badge()
@@ -179,7 +191,8 @@ class SupplyResource extends Resource
                         $record->update([
                             $name => ! $record->$name,
                         ]);
-                    }),
+                    })
+                    ->visibleFrom('md'),
             IconColumn::make('poster')
                 ->translateLabel()
                     ->boolean()
@@ -190,8 +203,11 @@ class SupplyResource extends Resource
                         $record->update([
                             $name => ! $record->$name,
                         ]);
-                    }),
+                    })                    
+                ->visibleFrom('md'),
+
             ])->defaultSort('added_at', 'desc')
+            ->deferLoading() //Ассинхронная загрузка
             ->filters([
                 SelectFilter::make('Place')
                     ->label(__('Place'))

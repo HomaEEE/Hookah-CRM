@@ -5,21 +5,17 @@ namespace App\Filament\Pages;
 use App\Http\Controllers\PosterApiController;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
-use Filament\Pages\Dashboard as BasePage;
 
 use App\Models\{Tip, Place};
 
-use Auth;
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
-use Filament\Support\Enums\Alignment;
 
-class Dashboard extends BasePage
+class Dashboard extends \Filament\Pages\Dashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 

@@ -62,7 +62,7 @@ class SupplierResource extends Resource
                     JS))
                     ->translateLabel(),
                 TextInput::make('company')->label(__('Company')),
-                TextInput::make('email')->label(__('Email'))->email(),
+                TextInput::make('mail')->label(__('Email'))->email(),
                 TextInput::make('comment')->translateLabel(),
                 Toggle::make('visible')->translateLabel()->default(1),
                 KeyValue::make('data')

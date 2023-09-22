@@ -20,8 +20,4 @@ class ManageWithdrawals extends ManageRecords
         ];
     }
 
-    protected function getTableQuery(): Builder
-    {
-        return Withdrawal::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
-    }
 }

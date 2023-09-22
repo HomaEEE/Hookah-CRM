@@ -147,6 +147,15 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Techcard::class);
     }
 
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class);
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(Spatie\Permission\Models\Role::class, 'place_id');
+    }
 
     public function categories()
     {

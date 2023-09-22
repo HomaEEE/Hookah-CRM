@@ -86,9 +86,6 @@ class AdminPanelProvider extends PanelProvider
                 ->label('Settings')
             ])
             ->plugins([
-                    QuickCreatePlugin::make()->includes([
-                        \App\Filament\Resources\SupplyResource::class,
-                    ])->slideOver(),
                     FilamentLanguageSwitchPlugin::make(),
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),
