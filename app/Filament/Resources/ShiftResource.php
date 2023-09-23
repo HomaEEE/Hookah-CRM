@@ -131,44 +131,40 @@ class ShiftResource extends Resource
 
             ])->defaultSort('id', 'desc')
             ->filters([
-                    Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->native(false),
-                        DatePicker::make('created_until')->native(false),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', Carbon::createFromFormat('Y-m-d', $date)),
-                            )
-                            ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', Carbon::createFromFormat('Y-m-d', $date)),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
+                Tables\Filters\Filter::make('created_at')
+                ->form([
+                    DatePicker::make('created_from')->translateLabel()->native(false)
+                        ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
+                    DatePicker::make('created_until')->translateLabel()->native(false)
+                        ->placeholder(fn ($state): string => now()->format('d/m/Y')),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'] ?? null,
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'] ?? null,
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                })
+                ->indicateUsing(function (array $data): array {
+                    $indicators = [];
 
-                        if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Created from ' . Carbon::parse($data['created_from'])->toFormattedDateString();
-                        }
+                    if ($data['created_from'] ?? null) {
+                        $indicators['created_from'] = 'Смены с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                    }
+                    if ($data['created_until'] ?? null) {
+                        $indicators['created_until'] = 'до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                    }
 
-                        if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'Created until ' . Carbon::parse($data['created_until'])->toFormattedDateString();
-                        }
-
-                        return $indicators;
-                    })
+                    return $indicators;
+                }),
 
             ])
 
             ->actions([
-                // Tables\Actions\Action::make('close_shift')
-                // ->icon('heroicon-o-badge-check')
-                // ->button()
-                // ->color('success')
-                // ->requiresConfirmation(),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),

@@ -18,20 +18,9 @@ class Ingredient extends Model
         return $this->belongsTo(Place::class, 'place_id');
     }
 
-    public function places()
+    public function ingredient()
     {
-        return $this->BelongsToMany(Place::class, 'place_supplier', 'supplier_id', 'place_id');
+        return $this->belongsTo(Ingredient::class, 'place_id');
     }
-
-    public function techcard()
-    {
-        return $this->belongsTo(Techcard::class,  'techcard_ingredient', 'techcard_id', 'ingredient_id');
-    }
-
-    public function techcards()
-    {
-        return $this->belongsToMany(Techcard::class);
-    }
-
 
 }

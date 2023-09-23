@@ -38,7 +38,7 @@ class GraphShifts extends ChartWidget
             end: now()->endOfYear(),
         )
         ->perMonth()
-        ->sum('terminal', 'cash');
+        ->sum('terminal','cash');
 
         return [
             'datasets' => [

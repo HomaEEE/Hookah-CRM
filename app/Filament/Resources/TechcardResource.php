@@ -66,9 +66,7 @@ class TechcardResource extends Resource
                     ->required(),
                 TextInput::make('techcard')->translateLabel(),
 
-                Group::make()
-                    ->schema([
-                        Section::make()
+                Section::make()
                             ->schema([
                                 SpatieMediaLibraryFileUpload::make('photo')
                                     ->collection('techcard')
@@ -79,18 +77,16 @@ class TechcardResource extends Resource
                                     ->openable()
                             ])
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
-                    ])->columns(2),
+
                 Textarea::make('process')->label(__('Process')),
-                Repeater::make('ingredients')
+                Repeater::make('ingredients')->translateLabel()
                     ->relationship()
                     ->schema([
-                        Select::make('ingredient_id')->label(__('ingredient'))
+                        Select::make('ingredient_id')->translateLabel()->searchable()
                         ->relationship('ingredient', 'ingredient')
-                            ->native(false)
-                            ->required()
-                            ->options(function (callable $get) {
-                                    return Ingredient::where('place_id', $get('place_id'))->get()->pluck('ingredient', 'id');
-                            })
+                        ->options(
+                            Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
+                        )
                             ->createOptionForm([
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 TextInput::make('ingredient')->label(__('ingredient'))->required(),
@@ -116,62 +112,24 @@ class TechcardResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('workshop.name')->translateLabel(),
+                TextColumn::make('workshop.name')->translateLabel()->searchable(),
                 TextColumn::make('techcard')->translateLabel(),
                 TextColumn::make('time')->translateLabel(),
             ])
             ->filters([
-                SelectFilter::make('Place')
-                    ->label(__('Place'))
-                    // build the filter form
-                    ->form([
-                        Select::make('place_id')->label(__('Place'))
-                            ->searchable()
-                            ->options(
-                                Auth::user()->place->pluck('nameCity', 'id')
-                            )
-                            ->afterStateUpdated(
-                                function (callable $set) {
-                                    $set('supplier_id', null);
-                                }
-                            ),
-                        Select::make('workshop_id')->label(__('Workshop'))
-                            ->searchable()
-                            ->hidden(fn (Get $get) => $get('place_id') == null)
-                            ->preload()
-                            ->options(function (callable $get) {
-                                if (null == ($get('place_id'))) {
-                                    return null;
-                                } else {
-                                    return Workshop::where('place_id', $get('place_id'))->pluck('name', 'id');
-                                }
-                            }),
-                    ])
-                    ->query(
-                        function (Builder $query, array $data) {
-                            $place_id = (int) $data['place_id'];
-                            $workshop_id = (int) $data['workshop_id'];
 
-                            if (!empty($workshop_id)) {
-                                $query->where('workshop_id', '=', $workshop_id);
-                            }
-
-                            if (!empty($place_id)) {
-                                $query->where('place_id', '=', $place_id);
-                            }
-                        }
-                    ),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-
 
     public static function infolist(Infolist $infolist): Infolist
     {
@@ -181,12 +139,16 @@ class TechcardResource extends Resource
             TextEntry::make('time')->translateLabel(),
             TextEntry::make('process')->translateLabel(),
 
-            RepeatableEntry::make('ingredients')
+            RepeatableEntry::make('ingredients')->hiddenLabel()
             ->schema([
-                TextEntry::make('ingredient')
+                TextEntry::make('ingredient')->hiddenLabel(),
+                TextEntry::make('qty')->hiddenLabel(),
+                TextEntry::make('unit')->hiddenLabel()
+                    ->columnSpan(3),
             ])
-            ->grid(2)
-        ]);
+            ->grid(1)
+            ->contained(false)
+            ]);
     }
 
 

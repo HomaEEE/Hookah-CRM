@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Shift};
+use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Ingredient, Shift};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -104,6 +104,31 @@ class PosterApiController extends Controller
             );
         }
     }
+
+
+    public function getIngredients($place_id)
+    {
+
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $responseMenu = Http::get($this->urlApi . 'menu.getIngredients?token=' . $place_api['api'])
+            ->throw()->json();
+        $ingredients = $responseMenu['response'];
+
+        foreach ($ingredients as $ingredient) {
+
+            Ingredient::updateOrCreate(
+                [
+                    'ingredient' => $ingredient['ingredient_name'],
+                    'place_id' => $place_id
+                ],
+                [
+                    'ingredient' => $ingredient['ingredient_name'],
+                    'unit' => $ingredient['ingredient_unit'],
+                ]
+            );
+        }
+    }
+
 
     //Получение Кассы и терминала за день
     public function getTodayShift($place_id)

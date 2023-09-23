@@ -3,10 +3,12 @@
 namespace App\Filament\Resources\TechcardResource\Pages;
 
 use App\Filament\Resources\TechcardResource;
-use Filament\Resources\Pages\ListRecords\Tab;
+use App\Models\Workshop;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Auth;
+use Filament\Facades\Filament;
+use Filament\Resources\Components\Tab;
 
 class ManageTechcards extends ManageRecords
 {
@@ -19,19 +21,19 @@ class ManageTechcards extends ManageRecords
         ];
     }
 
-    // public function getTabs(): array
-    // {
+    public function getTabs(): array
+    {
 
-    //     $tabs = [null => Tab::make(__('All'))];
+        $tabs = [null => Tab::make(__('All'))];
 
-    //     $places = Auth::user()->place;
+        $workshops = Workshop::where('place_id', Filament::getTenant()->id)->get();
 
-    //     foreach ($places as $place) {
-    //         $tabs[$place->city] = Tab::make()->query(function ($query) use ($place) {
-    //             $query->where('place_id', $place->id);
-    //         });
-    //     }
+        foreach ($workshops as $workshop) {
+            $tabs[$workshop->name] = Tab::make()->query(function ($query) use ($workshop) {
+                $query->where('workshop_id', $workshop->id);
+            });
+        }
 
-    //     return $tabs;
-    // }
+        return $tabs;
+    }
 }

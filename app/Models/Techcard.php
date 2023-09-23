@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Ingredient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -29,15 +31,16 @@ class Techcard extends Model implements HasMedia
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function ingredient()
+    public function ingredients(): BelongsToMany
     {
-        return $this->belongsTo(TechcardIngredient::class, 'ingredient_id');
+        return $this->belongsToMany(Ingredient::class);
     }
 
-    public function ingredients()
-    {
-        return $this->hasMany(TechcardIngredient::class, 'techcard_id');
-    }
+    public function ingredientTechcards(): HasMany
+{
+    return $this->hasMany(IngredientTechcard::class);
+}
+
 
     public function workshop()
     {

@@ -9,13 +9,9 @@ use Filament\Resources\Pages\ListRecords;
 use App\Http\Controllers\PosterApiController as PosterApi;
 use Filament\Notifications\Notification;
 
-use App\Models\Place;
-use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
 
 class ListMenus extends ListRecords
 {

@@ -40,14 +40,6 @@ return new class extends Migration
             $table->foreignIdFor(Ingredient::class);
             $table->integer('heft');
         });
-
-        Schema::create('ingredient_history', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(ingredient::class)->index();
-            $table->string('price');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
-        });
     }
 
     /**

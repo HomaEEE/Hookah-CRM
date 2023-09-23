@@ -27,16 +27,25 @@ return new class extends Migration
             });
         };
 
-        if ( ! Schema::hasTable('purchase_ingredients'))
+        if ( ! Schema::hasTable('ingredient_purchase'))
         {
-        Schema::create('purchase_ingredients', function (Blueprint $table) {
+        Schema::create('ingredient_purchase', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Purchase::class);
-            $table->foreignIdFor(ingredient::class);
+            $table->foreignIdFor(Ingredient::class);
             $table->integer('qty');
             $table->timestamp('created_at')->useCurrent();
         });
     }
+    if ( ! Schema::hasTable('ingredient_purchase')) {
+        Schema::create('ingredient_history', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(ingredient::class)->index();
+            $table->string('price');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            });
+        }
     }
 
     /**

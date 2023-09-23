@@ -14,7 +14,7 @@ class Place extends Model implements HasAvatar
 
     protected $fillable = ['name', 'city', 'address', 'phone', 'opened', 'instagram', 'sufix', 'time', 'settings', 'properties', 'pays'];
 
-    public $translatable = ['name','city', 'address'];
+    public $translatable = ['name', 'city', 'address'];
 
     protected $casts = ['opened' => 'boolean', 'time' => 'array', 'properties' => 'array', 'settings' => 'array', 'pays' => 'array'];
 
@@ -55,7 +55,7 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Service::class, 'place_id');
     }
 
-       //Показания счетчиков
+    //Показания счетчиков
     public function indications()
     {
         return $this->hasMany(Indication::class, 'place_id');
@@ -95,6 +95,13 @@ class Place extends Model implements HasAvatar
     {
         return $this->hasMany(Expense::class);
     }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
+
 
     public function excises()
     {
@@ -136,7 +143,6 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Task::class);
     }
 
-
     public function writeoffs()
     {
         return $this->hasMany(Writeoff::class);
@@ -167,10 +173,9 @@ class Place extends Model implements HasAvatar
         return $query->where('visible_menu', $value);
     }
 
-
     public function getNameCityAttribute()
     {
-        return $this->name.' '.$this->city;
+        return $this->name . ' ' . $this->city;
     }
 
     public function getFilamentAvatarUrl(): ?string

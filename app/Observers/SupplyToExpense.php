@@ -2,8 +2,9 @@
 
 namespace App\Observers;
 
-use App\Models\{Supply, Expense};
+use App\Models\{Supply, Expense, ExpenseCategory};
 use Auth;
+use Filament\Facades\Filament;
 
 class SupplyToExpense
 {
@@ -16,7 +17,7 @@ class SupplyToExpense
                     'user_id' => Auth::user()->id,
                     'place_id' => $supply->place_id,
                     'supply_id' => $supply != null ? $supply->id : 0,
-                    'category_id' => 35,
+                    'category_id' => ExpenseCategory::where(['place_id' => Filament::getTenant()->id, 'name' => 'Поставки'])->get('id'),
                     'sum' => $supply->sum,
                     'type_pay' => $supply->type_pay,
                     'comment' => $supply->comment,

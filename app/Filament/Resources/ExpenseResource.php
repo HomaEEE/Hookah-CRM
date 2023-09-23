@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Bill as BillEnum;
 use App\Filament\Resources\ExpenseResource\Pages;
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Expense,ExpenseCategory};
+use App\Models\{Expense, ExpenseCategory};
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
@@ -70,9 +70,9 @@ class ExpenseResource extends Resource
                                 Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 DateTimePicker::make('added_at')
-                                ->label(__('Date Added'))
-                                ->native(false)
-                                ->maxDate(now())->default(now()),
+                                    ->label(__('Date Added'))
+                                    ->native(false)
+                                    ->maxDate(now())->default(now()),
                                 Select::make('category_id')->label(__('Category'))
                                     ->relationship('categories', 'name')
                                     ->hidden(fn (Get $get) => $get('place_id') == null)
@@ -97,7 +97,7 @@ class ExpenseResource extends Resource
                                 TextInput::make('sum')->label(__('Sum'))
                                     ->numeric()
                                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                    Select::make('type_pay')->label(__('Type pay'))
+                                Select::make('type_pay')->label(__('Type pay'))
                                     ->default(0)
                                     ->options([
                                         0 => __('Cash'),
@@ -138,50 +138,50 @@ class ExpenseResource extends Resource
                     ->badge()
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
 
-                TextColumn::make('category.name')->label(__('Supplier'))
-                   ->badge(),
+                TextColumn::make('category.name')->label(__('Category'))
+                    ->badge(),
 
-                   TextColumn::make('supply_id')->badge()->translateLabel()
-                   ->wrap()
-                   ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
+                TextColumn::make('supply_id')->badge()->label(__('Supply'))
+                    ->wrap()
+                    ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
-                   TextColumn::make('sum')->label(__('Sum'))->money('uah', true)
-                   ->summarize(Sum::make()->money('uah')->label(__('Total'))),
-                   TextColumn::make('type_pay')->translateLabel()->badge()
-                   ->formatStateUsing(
-                    fn (string $state): string => match ($state) {
-                        '0' => __('Cash'),
-                        '1' => __('Card'),
-                    }),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)
+                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                TextColumn::make('type_pay')->translateLabel()->badge()
+                    ->formatStateUsing(
+                        fn (string $state): string => match ($state) {
+                            '0' => __('Cash'),
+                            '1' => __('Card'),
+                        }
+                    ),
 
                 IconColumn::make('pay')
-                            ->translateLabel()
-                            ->boolean()
-                            ->trueIcon('heroicon-o-check')
-                            ->falseIcon('heroicon-o-x-mark')
-                            ->action(function ($record, $column) {
-                                $name = $column->getName();
-                                $record->update([
-                                    $name => ! $record->$name,
-                                ]);
-                            }),
+                    ->translateLabel()
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check')
+                    ->falseIcon('heroicon-o-x-mark')
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => !$record->$name,
+                        ]);
+                    }),
                 IconColumn::make('poster')
-                        ->translateLabel()
-                            ->boolean()
-                            ->trueIcon('heroicon-o-check')
-                            ->falseIcon('heroicon-o-x-mark')
-                            ->action(function ($record, $column) {
-                                $name = $column->getName();
-                                $record->update([
-                                    $name => ! $record->$name,
-                                ]);
-                            }),
+                    ->translateLabel()
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check')
+                    ->falseIcon('heroicon-o-x-mark')
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => !$record->$name,
+                        ]);
+                    }),
 
             ])->defaultSort('added_at', 'desc')
 
 
             ->filters([
-
                 SelectFilter::make('Place')
                     ->label(__('Place'))
                     ->form([
@@ -203,37 +203,37 @@ class ExpenseResource extends Resource
                         }
                     ),
 
-                    Filter::make('created_at')
+                Filter::make('created_at')
                     ->form([
-                        DatePicker::make('created_from'),
-                        DatePicker::make('created_until'),
+                        DatePicker::make('created_from')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
+                        DatePicker::make('created_until')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', Carbon::createFromFormat('Y-m-d', $date)),
+                                $data['created_from'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
                             )
                             ->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', Carbon::createFromFormat('Y-m-d', $date)),
+                                $data['created_until'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
 
                         if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Created from ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                            $indicators['created_from'] = 'Расходы с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
                         }
-
                         if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'Created until ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                            $indicators['created_until'] = 'Расходы до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
                         }
 
                         return $indicators;
                     }),
-
-                    SelectFilter::make('type_pay')->translateLabel()
+                SelectFilter::make('type_pay')->translateLabel()
                     ->options(
                         [
                             0 => __('Cash'),
@@ -242,14 +242,14 @@ class ExpenseResource extends Resource
                     )
                     ->attribute('type_pay'),
 
-                    TernaryFilter::make('pay')
+                TernaryFilter::make('pay')
                     ->translateLabel()
                     ->nullable()
                     ->placeholder(__('All'))
                     ->trueLabel(__('Paid'))
                     ->falseLabel(__('Not Pay')),
 
-                    TernaryFilter::make('poster')
+                TernaryFilter::make('poster')
                     ->translateLabel()
                     ->nullable()
                     ->placeholder(__('All'))
@@ -292,12 +292,12 @@ class ExpenseResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            TextEntry::make('added_at')->translateLabel(),
-            TextEntry::make('place.city')->translateLabel(),
-            TextEntry::make('type_pay')->translateLabel(),
-            TextEntry::make('media')->translateLabel()
-        ]);
+            ->schema([
+                TextEntry::make('added_at')->translateLabel(),
+                TextEntry::make('place.city')->translateLabel(),
+                TextEntry::make('type_pay')->translateLabel(),
+                TextEntry::make('media')->translateLabel()
+            ]);
     }
 
     public static function getPages(): array
