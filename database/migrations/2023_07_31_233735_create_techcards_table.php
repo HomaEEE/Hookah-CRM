@@ -29,7 +29,13 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Place::class);
             $table->foreignIdFor(Workshop::class);
-            $table->string('ingredient')->index();
+            $table->string('product_name')->index();
+            $table->integer('barcode')->nullable();
+            $table->integer('cost')->nullable();
+            $table->integer('workshop_id')->nullable();
+            $table->integer('product_id');
+            $table->integer('cost')->nullable();
+            $table->integer('type');
             $table->string('unit');
             $table->string('price');
         });

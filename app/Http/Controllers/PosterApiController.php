@@ -114,17 +114,29 @@ class PosterApiController extends Controller
             ->throw()->json();
         $ingredients = $responseMenu['response'];
 
+        dd($ingredients);
+
         foreach ($ingredients as $ingredient) {
 
             Ingredient::updateOrCreate(
                 [
-                    'ingredient' => $ingredient['ingredient_name'],
+                    'product_name' => $ingredient['product_name'],
                     'place_id' => $place_id
                 ],
                 [
                     'ingredient' => $ingredient['ingredient_name'],
                     'unit' => $ingredient['ingredient_unit'],
                 ]
+
+                // $table->string('product_name')->index();
+                // $table->integer('barcode')->nullable();
+                // $table->integer('cost')->nullable();
+                // $table->integer('workshop_id')->nullable();
+                // $table->integer('product_id');
+                // $table->integer('cost')->nullable();
+                // $table->integer('type');
+                // $table->string('unit');
+                // $table->string('price');
             );
         }
     }

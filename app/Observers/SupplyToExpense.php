@@ -17,7 +17,7 @@ class SupplyToExpense
                     'user_id' => Auth::user()->id,
                     'place_id' => $supply->place_id,
                     'supply_id' => $supply != null ? $supply->id : 0,
-                    'category_id' => ExpenseCategory::where(['place_id' => Filament::getTenant()->id, 'name' => 'Поставки'])->get('id'),
+                    'category_id' => ExpenseCategory::where(['place_id' => Filament::getTenant()->id, 'name' => 'Поставки'])->value('id'),
                     'sum' => $supply->sum,
                     'type_pay' => $supply->type_pay,
                     'comment' => $supply->comment,
@@ -39,7 +39,7 @@ class SupplyToExpense
                 ],
                 [
                     'user_id' => Auth::user()->id,
-                    'category_id' =>35,
+                    'category_id' => ExpenseCategory::where(['place_id' => Filament::getTenant()->id, 'name' => 'Поставки'])->value('id'),
                     'type_pay' => $supply->type_pay,
                     'comment' => $supply->comment,
                 ]
