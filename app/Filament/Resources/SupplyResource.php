@@ -165,7 +165,7 @@ class SupplyResource extends Resource
                 ->limitedRemainingText()
                 ->height(30)
                 ->toggleable()
-                ->defaultImageUrl(url('https://www.vocaleurope.eu/wp-content/uploads/no-image.jpg'))
+                ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
                 ->visibleFrom('md'),
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
                 TextColumn::make('type_pay')->label(__('Type pay'))
