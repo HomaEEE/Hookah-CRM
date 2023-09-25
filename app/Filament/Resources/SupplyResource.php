@@ -151,6 +151,8 @@ class SupplyResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->label(__('#'))->searchable()->visibleFrom('xl'),
+
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->badge()
                     ->size('sm')
@@ -166,6 +168,7 @@ class SupplyResource extends Resource
                 ->height(30)
                 ->toggleable()
                 ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                ->placeholder('No description.')
                 ->visibleFrom('md'),
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
                 TextColumn::make('type_pay')->label(__('Type pay'))

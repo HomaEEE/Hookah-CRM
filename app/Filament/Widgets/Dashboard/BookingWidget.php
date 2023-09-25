@@ -47,11 +47,11 @@ class BookingWidget extends BaseWidget
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('name')->translateLabel()->searchable()
+            TextColumn::make('name')->translateLabel()
             ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
             TextColumn::make('time')->since()->translateLabel(),
             TextColumn::make('seet.table_id')->translateLabel()->toggleable(),
-            TextColumn::make('phone')->translateLabel()->searchable()
+            TextColumn::make('phone')->translateLabel()
             ->copyable()
                 ->copyMessage(__('Phone copied'))
                 ->copyMessageDuration(1500),
@@ -62,11 +62,7 @@ class BookingWidget extends BaseWidget
     protected function getTableFilters(): array
     {
         return [
-            SelectFilter::make('place_id')->label(__('Place'))
-                ->searchable()
-                ->options(
-                    Auth::user()->place->pluck('nameCity', 'id')
-                ),
+
         ];
     }
 }

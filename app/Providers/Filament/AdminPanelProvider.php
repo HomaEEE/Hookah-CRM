@@ -40,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
             ->tenantProfile(EditPlaceProfile::class)
             ->login()

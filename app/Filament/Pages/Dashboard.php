@@ -23,8 +23,6 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     protected static ?string $slug = 'dashboard';
 
-    protected int | string | array $columnSpan = 'full';
-
 
     public function getTitle(): string | Htmlable
     {
@@ -34,8 +32,7 @@ class Dashboard extends \Filament\Pages\Dashboard
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\Dashboard\OpenShift::class,
-            \App\Filament\Widgets\Dashboard\TipsShift::class,
+            \App\Filament\Widgets\Dashboard\TodayShift::class,
             \App\Filament\Widgets\Dashboard\TabWidget::class,
         ];
     }
