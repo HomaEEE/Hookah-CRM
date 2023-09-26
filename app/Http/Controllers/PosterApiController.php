@@ -154,6 +154,7 @@ class PosterApiController extends Controller
         return $posterShift['total'];
     }
 
+
     //Получение прошлой смены
     public function getShift($place_id)
     {

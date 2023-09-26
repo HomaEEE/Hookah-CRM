@@ -83,6 +83,7 @@ class CategoryRelationManager extends RelationManager
                 TextColumn::make('category_name')
                     ->translateLabel()
                     ->searchable()
+                    ->sortable()
                     ->description(fn (Category $record): string => $record->frontend_name, position: 'before'),
                 TextColumn::make('parent.category_name')->translateLabel()->visibleFrom('md'),
 
@@ -104,6 +105,7 @@ class CategoryRelationManager extends RelationManager
                 ->translateLabel()
                 ->size(IconColumn\IconColumnSize::Large)
                  ->boolean()
+                 ->sortable()
                  ->trueIcon('heroicon-o-eye')
                  ->falseIcon('heroicon-o-eye-slash')
                   ->action(function ($record, $column) {
@@ -114,8 +116,11 @@ class CategoryRelationManager extends RelationManager
                   }),
 
                 TextColumn::make('sort_order')->label(__('Sorting'))->visibleFrom('md')
+                ->sortable()
+
 
             ])
+            ->reorderable('sort_order')
             ->filters([
                 //
             ])
