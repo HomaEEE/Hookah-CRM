@@ -24,7 +24,7 @@ class TodayShift extends BaseWidget
             $tipsShift = Tip::where('place_id', Filament::getTenant()->id)
             ->whereDate('created_at', Carbon::today())->value('tips');
 
-            $expenseShift = Expense::query()->whereDate('added_at', Carbon::today())->sum('sum');
+            $expenseShift = Expense::where('place_id', Filament::getTenant()->id)->whereDate('added_at', Carbon::today())->sum('sum');
 
             return [
                 Stat::make('Открытие смены', $shift != null ? $shift->shift : 0)

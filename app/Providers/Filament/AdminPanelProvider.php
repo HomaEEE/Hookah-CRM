@@ -25,6 +25,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
 use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
+use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 
 use Filament\Support\Colors\Color;
 
@@ -91,7 +92,8 @@ class AdminPanelProvider extends PanelProvider
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),
                     \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-                    BreezyCore::make()
+                    BreezyCore::make(),
+                    EnvironmentIndicatorPlugin::make(),
                 ])
             ->authGuard('web')
             ->middleware([
