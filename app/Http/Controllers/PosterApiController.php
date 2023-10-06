@@ -114,13 +114,11 @@ class PosterApiController extends Controller
             ->throw()->json();
         $ingredients = $responseMenu['response'];
 
-        dd($ingredients);
-
         foreach ($ingredients as $ingredient) {
 
             Ingredient::updateOrCreate(
                 [
-                    'product_name' => $ingredient['product_name'],
+                    'product_name' => $ingredient['ingredient_name'],
                     'place_id' => $place_id
                 ],
                 [
@@ -138,6 +136,26 @@ class PosterApiController extends Controller
                 // $table->string('unit');
                 // $table->string('price');
             );
+
+            $responseMenu = Http::get($this->urlApi . 'menu.getProducts?token=' . $place_api['api'])
+                ->throw()->json();
+            $products = $responseMenu['response'];
+
+            foreach ($products as $product) {
+
+                Ingredient::updateOrCreate(
+                    [
+                        'product_id' => $product['product_id'],
+                        'place_id' => $place_id
+                    ],
+                    [
+                        'product_name' => $product['product_name'],
+                        'menu_category_id' => $product['menu_category_id'],
+                        'cost' => $product['cost'] / 100,
+                        'price' => $product['spots'][0]['price'] / 100,
+                    ]
+                );
+            }
         }
     }
 

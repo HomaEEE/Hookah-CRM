@@ -24,7 +24,6 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
-use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 
 use Filament\Support\Colors\Color;
@@ -43,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
-            ->tenantProfile(EditPlaceProfile::class)
+           // ->tenantProfile(EditPlaceProfile::class)
             ->login()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -110,5 +109,6 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+            //->spa();
     }
 }

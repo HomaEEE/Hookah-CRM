@@ -50,19 +50,13 @@ class BookingWidget extends BaseWidget
             TextColumn::make('name')->translateLabel()
             ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
             TextColumn::make('time')->since()->translateLabel(),
-            TextColumn::make('seet.table_id')->translateLabel()->toggleable(),
+            TextColumn::make('seet.table_id')->translateLabel(),
             TextColumn::make('phone')->translateLabel()
             ->copyable()
                 ->copyMessage(__('Phone copied'))
                 ->copyMessageDuration(1500),
-            TextColumn::make('person')->translateLabel()->toggleable(),
+            TextColumn::make('person')->translateLabel(),
         ];
     }
 
-    protected function getTableFilters(): array
-    {
-        return [
-
-        ];
-    }
 }

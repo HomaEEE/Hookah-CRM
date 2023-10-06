@@ -31,7 +31,7 @@ class ManageExpenses extends ManageRecords
     protected function getActions(): array
     {
         return [
-            CreateAction::make()->slideOver(),
+            CreateAction::make()->slideOver()->createAnother(false),
         ];
     }
 

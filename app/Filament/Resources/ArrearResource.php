@@ -72,7 +72,7 @@ class ArrearResource extends Resource
                 TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('sm')
                     ->description(fn (Arrear $record): string => $record->user->name),
-                TextColumn::make('fromUser.name')->label(__('From User')),
+                TextColumn::make('fromUser.name')->label(__('User')),
                 TextColumn::make('arrear')->translateLabel(),
             ])
             ->defaultSort('created_at', 'desc')

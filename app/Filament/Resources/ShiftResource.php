@@ -202,32 +202,6 @@ class ShiftResource extends Resource
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Section::make()->schema([
 
-                    // FieldSet::make('Calculator')->schema([
-                    //     Repeater::make('coupurs')->hiddenLabel()->schema([
-                    //         Select::make('value')->options([
-                    //             '1000' => '1000',
-                    //             '500' => '500',
-                    //             '200' => '200',
-                    //             '100' => '100',
-                    //             '50' => '50',
-                    //             '20' => '20',
-                    //             '10' => '10',
-                    //             '5' => '5',
-                    //             '2' => '2',
-                    //             '1' => '1',
-                    //         ])->selectablePlaceholder(false)->reactive(),
-                    //         TextInput::make('count')->translateLabel()
-                    //         ->afterStateUpdated(
-                    //             function (Set $set, Get $get, $state) {
-                    //                 if ($get('value') != 0 || $get('count') != null) {
-                    //                 $set('sum', $get('value') * $get('count'));
-                    //                 }
-                    //             }
-                    //         )->reactive(),
-                    //         TextInput::make('sum')->translateLabel(),
-                    //     ])->reactive()->columns(3)
-                    // ]),
-
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     Actions::make([
                         Action::make('load_poster')->translateLabel()
@@ -383,23 +357,22 @@ class ShiftResource extends Resource
                     ->relationship()
                     ->schema([
                         Select::make('user_id')->translateLabel()
-                            ->options(function (callable $get) {
-                                return User::whereHas('place', function ($query) use ($get) {
-                                    $query->where('place_id', $get('../../place_id'));
+                            ->options(
+                                 User::whereHas('place', function ($query) {
+                                    $query->where('place_id', Filament::getTenant()->id);
                                 })->get()
-                                    ->pluck('name', 'id');
-                            })
+                                    ->pluck('name', 'id')
+                            )
                             ->required()
                             ->reactive()
                             ->searchable(),
 
                         Select::make('wage_id')->translateLabel()
 
-                            ->options(function (Get $get) {
-                                return Wage::where('place_id', $get('../../place_id'))
+                            ->options( Wage::where('place_id', Filament::getTenant()->id)
                                     ->get()
-                                    ->pluck('name', 'id');
-                            })
+                                    ->pluck('name', 'id')
+                            )
                             ->required()
                             ->reactive()
                             ->searchable()
@@ -503,8 +476,8 @@ class ShiftResource extends Resource
                             ->hidden(fn (Get $get) => $get('wage_id') == null),
 
                     ])->columns(3)
-                    ->itemLabel(fn (array $state): ?string => $state['user_id'] ?? null)
-                    ->createItemButtonLabel(__('Add personal')),
+                    ->itemLabel(fn (array $state): ?string => $state['user_id.name'] ?? null)
+
             ];
         }
         if ($section === 'shift') {
@@ -520,6 +493,10 @@ class ShiftResource extends Resource
 
                                 $localTips = (new PosterApi())->getLocalTips($place->id);
                                 $set('tips', $localTips);
+
+                                $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                                $set('withdrawal', $LocalWithdrawal);
+
                         })
                     ])->fullWidth(),
 

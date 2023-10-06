@@ -56,7 +56,7 @@ class BookingResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Booking::query()->whereIn('place_id', Auth::user()->place->pluck('id'))->whereDate('time', '>=', Carbon::today())->count();
+        return Booking::query()->whereDate('time', '>=', Carbon::today())->count();
     }
 
     protected function getTableQuery(): Builder

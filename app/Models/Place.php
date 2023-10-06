@@ -160,7 +160,12 @@ class Place extends Model implements HasAvatar
 
     public function roles()
     {
-        return $this->hasMany(Spatie\Permission\Models\Role::class, 'place_id');
+        return $this->hasMany(Role::class, 'place_id');
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class, 'place_id');
     }
 
     public function categories()

@@ -95,6 +95,7 @@ class ExpenseResource extends Resource
                                     ]),
                                 TextInput::make('sum')->label(__('Sum'))
                                     ->numeric()
+                                    ->prefix('₴')
                                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                                 Select::make('type_pay')->label(__('Type pay'))
                                     ->default(0)

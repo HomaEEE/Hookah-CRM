@@ -27,7 +27,7 @@ class SupplyToPay extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Supply::query()->where('place_id', Filament::getTenant()->id)
+        return Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
         ->where('pay', 0);
     }
 
@@ -52,8 +52,7 @@ class SupplyToPay extends BaseWidget
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                 ->size('sm')
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
-                TextColumn::make('category.name')->label(__('Category'))->badge()
-                ->description(fn (Supply $record): string => $record->supplier->company ?? ''),
+                TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
                 TextColumn::make('type_pay')->translateLabel()->badge()
                 ->formatStateUsing(
@@ -75,14 +74,4 @@ class SupplyToPay extends BaseWidget
         ];
     }
 
-    protected function getTableFilters(): array
-    {
-        return [
-            SelectFilter::make('place_id')->label(__('Place'))
-                ->searchable()
-                ->options(
-                    Auth::user()->place->pluck('nameCity', 'id')
-                ),
-        ];
-    }
 }

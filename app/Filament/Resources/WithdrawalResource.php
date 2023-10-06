@@ -46,8 +46,8 @@ class WithdrawalResource extends Resource
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                TextInput::make('sum')->label(__('Sum'))->numeric(),
-            ]);
+                TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table

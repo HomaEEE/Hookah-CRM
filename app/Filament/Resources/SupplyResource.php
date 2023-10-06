@@ -85,18 +85,11 @@ class SupplyResource extends Resource
                                 ->maxDate(now())->default(now()),
                                 Select::make('supplier_id')->label(__('Supplier'))
                                     ->relationship('supplier', 'company')
-                                    ->hidden(fn (Get $get) => $get('place_id') == null)
                                     ->searchable()
                                     ->native(false)
                                     ->preload()
                                     ->required()
-                                    ->options(function (callable $get) {
-                                        if (null == ($get('place_id'))) {
-                                            return null;
-                                        } else {
-                                            return Supplier::where('place_id', $get('place_id'))->visible()->pluck('company', 'id');
-                                        }
-                                    })
+                                    ->options( Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
                                     ->createOptionForm([
                                         Section::make()
                                             ->schema([
@@ -112,6 +105,7 @@ class SupplyResource extends Resource
                                     ]),
                                 TextInput::make('sum')->label(__('Sum'))
                                     ->numeric()
+                                    ->prefix('₴')
                                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                                 Textarea::make('comment')->label(__('Comment'))
                                     ->rows(3),

@@ -37,6 +37,12 @@ class Indication extends Model
         }
     }
 
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class, 'place_id');
+    }
+
     public function getSumAttribute()
     {
         return $this->debt * $this->tarif;

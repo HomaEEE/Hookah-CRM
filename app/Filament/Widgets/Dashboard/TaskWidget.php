@@ -52,14 +52,4 @@ class TaskWidget extends BaseWidget
         ];
     }
 
-    protected function getTableFilters(): array
-    {
-        return [
-            SelectFilter::make('place_id')->label(__('Place'))
-                ->searchable()
-                ->options(
-                    Auth::user()->place->pluck('nameCity', 'id')
-                ),
-        ];
-    }
 }

@@ -5,7 +5,7 @@ namespace App\Filament\Resources\WithdrawalResource\Pages;
 use App\Filament\Resources\WithdrawalResource;
 use App\Models\Withdrawal;
 use Auth;
-use Filament\Pages\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,7 +16,7 @@ class ManageWithdrawals extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make()->modalWidth('xs')->createAnother(false),
         ];
     }
 
