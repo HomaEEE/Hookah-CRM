@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 
 use Filament\Tables\Columns\TextColumn;
@@ -55,8 +56,10 @@ class WithdrawalResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel(),
-                TextColumn::make('sum')->translateLabel(),
+                TextColumn::make('sum')->translateLabel()
+                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('place')->translateLabel()
                     ->options(function () {
