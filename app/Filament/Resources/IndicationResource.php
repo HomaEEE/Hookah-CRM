@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\IndicationResource\Pages;
 use App\Filament\Resources\IndicationResource\RelationManagers;
 use App\Models\{Indication,Meter,Room};
+use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -20,14 +21,40 @@ class IndicationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Place');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Indications');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Indications');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Select::make('meter_id')->translateLabel('Meter')->options(
-                    Meter::where('place_id', Filament::getTenant()->id)->pluck('type.name', 'id')
-                ),
-                TextInput::make('data')->label(__('indications'))
+                TableRepeater::make('data')
+                ->headers(['Meter', 'Indication'])
+                ->emptyLabel('Add ingredients to techcard')
+
+                ->schema([
+                    Select::make('meter_id')
+                    ->hiddenLabel()
+                        ->options(
+                            Meter::where('place_id', Filament::getTenant()->id)->get()->pluck('type', 'id')
+                        ),
+                    TextInput::make('indication')
+                    ->hiddenLabel()
+
+                ])->columnSpan('full')
+
             ]);
     }
 

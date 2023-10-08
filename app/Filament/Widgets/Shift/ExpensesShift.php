@@ -12,6 +12,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
 
 class ExpensesShift extends BaseWidget
 {
@@ -54,7 +55,7 @@ class ExpensesShift extends BaseWidget
                 TextColumn::make('place.city')->label(__('City')),
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
                 TextColumn::make('type_pay')->translateLabel()->badge()
                 ->formatStateUsing(
                  fn (string $state): string => match ($state) {
@@ -64,14 +65,4 @@ class ExpensesShift extends BaseWidget
         ];
     }
 
-    protected function getTableFilters(): array
-    {
-        return [
-            SelectFilter::make('place_id')->label(__('Place'))
-                ->searchable()
-                ->options(
-                    Auth::user()->place->pluck('nameCity', 'id')
-                ),
-        ];
-    }
 }

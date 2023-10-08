@@ -15,12 +15,17 @@ class Ingredient extends Model
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
-    public function ingredient()
+    public function techcard()
     {
-        return $this->belongsTo(Ingredient::class, 'place_id');
+        return $this->belongsTo(Techcard::class);
+    }
+
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class);
     }
 
 }

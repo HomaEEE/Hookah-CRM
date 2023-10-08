@@ -101,8 +101,6 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Purchase::class);
     }
 
-
-
     public function excises()
     {
         return $this->hasMany(Excise::class);

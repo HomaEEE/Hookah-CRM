@@ -18,6 +18,19 @@ class BillsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationLabel = 'Mis Clientes';
+
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Indications');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Indications');
+    }
+
     public function form(Form $form): Form
     {
         return $form

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\PurchaseResource\Pages;
 
 use App\Filament\Resources\PurchaseResource;
-use Filament\Pages\Actions\DeleteAction;
+use Filament\Pages\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewPurchase extends ViewRecord
@@ -13,7 +13,7 @@ class ViewPurchase extends ViewRecord
     protected function getActions(): array
     {
         return [
-            DeleteAction::make(),
+            EditAction::make(),
         ];
     }
 

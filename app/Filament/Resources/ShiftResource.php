@@ -48,9 +48,6 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Grouping\Group;
 
 use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Filters\Filter;
-
-use function Laravel\Prompts\text;
 
 class ShiftResource extends Resource
 {
@@ -58,10 +55,10 @@ class ShiftResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Place');
-    }
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return __('Place');
+    // }
 
     public static function getPluralModelLabel(): string
     {
@@ -122,7 +119,9 @@ class ShiftResource extends Resource
                 ->numeric()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
-                TextColumn::make('wages')->translateLabel(),
+                TextColumn::make('wages')->translateLabel()
+                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+
                 TextColumn::make('shift')
                     ->badge()
                     ->money('uah', true)->translateLabel(),
@@ -462,7 +461,6 @@ class ShiftResource extends Resource
                             ->reactive(),
                         TextInput::make('procent_day')->translateLabel()->numeric()
                             ->hidden(fn (Get $get) => $get('wage_id') == null)
-
                             ->afterStateUpdated(
                                 function (Set $set, Get $get) {
                                     if ($get('procent_day') != null) {
@@ -471,10 +469,8 @@ class ShiftResource extends Resource
                                 }
                             )
                             ->reactive(),
-
                         TextInput::make('cashout')->translateLabel()
                             ->hidden(fn (Get $get) => $get('wage_id') == null),
-
                     ])->columns(3)
                     ->itemLabel(fn (array $state): ?string => $state['user_id.name'] ?? null)
 

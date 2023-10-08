@@ -17,7 +17,7 @@ class Expense extends Model implements HasMedia
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function user()

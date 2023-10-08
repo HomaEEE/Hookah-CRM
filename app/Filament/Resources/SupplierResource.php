@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Filament\Support\RawJs;
 
 use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 
 class SupplierResource extends Resource
@@ -87,6 +88,18 @@ class SupplierResource extends Resource
                     ->copyMessage('Phone copied')
                     ->copyMessageDuration(1500)
                     ->alignLeft(),
+                IconColumn::make('visible')
+                    ->label(__('Visible menu'))
+                    ->size(IconColumn\IconColumnSize::Medium)
+                    ->boolean()
+                    ->trueIcon('heroicon-o-eye')
+                    ->falseIcon('heroicon-o-eye-slash')
+                     ->action(function ($record, $column) {
+                         $name = $column->getName();
+                         $record->update([
+                             $name => ! $record->$name,
+                         ]);
+                     }),
                 TextColumn::make('data'),
             ])
             ->filters([

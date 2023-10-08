@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\ShiftResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
 
 class ExpenseRelationManager extends RelationManager
 {
@@ -35,9 +34,8 @@ class ExpenseRelationManager extends RelationManager
                 ->size('sm')
                 ->badge()
                 ->description(fn ($record): string => $record->user->name ?? ''),
-
                 TextColumn::make('category.name')->translateLabel(),
-                TextColumn::make('sum')->translateLabel(),
+                TextColumn::make('sum')->translateLabel()->summarize(Sum::make()->label(__('Total')))                ,
                 TextColumn::make('type_pay')->translateLabel(),
                 TextColumn::make('pay')->translateLabel(),
             ])

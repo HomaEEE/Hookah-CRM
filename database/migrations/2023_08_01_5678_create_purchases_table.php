@@ -22,30 +22,11 @@ return new class extends Migration
                 $table->foreignIdFor(Place::class);
                 $table->foreignIdFor(Supplier::class);
                 $table->tinyInteger('status')->default(0);
+                $table->json('ingredients')->nullable();
                 $table->timestamp('created_at')->useCurrent();
                 $table->timestamp('updated_at')->useCurrent();
             });
         };
-
-        if ( ! Schema::hasTable('ingredient_purchase'))
-        {
-        Schema::create('ingredient_purchase', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Purchase::class);
-            $table->foreignIdFor(Ingredient::class);
-            $table->integer('qty');
-            $table->timestamp('created_at')->useCurrent();
-        });
-    }
-    if ( ! Schema::hasTable('ingredient_purchase')) {
-        Schema::create('ingredient_history', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(ingredient::class)->index();
-            $table->string('price');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
-            });
-        }
     }
 
     /**
@@ -56,6 +37,5 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('purchases');
-        Schema::dropIfExists('purchase_ingredients');
     }
 };

@@ -7,11 +7,11 @@ use App\Models\Ingredient;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Auth;
+use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -57,7 +57,6 @@ class PurchaseResource extends Resource
             ->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Hidden::make('user_id')->default(Auth::user()->id),
-
                 Select::make('supplier_id')->label(__('Supplier'))
                     ->native(false)
                     ->options(
@@ -65,18 +64,19 @@ class PurchaseResource extends Resource
                         )
                     ->required(),
 
-                Repeater::make('ingredientPurchases')
-                ->relationship()
-
-                ->schema([
-                    Select::make('ingredient_id')->translateLabel()->searchable()
-                    ->relationship('ingredient', 'ingredient')
-                    ->options(
-                        Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                       ),
-                    TextInput::make('qty')->translateLabel()
-                ])->columns(2)
-
+                TableRepeater::make('ingredients')
+                    ->headers([__('Ingredient'), __('Count')])
+                    ->schema([
+                        Select::make('ingredient')->label(__('Ingredient'))
+                        ->hiddenLabel()
+                        ->native(false)
+                        ->searchable()
+                            ->options(
+                                Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
+                            ),
+                        TextInput::make('qty')->translateLabel()
+                        ->hiddenLabel()
+                    ])->columnSpan('full')
             ]);
     }
 
@@ -84,7 +84,8 @@ class PurchaseResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('supplier.name')->label(__('Supplier')),
+                TextColumn::make('supplier.company')->label(__('Supplier')),
+                TextColumn::make('status')->translateLabel(),
                 TextColumn::make('created_at')->translateLabel()->dateTime('d/m/Y')->badge(),
             ])
             ->filters([
@@ -128,16 +129,14 @@ class PurchaseResource extends Resource
                     ->schema([
                     Components\RepeatableEntry::make('ingredients')->hiddenLabel()
                     ->schema([
-                        Components\TextEntry::make('ingredient')->hiddenLabel(),
+                        Components\TextEntry::make('ingredient.ingredient')->hiddenLabel(),
                         Components\TextEntry::make('qty')->hiddenLabel(),
-                        Components\TextEntry::make('unit')->hiddenLabel()
-                            ->columnSpan(3),
+                        Components\TextEntry::make('ingredient.unit')->hiddenLabel()
                     ])
-                    ->grid(1)
+                    ->grid(2)
                     ->contained(false)
                     ])
                     ->collapsible(),
-
             ]);
     }
 

@@ -7,6 +7,7 @@ use App\Filament\Resources\TechcardResource\RelationManagers;
 use App\Models\{Ingredient, Techcard, Workshop};
 
 use Auth;
+use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -79,32 +80,20 @@ class TechcardResource extends Resource
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
 
                 Textarea::make('process')->label(__('Process')),
-                Repeater::make('ingredients')->translateLabel()
-                    ->relationship()
-                    ->schema([
-                        Select::make('ingredient_id')->translateLabel()->searchable()
-                        ->relationship('ingredient', 'ingredient')
+
+                TableRepeater::make('ingredients')
+                ->headers([__('Ingredient'), __('Heft')])
+                ->schema([
+                    Select::make('ingredient_id')->label(__('Ingredient'))
+                    ->hiddenLabel()
+                    ->native(false)
+                    ->searchable()
                         ->options(
                             Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                        )
-                            ->createOptionForm([
-                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                TextInput::make('ingredient')->label(__('ingredient'))->required(),
-                                Select::make('unit')
-                                    ->options([
-                                        'kg' => __('Kg'),
-                                        'gr' => __('Gr'),
-                                        'l' => __('L'),
-                                        'ml' => __('Ml'),
-                                        'unit' => __('Unit'),
-                                    ])
-                                    ->required()
-                            ]),
-
-                        TextInput::make('heft')->label(__('Heft'))->suffix('.com')
-                    ])
-
-
+                        ),
+                    TextInput::make('heft')->suffix('гр.')->translateLabel()
+                    ->hiddenLabel()
+                ])->columnSpan('full')
             ]);
     }
 
@@ -114,7 +103,6 @@ class TechcardResource extends Resource
             ->columns([
                 TextColumn::make('workshop.name')->translateLabel()->searchable(),
                 TextColumn::make('techcard')->translateLabel(),
-                TextColumn::make('time')->translateLabel(),
             ])
             ->filters([
 
@@ -136,18 +124,16 @@ class TechcardResource extends Resource
         return $infolist
         ->schema([
             TextEntry::make('techcard')->translateLabel(),
-            TextEntry::make('time')->translateLabel(),
             TextEntry::make('process')->translateLabel(),
 
             RepeatableEntry::make('ingredients')->hiddenLabel()
             ->schema([
-                TextEntry::make('ingredient')->hiddenLabel(),
-                TextEntry::make('qty')->hiddenLabel(),
-                TextEntry::make('unit')->hiddenLabel()
-                    ->columnSpan(3),
+                TextEntry::make('ingredient.ingredient')->hiddenLabel(),
+                TextEntry::make('heft')->hiddenLabel()->badge()
             ])
-            ->grid(1)
-            ->contained(false)
+            ->columns(2)
+            ->grid(2)
+
             ]);
     }
 

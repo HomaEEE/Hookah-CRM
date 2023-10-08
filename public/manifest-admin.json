@@ -9,47 +9,17 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "/assets/imgs/pwa/icons/142x142-icon.png",
-      "type": "image/png",
-      "sizes": "142x142",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/imgs/pwa/icons/176x176-icon.png",
-      "type": "image/png",
-      "sizes": "176x176",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/imgs/pwa/icons/64x64-icon.png",
-      "type": "image/png",
-      "sizes": "64x64",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/imgs/pwa/icons/72x72-icon.png",
-      "type": "image/png",
-      "sizes": "72x72",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/imgs/pwa/icons/192x192-icon.png",
-      "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/imgs/pwa/icons/256x256-icon.png",
-      "type": "image/png",
-      "sizes": "256x256",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/imgs/pwa/icons/512x512-icon.png",
-      "type": "image/png",
+      "purpose": "maskable",
       "sizes": "512x512",
-      "purpose": "any"
-    }
+      "src": "icon512_maskable.png",
+      "type": "image/png"
+      },
+      {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+      }
   ],
   "screenshots": [
     {
@@ -70,6 +40,12 @@
     {
       "name": "Добавить поставку",
       "url": "https://noire.ee/admin/supplies",
+      "description": "Новая поставка"
+    },
+
+    {
+      "name": "Добавить расход",
+      "url": "https://noire.ee/admin/expenses",
       "description": "Новая поставка"
     },
 

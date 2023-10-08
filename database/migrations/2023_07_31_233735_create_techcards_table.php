@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignIdFor(Place::class);
             $table->foreignIdFor(Workshop::class);
             $table->string('techcard')->index();
-            $table->text('process');
-            $table->time('time');
+            $table->text('process')->nullable();
+            $table->json('ingredients')->nullable();
 
         });
 
@@ -40,12 +40,6 @@ return new class extends Migration
             $table->string('price');
         });
 
-        Schema::create('techcard_ingredients', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Techcard::class);
-            $table->foreignIdFor(Ingredient::class);
-            $table->integer('heft');
-        });
     }
 
     /**
@@ -56,8 +50,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('techcards');
-        Schema::dropIfExists('techcard_components');
-        Schema::dropIfExists('сomponents');
-        Schema::dropIfExists('сomponent_history');
+        Schema::dropIfExists('ingredients');
 }
 };

@@ -11,19 +11,20 @@ class Purchase extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['user_id', 'place_id', 'ingredients', 'supplier_id'];
+
+
+    protected $casts = ['ingredients' => 'array'];
+    protected $attributes = ['ingredients' => '[]'];
+
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function suppliers()
-    {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(User::class);
     }
 
     public function supplier()
@@ -31,14 +32,12 @@ class Purchase extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function ingredients(): BelongsToMany
+    public function ingredient()
     {
-        return $this->belongsToMany(Ingredient::class);
+        return $this->belongsTo(Ingredient::class);
     }
 
-    public function ingredientPurchases(): HasMany
-{
-    return $this->hasMany(IngredientPurchase::class);
-}
+
+
 
 }
