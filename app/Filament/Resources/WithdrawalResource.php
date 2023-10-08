@@ -6,7 +6,9 @@ use App\Filament\Resources\WithdrawalResource\Pages;
 use App\Models\Place;
 use App\Models\Withdrawal;
 use Auth;
+use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -18,7 +20,9 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class WithdrawalResource extends Resource
 {
@@ -55,17 +59,42 @@ class WithdrawalResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel(),
+                TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('sum')->translateLabel()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                SelectFilter::make('place')->translateLabel()
-                    ->options(function () {
-                        return Place::all()->pluck('city', 'id');
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
+                        DatePicker::make('created_until')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
                     })
-                    ->attribute('place_id'),
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Расходы с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Расходы до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                        }
+
+                        return $indicators;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
