@@ -6,6 +6,7 @@ use App\Enums\Bill as BillEnum;
 use App\Models\Expense;
 use Auth;
 use Carbon\Carbon;
+use Filament\Facades\Filament;
 use Filament\Infolists\Components\Tabs\Tab;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -27,7 +28,7 @@ class ExpensesShift extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Expense::query()
+        return Expense::query()->where('place_id', Filament::getTenant()->id)
         ->whereDate('added_at', Carbon::today())->with('category', 'user', 'supply');
     }
 
