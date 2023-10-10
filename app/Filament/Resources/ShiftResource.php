@@ -108,58 +108,58 @@ class ShiftResource extends Resource
                     ->badge()->translateLabel(),
 
                 TextColumn::make('terminal')->translateLabel()
-                ->numeric()
-                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->numeric()
+                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('cash')->translateLabel()
-                ->numeric()
-                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->numeric()
+                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('expense')->translateLabel()
-                ->numeric()
-                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->numeric()
+                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('wages')->translateLabel()
-                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('shift')
                     ->badge()
                     ->money('uah', true)->translateLabel(),
 
-               //   TextColumn::make('shift_users.user_id')->badge(),
+                //   TextColumn::make('shift_users.user_id')->badge(),
 
             ])->defaultSort('id', 'desc')
             ->filters([
                 Tables\Filters\Filter::make('created_at')
-                ->form([
-                    DatePicker::make('created_from')->translateLabel()->native(false)
-                        ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                    DatePicker::make('created_until')->translateLabel()->native(false)
-                        ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when(
-                            $data['created_from'] ?? null,
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                        )
-                        ->when(
-                            $data['created_until'] ?? null,
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                        );
-                })
-                ->indicateUsing(function (array $data): array {
-                    $indicators = [];
+                    ->form([
+                        DatePicker::make('created_from')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
+                        DatePicker::make('created_until')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
 
-                    if ($data['created_from'] ?? null) {
-                        $indicators['created_from'] = 'Смены с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                    }
-                    if ($data['created_until'] ?? null) {
-                        $indicators['created_until'] = 'до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                    }
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Смены с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                        }
 
-                    return $indicators;
-                }),
+                        return $indicators;
+                    }),
 
             ])
 
@@ -324,7 +324,7 @@ class ShiftResource extends Resource
                 ])->hidden(fn (Get $get): bool => !$get('total')),
 
 
-                    Fieldset::make(__('Workshops'))
+                Fieldset::make(__('Workshops'))
                     ->schema([
                         TextInput::make('bulbs')->label(__('Bulbs'))
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
@@ -357,7 +357,7 @@ class ShiftResource extends Resource
                     ->schema([
                         Select::make('user_id')->translateLabel()
                             ->options(
-                                 User::whereHas('place', function ($query) {
+                                User::whereHas('place', function ($query) {
                                     $query->where('place_id', Filament::getTenant()->id);
                                 })->get()
                                     ->pluck('name', 'id')
@@ -367,11 +367,11 @@ class ShiftResource extends Resource
                             ->searchable(),
 
                         Select::make('wage_id')->translateLabel()
-
-                            ->options( Wage::where('place_id', Filament::getTenant()->id)
-                                    ->get()
-                                    ->pluck('name', 'id')
-                            )
+                        ->options(
+                            Wage::where('place_id', Filament::getTenant()->id)
+                                ->get()
+                                ->pluck('name', 'id')
+                        )
                             ->required()
                             ->reactive()
                             ->searchable()
@@ -380,7 +380,6 @@ class ShiftResource extends Resource
 
                                     $wage = Wage::where('id', $get('wage_id'))->first();
                                     $all_procents = 0;
-
                                     if (isset($wage)) {
                                         foreach ($wage->procent as $num) {
                                             $workshop = Workshop::where('id', $num['workshop_id'])->first();
@@ -404,13 +403,10 @@ class ShiftResource extends Resource
                                         } else {
                                             $set('wage', 0);
                                             $set('days', 0);
-
                                         }
-
                                     } else {
                                         $all_procents = 0;
                                         $set('days', 0);
-
                                     }
 
                                     $set('procent_day', round($all_procents, 0));
@@ -419,7 +415,6 @@ class ShiftResource extends Resource
                             ),
 
                         Select::make('days')->translateLabel()
-                           // ->hidden(fn (Get $get) => $get('wage_id') == null)
                             ->options(
                                 [
                                     '0' => '0',
@@ -433,15 +428,14 @@ class ShiftResource extends Resource
                                     '7' => '7',
                                 ]
                             )
-                            ->selectablePlaceholder(false)
-                            ->default('0')
+                            ->disabled(fn (Get $get) => $get('wage_id') == null)
                             ->rules(['required'])
                             ->afterStateUpdated(
                                 function (Set $set, Get $get, $state) {
                                     $wage = Wage::where('id', $get('wage_id'))->first();
                                     if ($get('days') != 0 || $get('wage_id') != null) {
-                                    $set('wage', $state * $wage->wage);
-                                    $set('cashout', $get('procent_day') + $get('wage'));
+                                        $set('wage', $state * $wage->wage);
+                                        $set('cashout', $get('procent_day') + $get('wage'));
                                     }
                                 }
                             )
@@ -483,54 +477,53 @@ class ShiftResource extends Resource
                         ->icon('heroicon-s-arrow-path')
                         ->color('danger')
                         ->action(function (Get $get, Set $set) {
-                                $place = Place::where('id', $get('place_id'))->first();
-                                $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
-                                $set('expense', (int) $posterLocalExpense);
+                            $place = Place::where('id', $get('place_id'))->first();
+                            $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
+                            $set('expense', (int) $posterLocalExpense);
 
-                                $localTips = (new PosterApi())->getLocalTips($place->id);
-                                $set('tips', $localTips);
+                            $localTips = (new PosterApi())->getLocalTips($place->id);
+                            $set('tips', $localTips);
 
-                                $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
-                                $set('withdrawal', $LocalWithdrawal);
-
+                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                            $set('withdrawal', $LocalWithdrawal);
                         })
-                    ])->fullWidth(),
+                ])->fullWidth(),
 
                 FieldSet::make('Expenses & Income')->schema([
-                TextInput::make('income')->translateLabel()
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                    ->numeric()
-                    ->reactive()
-                    ->minValue(0)
-                    ->default(0),
+                    TextInput::make('income')->translateLabel()
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                        ->numeric()
+                        ->reactive()
+                        ->minValue(0)
+                        ->default(0),
 
-                TextInput::make('expense')->translateLabel()
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                    ->numeric()
-                    ->default(0)
-                    ->hidden(fn (Get $get) => $get('expense') == 0),
+                    TextInput::make('expense')->translateLabel()
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                        ->numeric()
+                        ->default(0)
+                        ->hidden(fn (Get $get) => $get('expense') == 0),
 
-                TextInput::make('tips')->translateLabel()
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                    ->numeric()->default(0),
-                TextInput::make('withdrawal')->translateLabel()
-                    ->disabled()
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                    TextInput::make('tips')->translateLabel()
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                        ->numeric()->default(0),
+                    TextInput::make('withdrawal')->translateLabel()
+                        ->disabled()
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
 
-                    ->hidden(fn (Get $get) => $get('withdrawal') == 0)
-                    ->numeric()->default(0),
+                        ->hidden(fn (Get $get) => $get('withdrawal') == 0)
+                        ->numeric()->default(0),
 
-                Hidden::make('wages'),
-                Placeholder::make('wages_calc')->translateLabel()
-                    ->content(function (Set $set, $get) {
-                        $totalWage = collect($get('users'))
-                            ->pluck('cashout')
-                            ->sum();
-                        $set('wages', $totalWage);
+                    Hidden::make('wages'),
+                    Placeholder::make('wages_calc')->translateLabel()
+                        ->content(function (Set $set, $get) {
+                            $totalWage = collect($get('users'))
+                                ->pluck('cashout')
+                                ->sum();
+                            $set('wages', $totalWage);
 
-                        return $totalWage;
-                    })
-                    ->reactive(),
+                            return $totalWage;
+                        })
+                        ->reactive(),
                 ])->columns(3),
 
 
@@ -547,34 +540,33 @@ class ShiftResource extends Resource
 
                 FieldSet::make('Shift')->translateLabel()->schema([
 
-                Placeholder::make('total_shift')->translateLabel()
-                    ->content(function (Set $set, Get $get) {
-                        $totalCash =
-                            $get('old_shift') + $get('cash') - $get('wages')
-                            + $get('income') - $get('expense') - $get('withdrawal');
+                    Placeholder::make('total_shift')->translateLabel()
+                        ->content(function (Set $set, Get $get) {
+                            $totalCash =
+                                $get('old_shift') + $get('cash') - $get('wages')
+                                + $get('income') - $get('expense') - $get('withdrawal');
                             $set('calc_shift', $totalCash);
                             return $totalCash;
-                    }),
+                        }),
 
-                Hidden::make('calc_shift')->default(0),
-                Placeholder::make('different')->translateLabel()
-                ->content(function ( Get $get) {
-                    if ($get('shift') != null) {
-                    $different =
-                    $get('shift') - $get('calc_shift');
-                        return $different;
-                    } else {
-                        return 0;
-                    }
-                }),
-                TextInput::make('shift')->translateLabel()
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                    ->numeric()
-                    ->required()
-                    ->reactive()
+                    Hidden::make('calc_shift')->default(0),
+                    Placeholder::make('different')->translateLabel()
+                        ->content(function (Get $get) {
+                            if ($get('shift') != null) {
+                                $different =
+                                    $get('shift') - $get('calc_shift');
+                                return $different;
+                            } else {
+                                return 0;
+                            }
+                        }),
+                    TextInput::make('shift')->translateLabel()
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                        ->numeric()
+                        ->required()
+                        ->reactive()
                 ])->columns(['md' => 2, 'xl' => 3]),
-                ];
-
+            ];
         }
         return [];
     }
@@ -584,62 +576,62 @@ class ShiftResource extends Resource
     {
         return $infolist
             ->schema([
-            InfolistFeildSet::make('Shift')->translateLabel()
-            ->schema([
-                TextEntry::make('cash')->translateLabel()
-                ->badge(),
-                TextEntry::make('terminal')->translateLabel()
-                ->badge(),
+                InfolistFeildSet::make('Shift')->translateLabel()
+                    ->schema([
+                        TextEntry::make('cash')->translateLabel()
+                            ->badge(),
+                        TextEntry::make('terminal')->translateLabel()
+                            ->badge(),
 
-                TextEntry::make('sum')->translateLabel()
-                ->badge()
-                ->getStateUsing(fn (Shift $record): int => $record->cash + $record->terminal ?? ''),
+                        TextEntry::make('sum')->translateLabel()
+                            ->badge()
+                            ->getStateUsing(fn (Shift $record): int => $record->cash + $record->terminal ?? ''),
 
-                TextEntry::make('calc_shift')->translateLabel()
-                ->badge(),
+                        TextEntry::make('calc_shift')->translateLabel()
+                            ->badge(),
 
-                TextEntry::make('shift')->translateLabel()
-                ->badge(),
+                        TextEntry::make('shift')->translateLabel()
+                            ->badge(),
 
-                TextEntry::make('different')->translateLabel()
-                ->badge()
-                ->getStateUsing(fn (Shift $record): int => $record->calc_shift - $record->shift ?? ''),
-
-
-            ])->columns(['md' => 2, 'xl' => 3]),
-
-            InfolistFeildSet::make('Workshops')->translateLabel()
-            ->schema([
-                TextEntry::make('hookahs')->translateLabel()
-                ->getStateUsing(fn (Shift $record): int => $record->bulbs + $record->hookah ?? ''),
-                TextEntry::make('bar')->translateLabel(),
-                TextEntry::make('kitchen')->translateLabel()
-            ])->columns(3),
-
-            InfolistFeildSet::make('Expenses')->translateLabel()
-            ->schema([
-                TextEntry::make('wages')->translateLabel(),
-                TextEntry::make('expense')->translateLabel(),
-                TextEntry::make('tips')->translateLabel()
-            ])->columns(3)->columnSpanFull(),
-
-            InfolistFeildSet::make('Reports')->translateLabel()
-            ->schema([
-                TextEntry::make('report.x-report-terminal')->badge()
-                ->label(__('X report terminal')),
-                TextEntry::make('report.z-report-terminal')->badge()
-                ->label(__('Z report terminal')),
-                TextEntry::make('report.x-report-poster')->badge()
-                ->label(__('X report poster')),
-                TextEntry::make('report.z-report-poster')->badge()
-                ->label(__('Z report terminal')),
-                TextEntry::make('report.incassation')->badge()
-                ->label(__('Incassation')),
+                        TextEntry::make('different')->translateLabel()
+                            ->badge()
+                            ->getStateUsing(fn (Shift $record): int => $record->calc_shift - $record->shift ?? ''),
 
 
-            ])->columns(3)
+                    ])->columns(['md' => 2, 'xl' => 3]),
 
-        ]);
+                InfolistFeildSet::make('Workshops')->translateLabel()
+                    ->schema([
+                        TextEntry::make('hookahs')->translateLabel()
+                            ->getStateUsing(fn (Shift $record): int => $record->bulbs + $record->hookah ?? ''),
+                        TextEntry::make('bar')->translateLabel(),
+                        TextEntry::make('kitchen')->translateLabel()
+                    ])->columns(3),
+
+                InfolistFeildSet::make('Expenses')->translateLabel()
+                    ->schema([
+                        TextEntry::make('wages')->translateLabel(),
+                        TextEntry::make('expense')->translateLabel(),
+                        TextEntry::make('tips')->translateLabel()
+                    ])->columns(3)->columnSpanFull(),
+
+                InfolistFeildSet::make('Reports')->translateLabel()
+                    ->schema([
+                        TextEntry::make('report.x-report-terminal')->badge()
+                            ->label(__('X report terminal')),
+                        TextEntry::make('report.z-report-terminal')->badge()
+                            ->label(__('Z report terminal')),
+                        TextEntry::make('report.x-report-poster')->badge()
+                            ->label(__('X report poster')),
+                        TextEntry::make('report.z-report-poster')->badge()
+                            ->label(__('Z report terminal')),
+                        TextEntry::make('report.incassation')->badge()
+                            ->label(__('Incassation')),
+
+
+                    ])->columns(3)
+
+            ]);
     }
 
     public static function getEloquentQuery(): Builder

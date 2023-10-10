@@ -44,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
            // ->tenantProfile(EditPlaceProfile::class)
             ->login()
+            ->registration()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

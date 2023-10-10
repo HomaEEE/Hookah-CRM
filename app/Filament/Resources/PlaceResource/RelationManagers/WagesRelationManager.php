@@ -53,8 +53,7 @@ class WagesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('name')->translateLabel(),
                 Tables\Columns\TextColumn::make('wage')->translateLabel()->badge(),
-                Tables\Columns\TextColumn::make('procent')->translateLabel()
-                ->listWithLineBreaks()
+
             ])
             ->filters([
                 //

@@ -85,7 +85,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenant
         return $this->BelongsToMany(Place::class);
     }
 
-    public function wages()
+    public function wage()
     {
         return $this->belongsTo(Wage::class, 'wage_id');
     }
@@ -94,7 +94,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenant
     {
         return $this->belongsTo(Shift::class);
     }
-
 
     public function task()
     {
