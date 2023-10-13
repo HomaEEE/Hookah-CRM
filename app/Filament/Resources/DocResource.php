@@ -29,6 +29,8 @@ class DocResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-paper-clip';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getPluralModelLabel(): string
     {
         return __('Docs');

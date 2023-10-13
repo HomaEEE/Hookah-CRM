@@ -55,6 +55,8 @@ class ShiftResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
     // public static function getNavigationGroup(): ?string
     // {
     //     return __('Place');
@@ -486,7 +488,29 @@ class ShiftResource extends Resource
 
                             $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
                             $set('withdrawal', $LocalWithdrawal);
-                        })
+                        }),
+                        // Action::make('add_expense')->translateLabel()
+                        // ->icon('heroicon-s-arrow-path')
+                        // ->color('danger')
+                        // ->action(function (Get $get, Set $set) {
+                        //     $place = Place::where('id', $get('place_id'))->first();
+                        //     $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
+                        //     $set('expense', (int) $posterLocalExpense);
+
+                        //     $localTips = (new PosterApi())->getLocalTips($place->id);
+                        //     $set('tips', $localTips);
+
+                        //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                        //     $set('withdrawal', $LocalWithdrawal);
+                        // }),
+                        // Action::make('add_withdraw')->translateLabel()
+                        // ->icon('heroicon-s-arrow-path')
+                        // ->color('info')
+                        // ->action(function (Set $set) {
+
+                        //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                        //     $set('withdrawal', $LocalWithdrawal);
+                        // })
                 ])->fullWidth(),
 
                 FieldSet::make('Expenses & Income')->schema([

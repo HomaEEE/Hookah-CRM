@@ -49,6 +49,9 @@ class SupplyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
+
     public static function getNavigationGroup(): ?string
     {
         return __('Manage');

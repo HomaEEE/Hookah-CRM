@@ -35,6 +35,8 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
+    protected static ?string $recordTitleAttribute = 'company';
+
     public static function getPluralModelLabel(): string
     {
         return __('Suppliers');

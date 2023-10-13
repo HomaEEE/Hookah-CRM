@@ -30,6 +30,8 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
+    protected static ?string $recordTitleAttribute = 'id';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getPluralModelLabel(): string

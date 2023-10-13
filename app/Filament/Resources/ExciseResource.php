@@ -31,6 +31,9 @@ class ExciseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-beaker';
 
+    protected static ?string $recordTitleAttribute = 'title';
+
+
     public static function getNavigationGroup(): ?string
     {
         return __('Menu');

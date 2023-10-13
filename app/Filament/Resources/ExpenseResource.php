@@ -41,6 +41,8 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-minus';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
     protected static ?string $navigationGroup = 'Finance';
 
     public static function getPluralModelLabel(): string

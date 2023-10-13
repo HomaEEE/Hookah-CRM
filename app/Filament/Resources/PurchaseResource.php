@@ -29,6 +29,8 @@ class PurchaseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
 
+    protected static ?string $recordTitleAttribute = 'id';
+
     protected static ?string $navigationGroup = 'Stocks';
 
     public static function getPluralModelLabel(): string

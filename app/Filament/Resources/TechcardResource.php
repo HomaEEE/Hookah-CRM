@@ -37,6 +37,8 @@ class TechcardResource extends Resource
 {
     protected static ?string $model = Techcard::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     public static function getPluralModelLabel(): string

@@ -26,6 +26,8 @@ class WriteoffResource extends Resource
 {
     protected static ?string $model = Writeoff::class;
 
+    protected static ?string $recordTitleAttribute = 'id';
+
     protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
 
     public static function getPluralModelLabel(): string

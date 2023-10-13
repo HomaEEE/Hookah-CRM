@@ -105,8 +105,8 @@ class ProductRelationManager extends RelationManager
                     ->circular()->size(50),
 
                 TextColumn::make('product_name')->searchable()->wrap()
-                    ->description(fn (Product $record): string => $record->frontend_name, position: 'before')
-                    ->description(fn (Product $record): string => $record->category['category_name'], position: 'above'),
+                    ->description(fn (Product $record): string => $record->frontend_name ?? '', position: 'before')
+                    ->description(fn (Product $record): string => $record->category['category_name'] ?? '', position: 'above'),
 
                 TextColumn::make('cost')->money('uah', true)->translateLabel()
                     ->searchable()

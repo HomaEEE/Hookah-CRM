@@ -13,6 +13,7 @@ use Filament\Widgets;
 
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
 use Filament\Navigation\NavigationGroup;
+use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -92,7 +93,17 @@ class AdminPanelProvider extends PanelProvider
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),
                     \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-                    BreezyCore::make(),
+                    BreezyCore::make()
+                    ->myProfile(
+                        shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
+                        shouldRegisterNavigation: true, // Adds a main navigation item for the My Profile page (default = false)
+                        hasAvatars: false, // Enables the avatar upload form component (default = false)
+                        slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
+                    )
+                    ->passwordUpdateRules(
+                        rules: [Password::default()->mixedCase()->uncompromised(3)], // you may pass an array of validation rules as well. (default = ['min:8'])
+                        requiresCurrentPassword: false, // when false, the user can update their password without entering their current password. (default = true)
+                        ),
                     EnvironmentIndicatorPlugin::make(),
                 ])
             ->authGuard('web')

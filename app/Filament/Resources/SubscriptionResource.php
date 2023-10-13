@@ -33,6 +33,8 @@ class SubscriptionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationGroup = 'Finance';
 
     public static function getPluralModelLabel(): string
