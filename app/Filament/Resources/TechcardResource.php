@@ -37,7 +37,7 @@ class TechcardResource extends Resource
 {
     protected static ?string $model = Techcard::class;
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $recordTitleAttribute = 'techcard';
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
@@ -125,17 +125,14 @@ class TechcardResource extends Resource
     {
         return $infolist
         ->schema([
-            TextEntry::make('techcard')->translateLabel(),
             TextEntry::make('process')->translateLabel(),
-
             RepeatableEntry::make('ingredients')->hiddenLabel()
             ->schema([
-                TextEntry::make('ingredient.ingredient')->hiddenLabel(),
+                TextEntry::make('ingredient')->hiddenLabel(),
                 TextEntry::make('heft')->hiddenLabel()->badge()
             ])
             ->columns(2)
             ->grid(2)
-
             ]);
     }
 

@@ -30,6 +30,12 @@ class Place extends Model implements HasAvatar
         return $this->HasMany(Bill::class, 'place_id');
     }
 
+
+    public function arrears()
+    {
+        return $this->hasMany(Arrear::class);
+    }
+
     public function supplier()
     {
         return $this->hasMany(Supplier::class, 'place_id');

@@ -134,6 +134,13 @@ class SupplyResource extends Resource
                                     ->imageResizeTargetWidth('1600')
                                     ->imageResizeMode('cover')
                                     ->imagePreviewHeight(350)
+                                    ->imageEditor()
+                                    ->imageEditorAspectRatios([
+                                        null,
+                                        '16:9',
+                                        '4:3',
+                                        '1:1',
+                                    ])
                                     ->reorderable()
                                     ->openable()
                             ])

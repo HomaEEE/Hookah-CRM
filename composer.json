@@ -14,6 +14,7 @@
         "awobaz/compoships": "^2.2",
         "bezhansalleh/filament-language-switch": "^2.0",
         "bezhansalleh/filament-shield": "^3.0",
+        "chrisreedio/socialment": "^3.0@beta",
         "filament/filament": "^3.0-dev",
         "filament/spatie-laravel-media-library-plugin": "^3.0",
         "filament/spatie-laravel-translatable-plugin": "^3.0",
