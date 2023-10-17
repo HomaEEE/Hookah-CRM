@@ -12,7 +12,7 @@ use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Place, Workshop, Shift, User, Wage};
+use App\Models\{Place, Workshop, Shift, User, Wage, Withdrawal};
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -204,6 +204,7 @@ class ShiftResource extends Resource
                 Section::make()->schema([
 
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
+
                     Actions::make([
                         Action::make('load_poster')->translateLabel()
                             ->icon('heroicon-s-cloud-arrow-down')
@@ -475,6 +476,30 @@ class ShiftResource extends Resource
         if ($section === 'shift') {
             return [
                 Actions::make([
+                    Action::make('add_withdrawal')->translateLabel()
+                    ->icon('heroicon-s-banknotes')
+                    ->color('success')
+                    ->modalHeading(__('Add Withdrawal'))->translateLabel()
+                    ->requiresConfirmation()
+                    ->form([
+                        Hidden::make('user_id')->default(Auth::user()->id),
+                        Hidden::make('place_id')->default(Filament::getTenant()->id),
+                        TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
+                    ])
+                    ->action(function (Set $set, array $data): void {
+                        Withdrawal::create(
+                            [
+                                'place_id' => Filament::getTenant()->id,
+                                'user_id' => Auth::user()->id,
+                                'sum' => $data['sum']
+                            ]
+                        );
+
+
+                        $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                        $set('withdrawal', $LocalWithdrawal);
+                    }),
+
                     Action::make('update_expenses')->translateLabel()
                         ->icon('heroicon-s-arrow-path')
                         ->color('danger')
