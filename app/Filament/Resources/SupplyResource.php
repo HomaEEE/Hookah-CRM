@@ -30,6 +30,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\BadgeColumn;
@@ -42,6 +43,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class SupplyResource extends Resource
 {
@@ -309,8 +311,16 @@ class SupplyResource extends Resource
 
     public static function infolist(Infolist $infolist): Infolist
     {
-        return $infolist([
-
+        return $infolist
+        ->schema([
+            TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+            ->badge(),
+            TextEntry::make('supplier.company')->label(__('Supplier')),
+            TextEntry::make('sum')->label(__('Supplier')),
+            TextEntry::make('type_pay')->translateLabel(),
+            LightboxSpatieMediaLibraryImageEntry::make('invoice')->translateLabel()
+            ->collection('supplies')
+            ->conversion('thumb')
         ]);
     }
 
