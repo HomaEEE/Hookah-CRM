@@ -26,6 +26,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
+use App\Livewire\UserProfileData;
 
 use Filament\Support\Colors\Color;
 
@@ -100,11 +101,14 @@ class AdminPanelProvider extends PanelProvider
                         hasAvatars: false, // Enables the avatar upload form component (default = false)
                         slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
                     )
+                    ->myProfileComponents([UserProfileData::class])
                     ->passwordUpdateRules(
                         rules: [Password::default()->mixedCase()->uncompromised(3)], // you may pass an array of validation rules as well. (default = ['min:8'])
                         requiresCurrentPassword: false, // when false, the user can update their password without entering their current password. (default = true)
                         ),
-                    EnvironmentIndicatorPlugin::make(),
+                    //\ChrisReedIO\Socialment\SocialmentPlugin::make(),
+                    EnvironmentIndicatorPlugin::make()
+                    ,
                 ])
             ->authGuard('web')
             ->middleware([

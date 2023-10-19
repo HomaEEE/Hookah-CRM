@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
 use App\Models\Room;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -25,9 +26,9 @@ class SeetsRelationManager extends RelationManager
             ->schema([
                 TextInput::make('table_id')->label(__('Table_id')),
                 Select::make('room_id')->label(__('Room'))
-                    ->options(fn (Livewire $livewire) => Room::where('place_id', $livewire->ownerRecord->id)->pluck('room', 'id')),
+                    ->options( Room::where('place_id', Filament::getTenant()->id)->pluck('room', 'id')),
                 Hidden::make('place_id')->label(__('Place'))
-                    ->default(fn (Livewire $livewire) => $livewire->ownerRecord->id),
+                    ->default(Filament::getTenant()->id),
             ]);
     }
 

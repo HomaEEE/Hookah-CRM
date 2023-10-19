@@ -30,7 +30,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-
+use Filament\Infolists\Infolist;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
@@ -131,10 +131,10 @@ class SupplyResource extends Resource
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
                                     ->multiple()
-                                    ->imageResizeTargetWidth('1600')
-                                    ->imageResizeMode('cover')
                                     ->imagePreviewHeight(350)
                                     ->imageEditor()
+                                    ->optimize('webp')
+                                    ->resize(50)
                                     ->imageEditorAspectRatios([
                                         null,
                                         '16:9',
@@ -305,6 +305,13 @@ class SupplyResource extends Resource
                 // ->deselectRecordsAfterCompletion(),
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist([
+
+        ]);
     }
 
     public static function getPages(): array

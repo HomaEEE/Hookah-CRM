@@ -157,8 +157,8 @@ class PlaceResource extends Resource
             RelationGroup::make(__('Room & Seets'), [
                 RelationManagers\SeetsRelationManager::class,
                 RelationManagers\RoomsRelationManager::class
-            ])
-
+            ]),
+            RelationManagers\MetersRelationManager::class,
         ];
     }
 

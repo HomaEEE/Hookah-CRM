@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\IndicationResource\Pages;
 use App\Filament\Resources\IndicationResource\RelationManagers;
 use App\Models\{Indication,Meter,Room};
+use App\Enums\MeterType;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
@@ -19,7 +20,7 @@ class IndicationResource extends Resource
 {
     protected static ?string $model = Indication::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-light-bulb';
 
     public static function getNavigationGroup(): ?string
     {
@@ -43,16 +44,13 @@ class IndicationResource extends Resource
                 TableRepeater::make('data')
                 ->headers(['Meter', 'Indication'])
                 ->emptyLabel('Add ingredients to techcard')
-
                 ->schema([
-                    Select::make('meter_id')
-                    ->hiddenLabel()
-                        ->options(
-                            Meter::where('place_id', Filament::getTenant()->id)->get()->pluck('type', 'id')
-                        ),
+                    Select::make('meter_id')->label(__('Meter'))
+                    ->relationship('meter', 'id')
+                    ->options(
+                        Meter::where('place_id', Filament::getTenant()->id)->pluck('room', 'id')
+                    ),
                     TextInput::make('indication')
-                    ->hiddenLabel()
-
                 ])->columnSpan('full')
 
             ]);

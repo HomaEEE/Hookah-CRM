@@ -16,7 +16,7 @@ class Seet extends Model
 
     public function room()
     {
-        return $this->belongsTo(Room::class, ['room_id', 'place_id'], ['id', 'place_id']);
+        return $this->belongsTo(Room::class);
     }
 
     public function booking()

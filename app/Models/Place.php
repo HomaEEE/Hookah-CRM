@@ -22,7 +22,7 @@ class Place extends Model implements HasAvatar
 
     public function meters()
     {
-        return $this->hasMany(Meter::class, 'place_id');
+        return $this->hasMany(Meter::class);
     }
 
     public function bill()
@@ -140,6 +140,10 @@ class Place extends Model implements HasAvatar
     public function supplies()
     {
         return $this->hasMany(Supply::class);
+    }
+    public function leftovers()
+    {
+        return $this->hasMany(Leftover::class);
     }
 
     public function tasks()
