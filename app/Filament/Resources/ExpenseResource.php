@@ -216,11 +216,11 @@ class ExpenseResource extends Resource
                         return $query
                             ->when(
                                 $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '>=', $date),
                             )
                             ->when(
                                 $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {

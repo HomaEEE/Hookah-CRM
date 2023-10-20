@@ -112,7 +112,7 @@ class BookingResource extends Resource
                 ->copyMessage(__('Phone copied'))
                 ->copyMessageDuration(1500),
                 TextColumn::make('person')->translateLabel()->toggleable(),
-            ])->defaultSort('time', 'asc')
+            ])->defaultSort('time', 'desc')
             ->filters([
                 SelectFilter::make('place')->translateLabel()
                     ->options(function () {
