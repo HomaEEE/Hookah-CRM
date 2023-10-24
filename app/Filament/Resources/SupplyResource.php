@@ -85,16 +85,16 @@ class SupplyResource extends Resource
                                 Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 DateTimePicker::make('added_at')
-                                ->label(__('Date Added'))
-                                ->native(false)
-                                ->maxDate(now())->default(now()),
+                                    ->label(__('Date Added'))
+                                    ->native(false)
+                                    ->maxDate(now())->default(now()),
                                 Select::make('supplier_id')->label(__('Supplier'))
                                     ->relationship('supplier', 'company')
                                     ->searchable()
                                     ->native(false)
                                     ->preload()
                                     ->required()
-                                    ->options( Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
+                                    ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
                                     ->createOptionForm([
                                         Section::make()
                                             ->schema([
@@ -134,9 +134,11 @@ class SupplyResource extends Resource
                                     ->collection('supplies')
                                     ->multiple()
                                     ->imagePreviewHeight(350)
+                                    ->imageResizeMode('cover')
+                                    ->imageResizeTargetWidth('2100')
                                     ->imageEditor()
                                     ->optimize('webp')
-                                    ->resize(50)
+                                    ->resize(60)
                                     ->imageEditorAspectRatios([
                                         null,
                                         '16:9',
@@ -166,29 +168,30 @@ class SupplyResource extends Resource
                 TextColumn::make('supplier.company')->label(__('Supplier'))->searchable(),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable(),
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
-                ->collection('supplies')
-                ->circular()
-                ->stacked()
-                ->limit(3)
-                ->limitedRemainingText()
-                ->height(30)
-                ->toggleable()
-                ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                ->placeholder('No description.')
-                ->visibleFrom('md'),
+                    ->collection('supplies')
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText()
+                    ->height(30)
+                    ->toggleable()
+                    ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                    ->placeholder('No description.')
+                    ->visibleFrom('md'),
                 // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
                 TextColumn::make('type_pay')->label(__('Type pay'))
-                ->badge()
-                ->formatStateUsing(
-                    fn (string $state): string => match ($state) {
-                        '0' => __('Cash'),
-                        '1' => __('Card'),
-                    })
+                    ->badge()
+                    ->formatStateUsing(
+                        fn (string $state): string => match ($state) {
+                            '0' => __('Cash'),
+                            '1' => __('Card'),
+                        }
+                    )
                     ->colors([
                         0 => 'info',
                         1 => 'danger',
                     ]),
-            IconColumn::make('pay')
+                IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
                     ->trueIcon('heroicon-o-check')
@@ -196,78 +199,78 @@ class SupplyResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => ! $record->$name,
+                            $name => !$record->$name,
                         ]);
                     })
                     ->visibleFrom('md'),
-            IconColumn::make('poster')
-                ->translateLabel()
+                IconColumn::make('poster')
+                    ->translateLabel()
                     ->boolean()
                     ->trueIcon('heroicon-o-check')
                     ->falseIcon('heroicon-o-x-mark')
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => ! $record->$name,
+                            $name => !$record->$name,
                         ]);
                     })
-                ->visibleFrom('md'),
+                    ->visibleFrom('md'),
 
             ])->defaultSort('added_at', 'desc')
             ->deferLoading() //Ассинхронная загрузка
             ->filters([
                 SelectFilter::make('Place')
                     ->label(__('Place'))
-                // build the filter form
+                    // build the filter form
                     ->form([
                         Select::make('supplier_id')->label(__('Supplier'))
                             ->searchable()
                             ->preload()
                             ->options(
                                 Supplier::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
-                                ),
+                            ),
                     ])
-                    ->query(function (Builder $query, array $data) {
-                        $place_id = (int) Filament::getTenant()->id;
-                        $supplier_id = (int) $data['supplier_id'];
+                    ->query(
+                        function (Builder $query, array $data) {
+                            $place_id = (int) Filament::getTenant()->id;
+                            $supplier_id = (int) $data['supplier_id'];
 
-                        if (! empty($supplier_id)) {
-                            $query->where('supplier_id', '=', $supplier_id);
-
+                            if (!empty($supplier_id)) {
+                                $query->where('supplier_id', '=', $supplier_id);
+                            }
                         }
-                    }
                     ),
 
                 Filter::make('created_at')
-                ->form([
-                    DatePicker::make('created_from')->translateLabel()->native(false)
-                        ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                    DatePicker::make('created_until')->translateLabel()->native(false)
-                        ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when(
-                            $data['created_from'] ?? null,
-                            fn (Builder $query, $date): Builder => $query->whereDate('added_at', '>=', $date),
-                        )
-                        ->when(
-                            $data['created_until'] ?? null,
-                            fn (Builder $query, $date): Builder => $query->whereDate('added_at', '<=', $date),
-                        );
-                })
-                ->indicateUsing(function (array $data): array {
-                    $indicators = [];
+                    ->form([
+                        DatePicker::make('created_from')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
+                        DatePicker::make('created_until')->translateLabel()->native(false)
+                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
 
-                    if ($data['created_from'] ?? null) {
-                        $indicators['created_from'] = 'Поставки с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                    }
-                    if ($data['created_until'] ?? null) {
-                        $indicators['created_until'] = 'Поставки до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                    }
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Поставки с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Поставки до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                        }
 
-                    return $indicators;
-                }),
+                        return $indicators;
+                    }),
 
                 SelectFilter::make('type_pay')->translateLabel()
                     ->options(
@@ -279,19 +282,19 @@ class SupplyResource extends Resource
                     ->attribute('type_pay'),
 
 
-                    TernaryFilter::make('pay')
+                TernaryFilter::make('pay')
                     ->translateLabel()
                     ->nullable()
                     ->placeholder(__('All'))
                     ->trueLabel(__('Paid'))
                     ->falseLabel(__('Not Pay')),
 
-                    TernaryFilter::make('poster')
+                TernaryFilter::make('poster')
                     ->translateLabel()
                     ->nullable()
                     ->placeholder(__('All'))
-                    ->falseLabel(__('In Poster'))
-                    ->trueLabel(__('Not in Poster')),
+                    ->trueLabel(__('In Poster'))
+                    ->falseLabel(__('Not in Poster'))
             ])
 
             ->actions([
@@ -312,16 +315,16 @@ class SupplyResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-            ->badge(),
-            TextEntry::make('supplier.company')->label(__('Supplier')),
-            TextEntry::make('sum')->label(__('Supplier')),
-            TextEntry::make('type_pay')->translateLabel(),
-            LightboxSpatieMediaLibraryImageEntry::make('invoice')->translateLabel()
-            ->collection('supplies')
-            ->conversion('thumb')
-        ]);
+            ->schema([
+                TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                    ->badge(),
+                TextEntry::make('supplier.company')->label(__('Supplier')),
+                TextEntry::make('sum')->label(__('Supplier')),
+                TextEntry::make('type_pay')->translateLabel(),
+                LightboxSpatieMediaLibraryImageEntry::make('invoice')->translateLabel()
+                    ->collection('supplies')
+                    ->conversion('thumb')
+            ]);
     }
 
     public static function getPages(): array

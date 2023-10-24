@@ -118,14 +118,11 @@ class ExpenseResource extends Resource
                                     ->collection('supplies')
                                     ->multiple()
                                     ->optimize('webp')
-                                    ->resize(50)
+                                    ->imageResizeMode('cover')
+                                    ->imageResizeTargetWidth('1600')
                                     ->reorderable()
                                     ->openable()
                                     ->imagePreviewHeight('250')
-                                    ->loadingIndicatorPosition('left')
-                                    ->removeUploadedFileButtonPosition('right')
-                                    ->uploadButtonPosition('left')
-                                    ->uploadProgressIndicatorPosition('left')
                             ]),
                     ]),
             ])->columns(2);

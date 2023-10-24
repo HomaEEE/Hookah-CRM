@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\{Item, Place, Workshop};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +16,11 @@ return new class extends Migration
     {
         Schema::create('storages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('place_id')->unsigned();
-            $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreignIdFor(Place::class);
+            $table->foreignIdFor(Workshop::class);
+            $table->foreignIdFor(Item::class);
+            $table->integer('qty')->default(0);
+            $table->text('comment')->nullable();
         });
     }
 

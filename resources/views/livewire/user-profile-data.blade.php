@@ -1,4 +1,4 @@
-<x-filament-breezy::grid-section md=2 title='{{__("Extended Data")}}' description=''>
+<x-filament-breezy::grid-section md=2 title="Your title" description="This is the description">
     <x-filament::card>
         <form wire:submit.prevent="submit" class="space-y-6">
 
@@ -6,9 +6,9 @@
 
             <div class="text-right">
                 <x-filament::button type="submit" form="submit" class="align-right">
-                    {{ __('filament-breezy::default.profile.personal_info.submit.label') }}
+                    Submit!
                 </x-filament::button>
             </div>
-     </form>
+        </form>
     </x-filament::card>
 </x-filament-breezy::grid-section>

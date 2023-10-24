@@ -82,7 +82,7 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Bill::class, 'place_id');
     }
 
-    public function storage()
+    public function storages()
     {
         return $this->hasMany(Storage::class, 'place_id');
     }

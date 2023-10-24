@@ -83,10 +83,6 @@ class ShiftResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
-                        Section::make('report')
-                            ->schema(static::getFormSchema('z-report'))
-                            ->hidden(fn (Get $get) => $get('place_id') == null),
-
                         Section::make('poster')
                             ->schema(static::getFormSchema('poster'))
                             ->hidden(fn (Get $get) => $get('place_id') == null),
@@ -98,6 +94,11 @@ class ShiftResource extends Resource
                         Section::make('Shift')->label(__('Shift'))
                             ->schema(static::getFormSchema('shift'))
                             ->visible(fn (Get $get) => $get('terminal') != null),
+
+
+                        Section::make('report')
+                            ->schema(static::getFormSchema('z-report'))
+                            ->hidden(fn (Get $get) => $get('place_id') == null),
                     ]),
             ]);
     }
@@ -676,10 +677,7 @@ class ShiftResource extends Resource
                             ->label(__('Z report terminal')),
                         TextEntry::make('report.incassation')->badge()
                             ->label(__('Incassation')),
-
-
                     ])->columns(3)
-
             ]);
     }
 
