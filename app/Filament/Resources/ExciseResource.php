@@ -24,6 +24,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
+use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExciseResource extends Resource
 {
@@ -79,10 +80,13 @@ class ExciseResource extends Resource
                                 SpatieMediaLibraryFileUpload::make('excise')
                                     ->collection('excise')
                                     ->image()
-                                    ->imageResizeMode('contain')
                                     ->openable()
+                                    ->imagePreviewHeight(350)
+                                    ->imageResizeMode('cover')
+                                    ->imageResizeTargetWidth('1000')
+                                    ->imageEditor()
+                                    ->optimize('webp')
                             ])
-
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
                     ])->columns(2),
             ]);
@@ -148,6 +152,9 @@ class ExciseResource extends Resource
                 return $record->volume * 1000 / 40 - $record->portions;
             })
             ->html(),
+
+            LightboxSpatieMediaLibraryImageEntry::make('excise')->translateLabel()
+            ->collection('excise')
         ]);
     }
 

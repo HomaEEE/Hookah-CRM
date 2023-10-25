@@ -84,7 +84,6 @@ class TechcardResource extends Resource
                 Textarea::make('process')->label(__('Process')),
 
                 TableRepeater::make('ingredients')
-                ->headers([__('Ingredient'), __('Heft')])
                 ->schema([
                     Select::make('ingredient_id')->label(__('Ingredient'))
                     ->hiddenLabel()
@@ -126,6 +125,7 @@ class TechcardResource extends Resource
         return $infolist
         ->schema([
             TextEntry::make('process')->translateLabel(),
+            TextEntry::make('ingredients[0]'),
             RepeatableEntry::make('ingredients')->hiddenLabel()
             ->schema([
                 TextEntry::make('ingredient')->hiddenLabel(),

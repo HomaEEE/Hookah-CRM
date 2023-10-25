@@ -27,7 +27,7 @@ class StorageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $recordTitleAttribute = 'id';
+    protected static ?string $recordTitleAttribute = 'name';
 
 
     public static function getNavigationGroup(): ?string
@@ -89,9 +89,9 @@ class StorageResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('item.name')->label(__('Title')),
+                TextColumn::make('item.name')->label(__('Title'))->searchable(),
                 TextColumn::make('qty')->label(__('Quantity')),
-                TextColumn::make('item.price')->label(__('Price')),
+                TextColumn::make('item.price')->label(__('Price'))->searchable(),
             ])
             ->filters([
                 //
