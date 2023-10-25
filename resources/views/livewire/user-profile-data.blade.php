@@ -6,7 +6,7 @@
 
             <div class="text-right">
                 <x-filament::button type="submit" form="submit" class="align-right">
-                    Submit!
+                {{ __('filament-breezy::default.profile.personal_info.submit.label') }}
                 </x-filament::button>
             </div>
         </form>
