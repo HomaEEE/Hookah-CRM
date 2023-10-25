@@ -105,7 +105,7 @@ class ExciseResource extends Resource
                         // return whatever you need to show
                         return $record->volume * 1000 / 40 - $record->portions;
                     }),
-            ])
+            ])->defaultSort('added_at', 'desc')
             ->filters([
                 //
             ])
