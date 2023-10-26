@@ -63,10 +63,7 @@ class CreateShift extends CreateRecord
     protected function getSteps(): array
     {
         return [
-            Step::make('Reoprts')->translateLabel()
-                ->schema([
-                    Section::make(ShiftResource::getFormSchema('report')),
-                ]),
+
             Step::make('Poster')->translateLabel()
                 ->schema(
                     ShiftResource::getFormSchema('poster')
@@ -79,6 +76,10 @@ class CreateShift extends CreateRecord
                 ->schema(
                    ShiftResource::getFormSchema('shift')
                 ),
+            Step::make('Reoprts')->translateLabel()
+                ->schema([
+                    Section::make(ShiftResource::getFormSchema('report')),
+                ]),
         ];
     }
 

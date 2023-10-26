@@ -12,7 +12,7 @@ use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Place, Workshop, Shift, User, Wage, Withdrawal};
+use App\Models\{Expense, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -25,6 +25,7 @@ use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Notifications\Notification;
 
 use Filament\Forms\Components\Hidden;
@@ -35,6 +36,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Filters\SelectFilter;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Database\Eloquent\Builder;
@@ -371,11 +373,11 @@ class ShiftResource extends Resource
                             ->searchable(),
 
                         Select::make('wage_id')->translateLabel()
-                        ->options(
-                            Wage::where('place_id', Filament::getTenant()->id)
-                                ->get()
-                                ->pluck('name', 'id')
-                        )
+                            ->options(
+                                Wage::where('place_id', Filament::getTenant()->id)
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            )
                             ->required()
                             ->reactive()
                             ->searchable()
@@ -478,65 +480,125 @@ class ShiftResource extends Resource
             return [
                 Actions::make([
                     Action::make('add_withdrawal')->translateLabel()
-                    ->icon('heroicon-s-banknotes')
-                    ->color('success')
-                    ->modalHeading(__('Add Withdrawal'))->translateLabel()
-                    ->requiresConfirmation()
-                    ->form([
-                        Hidden::make('user_id')->default(Auth::user()->id),
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
-                    ])
-                    ->action(function (Set $set, array $data): void {
-                        Withdrawal::create(
-                            [
-                                'place_id' => Filament::getTenant()->id,
-                                'user_id' => Auth::user()->id,
-                                'sum' => $data['sum']
-                            ]
-                        );
+                        ->icon('heroicon-s-banknotes')
+                        ->color('success')
+                        ->modalHeading(__('Add Withdrawal'))->translateLabel()
+                        ->requiresConfirmation()
+                        ->form([
+                            Hidden::make('user_id')->default(Auth::user()->id),
+                            Hidden::make('place_id')->default(Filament::getTenant()->id),
+                            TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
+                        ])
+                        ->action(function (Set $set, array $data): void {
+                            Withdrawal::create(
+                                [
+                                    'place_id' => Filament::getTenant()->id,
+                                    'user_id' => Auth::user()->id,
+                                    'sum' => $data['sum']
+                                ]
+                            );
 
 
-                        $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
-                        $set('withdrawal', $LocalWithdrawal);
-                    }),
+                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                            $set('withdrawal', $LocalWithdrawal);
+                        }),
+
+
+                    Action::make('add_expense')->translateLabel()
+                        ->icon('heroicon-s-banknotes')
+                        ->color('info')
+                        ->modalHeading(__('Add Expense'))->translateLabel()
+                        ->requiresConfirmation()
+                        ->form([
+                            DateTimePicker::make('added_at')
+                                ->label(__('Date Added'))
+                                ->native(false)
+                                ->maxDate(now())->default(now()),
+                            Select::make('supplier_id')->label(__('Supplier'))
+                                ->relationship('supplier', 'company')
+                                ->searchable()
+                                ->native(false)
+                                ->preload()
+                                ->required()
+                                ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
+
+                            TextInput::make('sum')->label(__('Sum'))
+                                ->numeric()
+                                ->prefix('₴')
+                                ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                            Textarea::make('comment')->label(__('Comment'))
+                                ->rows(3),
+                            Select::make('type_pay')->label(__('Type pay'))
+                                ->default(0)
+                                ->options([
+                                    0 => __('Cash'),
+                                    1 => __('Card')
+                                ])
+                                ->required(),
+                            Toggle::make('pay')->label(__('Paid'))
+                                ->default(false)
+                                ->inline(),
+                        ])
+                        ->action(function (Set $set, array $data): void {
+                            Expense::create(
+                                [
+                                    'place_id' => Filament::getTenant()->id,
+                                    'user_id' => Auth::user()->id,
+                                    'sum' => $data['sum'],
+                                    'added_at' => $data['added_at'],
+                                    'comment' => $data['comment'],
+                                    'type_pay' => $data['type_pay'],
+                                    'pay' => $data['pay']
+                                ],
+                            );
+
+
+                            Notification::make()
+                            ->title(__('Expense added'))
+                            ->send();
+
+                            $posterLocalExpense = (new PosterApi())->getLocalExpenses(Filament::getTenant()->id);
+                            $set('expense', (int) $posterLocalExpense);
+
+                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                            $set('withdrawal', $LocalWithdrawal);
+                        }),
 
                     Action::make('update_expenses')->translateLabel()
                         ->icon('heroicon-s-arrow-path')
                         ->color('danger')
-                        ->action(function (Get $get, Set $set) {
-                            $place = Place::where('id', $get('place_id'))->first();
-                            $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
+                        ->action(function ( Set $set) {
+                            $posterLocalExpense = (new PosterApi())->getLocalExpenses(Filament::getTenant()->id);
                             $set('expense', (int) $posterLocalExpense);
 
-                            $localTips = (new PosterApi())->getLocalTips($place->id);
+                            $localTips = (new PosterApi())->getLocalTips(Filament::getTenant()->id);
                             $set('tips', $localTips);
 
-                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
                             $set('withdrawal', $LocalWithdrawal);
                         }),
-                        // Action::make('add_expense')->translateLabel()
-                        // ->icon('heroicon-s-arrow-path')
-                        // ->color('danger')
-                        // ->action(function (Get $get, Set $set) {
-                        //     $place = Place::where('id', $get('place_id'))->first();
-                        //     $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
-                        //     $set('expense', (int) $posterLocalExpense);
+                    // Action::make('add_expense')->translateLabel()
+                    // ->icon('heroicon-s-arrow-path')
+                    // ->color('danger')
+                    // ->action(function (Get $get, Set $set) {
+                    //     $place = Place::where('id', $get('place_id'))->first();
+                    //     $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
+                    //     $set('expense', (int) $posterLocalExpense);
 
-                        //     $localTips = (new PosterApi())->getLocalTips($place->id);
-                        //     $set('tips', $localTips);
+                    //     $localTips = (new PosterApi())->getLocalTips($place->id);
+                    //     $set('tips', $localTips);
 
-                        //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
-                        //     $set('withdrawal', $LocalWithdrawal);
-                        // }),
-                        // Action::make('add_withdraw')->translateLabel()
-                        // ->icon('heroicon-s-arrow-path')
-                        // ->color('info')
-                        // ->action(function (Set $set) {
+                    //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                    //     $set('withdrawal', $LocalWithdrawal);
+                    // }),
+                    // Action::make('add_withdraw')->translateLabel()
+                    // ->icon('heroicon-s-arrow-path')
+                    // ->color('info')
+                    // ->action(function (Set $set) {
 
-                        //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
-                        //     $set('withdrawal', $LocalWithdrawal);
-                        // })
+                    //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                    //     $set('withdrawal', $LocalWithdrawal);
+                    // })
                 ])->fullWidth(),
 
                 FieldSet::make('Expenses & Income')->schema([
