@@ -479,10 +479,10 @@ class ShiftResource extends Resource
         if ($section === 'shift') {
             return [
                 Actions::make([
-                    Action::make('add_withdrawal')->translateLabel()
+                    Action::make('Add Withdrawal')->label(__('Add Withdrawal'))
                         ->icon('heroicon-s-banknotes')
                         ->color('success')
-                        ->modalHeading(__('Add Withdrawal'))->translateLabel()
+                        ->modalHeading(__('Add Withdrawal'))
                         ->requiresConfirmation()
                         ->form([
                             Hidden::make('user_id')->default(Auth::user()->id),
@@ -504,10 +504,10 @@ class ShiftResource extends Resource
                         }),
 
 
-                    Action::make('add_expense')->translateLabel()
+                    Action::make('add_expense')->label(__('Add Expense'))
                         ->icon('heroicon-s-banknotes')
                         ->color('info')
-                        ->modalHeading(__('Add Expense'))->translateLabel()
+                        ->modalHeading(__('Add Expense'))
                         ->requiresConfirmation()
                         ->form([
                             DateTimePicker::make('added_at')
@@ -601,7 +601,7 @@ class ShiftResource extends Resource
                     // })
                 ])->fullWidth(),
 
-                FieldSet::make('Expenses & Income')->schema([
+                FieldSet::make(__('Expenses & Income'))->schema([
                     TextInput::make('income')->translateLabel()
                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                         ->numeric()
