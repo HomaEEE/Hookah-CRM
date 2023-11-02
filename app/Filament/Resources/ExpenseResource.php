@@ -76,17 +76,10 @@ class ExpenseResource extends Resource
                                     ->maxDate(now())->default(now()),
                                 Select::make('category_id')->label(__('Category'))
                                     ->relationship('categories', 'name')
-                                    ->hidden(fn (Get $get) => $get('place_id') == null)
                                     ->searchable()
                                     ->required()
                                     ->reactive()
-                                    ->options(function (callable $get) {
-                                        if (null == ($get('place_id'))) {
-                                            return null;
-                                        } else {
-                                            return ExpenseCategory::where('place_id', $get('place_id'))->pluck('name', 'id');
-                                        }
-                                    })
+                                    ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
                                     ->createOptionForm([
                                         Section::make()
                                             ->schema([
@@ -108,23 +101,7 @@ class ExpenseResource extends Resource
                                     ->required(),
                                 Textarea::make('comment')->translateLabel()->rows(2),
                             ]),
-                    ]),
-
-                Group::make()
-                    ->schema([
-                        Section::make()
-                            ->schema([
-                                SpatieMediaLibraryFileUpload::make('invoice')
-                                    ->collection('supplies')
-                                    ->multiple()
-                                    ->optimize('webp')
-                                    ->imageResizeMode('cover')
-                                    ->imageResizeTargetWidth('1600')
-                                    ->reorderable()
-                                    ->openable()
-                                    ->imagePreviewHeight('250')
-                            ]),
-                    ]),
+                    ])
             ])->columns(2);
     }
 
@@ -138,7 +115,8 @@ class ExpenseResource extends Resource
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
 
                 TextColumn::make('category.name')->label(__('Category'))
-                    ->badge(),
+                    ->badge()
+                    ->description(fn (Expense $record): string => $record->comment ?? ''),
 
                 TextColumn::make('supply_id')->badge()->label(__('Supply'))
                     ->wrap()

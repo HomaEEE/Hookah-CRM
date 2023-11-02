@@ -7,9 +7,8 @@ use App\Models\Expense;
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
-use Filament\Infolists\Components\Tabs\Tab;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,8 +27,8 @@ class ExpensesShift extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Expense::query()->where('place_id', Filament::getTenant()->id)
-        ->whereDate('added_at', Carbon::today())->with('category', 'user', 'supply');
+    return Expense::query()->where('place_id', Filament::getTenant()->id)
+        ->whereDate('added_at', Carbon::today())->with('user', 'supply');
     }
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
@@ -53,8 +52,7 @@ class ExpensesShift extends BaseWidget
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('sm')
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
-                TextColumn::make('place.city')->label(__('City')),
-                TextColumn::make('category.name')->label(__('Category'))->badge()
+                TextColumn::make('category')->label(__('Category'))->badge()
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
                 TextColumn::make('type_pay')->translateLabel()->badge()
@@ -63,6 +61,10 @@ class ExpensesShift extends BaseWidget
                      '0' => __('Cash'),
                      '1' => __('Card'),
                  }),
+                 IconColumn::make('pay')->translateLabel()
+                 ->boolean()
+                    ->trueIcon('heroicon-o-check')
+                    ->falseIcon('heroicon-o-x-mark')
         ];
     }
 

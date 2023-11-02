@@ -21,7 +21,6 @@ class EditShift extends EditRecord
             Actions\DeleteAction::make(),
             Actions\RestoreAction::make(),
             Actions\ForceDeleteAction::make(),
-
         ];
     }
 
@@ -34,7 +33,6 @@ class EditShift extends EditRecord
                 })->numeric(),
             Grid::make()
                 ->schema([
-
                     Card::make()
                         ->schema([
                             Placeholder::make('cash')->translateLabel()
@@ -87,7 +85,6 @@ class EditShift extends EditRecord
                                 }),
                         ])->columns(1)
                         ->columnSpan(['lg' => 1]),
-
                     Card::make()
                         ->schema([
                             Placeholder::make('income')->translateLabel()
@@ -104,7 +101,6 @@ class EditShift extends EditRecord
                                 }),
                         ])->columns(1)
                         ->columnSpan(['lg' => 1]),
-
                 ])->columns(4),
         ];
     }

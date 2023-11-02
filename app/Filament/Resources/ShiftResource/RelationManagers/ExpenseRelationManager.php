@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ShiftResource\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,8 +23,6 @@ class ExpenseRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-
-
         return $table
         ->modifyQueryUsing(fn (Builder $query) =>
             $query->where(
@@ -34,10 +33,18 @@ class ExpenseRelationManager extends RelationManager
                 ->size('sm')
                 ->badge()
                 ->description(fn ($record): string => $record->user->name ?? ''),
-                TextColumn::make('category.name')->translateLabel(),
-                TextColumn::make('sum')->translateLabel()->summarize(Sum::make()->label(__('Total')))                ,
-                TextColumn::make('type_pay')->translateLabel(),
-                TextColumn::make('pay')->translateLabel(),
+                TextColumn::make('category.name')->translateLabel()->badge()
+                ->description(fn ($record): string => $record->comment ?? ''),
+                TextColumn::make('sum')->translateLabel()->summarize(Sum::make()->label(__('Total'))),
+                IconColumn::make('type_pay')->translateLabel()
+                ->boolean()
+                ->trueIcon('heroicon-o-card')
+                ->falseIcon('heroicon-o-banknotes'),
+
+                IconColumn::make('pay')->translateLabel()
+               ->boolean()
+                    ->trueIcon('heroicon-o-check')
+                    ->falseIcon('heroicon-o-x-mark')
             ])
             ->filters([
                 //

@@ -12,7 +12,7 @@ use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Expense, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
+use App\Models\{Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -45,6 +45,7 @@ use Filament\Infolists\Infolist;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Fieldset as InfolistFeildSet;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Grouping\Group;
@@ -510,34 +511,28 @@ class ShiftResource extends Resource
                         ->modalHeading(__('Add Expense'))
                         ->requiresConfirmation()
                         ->form([
-                            DateTimePicker::make('added_at')
-                                ->label(__('Date Added'))
-                                ->native(false)
-                                ->maxDate(now())->default(now()),
-                            Select::make('supplier_id')->label(__('Supplier'))
-                                ->relationship('supplier', 'company')
-                                ->searchable()
-                                ->native(false)
-                                ->preload()
-                                ->required()
-                                ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
-
-                            TextInput::make('sum')->label(__('Sum'))
-                                ->numeric()
-                                ->prefix('₴')
-                                ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                            Textarea::make('comment')->label(__('Comment'))
-                                ->rows(3),
-                            Select::make('type_pay')->label(__('Type pay'))
-                                ->default(0)
-                                ->options([
-                                    0 => __('Cash'),
-                                    1 => __('Card')
-                                ])
-                                ->required(),
-                            Toggle::make('pay')->label(__('Paid'))
-                                ->default(false)
-                                ->inline(),
+                                DateTimePicker::make('added_at')
+                                    ->label(__('Date Added'))
+                                    ->native(false)
+                                    ->maxDate(now())->default(now()),
+                                Select::make('category_id')->label(__('Category'))
+                                    ->relationship('categories', 'name')
+                                    ->searchable()
+                                    ->required()
+                                    ->reactive()
+                                    ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
+                                TextInput::make('sum')->label(__('Sum'))
+                                    ->numeric()
+                                    ->prefix('₴')
+                                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                                Select::make('type_pay')->label(__('Type pay'))
+                                    ->default(0)
+                                    ->options([
+                                        0 => __('Cash'),
+                                        1 => __('Card')
+                                    ])
+                                    ->required(),
+                                Textarea::make('comment')->translateLabel()->rows(2),
                         ])
                         ->action(function (Set $set, array $data): void {
                             Expense::create(
@@ -548,7 +543,7 @@ class ShiftResource extends Resource
                                     'added_at' => $data['added_at'],
                                     'comment' => $data['comment'],
                                     'type_pay' => $data['type_pay'],
-                                    'pay' => $data['pay']
+                                    'pay' => 1
                                 ],
                             );
 
@@ -577,29 +572,8 @@ class ShiftResource extends Resource
                             $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
                             $set('withdrawal', $LocalWithdrawal);
                         }),
-                    // Action::make('add_expense')->translateLabel()
-                    // ->icon('heroicon-s-arrow-path')
-                    // ->color('danger')
-                    // ->action(function (Get $get, Set $set) {
-                    //     $place = Place::where('id', $get('place_id'))->first();
-                    //     $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
-                    //     $set('expense', (int) $posterLocalExpense);
 
-                    //     $localTips = (new PosterApi())->getLocalTips($place->id);
-                    //     $set('tips', $localTips);
-
-                    //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
-                    //     $set('withdrawal', $LocalWithdrawal);
-                    // }),
-                    // Action::make('add_withdraw')->translateLabel()
-                    // ->icon('heroicon-s-arrow-path')
-                    // ->color('info')
-                    // ->action(function (Set $set) {
-
-                    //     $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
-                    //     $set('withdrawal', $LocalWithdrawal);
-                    // })
-                ])->fullWidth(),
+                ]),
 
                 FieldSet::make(__('Expenses & Income'))->schema([
                     TextInput::make('income')->translateLabel()
@@ -708,8 +682,6 @@ class ShiftResource extends Resource
                         TextEntry::make('different')->translateLabel()
                             ->badge()
                             ->getStateUsing(fn (Shift $record): int => $record->calc_shift - $record->shift ?? ''),
-
-
                     ])->columns(['md' => 2, 'xl' => 3]),
 
                 InfolistFeildSet::make('Workshops')->translateLabel()
@@ -729,16 +701,35 @@ class ShiftResource extends Resource
 
                 InfolistFeildSet::make('Reports')->translateLabel()
                     ->schema([
-                        TextEntry::make('report.x-report-terminal')->badge()
-                            ->label(__('X report terminal')),
-                        TextEntry::make('report.z-report-terminal')->badge()
-                            ->label(__('Z report terminal')),
-                        TextEntry::make('report.x-report-poster')->badge()
-                            ->label(__('X report poster')),
-                        TextEntry::make('report.z-report-poster')->badge()
-                            ->label(__('Z report terminal')),
-                        TextEntry::make('report.incassation')->badge()
-                            ->label(__('Incassation')),
+                        IconEntry::make('report.x-report-terminal')->label(__('X report terminal'))
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check',
+                            '0' => 'heroicon-o-x-mark',
+                        }),
+
+                        IconEntry::make('report.z-report-terminal')->label(__('Z report terminal'))
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check',
+                            '0' => 'heroicon-o-x-mark',
+                        }),
+
+                        IconEntry::make('report.x-report-poster')->label(__('X report poster'))
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check',
+                            '0' => 'heroicon-o-x-mark',
+                        }),
+
+                        IconEntry::make('report.z-report-poster')->label(__('Z report terminal'))
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check',
+                            '0' => 'heroicon-o-x-mark',
+                        }),
+
+                        IconEntry::make('report.incassation')->label(__('Incassation'))
+                        ->icon(fn (string $state): string => match ($state) {
+                            '1' => 'heroicon-o-check',
+                            '0' => 'heroicon-o-x-mark',
+                        }),
                     ])->columns(3)
             ]);
     }
