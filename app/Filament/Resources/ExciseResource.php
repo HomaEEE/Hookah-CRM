@@ -62,6 +62,7 @@ class ExciseResource extends Resource
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 DateTimePicker::make('added_at')->label(__('Date Added'))->maxDate(now())->default(now()),
                                 TextInput::make('title')->translateLabel()->required(),
+                                TextInput::make('excise')->translateLabel()->required(),
                                 Select::make('volume')->translateLabel()->required()
                                     ->options(
                                         [
@@ -98,6 +99,7 @@ class ExciseResource extends Resource
             ->columns([
                 TextColumn::make('added_at')->dateTime('d/m/Y')->badge()->translateLabel(),
                 TextColumn::make('title')->translateLabel(),
+                TextColumn::make('excise')->translateLabel(),
                 TextColumn::make('volume')->translateLabel(),
                 TextColumn::make('portions')->translateLabel(),
                 TextColumn::make('left')->translateLabel()
@@ -144,6 +146,7 @@ class ExciseResource extends Resource
         ->schema([
             TextEntry::make('added_at')->translateLabel(),
             TextEntry::make('title')->translateLabel(),
+            TextEntry::make('excise')->translateLabel(),
             TextEntry::make('volume')->translateLabel(),
             TextEntry::make('portions')->translateLabel(),
             TextEntry::make('left')->translateLabel()
@@ -155,6 +158,7 @@ class ExciseResource extends Resource
 
             LightboxSpatieMediaLibraryImageEntry::make('excise')->translateLabel()
             ->collection('excise')
+            ->conversion('thumb')
         ]);
     }
 
