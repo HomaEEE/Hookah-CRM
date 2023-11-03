@@ -702,34 +702,29 @@ class ShiftResource extends Resource
                 InfolistFeildSet::make('Reports')->translateLabel()
                     ->schema([
                         IconEntry::make('report.x-report-terminal')->label(__('X report terminal'))
-                        ->icon(fn (string $state): string => match ($state) {
-                            '1' => 'heroicon-o-check',
-                            '0' => 'heroicon-o-x-mark',
-                        }),
+                        ->boolean()
+                        ->trueIcon('heroicon-o-check')
+                        ->falseIcon('heroicon-o-x-mark'),
 
                         IconEntry::make('report.z-report-terminal')->label(__('Z report terminal'))
-                        ->icon(fn (string $state): string => match ($state) {
-                            '1' => 'heroicon-o-check',
-                            '0' => 'heroicon-o-x-mark',
-                        }),
+                        ->boolean()
+                        ->trueIcon('heroicon-o-check')
+                        ->falseIcon('heroicon-o-x-mark'),
 
                         IconEntry::make('report.x-report-poster')->label(__('X report poster'))
-                        ->icon(fn (string $state): string => match ($state) {
-                            '1' => 'heroicon-o-check',
-                            '0' => 'heroicon-o-x-mark',
-                        }),
+                        ->boolean()
+                        ->trueIcon('heroicon-o-check')
+                        ->falseIcon('heroicon-o-x-mark'),
 
                         IconEntry::make('report.z-report-poster')->label(__('Z report terminal'))
-                        ->icon(fn (string $state): string => match ($state) {
-                            '1' => 'heroicon-o-check',
-                            '0' => 'heroicon-o-x-mark',
-                        }),
+                        ->boolean()
+                        ->trueIcon('heroicon-o-check')
+                        ->falseIcon('heroicon-o-x-mark'),
 
                         IconEntry::make('report.incassation')->label(__('Incassation'))
-                        ->icon(fn (string $state): string => match ($state) {
-                            '1' => 'heroicon-o-check',
-                            '0' => 'heroicon-o-x-mark',
-                        }),
+                        ->boolean()
+                        ->trueIcon('heroicon-o-check')
+                        ->falseIcon('heroicon-o-x-mark')
                     ])->columns(3)
             ]);
     }

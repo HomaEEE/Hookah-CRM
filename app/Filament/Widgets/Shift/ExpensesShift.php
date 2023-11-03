@@ -52,7 +52,7 @@ class ExpensesShift extends BaseWidget
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('sm')
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
-                TextColumn::make('category')->label(__('Category'))->badge()
+                TextColumn::make('category.name')->label(__('Category'))->badge()
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
                 TextColumn::make('type_pay')->translateLabel()->badge()
