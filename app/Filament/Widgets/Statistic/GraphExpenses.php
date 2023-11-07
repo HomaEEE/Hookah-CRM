@@ -16,12 +16,12 @@ class GraphExpenses extends ChartWidget
 
     public function getHeading(): string
     {
-        return __('Statistic');
+        return __('Expenses');
     }
 
     protected function getData(): array
     {
-    [$labels, $data] = Trend::make(Expense::class)
+    [$labels, $data] = Trend::make(Expense::where('place_id', Filament::getTenant()->id))
             ->range($this->filter)
             ->rangesFromOptions($this->getFilters())
             ->sumByMonths('sum');
@@ -29,7 +29,7 @@ class GraphExpenses extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Expense',
+                    'label' => __('Expenses'),
                     'data' => $data,
                 ],
             ],

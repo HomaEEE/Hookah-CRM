@@ -125,14 +125,13 @@ class TechcardResource extends Resource
         return $infolist
         ->schema([
             TextEntry::make('process')->translateLabel(),
-            TextEntry::make('ingredients[0]'),
             RepeatableEntry::make('ingredients')->hiddenLabel()
             ->schema([
-                TextEntry::make('ingredient')->hiddenLabel(),
+                TextEntry::make('ingredient.name')->hiddenLabel(),
                 TextEntry::make('heft')->hiddenLabel()->badge()
             ])
-            ->columns(2)
             ->grid(2)
+            ->columns(2)
             ]);
     }
 

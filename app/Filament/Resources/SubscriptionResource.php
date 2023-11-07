@@ -123,11 +123,6 @@ class SubscriptionResource extends Resource
                 //
             ])
 
-            ->groups([
-                Group::make('place.city')
-                ->label(__('Place city')),
-            ])
-
             ->actions([
                 Action::make('paid')->button()->translateLabel()
                     ->icon('heroicon-s-banknotes')
@@ -136,6 +131,12 @@ class SubscriptionResource extends Resource
                     ->requiresConfirmation()
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
+                        TextInput::make('sum')->translateLabel()
+                        ->numeric()
+                        ->required()
+                        ->prefix('₴')
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                        ->default(fn (Subscription $record): int => $record->price),
                         Select::make('type_pay')->translateLabel()
                             ->columnSpan(['md' => 6])
                             ->options(

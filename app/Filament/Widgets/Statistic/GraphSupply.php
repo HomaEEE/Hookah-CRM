@@ -29,7 +29,7 @@ class GraphSupply extends ChartWidget
     {
         $activeFilter = $this->filter;
 
-        $data = Trend::query( Supply::query()->where('place_id', Filament::getTenant()->id) )
+        $data = Trend::query( Supply::where('place_id', Filament::getTenant()->id) )
         ->between(
             start: now()->startOfYear(),
             end: now()->endOfYear(),

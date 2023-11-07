@@ -5,6 +5,7 @@ namespace App\Filament\Widgets\Statistic;
 use Filament\Widgets\ChartWidget;
 
 use App\Models\Expense;
+use Filament\Facades\Filament;
 use SaKanjo\EasyMetrics\Metrics\Trend;
 
 class GraphProfit extends ChartWidget
@@ -17,7 +18,7 @@ class GraphProfit extends ChartWidget
 
     protected function getData(): array
     {
-    [$labels, $data] = Trend::make(Expense::class)
+    [$labels, $data] = Trend::make(Expense::where('place_id', Filament::getTenant()->id))
             ->range($this->filter)
             ->rangesFromOptions($this->getFilters())
             ->sumByMonths('sum');

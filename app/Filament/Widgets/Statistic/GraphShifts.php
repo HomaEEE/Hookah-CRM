@@ -32,7 +32,7 @@ class GraphShifts extends ChartWidget
     {
         $activeFilter = $this->filter;
 
-        $data = Trend::query( Shift::query()->where('place_id', Filament::getTenant()->id) )
+        $data = Trend::query( Shift::where('place_id', Filament::getTenant()->id) )
         ->between(
             start: now()->startOfYear(),
             end: now()->endOfYear(),
