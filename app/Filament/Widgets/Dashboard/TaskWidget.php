@@ -11,9 +11,12 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class TaskWidget extends BaseWidget
 {
+
+    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 

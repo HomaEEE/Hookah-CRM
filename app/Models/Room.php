@@ -21,7 +21,7 @@ class Room extends Model
 
     public function meter()
     {
-        return $this->hasMany(Meter::class, 'place_id');
+        return $this->belongsTo(Meter::class, 'place_id');
     }
 
     public function getRoomNameAttribute()

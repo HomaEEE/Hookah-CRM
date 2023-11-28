@@ -12,7 +12,11 @@ class Role extends SpatieRole
 
     public function place()
     {
-        return $this->BelongsToMany(Place::class);
+        return $this->belongsTo(Place::class);
     }
 
+    public function user()
+    {
+       return $this->hasOne(User::class);
+    }
 }

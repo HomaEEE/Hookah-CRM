@@ -73,6 +73,7 @@ class ExpenseResource extends Resource
                                 DateTimePicker::make('added_at')
                                     ->label(__('Date Added'))
                                     ->native(false)
+                                    ->seconds(false)
                                     ->maxDate(now())->default(now()),
                                 Select::make('category_id')->label(__('Category'))
                                     ->relationship('categories', 'name')
@@ -100,6 +101,29 @@ class ExpenseResource extends Resource
                                     ])
                                     ->required(),
                                 Textarea::make('comment')->translateLabel()->rows(2),
+
+                                Section::make()
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('invoice')
+                                    ->collection('supplies')
+                                    ->multiple()
+                                    ->imagePreviewHeight(350)
+                                    ->imageResizeMode('cover')
+                                    ->imageResizeTargetWidth('2100')
+                                    ->imageEditor()
+                                    ->optimize('webp')
+                                    ->resize(60)
+                                    ->imageEditorAspectRatios([
+                                        null,
+                                        '16:9',
+                                        '4:3',
+                                        '1:1',
+                                    ])
+                                    ->reorderable()
+                                    ->openable()
+                            ])
+
+                            ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
                             ]),
                     ])
             ])->columns(2);

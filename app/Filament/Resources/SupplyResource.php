@@ -87,6 +87,7 @@ class SupplyResource extends Resource
                                 DateTimePicker::make('added_at')
                                     ->label(__('Date Added'))
                                     ->native(false)
+                                    ->seconds(false)
                                     ->maxDate(now())->default(now()),
                                 Select::make('supplier_id')->label(__('Supplier'))
                                     ->relationship('supplier', 'company')
@@ -170,6 +171,7 @@ class SupplyResource extends Resource
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable(),
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
+                    ->simpleLightbox()
                     ->circular()
                     ->stacked()
                     ->limit(3)

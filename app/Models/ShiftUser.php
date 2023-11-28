@@ -33,6 +33,10 @@ class ShiftUser extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function place()
+    {
+        return $this->belongsTo(Place::class, 'place_id');
+    }
 
     public function users()
     {

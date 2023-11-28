@@ -9,6 +9,7 @@ return [
         'navigation_group' => true,
         'is_globally_searchable' => false,
         'show_model_path' => true,
+        'is_scoped_to_tenant' => true,
     ],
 
     'auth_provider_model' => [
@@ -18,13 +19,13 @@ return [
     'super_admin' => [
         'enabled' => true,
         'name' => 'super_admin',
-        'define_via_gate' => true,
+        'define_via_gate' => false,
         'intercept_gate' => 'before', // after
     ],
 
-    'filament_user' => [
+    'panel_user' => [
         'enabled' => true,
-        'name' => 'filament_user',
+        'name' => 'panel_user',
     ],
 
     'permission_prefixes' => [
@@ -33,10 +34,14 @@ return [
             'view_any',
             'create',
             'update',
+            'restore',
+            'restore_any',
             'replicate',
             'reorder',
             'delete',
+            'delete_any',
             'force_delete',
+            'force_delete_any',
         ],
 
         'page' => 'page',
@@ -44,10 +49,10 @@ return [
     ],
 
     'entities' => [
-        'pages' => true,
-        'widgets' => true,
-        'resources' => true,
-        'custom_permissions' => true,
+        'pages' => false,
+        'widgets' => false,
+        'resources' => false,
+        'custom_permissions' => false,
     ],
 
     'generator' => [
@@ -66,6 +71,12 @@ return [
         ],
 
         'resources' => [],
+    ],
+
+    'discovery' => [
+        'discover_all_resources' => true,
+        'discover_all_widgets' => true,
+        'discover_all_pages' => true,
     ],
 
     'register_role_policy' => [

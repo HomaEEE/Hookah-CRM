@@ -14,7 +14,7 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class TipsShift extends BaseWidget
 {
-   // use HasWidgetShield;
+    use HasWidgetShield;
 
     protected function getCards(): array
     {

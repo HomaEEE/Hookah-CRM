@@ -72,7 +72,6 @@ class UserResource extends Resource
                         $input.length >= 16 ? '9999-9999-9999-9999' : '9999-9999-9999-9999'
                      JS)),
                     DatePicker::make('birth')->translateLabel(),
-
                     Select::make('wage_id')->translateLabel()->options(
                         Wage::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
                     )->columns(2),
@@ -81,10 +80,10 @@ class UserResource extends Resource
                             ->relationship('place', 'name')
                             ->columns(2),
 
-                        CheckboxList::make('roles')->label(__('Access'))
+                        Select::make('role_id')
                             ->relationship('roles', 'name')
-                            ->columns(2)
-                            ->helperText('Только 1 пункт!')
+                            ->preload()
+                             ->searchable()
                     ]),
                 ])
             ]);
@@ -96,8 +95,6 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('id')->translateLabel(),
                 TextColumn::make('name')->translateLabel(),
-                SelectColumn::make('wage_id')->translateLabel()
-                ->options(Wage::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
                 TextColumn::make('birth')->date('d M Y')
                     ->translateLabel()
                     ->icon('heroicon-s-calendar')

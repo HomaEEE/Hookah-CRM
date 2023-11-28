@@ -5,6 +5,7 @@ namespace App\Filament\Widgets\Statistic;
 use Filament\Widgets\ChartWidget;
 
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use SaKanjo\EasyMetrics\Metrics\Trend;
 use SaKanjo\EasyMetrics\Enums\Range;
 use Filament\Facades\Filament;
@@ -45,10 +46,6 @@ class GraphExpenses extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            15 => __('15 Days'),
-            30 => __('Mounth'),
-            60 => __('2 Mounths'),
-            365 => __('Year')
         ];
     }
 }

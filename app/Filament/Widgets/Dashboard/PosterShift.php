@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\Shift;
+namespace App\Filament\Widgets\Dashboard;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Models\Place;
@@ -8,10 +8,13 @@ use Auth;
 use Filament\Facades\Filament;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PosterShift extends BaseWidget
 {
     protected static ?string $pollingInterval = '10s';
+
+    use HasWidgetShield;
 
     protected function getCards(): array
     {

@@ -12,6 +12,8 @@ use Filament\PanelProvider;
 use Filament\Widgets;
 
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
+use App\Livewire\PersonalInfo;
+use App\Livewire\UserDataComponent;
 use Filament\Navigation\NavigationGroup;
 use Illuminate\Validation\Rules\Password;
 
@@ -22,13 +24,12 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
-use App\Livewire\UserProfileData;
 
 use Filament\Support\Colors\Color;
+use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -44,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
-           // ->tenantProfile(EditPlaceProfile::class)
+        //    // ->tenantProfile(EditPlaceProfile::class)
             ->login()
             ->registration()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -93,7 +94,6 @@ class AdminPanelProvider extends PanelProvider
                     FilamentLanguageSwitchPlugin::make(),
                     SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['en', 'ru', 'uk']),
-                    \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
                     BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
@@ -101,14 +101,17 @@ class AdminPanelProvider extends PanelProvider
                         hasAvatars: false, // Enables the avatar upload form component (default = false)
                         slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
                     )
-                    ->myProfileComponents([UserProfileData::class])
+                    ->myProfileComponents([
+                        'personal_info' => PersonalInfo::class,
+                    ])
                     ->passwordUpdateRules(
                         rules: [Password::default()->mixedCase()->uncompromised(3)], // you may pass an array of validation rules as well. (default = ['min:8'])
                         requiresCurrentPassword: false, // when false, the user can update their password without entering their current password. (default = true)
                         ),
-                    //\ChrisReedIO\Socialment\SocialmentPlugin::make(),
-                    EnvironmentIndicatorPlugin::make()
-                    ,
+                    EnvironmentIndicatorPlugin::make(),
+                    SimpleLightBoxPlugin::make(),
+                    \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+
                 ])
             ->authGuard('web')
             ->middleware([

@@ -13,9 +13,12 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\Summarizers\Sum;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class ExpensesShift extends BaseWidget
 {
+
+    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 

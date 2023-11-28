@@ -6,7 +6,7 @@ use App\Http\Controllers\PosterApiController;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
-use App\Models\{Tip, Place};
+use App\Models\{Expense, ExpenseCategory, Tip};
 
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
@@ -14,6 +14,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -23,6 +27,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     protected static ?string $slug = 'dashboard';
 
+    use HasPageShield;
 
     public function getTitle(): string | Htmlable
     {
@@ -33,6 +38,7 @@ class Dashboard extends \Filament\Pages\Dashboard
     {
         return [
             \App\Filament\Widgets\Dashboard\TodayShift::class,
+            \App\Filament\Widgets\Dashboard\PosterShift::class,
             \App\Filament\Widgets\Dashboard\TabWidget::class,
         ];
     }
@@ -86,6 +92,56 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->send();
                 }),
 
+                // Action::make('add_expense')->label(__('Add Expense'))
+                // ->icon('heroicon-s-banknotes')
+                // ->color('info')
+                // ->modalHeading(__('Add Expense'))
+                // ->requiresConfirmation()
+                // ->form([
+                //         DateTimePicker::make('added_at')
+                //             ->label(__('Date Added'))
+                //             ->native(false)
+                //             ->seconds(false)
+                //             ->maxDate(now())->default(now()),
+                //         Select::make('category_id')->label(__('Category'))
+                //             ->relationship('categories', 'name')
+                //             ->searchable()
+                //             ->required()
+                //             ->reactive()
+                //             ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
+                //         TextInput::make('sum')->label(__('Sum'))
+                //             ->numeric()
+                //             ->prefix('₴')
+                //             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                //         Select::make('type_pay')->label(__('Type pay'))
+                //             ->default(0)
+                //             ->options([
+                //                 0 => __('Cash'),
+                //                 1 => __('Card')
+                //             ])
+                //             ->required(),
+                //         Textarea::make('comment')->translateLabel()->rows(2),
+                // ])
+                // ->action(function  (array $data): void {
+                //     Expense::create(
+                //         [
+                //             'place_id' => Filament::getTenant()->id,
+                //             'user_id' => Auth::user()->id,
+                //             'sum' => $data['sum'],
+                //             'added_at' => $data['added_at'],
+                //             'comment' => $data['comment'],
+                //             'type_pay' => $data['type_pay'],
+                //             'pay' => 1
+                //         ],
+                //     );
+
+
+                //     Notification::make()
+                //     ->title(__('Expense added'))
+                //     ->send();
+                // }),
+
+
             Action::make('openShift')
                 ->label(__('Open Shift'))
                 ->color('info')
@@ -102,34 +158,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                     (new PosterApiController())->openShift($data);
                 }),
 
-            // Action::make('closeShift')
-            //     ->label(__('Close Shift'))
-            //     ->color('danger')
-            //     ->modalWidth('xs')
-            //     ->icon('heroicon-o-lock-closed')
-
-            //     ->modalHeading(__('Close Shift'))
-            //     ->modalWidth('xs')
-            //     ->slideOver()
-            //     ->form([
-
-            //         Select::make('place_id')->label(__('Place'))
-            //             ->native(false)
-            //             ->options(
-            //                 Auth::user()->place->pluck('city', 'id')
-            //             )->reactive()
-            //             ->required()
-            //             ->reactive(),
-            //         TextInput::make('shift')
-            //             ->label(__('Add Sum'))
-            //             ->numeric()
-            //             ->required(),
-            //         TextInput::make('comment')
-            //             ->label(__('Comment'))
-            //     ])
-            //     ->action(function (array $data): void {
-            //         (new PosterApiController())->closeShift($data);
-            //     }),
 
         ];
     }

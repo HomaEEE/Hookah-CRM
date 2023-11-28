@@ -12,10 +12,12 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class SupplyToPay extends BaseWidget
 
 {
+    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 
