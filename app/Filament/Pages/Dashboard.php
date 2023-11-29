@@ -14,7 +14,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -26,8 +25,6 @@ class Dashboard extends \Filament\Pages\Dashboard
     protected static string $view = 'filament.pages.dashboard';
 
     protected static ?string $slug = 'dashboard';
-
-    use HasPageShield;
 
     public function getTitle(): string | Htmlable
     {
