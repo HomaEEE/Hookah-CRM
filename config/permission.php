@@ -13,7 +13,8 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => App\Models\Permission::class,
+        //  'permission' => Spatie\Permission\Models\Permission::class,
+         'permission' => App\Models\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -24,9 +25,8 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => App\Models\Role::class,
-
-        'team' => App\Models\Place::class
+        //  'role' => Spatie\Permission\Models\Role::class,
+         'role' => App\Models\Role::class,
 
     ],
 
@@ -95,7 +95,7 @@ return [
          * foreign key is other than `team_id`.
          */
 
-        'team_foreign_key' => 'place_id',
+        'team_foreign_key' => 'team_id',
     ],
 
     /*
@@ -103,7 +103,7 @@ return [
      * Set this to false if you want to implement custom logic for checking permissions.
      */
 
-    'register_permission_check_method' => false,
+    'register_permission_check_method' => true,
 
     /*
      * When set to true, Laravel\Octane\Events\OperationTerminated event listener will be registered
