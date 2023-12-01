@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IndicationResource\Pages;
-use App\Filament\Resources\IndicationResource\RelationManagers;
-use App\Models\{Indication,Meter,Room};
-use App\Enums\MeterType;
+use App\Models\{Indication,Meter};
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
@@ -48,7 +46,7 @@ class IndicationResource extends Resource
                     Select::make('meter_id')->label(__('Meter'))
                     ->relationship('meter', 'id')
                     ->options(
-                        Meter::where('place_id', Filament::getTenant()->id)->pluck('room', 'id')
+                        Meter::where('place_id', Filament::getTenant()->id)->pluck('type', 'id')
                     ),
                     TextInput::make('indication')
                 ])->columnSpan('full')

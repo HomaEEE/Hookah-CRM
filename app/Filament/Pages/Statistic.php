@@ -38,6 +38,7 @@ class Statistic extends Page
             \App\Filament\Widgets\Statistic\GraphExpenses::make(),
             \App\Filament\Widgets\Statistic\GraphSupply::make(),
             \App\Filament\Widgets\Statistic\GraphShifts::make(),
+            \App\Filament\Widgets\Statistic\UserWage::make(),
         ];
     }
 }
