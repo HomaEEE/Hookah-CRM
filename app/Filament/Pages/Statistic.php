@@ -35,10 +35,8 @@ class Statistic extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\Statistic\GraphExpenses::make(),
-            \App\Filament\Widgets\Statistic\GraphSupply::make(),
-            \App\Filament\Widgets\Statistic\GraphShifts::make(),
-            \App\Filament\Widgets\Statistic\UserWage::make(),
+            \App\Filament\Pages\Widgets\Statistic\TabWidget::make(),
+            \App\Filament\Widgets\Statistic\UserWage::make()
         ];
     }
 }

@@ -38,7 +38,7 @@ class ExpenseRelationManager extends RelationManager
                 TextColumn::make('sum')->translateLabel()->summarize(Sum::make()->label(__('Total'))),
                 IconColumn::make('type_pay')->translateLabel()
                 ->boolean()
-                ->trueIcon('heroicon-o-card')
+                ->trueIcon('heroicon-o-credit-card')
                 ->falseIcon('heroicon-o-banknotes'),
 
                 IconColumn::make('pay')->translateLabel()

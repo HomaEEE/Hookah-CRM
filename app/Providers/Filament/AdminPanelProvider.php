@@ -29,6 +29,7 @@ use Filament\SpatieLaravelTranslatablePlugin;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 
 use Filament\Support\Colors\Color;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -110,8 +111,11 @@ class AdminPanelProvider extends PanelProvider
                         ),
                     EnvironmentIndicatorPlugin::make(),
                     SimpleLightBoxPlugin::make(),
-                    \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+                    \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
 
+                    FilamentFullCalendarPlugin::make()
+                    ->selectable()
+                    ->editable()
                 ])
             ->authGuard('web')
             ->middleware([

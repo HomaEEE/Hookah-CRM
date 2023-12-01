@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\WithdrawalResource\Pages;
+use App\Models\Bill;
 use App\Models\Place;
 use App\Models\Withdrawal;
 use Auth;
@@ -54,6 +55,9 @@ class WithdrawalResource extends Resource
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
+                Select::make('bill_id')->label(__('Bill'))
+                ->relationship('bills', 'name')
+                ->options(Bill::get()->pluck('name', 'id')),
             ])->columns(1);
     }
 

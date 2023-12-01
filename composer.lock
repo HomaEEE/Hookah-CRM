@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f36fdc2d17bdaeca5eed676729da3d4b",
+    "content-hash": "d621c25919296b15eeac5f55a1f9d367",
     "packages": [
         {
             "name": "awcodes/filament-table-repeater",
@@ -6123,6 +6123,77 @@
                 }
             ],
             "time": "2023-02-14T16:54:54+00:00"
+        },
+        {
+            "name": "saade/filament-fullcalendar",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saade/filament-fullcalendar.git",
+                "reference": "c3842f2fbc44e700f85e2dfde9748f26bdb1a314"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saade/filament-fullcalendar/zipball/c3842f2fbc44e700f85e2dfde9748f26bdb1a314",
+                "reference": "c3842f2fbc44e700f85e2dfde9748f26bdb1a314",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "illuminate/contracts": "^9.0|^10.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.13.5"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^6.0|^7.0",
+                "nunomaduro/larastan": "^1.0|^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Saade\\FilamentFullCalendar\\FilamentFullCalendarServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Saade\\FilamentFullCalendar\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saade",
+                    "email": "saade@outlook.com.br",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Most Popular JavaScript Calendar integrated with Filament 💛",
+            "homepage": "https://github.com/saade/filament-fullcalendar",
+            "keywords": [
+                "filament-fullcalendar",
+                "laravel",
+                "saade"
+            ],
+            "support": {
+                "issues": "https://github.com/saade/filament-fullcalendar/issues",
+                "source": "https://github.com/saade/filament-fullcalendar/tree/v3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/saade",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-11-24T21:54:25+00:00"
         },
         {
             "name": "sakanjo/laravel-easy-metrics",

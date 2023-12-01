@@ -36,6 +36,14 @@ class BookingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
+    // protected function getHeaderWidgets(): array
+    // {
+    //     return [
+    //         \App\Filament\Widgets\CalendarWidget::class,
+    //     ];
+    // }
+
+
     public static function getPluralModelLabel(): string
     {
         return __('Bookings');
