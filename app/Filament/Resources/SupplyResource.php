@@ -278,7 +278,12 @@ class SupplyResource extends Resource
                     ->nullable()
                     ->placeholder(__('All'))
                     ->trueLabel(__('Paid'))
-                    ->falseLabel(__('Not Pay')),
+                    ->falseLabel(__('Not Pay'))
+                    ->queries(
+                        true: fn (Builder $query) => $query->where('pay' , 1),
+                        false: fn (Builder $query) => $query->where('pay', 0),
+                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                    ),
 
                 TernaryFilter::make('poster')
                     ->translateLabel()
