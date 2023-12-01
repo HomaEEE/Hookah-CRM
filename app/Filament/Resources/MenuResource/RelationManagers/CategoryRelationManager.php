@@ -84,7 +84,7 @@ class CategoryRelationManager extends RelationManager
                     ->translateLabel()
                     ->searchable()
                     ->sortable()
-                    ->description(fn (Category $record): string => $record->frontend_name, position: 'before'),
+                    ->description(fn (Category $record): string => $record->frontend_name ?? '', position: 'before'),
                 TextColumn::make('parent.category_name')->translateLabel()->visibleFrom('md'),
 
                 // IconColumn::make('visible')
