@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\Shift;
+namespace App\Filament\Widgets\Dashboard;
 
 use App\Enums\Bill as BillEnum;
 use App\Models\Expense;

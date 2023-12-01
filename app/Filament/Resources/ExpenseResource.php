@@ -64,10 +64,6 @@ class ExpenseResource extends Resource
     {
         return $form
             ->schema([
-                Group::make()
-                    ->schema([
-                        Section::make()
-                            ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                                 DateTimePicker::make('added_at')
@@ -102,10 +98,9 @@ class ExpenseResource extends Resource
                                     ->required(),
                                 Textarea::make('comment')->translateLabel()->rows(2),
 
-                                Section::make()
-                            ->schema([
                                 SpatieMediaLibraryFileUpload::make('invoice')
                                     ->collection('supplies')
+                                    ->translateLabel()
                                     ->multiple()
                                     ->imagePreviewHeight(350)
                                     ->imageResizeMode('cover')
@@ -121,12 +116,9 @@ class ExpenseResource extends Resource
                                     ])
                                     ->reorderable()
                                     ->openable()
-                            ])
 
-                            ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
-                            ]),
-                    ])
-            ])->columns(2);
+                            ->columns(['lg' => 1, 'md' => 1, 'xs' => 1]),
+                                    ]);
     }
 
     public static function table(Table $table): Table

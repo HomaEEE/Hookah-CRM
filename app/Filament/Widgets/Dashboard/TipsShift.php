@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\Shift;
+namespace App\Filament\Widgets\Dashboard;
 
 use Auth;
 

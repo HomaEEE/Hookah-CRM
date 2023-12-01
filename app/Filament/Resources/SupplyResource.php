@@ -32,12 +32,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -78,83 +76,69 @@ class SupplyResource extends Resource
     {
         return $form
             ->schema([
-                Group::make()
-                    ->schema([
+                Hidden::make('user_id')->default(Auth::user()->id),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
+                DateTimePicker::make('added_at')
+                    ->label(__('Date Added'))
+                    ->native(false)
+                    ->seconds(false)
+                    ->maxDate(now())->default(now()),
+                Select::make('supplier_id')->label(__('Supplier'))
+                    ->relationship('supplier', 'company')
+                    ->searchable()
+                    ->native(false)
+                    ->preload()
+                    ->required()
+                    ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
+                    ->createOptionForm([
                         Section::make()
                             ->schema([
-                                Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                DateTimePicker::make('added_at')
-                                    ->label(__('Date Added'))
-                                    ->native(false)
-                                    ->seconds(false)
-                                    ->maxDate(now())->default(now()),
-                                Select::make('supplier_id')->label(__('Supplier'))
-                                    ->relationship('supplier', 'company')
-                                    ->searchable()
-                                    ->native(false)
-                                    ->preload()
-                                    ->required()
-                                    ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
-                                    ->createOptionForm([
-                                        Section::make()
-                                            ->schema([
-                                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                                TextInput::make('name')->label(__('Name')),
-                                                TextInput::make('phone')->label(__('Phone')),
-                                                TextInput::make('company')->label(__('Company')),
-                                                TextInput::make('email')->label(__('Email'))->email(),
-                                                KeyValue::make('data')
-                                                    ->keyLabel(__('Rekvizites'))
-                                                    ->valueLabel(__('Value')),
-                                            ])->columns(2),
-                                    ]),
-                                TextInput::make('sum')->label(__('Sum'))
-                                    ->numeric()
-                                    ->required()
-                                    ->prefix('₴')
-                                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                Textarea::make('comment')->label(__('Comment'))
-                                    ->rows(3),
-                                Select::make('type_pay')->label(__('Type pay'))
-                                    ->default(0)
-                                    ->options([
-                                        0 => __('Cash'),
-                                        1 => __('Card')
-                                    ])
-                                    ->required(),
-                                Toggle::make('pay')->label(__('Paid'))
-                                    ->default(false)
-                                    ->inline(),
-                            ]),
-                    ])->columns(2),
-                Group::make()
-                    ->schema([
-                        Section::make()
-                            ->schema([
-                                SpatieMediaLibraryFileUpload::make('invoice')
-                                    ->collection('supplies')
-                                    ->multiple()
-                                    ->imagePreviewHeight(350)
-                                    ->imageResizeMode('cover')
-                                    ->imageResizeTargetWidth('2100')
-                                    ->imageEditor()
-                                    ->optimize('webp')
-                                    ->resize(60)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
-                                    ->reorderable()
-                                    ->openable()
-                            ])
-
-                            ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
-                    ])->columns(2),
-
-            ]);
+                                TextInput::make('name')->label(__('Name')),
+                                TextInput::make('phone')->label(__('Phone')),
+                                TextInput::make('company')->label(__('Company')),
+                                TextInput::make('email')->label(__('Email'))->email(),
+                                KeyValue::make('data')
+                                    ->keyLabel(__('Rekvizites'))
+                                    ->valueLabel(__('Value')),
+                            ])->columns(2),
+                    ]),
+                TextInput::make('sum')->label(__('Sum'))
+                    ->numeric()
+                    ->required()
+                    ->prefix('₴')
+                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                Textarea::make('comment')->label(__('Comment'))
+                    ->rows(3),
+                Select::make('type_pay')->label(__('Type pay'))
+                    ->default(0)
+                    ->options([
+                        0 => __('Cash'),
+                        1 => __('Card')
+                    ])
+                    ->required(),
+                Toggle::make('pay')->label(__('Paid'))
+                    ->default(false)
+                    ->inline(),
+                SpatieMediaLibraryFileUpload::make('invoice')
+                    ->collection('supplies')
+                    ->multiple()
+                    ->imagePreviewHeight(350)
+                    ->imageResizeMode('cover')
+                    ->imageResizeTargetWidth('2100')
+                    ->imageEditor()
+                    ->optimize('webp')
+                    ->resize(60)
+                    ->imageEditorAspectRatios([
+                        null,
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->reorderable()
+                    ->openable()
+            ])
+            ->columns(['lg' => 2, 'md' => 2, 'xs' => 1]);
     }
 
     public static function table(Table $table): Table
@@ -167,8 +151,12 @@ class SupplyResource extends Resource
                     ->badge()
                     ->size('sm')
                     ->description(fn (Supply $record): string => $record->user->name ?? ''),
+
                 TextColumn::make('supplier.company')->label(__('Supplier'))->searchable(),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable(),
+
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable()
+                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
                     ->simpleLightbox()
@@ -181,8 +169,8 @@ class SupplyResource extends Resource
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
                     ->placeholder('No description.')
                     ->visibleFrom('md'),
-                // TextColumn::make('media')->collecction('supplies')->html()->label(__('Link')),
-                TextColumn::make('type_pay')->label(__('Type pay'))
+
+                    TextColumn::make('type_pay')->label(__('Type pay'))
                     ->badge()
                     ->formatStateUsing(
                         fn (string $state): string => match ($state) {
@@ -298,6 +286,11 @@ class SupplyResource extends Resource
                     ->placeholder(__('All'))
                     ->trueLabel(__('In Poster'))
                     ->falseLabel(__('Not in Poster'))
+                    ->queries(
+                        true: fn (Builder $query) => $query->where('poster' , 1),
+                        false: fn (Builder $query) => $query->where('poster', 0),
+                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                    )
             ])
 
             ->actions([
@@ -322,7 +315,7 @@ class SupplyResource extends Resource
                 TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->badge(),
                 TextEntry::make('supplier.company')->label(__('Supplier')),
-                TextEntry::make('sum')->label(__('Supplier')),
+                TextEntry::make('sum')->label(__('Sum')),
                 TextEntry::make('type_pay')->translateLabel(),
                 LightboxSpatieMediaLibraryImageEntry::make('invoice')->translateLabel()
                     ->collection('supplies')

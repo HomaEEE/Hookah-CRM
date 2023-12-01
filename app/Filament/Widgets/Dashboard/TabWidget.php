@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets\Dashboard;
 
-use App\Filament\Widgets\Shift\ExpensesShift;
+use App\Filament\Widgets\Dashboard\ExpensesShift;
 use App\Models\Expense;
 use App\Models\Task;
 use Kenepa\MultiWidget\MultiWidget;
