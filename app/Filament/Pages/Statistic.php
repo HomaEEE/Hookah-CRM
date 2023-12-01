@@ -35,7 +35,6 @@ class Statistic extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Pages\Widgets\Statistic\TabWidget::make(),
             \App\Filament\Widgets\Statistic\UserWage::make()
         ];
     }

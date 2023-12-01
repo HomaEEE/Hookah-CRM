@@ -34,7 +34,7 @@ class ExpenseRelationManager extends RelationManager
                 ->badge()
                 ->description(fn ($record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->translateLabel()->badge()
-                ->description(fn ($record): string => $record->comment ?? ''),
+                ->description(fn ($record): string => $record->supplier->company ?? ''),
                 TextColumn::make('sum')->translateLabel()->summarize(Sum::make()->label(__('Total'))),
                 IconColumn::make('type_pay')->translateLabel()
                 ->boolean()

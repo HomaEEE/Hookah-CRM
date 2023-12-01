@@ -38,7 +38,7 @@ class UserWage extends BaseWidget
         return $table
             ->query(
                 ShiftUser::query()->where('user_id', Auth::user()->id)
-            ) ->defaultPaginationPageOption(30)
+            )->defaultPaginationPageOption(30)
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')->badge(),
