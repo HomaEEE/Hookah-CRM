@@ -6,17 +6,14 @@ use Auth;
 
 use App\Models\ShiftUser;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
-use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
 
 class UserWage extends BaseWidget
 {
-
     use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
