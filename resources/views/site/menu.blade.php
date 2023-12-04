@@ -11,83 +11,88 @@
     @include('site.nav')
     @include('site.properties')
 
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-3">
         <div class="tabs">
+            <ul>
             @foreach ($categories as $cat)
-            <li class="menu-item"><a href="#{{$cat['slug']}}" class="menu-item {{ $loop->index == 0 ? 'active' : '' }}">{{$cat['frontend_menu_name']}}</a></li></li>
+            <li data-target="{{ $cat['slug'] }}"
+                class="tab-item {{ $loop->index == 0 ? 'active' : '' }}">
+                {{$cat['frontend_menu_name']}}
+            </li>
             @endforeach
+            </ul>
+        </div>
         </div>
 
+            <div class="col-xs-12 col-md-9 list">
+                @foreach ($categories as $category)
+                <div class="positions {{ $loop->index == 0 ? 'active' : '' }} @isset( $category->class['gram-hidden'] ) {{'gram-hidden'}}@endisset"
+                id="{{$category['slug']}}">
+                    <!--h3>{{$category['frontend_name'] ? $category['frontend_name'] : $category['category_name'] }}</!--h3-->
 
-     @foreach ($categories as $category)
-        <div class="col-xs-12 menu_category {{$category['slug']}}
-        @isset( $category->class['gram-hidden'] ) {{'gram-hidden'}}@endisset" id="{{$category['slug']}}">
-            @if (isset($category->class['logo']))
-                <img src="{{$category->class['logo']}}" alt="" class="logo-category">
-            @else
-            <h2 class="menu_title">{{$category['frontend_name'] ? $category['frontend_name'] : $category['category_name'] }}</h2>
-            @endif
-        @if(isset($category->childs))
-            @foreach($category->childs as $subcategory)
-                <h3> {{$subcategory['frontend_name'] ? $subcategory['frontend_name'] : $subcategory['category_name'] }}</h3>
-                @foreach ($subcategory->products as $item)
-
-                    <div class="row menu_item">
-                        <div class="col-xs-9 col-md-10 item-title">
-                            <h4 class="menu_item">
+                    @foreach ($category->products as $item)
+                    <div class="menu-item">
+                        <div class="item">
+                            <div class="title">
                                 {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}
-                                <sup>{{$item['sup']}}</sup>
-                            </h4>
-                            <p>
-                                {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
-                            </p>
+                            </div>
+                            <div class="property">
+                                <p class="sup">{{$item['sup']}}</p>
+                                <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
+                                <p class="price">{{number_format($item['price'], 0)}} ₴</p>
+                            </div>
                         </div>
-
-                        <div class="col-xs-1 col-md-2 item-price">
-                            <span>{{number_format($item['price'], 0)}}₴</span>
-                            <small>{{number_format($item['out'], 0)}}gr</small>
+                        @if (isset($item['frontend_desc']))
+                        <div class="description">
+                            <p>{{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}</p>
+                            @if (!empty($item->getFirstMediaUrl('products')))
+                                <a data-fancybox data-src="{{$item->getFirstMediaUrl('products')}}"
+                                data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
+                                </a>
+                            @endif
                         </div>
-
+                        @endif
                     </div>
+                    @endforeach
+
+                    @if(isset($category->childs))
+
+                        @foreach($category->childs as $subcategory)
+                            <h3>{{$subcategory['frontend_name'] ? $subcategory['frontend_name'] : $subcategory['category_name'] }}</h3>
+                                @foreach ($subcategory->products as $item)
+
+                                <div class="menu-item">
+                                    <div class="item">
+                                        <div class="title"> {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}</div>
+                                        <div class="property">
+                                            <p class="sup">{{$item['sup']}}</p>
+                                <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
+                                            <p class="price">{{number_format($item['price'], 0)}} ₴</p>
+                                        </div>
+                                    </div>
+                                  @if (isset($item['frontend_desc']))
+                                    <div class="description">
+                                        <p>{{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}</p>
+                                        @if (!empty($item->getFirstMediaUrl('products')))
+                                            <a data-fancybox data-src="{{$item->getFirstMediaUrl('products')}}"
+                                            data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
+                                            </a>
+                                        @endif
+                                    </div>
+                                    @endif
+                                </div>
+                                @endforeach
+                        @endforeach
+                    @endif
+                     </div>
                 @endforeach
-            @endforeach
-        @endif
 
-        @foreach ($category->products as $item)
-        <div class="row menu_item">
-            <div class="col-xs-8 col-md-10 item-title">
-                <h4>
-                    {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}
-                    <sup>{{$item['sup']}}</sup>
-                </h4>
-                <p>
-                    {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
-                </p>
-            </div>
-            <div class="col-xs-2 col-md-1 item-price">
-                <span>{{number_format($item['price'], 0)}}₴</span>
-                <small>{{number_format($item['out'], 0)}}gr</small>
-
-            </div>
-
-            <div class="col-xs-1 col-md-1 item-image center-xs">
-                @if (!empty($item->getFirstMediaUrl('products')))
-                <a data-fancybox data-src="{{$item->getFirstMediaUrl('products')}}"
-                    data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
-                    <i class="icon-picture"></i>
-                </a>
-
-                @endif
-            </div>
         </div>
-    @endforeach
-        @if (isset($category->class['img']))
-            <img src="{{$category->class['img']}}" alt="" class="bg-image">
-        @endif
-        @if (isset($category->class['item']))
-            <img src="{{$category->class['item']}}" alt="" class="item-image">
-        @endif
-        </div>
-     @endforeach
+    </div>
+</div>
+</div>
 @endsection
 
 @push('scripts')

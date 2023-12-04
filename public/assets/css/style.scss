@@ -695,60 +695,168 @@ header {
 div.menu-container {
   height: 100%;
   width: 100vw;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .tabs {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
   position: sticky;
-  list-style: none;
-  top: 0;
-  background: $grey;
-  padding: 10px;
-  z-index: 20;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  position: -webkit-sticky;
+  margin-bottom: 20px;
+  top: 2rem;
+  max-height: 100vh;
 
-  li.menu-item {
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex: 0 0 auto;
-    text-align: center;
-    padding: 10px;
-    a {
-      color: $text;
-      padding: 10px 20px;
-      margin: 10px 5px;
-      border-radius: 40px;
-      border: $text 1px solid;
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-flow: row nowrap;
+		flex-direction: column;
+		font-size: 2rem;
+		li {
+			margin: 2px;
+			box-sizing: border-box;
+			flex: 1 1 1;
+			transition: flex 0.5s ease;
       text-transform: uppercase;
-      transition: all 0.3s ease-in-out;
-      position: relative;
+      color: $text-dark-grey;
+			a {
+				color: var(text-dark-grey);
+				text-decoration: none;
+				transition: color 0.4s ease;
+				text-transform: uppercase;
+			}
+			&.active {
+				flex: 2 1 200px;
+        color: $text;
+			}
+			&:hover {
+				a {
+					color: var(text-grey);
+				}
+			}
+		}
+	}
+
+  @media screen and (max-width: 575px) {
+    &::-webkit-scrollbar {
+        display: none;
     }
-    &:hover,
-    &.active {
-      a {
-        background: $text-grey;
-        color: $black;
+    position: sticky;
+    position: -webkit-sticky;
+    padding: 10px 0;
+    margin : 0;
+    top: 0;
+    overflow-x: scroll;
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: -webkit-box;
+      font-size: 1rem;
+      vertical-align: bottom;
+      li {
+        padding: 5px 10px;
+        transition: font-size .5s ease;
+        text-transform: uppercase;
+        color: $text-dark-grey;
+        a {
+          text-decoration: none;
+          transition: color 0.4s ease;
+          text-transform: uppercase;
+        }
+        &.active {
+          font-size: 1.25rem;
+          padding: 0 10px;
+          color: $text;
+        }
+        &:hover {
+          a {
+            font-size: 1.25rem;
+            padding: 0 10px;
+            color: $text;
+          }
+        }
       }
     }
   }
-
-  &:-webkit-scrollbar {
-    display: none;
+}
+.list{
+  max-height: 100%;
+  overflow-y: scroll;
+.positions {
+	display: none;
+	height: 0;
+  transition: height 1s ease;
+  padding: 20px 0;
+	&.active {
+		display: block;
+		height: 100%;
+	}
+  h3 {
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    padding: 10px 0;
   }
-  &:after {
-    content: " ";
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(167, 167, 167, 1) 100%);
+	.menu-item {
+    padding: 0px 10px 20px 0px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid;
+		.item {
+			display: flex;
+      font-size: 1rem;
+			flex-direction: row;
+			justify-content: space-between;
+			.title {
+				flex: 2 1 300px;
+        text-transform: uppercase;
+				padding: 0;
+				margin: 0;
+			}
+			.property {
+				display: flex;
+				justify-content: space-between;
+				flex: 1 0 auto;
+				flex-flow: row;
+				p {
+          .gram {
+            color: $text-dark-grey;
+          }
+				}
+			}
+		}
+		.description {
+      display: none;
+      padding: 20px 0px;
+      opacity: 0;
+      transition: all 1s linear;
+			img {
+				width: 100px;
+			}
+      &.active {
+          display: block;
+          opacity: 1;
 
-    -webkit-mask-image: linear-gradient(to left, #000 0%, #151515 10%);
-    mask-image: linear-gradient(to left, #000 0%, #151515 10%);
+      }
+	}
+  @media screen and (max-width: 575px) {
+    .property {
+      p {
+        padding: 0 10px;
+        &.gram, &.sup{
+          font-size: 0.7rem;
+          padding: 2px 0;
+        }
+      }
+    }
+    .description {
+      font-size: 0.8rem;
+    }
   }
+}
+}
+
 }
 
 .properties {
