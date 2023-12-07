@@ -6,6 +6,10 @@
 @section('page', __('Menu page'))
 
 @section('content')
+
+ @include('site.loader')
+
+
 <div class="menu-container">
 
     @include('site.nav')
@@ -48,9 +52,12 @@
                         <div class="description">
                             <p>{{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}</p>
                             @if (!empty($item->getFirstMediaUrl('products')))
-                                <a data-fancybox data-src="{{$item->getFirstMediaUrl('products')}}"
-                                data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
-                                </a>
+                                 @if (!empty($item->getFirstMediaUrl('products')))
+                                            <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
+                                            data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
+                                            <img src="{{$item->getFirstMediaUrl('products')}}">
+                                            </a>
+                                        @endif
                             @endif
                         </div>
                         @endif
@@ -76,8 +83,9 @@
                                     <div class="description">
                                         <p>{{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}</p>
                                         @if (!empty($item->getFirstMediaUrl('products')))
-                                            <a data-fancybox data-src="{{$item->getFirstMediaUrl('products')}}"
+                                            <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
                                             data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
+                                            <img src="{{$item->getFirstMediaUrl('products')}}">
                                             </a>
                                         @endif
                                     </div>

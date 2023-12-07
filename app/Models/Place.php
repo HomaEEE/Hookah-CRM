@@ -77,6 +77,11 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Seet::class, 'place_id');
     }
 
+    public function subsriptions()
+    {
+        return $this->hasMany(Subscription::class, 'place_id');
+    }
+
     public function bills()
     {
         return $this->hasMany(Bill::class, 'place_id');

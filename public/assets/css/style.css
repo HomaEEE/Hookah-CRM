@@ -187,6 +187,24 @@ div.index-container {
   flex: 1;
 }
 
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #202020;
+  z-index: 1000;
+}
+.loader #logo-loader {
+  width: 50%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .logo-index {
   position: absolute;
   top: 50px;
@@ -802,8 +820,11 @@ div.menu-container {
 .list .positions .menu-item .description img {
   width: 100px;
 }
+.list .positions .menu-item .description a {
+  z-index: 10;
+}
 .list .positions .menu-item .description.active {
-  display: block;
+  display: flex;
   opacity: 1;
 }
 @media screen and (max-width: 575px) {
