@@ -64,7 +64,7 @@ class SiteController extends Controller
     {
 
         $place = Place::where('slug', $slug)->first();
-        $feedbacks = Feedback::where('place_id', $place->id)->get();
+        $feedbacks = Feedback::where('place_id', $place->id)->Approve(1)->get();
 
         return view('site.feedbacks', compact('place', 'feedbacks'));
     }
