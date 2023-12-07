@@ -7,9 +7,6 @@
 
 @section('content')
 
- @include('site.loader')
-
-
 <div class="menu-container">
 
     @include('site.nav')
