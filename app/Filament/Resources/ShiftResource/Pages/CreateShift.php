@@ -42,7 +42,7 @@ class CreateShift extends CreateRecord
                 'place_id' => $shift->place_id,
                 'category_id' => $wage->expense,
                 'sum' => $shift->wages,
-                'type_pay' => '0',
+                'bill_id' => '0',
                 'comment' => 'Зарплаты',
             ]
         );
