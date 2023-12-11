@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ExpenseResource;
 use App\Filament\Resources\ShiftResource;
 use App\Http\Controllers\PosterApiController;
+use App\Models\Bill;
 use App\Models\Expense;
 use App\Models\Place;
 use App\Models\Shift;
@@ -46,6 +47,19 @@ class CreateShift extends CreateRecord
                 'comment' => 'Зарплаты',
             ]
         );
+
+        Bill::updateOrCreate(
+            ['id' => 1],
+            ['balance' => $shift->shift]
+        );
+
+        Bill::updateOrCreate(
+            ['id' => 2]
+        )->increment('balance', $shift->terminal );
+
+        Notification::make()
+            ->title(__('Balances are updated'))
+            ->send();
 
         Notification::make()
             ->title(__('Wages added in expenses'))

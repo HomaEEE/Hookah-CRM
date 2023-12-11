@@ -56,12 +56,7 @@ class SupplyToPay extends BaseWidget
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
-                TextColumn::make('type_pay')->translateLabel()->badge()
-                ->formatStateUsing(
-                 fn (string $state): string => match ($state) {
-                     '0' => __('Cash'),
-                     '1' => __('Card'),
-                 }),
+                TextColumn::make('bill.name')->translateLabel()->badge(),
                  IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()

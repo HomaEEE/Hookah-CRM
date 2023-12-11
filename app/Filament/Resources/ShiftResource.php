@@ -528,12 +528,8 @@ class ShiftResource extends Resource
                                     ->numeric()
                                     ->prefix('₴')
                                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                Select::make('type_pay')->label(__('Type pay'))
-                                    ->default(0)
-                                    ->options([
-                                        0 => __('Cash'),
-                                        1 => __('Card')
-                                    ])
+                                Select::make('bill_id')->label(__('Type pay'))
+                                    ->options(Bill::get()->pluck('name', 'id'))
                                     ->required(),
                                 Textarea::make('comment')->translateLabel()->rows(2),
                         ])
@@ -545,7 +541,7 @@ class ShiftResource extends Resource
                                     'sum' => $data['sum'],
                                     'added_at' => $data['added_at'],
                                     'comment' => $data['comment'],
-                                    'type_pay' => $data['type_pay'],
+                                    'bill_id' => $data['bill_id'],
                                     'pay' => 1
                                 ],
                             );

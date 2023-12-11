@@ -146,7 +146,8 @@ class SupplyResource extends Resource
                     ->size('sm')
                     ->description(fn (Supply $record): string => $record->user->name ?? ''),
 
-                TextColumn::make('supplier.company')->label(__('Supplier'))->searchable(),
+                    TextColumn::make('supplier.company')->label(__('Supplier'))->searchable()
+                    ->description(fn (Supply $record): string => $record->comment ?? '')->wrap(),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
@@ -300,8 +301,9 @@ class SupplyResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
                     ->badge(),
+                TextEntry::make('user.name')->translateLabel(),
                 TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
                 LightboxSpatieMediaLibraryImageEntry::make('invoice')
                 ->collection('supplies')
@@ -310,7 +312,7 @@ class SupplyResource extends Resource
                 TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
                 TextEntry::make('bill.name')->translateLabel()
                 ->badge(),
-                 TextEntry::make('comment')->label(__('Comment')),
+                TextEntry::make('comment')->label(__('Comment'))->badge(),
 
             ]);
     }

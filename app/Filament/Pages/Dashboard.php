@@ -6,17 +6,21 @@ use App\Http\Controllers\PosterApiController;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
-use App\Models\{Expense, ExpenseCategory, Tip};
+use App\Models\{Bill, Expense, ExpenseCategory, Supplier, Supply, Tip};
 
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -62,6 +66,108 @@ class Dashboard extends \Filament\Pages\Dashboard
             //             [$record->portions += $data['portion']]
             //         );
             //     }),
+            ActionGroup::make([
+
+                Action::make('add_expense')->label(__('Expense'))
+                    ->icon('heroicon-o-document-minus')
+                    ->modalHeading(__('Add Expense'))
+                    ->modalWidth('sm')
+                    ->modalIcon('heroicon-o-document-minus')
+                    ->form([
+                        DateTimePicker::make('added_at')
+                            ->label(__('Date Added'))
+                            ->native(false)
+                            ->maxDate(now())->default(now()),
+                        Select::make('category_id')->label(__('Category'))
+                            ->searchable()
+                            ->required()
+                            ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
+                        TextInput::make('sum')->label(__('Sum'))
+                            ->numeric()
+                            ->prefix('₴')
+                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                        Select::make('bill_id')->label(__('Type pay'))
+                            ->options(Bill::get()->pluck('name', 'id'))
+                            ->required(),
+                        Textarea::make('comment')->translateLabel()->rows(2),
+                    ])
+                    ->action(function (array $data): void {
+                        Expense::create(
+                            [
+                                'place_id' => Filament::getTenant()->id,
+                                'user_id' => Auth::user()->id,
+                                'sum' => $data['sum'],
+                                'added_at' => $data['added_at'],
+                                'comment' => $data['comment'],
+                                'bill_id' => $data['bill_id'],
+                                'pay' => 1
+                            ],
+                        );
+                        Notification::make()
+                            ->title(__('Expense added'))
+                            ->send();
+                    }),
+
+                Action::make('add_supply')->label(__('Supply'))
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->modalHeading(__('Add Supply'))
+                    ->modalWidth('sm')
+                    ->modalIcon('heroicon-o-inbox-arrow-down')
+                    ->form([
+                        DateTimePicker::make('added_at')
+                            ->label(__('Date Added'))
+                            ->native(false)
+                            ->seconds(false)
+                            ->maxDate(now())->default(now()),
+                        Select::make('supplier_id')->label(__('Supplier'))
+                            ->searchable()
+                            ->native(false)
+                            ->required()
+                            ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
+                        TextInput::make('sum')->label(__('Sum'))
+                            ->numeric()
+                            ->required()
+                            ->prefix('₴')
+                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                        SpatieMediaLibraryFileUpload::make('invoice')
+                            ->collection('supplies')
+                            ->multiple()
+                            ->imagePreviewHeight(150)
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('2100')
+                            ->optimize('webp')
+                            ->resize(60),
+                        Textarea::make('comment')->label(__('Comment'))
+                            ->rows(3),
+                        Select::make('bill_id')->label(__('Type pay'))
+                            ->default(0)
+                            ->options(Bill::get()->pluck('name', 'id'))
+                            ->required(),
+                        Toggle::make('pay')->label(__('Paid'))
+                            ->default(false)
+                            ->inline(),
+                    ])
+                    ->action(function (array $data): void {
+                        Supply::create(
+                            [
+                                'place_id' => Filament::getTenant()->id,
+                                'user_id' => Auth::user()->id,
+                                'sum' => $data['sum'],
+                                'added_at' => $data['added_at'],
+                                'comment' => $data['comment'],
+                                'bill_id' => $data['bill_id'],
+                                'supplier_id' => $data['supplier_id'],
+                                'pay' => $data['pay']
+                            ],
+                        );
+                        Notification::make()
+                            ->title(__('Expense added'))
+                            ->send();
+                    }),
+
+            ])
+                ->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
+
             Action::make('addTips')
                 ->label(__('Add Tips'))
                 ->color('success')
@@ -89,54 +195,54 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->send();
                 }),
 
-                // Action::make('add_expense')->label(__('Add Expense'))
-                // ->icon('heroicon-s-banknotes')
-                // ->color('info')
-                // ->modalHeading(__('Add Expense'))
-                // ->requiresConfirmation()
-                // ->form([
-                //         DateTimePicker::make('added_at')
-                //             ->label(__('Date Added'))
-                //             ->native(false)
-                //             ->seconds(false)
-                //             ->maxDate(now())->default(now()),
-                //         Select::make('category_id')->label(__('Category'))
-                //             ->relationship('categories', 'name')
-                //             ->searchable()
-                //             ->required()
-                //             ->reactive()
-                //             ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
-                //         TextInput::make('sum')->label(__('Sum'))
-                //             ->numeric()
-                //             ->prefix('₴')
-                //             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                //         Select::make('type_pay')->label(__('Type pay'))
-                //             ->default(0)
-                //             ->options([
-                //                 0 => __('Cash'),
-                //                 1 => __('Card')
-                //             ])
-                //             ->required(),
-                //         Textarea::make('comment')->translateLabel()->rows(2),
-                // ])
-                // ->action(function  (array $data): void {
-                //     Expense::create(
-                //         [
-                //             'place_id' => Filament::getTenant()->id,
-                //             'user_id' => Auth::user()->id,
-                //             'sum' => $data['sum'],
-                //             'added_at' => $data['added_at'],
-                //             'comment' => $data['comment'],
-                //             'type_pay' => $data['type_pay'],
-                //             'pay' => 1
-                //         ],
-                //     );
+            // Action::make('add_expense')->label(__('Add Expense'))
+            // ->icon('heroicon-s-banknotes')
+            // ->color('info')
+            // ->modalHeading(__('Add Expense'))
+            // ->requiresConfirmation()
+            // ->form([
+            //         DateTimePicker::make('added_at')
+            //             ->label(__('Date Added'))
+            //             ->native(false)
+            //             ->seconds(false)
+            //             ->maxDate(now())->default(now()),
+            //         Select::make('category_id')->label(__('Category'))
+            //             ->relationship('categories', 'name')
+            //             ->searchable()
+            //             ->required()
+            //             ->reactive()
+            //             ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
+            //         TextInput::make('sum')->label(__('Sum'))
+            //             ->numeric()
+            //             ->prefix('₴')
+            //             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+            //         Select::make('type_pay')->label(__('Type pay'))
+            //             ->default(0)
+            //             ->options([
+            //                 0 => __('Cash'),
+            //                 1 => __('Card')
+            //             ])
+            //             ->required(),
+            //         Textarea::make('comment')->translateLabel()->rows(2),
+            // ])
+            // ->action(function  (array $data): void {
+            //     Expense::create(
+            //         [
+            //             'place_id' => Filament::getTenant()->id,
+            //             'user_id' => Auth::user()->id,
+            //             'sum' => $data['sum'],
+            //             'added_at' => $data['added_at'],
+            //             'comment' => $data['comment'],
+            //             'type_pay' => $data['type_pay'],
+            //             'pay' => 1
+            //         ],
+            //     );
 
 
-                //     Notification::make()
-                //     ->title(__('Expense added'))
-                //     ->send();
-                // }),
+            //     Notification::make()
+            //     ->title(__('Expense added'))
+            //     ->send();
+            // }),
 
 
             Action::make('openShift')

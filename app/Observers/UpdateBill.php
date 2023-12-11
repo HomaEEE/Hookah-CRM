@@ -18,7 +18,7 @@ class UpdateBill
     public function updated(Model $model)
     {
         Bill::updateOrCreate(
-            ['id' => $model->bill_id]
+            ['id' => $model->getOriginal('bill_id')]
         )
         ->increment('balance', $model->getOriginal('sum') );
 

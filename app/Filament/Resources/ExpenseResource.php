@@ -89,7 +89,7 @@ class ExpenseResource extends Resource
                                     ->numeric()
                                     ->prefix('₴')
                                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                Select::make('bill_id')->label(__('Type pay'))
+                                Select::make('bill_id')->label(__('Bill'))
                                     ->options(Bill::get()->pluck('name', 'id'))
                                     ->required(),
                                 Textarea::make('comment')->translateLabel()->rows(2),
@@ -121,7 +121,7 @@ class ExpenseResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
+                TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d-m-Y')
                     ->size('md')
                     ->badge()
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
@@ -280,9 +280,13 @@ class ExpenseResource extends Resource
     {
         return $infolist
             ->schema([
-                TextEntry::make('added_at')->translateLabel(),
-                TextEntry::make('place.city')->translateLabel(),
-                TextEntry::make('bill.name')->translateLabel(),
+                TextEntry::make('added_at')->translateLabel()->badge()->dateTime('d F Y'),
+                TextEntry::make('user.name')->translateLabel()->badge(),
+                TextEntry::make('place.city')->translateLabel()->badge(),
+                TextEntry::make('bill.name')->translateLabel()->badge(),
+                TextEntry::make('category.name')->translateLabel()->badge(),
+                TextEntry::make('sum')->translateLabel()->badge(),
+                TextEntry::make('comment')->translateLabel()->badge(),
                 TextEntry::make('media')->translateLabel()
             ]);
     }
