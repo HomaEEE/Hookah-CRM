@@ -213,7 +213,7 @@ class PosterApiController extends Controller
     {
         $cash_expense = Expense::select('sum')->where(
             [
-                ['type_pay', 0],
+                ['bill_id', 0],
                 ['place_id', $place_id],
             ]
         )
