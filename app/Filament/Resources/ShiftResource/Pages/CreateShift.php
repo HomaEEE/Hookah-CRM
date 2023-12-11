@@ -30,6 +30,13 @@ class CreateShift extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['terminal'] =  $data['terminal'] * 0.987;
+
+        return $data;
+    }
+
     protected function afterCreate(): void
     {
         $shift = $this->record;
