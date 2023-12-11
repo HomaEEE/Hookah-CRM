@@ -12,7 +12,7 @@ use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
+use App\Models\{Bill, Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -489,6 +489,9 @@ class ShiftResource extends Resource
                             Hidden::make('user_id')->default(Auth::user()->id),
                             Hidden::make('place_id')->default(Filament::getTenant()->id),
                             TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
+                            Select::make('bill_id')->label(__('Bill'))
+                            ->relationship('bills', 'name')
+                            ->options(Bill::get()->pluck('name', 'id'))
                         ])
                         ->action(function (Set $set, array $data): void {
                             Withdrawal::create(

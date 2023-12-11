@@ -16,6 +16,8 @@ use Filament\Forms\Components\TextInput;
 
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -127,18 +129,22 @@ class SubscriptionResource extends Resource
                 Action::make('paid')->button()->translateLabel()
                     ->icon('heroicon-s-banknotes')
                     ->color('success')
-                    ->modalHeading('Оплата платежа')->translateLabel()
+                    ->modalIcon('heroicon-o-banknotes')
+                    ->modalIconColor('success')
+                    ->modalHeading('Оплата платежа')
                     ->requiresConfirmation()
+                    ->modalWidth(MaxWidth::Small)
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
                         TextInput::make('sum')->translateLabel()
                         ->numeric()
                         ->required()
                         ->prefix('₴')
+                        ->columnSpan(6)
                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                         ->default(fn (Subscription $record): int => $record->price),
                         Select::make('type_pay')->translateLabel()
-                            ->columnSpan(['md' => 6])
+                            ->columnSpan(6)
                             ->options(
                                 [
                                     0 => __('Cash'),

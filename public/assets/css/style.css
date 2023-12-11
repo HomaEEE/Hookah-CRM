@@ -814,7 +814,6 @@ div.menu-container {
 .list .positions .menu-item .description {
   display: none;
   padding: 20px 0px;
-  opacity: 0;
   transition: all 1s linear;
 }
 .list .positions .menu-item .description img {
@@ -825,7 +824,6 @@ div.menu-container {
 }
 .list .positions .menu-item .description.active {
   display: flex;
-  opacity: 1;
 }
 @media screen and (max-width: 575px) {
   .list .positions .menu-item .property p {

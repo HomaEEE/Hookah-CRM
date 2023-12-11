@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Bill as BillEnum;
 use App\Filament\Resources\ExpenseResource\Pages;
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Expense, ExpenseCategory, Supply};
+use App\Models\{Bill, Expense, ExpenseCategory, Supply};
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
@@ -89,12 +89,8 @@ class ExpenseResource extends Resource
                                     ->numeric()
                                     ->prefix('₴')
                                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                Select::make('type_pay')->label(__('Type pay'))
-                                    ->default(0)
-                                    ->options([
-                                        0 => __('Cash'),
-                                        1 => __('Card')
-                                    ])
+                                Select::make('bill_id')->label(__('Type pay'))
+                                    ->options(Bill::get()->pluck('name', 'id'))
                                     ->required(),
                                 Textarea::make('comment')->translateLabel()->rows(2),
 
@@ -140,14 +136,7 @@ class ExpenseResource extends Resource
 
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
-                TextColumn::make('type_pay')->translateLabel()->badge()
-                    ->formatStateUsing(
-                        fn (string $state): string => match ($state) {
-                            '0' => __('Cash'),
-                            '1' => __('Card'),
-                        }
-                    ),
-
+                TextColumn::make('bill.name')->translateLabel()->badge(),
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
@@ -226,14 +215,9 @@ class ExpenseResource extends Resource
 
                         return $indicators;
                     }),
-                SelectFilter::make('type_pay')->translateLabel()
-                    ->options(
-                        [
-                            0 => __('Cash'),
-                            1 => __('Card')
-                        ]
-                    )
-                    ->attribute('type_pay'),
+                SelectFilter::make('bill')->translateLabel()
+                    ->options(Bill::get()->pluck('name', 'id'))
+                    ->attribute('bill_id'),
 
                 TernaryFilter::make('pay')
                     ->translateLabel()
@@ -298,7 +282,7 @@ class ExpenseResource extends Resource
             ->schema([
                 TextEntry::make('added_at')->translateLabel(),
                 TextEntry::make('place.city')->translateLabel(),
-                TextEntry::make('type_pay')->translateLabel(),
+                TextEntry::make('bill.name')->translateLabel(),
                 TextEntry::make('media')->translateLabel()
             ]);
     }

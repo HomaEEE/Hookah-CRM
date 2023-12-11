@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(Place::class);
             $table->integer('expense_category_id')->nullable();
             $table->integer('sum')->nullable();
-            $table->integer('type_pay')->nullable();
+            $table->integer('bill_id')->nullable();
             $table->string('comment')->nullable();
             $table->text('invoice')->nullable();
             $table->integer('poster')->default(0);

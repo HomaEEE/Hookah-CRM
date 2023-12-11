@@ -23,6 +23,6 @@ class Withdrawal extends Model
 
     public function bill()
     {
-        return $this->HasOne(Bill::class);
+        return $this->belongsTo(Bill::class, 'bill_id');
     }
 }

@@ -18,10 +18,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Section;
@@ -40,7 +38,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class SupplyResource extends Resource
@@ -110,12 +107,9 @@ class SupplyResource extends Resource
                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                 Textarea::make('comment')->label(__('Comment'))
                     ->rows(3),
-                Select::make('type_pay')->label(__('Type pay'))
+                Select::make('bill_id')->label(__('Type pay'))
                     ->default(0)
-                    ->options([
-                        0 => __('Cash'),
-                        1 => __('Card')
-                    ])
+                    ->options(Bill::get()->pluck('name', 'id'))
                     ->required(),
                 Toggle::make('pay')->label(__('Paid'))
                     ->default(false)
@@ -170,17 +164,11 @@ class SupplyResource extends Resource
                     ->placeholder('No description.')
                     ->visibleFrom('md'),
 
-                    TextColumn::make('type_pay')->label(__('Type pay'))
+                    TextColumn::make('bill.name')->label(__('Bill'))
                     ->badge()
-                    ->formatStateUsing(
-                        fn (string $state): string => match ($state) {
-                            '0' => __('Cash'),
-                            '1' => __('Card'),
-                        }
-                    )
                     ->colors([
-                        0 => 'info',
-                        1 => 'danger',
+                        1 => 'info',
+                        2 => 'danger',
                     ]),
                 IconColumn::make('pay')
                     ->translateLabel()
@@ -263,14 +251,9 @@ class SupplyResource extends Resource
                         return $indicators;
                     }),
 
-                SelectFilter::make('type_pay')->translateLabel()
-                    ->options(
-                        [
-                            0 => __('Cash'),
-                            1 => __('Card')
-                        ]
-                    )
-                    ->attribute('type_pay'),
+                SelectFilter::make('bill')->translateLabel()
+                    ->options(Bill::get()->pluck('name', 'id'))
+                    ->attribute('bill_id'),
 
 
                 TernaryFilter::make('pay')
@@ -319,12 +302,16 @@ class SupplyResource extends Resource
             ->schema([
                 TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->badge(),
-                TextEntry::make('supplier.company')->label(__('Supplier')),
-                TextEntry::make('sum')->label(__('Sum')),
-                TextEntry::make('type_pay')->translateLabel(),
-                LightboxSpatieMediaLibraryImageEntry::make('invoice')->translateLabel()
-                    ->collection('supplies')
-                    ->conversion('thumb')
+                TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
+                LightboxSpatieMediaLibraryImageEntry::make('invoice')
+                ->collection('supplies')
+                ->conversion('thumb')
+                ->translateLabel(),
+                TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
+                TextEntry::make('bill.name')->translateLabel()
+                ->badge(),
+                 TextEntry::make('comment')->label(__('Comment')),
+
             ]);
     }
 

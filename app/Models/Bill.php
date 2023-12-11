@@ -28,6 +28,11 @@ class Bill extends Model
         return $this->belongsTo(Supply::class);
     }
 
+    public function withdrawal()
+    {
+        return $this->belongsTo(Withdrawal::class);
+    }
+
     public function expense()
     {
         return $this->belongsTo(Expense::class);

@@ -68,8 +68,10 @@ class WithdrawalResource extends Resource
                 TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('sum')->translateLabel()
                 ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                TextColumn::make('bill.name')->badge()
             ])
             ->defaultSort('created_at', 'desc')
+            ->defaultGroup('bill.name')
             ->filters([
                 Filter::make('created_at')
                     ->form([
@@ -101,6 +103,8 @@ class WithdrawalResource extends Resource
 
                         return $indicators;
                     }),
+                SelectFilter::make('bill_id')
+                ->options(Bill::get()->pluck('name', 'id'))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

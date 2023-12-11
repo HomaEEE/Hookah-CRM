@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignIdFor(Supplier::class)->nullable();
             $table->integer('sum')->nullable();
             $table->text('comment')->nullable();
-            $table->integer('type_pay')->default(0);
+            $table->integer('bill_id')->default(0);
             $table->integer('pay')->default(0);
             $table->integer('poster')->default(0);
             $table->text('invoice')->nullable();

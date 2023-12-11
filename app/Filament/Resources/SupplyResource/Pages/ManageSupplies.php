@@ -38,7 +38,7 @@ class ManageSupplies extends ManageRecords
     protected function getActions(): array
     {
         return [
-            CreateAction::make()->slideOver(),
+            CreateAction::make(),
         ];
     }
 }

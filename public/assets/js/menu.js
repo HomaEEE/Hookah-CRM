@@ -18,16 +18,7 @@ $(".tab-item").click(function (e) {
     }, 1000);
 });
 
-$(".menu-item").click(function (e) {
-	e.preventDefault();
-	$(this).children('.description').removeClass("active");
-	$(".menu-item").children('.description').removeClass("active");
-	$(this).children('.description').addClass("active");
-	return false;
-});
-
-
-
+$(".menu-item").accordion({collapsible: true, active: false});
 
 Fancybox.bind("[data-fancybox]", {
     hideScrollbar: false,
