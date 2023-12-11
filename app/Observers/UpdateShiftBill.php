@@ -14,8 +14,7 @@ class UpdateShiftBill
         );
         Bill::updateOrCreate(
             ['id' => 2]
-        )
-        ->increment('balance', $shift->terminal*0.987 );
+        )->increment('balance', $shift->terminal );
     }
 
     // public function updated(Shift $shift)
