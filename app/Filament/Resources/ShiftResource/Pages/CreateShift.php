@@ -49,13 +49,13 @@ class CreateShift extends CreateRecord
         );
 
         Bill::updateOrCreate(
-            ['id' => 1],
+            ['id' => 0],
             ['balance' => $shift->shift]
         );
 
-        // Bill::updateOrCreate(
-        //     ['id' => 2],
-        // )->increment('balance', $shift->terminal );
+        Bill::updateOrCreate(
+            ['id' => 1],
+        )->increment('balance', $shift->terminal );
 
         Notification::make()
             ->title(__('Balances are updated'))
