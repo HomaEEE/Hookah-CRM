@@ -11,7 +11,10 @@ enum BILL: string implements HasLabel  /// Счета
 
     public function getLabel(): ?string
     {
-        return $this->value;
+        return match ($this) {
+            self::CASH => __('Наличные'),
+            self::CARD => __('Расчетный счет'),
+        };
     }
 
     public function getIcon(): ?string

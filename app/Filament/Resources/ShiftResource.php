@@ -115,6 +115,9 @@ class ShiftResource extends Resource
 
                 TextColumn::make('terminal')->translateLabel()
                     ->numeric()
+                    ->state(function (Shift $record): int {
+                        return $record->terminal * 0.987;
+                    })
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('cash')->translateLabel()

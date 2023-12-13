@@ -13,7 +13,7 @@ enum CURRENCY: string implements HasLabel  /// Счета
     public function getLabel(): ?string
     {
         return $this->value;
-    }
+   }
 
     public function getColor(): string | array | null
     {

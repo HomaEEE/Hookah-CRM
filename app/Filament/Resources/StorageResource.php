@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StorageResource\Pages;
 use App\Filament\Resources\StorageResource\RelationManagers;
 use App\Models\{Item, Storage, Workshop};
+use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -50,9 +52,9 @@ class StorageResource extends Resource
         return $form
             ->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                Select::make('workshop_id')->translateLabel()
+                Select::make('workshop_id')->label(__('Workshop'))
                     ->options(Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'id')),
-                        Select::make('item_id')
+                        Select::make('item_id')->label(__('Item'))
                             ->relationship('item', 'name')
                             ->searchable()
                             ->native(false)
@@ -64,23 +66,24 @@ class StorageResource extends Resource
                                     ->schema([
                                         TextInput::make('name')->translateLabel(),
                                         TextInput::make('price')->translateLabel(),
+                                        SpatieMediaLibraryFileUpload::make('item')
+                                        ->collection('storage')
+                                        ->label(__('Photo'))
+                                        ->imagePreviewHeight(350)
+                                        ->imageResizeMode('cover')
+                                        ->imageResizeTargetWidth('900')
+                                        ->imageEditor()
+                                        ->optimize('webp')
+                                        ->imageEditorAspectRatios([
+                                            null,
+                                            '16:9',
+                                            '4:3',
+                                            '1:1',
+                                        ])
+                                        ->openable(),
                                     ])->columns(2),
                             ]),
-                        TextInput::make('qty')->numeric(),
-                        SpatieMediaLibraryFileUpload::make('item')
-                        ->collection('storage')
-                        ->imagePreviewHeight(350)
-                        ->imageResizeMode('cover')
-                        ->imageResizeTargetWidth('900')
-                        ->imageEditor()
-                        ->optimize('webp')
-                        ->imageEditorAspectRatios([
-                            null,
-                            '16:9',
-                            '4:3',
-                            '1:1',
-                        ])
-                        ->openable(),
+                        TextInput::make('qty')->numeric()->label(__('Quantity')),
                         Textarea::make('comment')->translateLabel()
                         ]);
     }
@@ -89,7 +92,20 @@ class StorageResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('item.name')->label(__('Title'))->searchable(),
+                TextColumn::make('item.name')->label(__('Title'))->searchable()
+                ->description(fn (Storage $record): string => $record->comment ?? ''),
+                SpatieMediaLibraryImageColumn::make('item.item')->label(__('Photo'))
+                    ->collection('storage')
+                    ->simpleLightbox()
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText()
+                    ->height(30)
+                    ->toggleable()
+                    ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                    ->placeholder('No description.')
+                    ->visibleFrom('md'),
                 TextColumn::make('qty')->label(__('Quantity')),
                 TextColumn::make('item.price')->label(__('Price'))->searchable(),
             ])
@@ -97,14 +113,22 @@ class StorageResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()->label(''),
+                Tables\Actions\EditAction::make()->label(''),
+                Tables\Actions\DeleteAction::make()->label(''),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\ItemsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

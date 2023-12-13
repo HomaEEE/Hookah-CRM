@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
 use App\Enums\Bill as BillEnum;
-use App\Enums\CURRENCY;
+use App\Enums\Currency;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -37,7 +37,7 @@ class BillsRelationManager extends RelationManager
             ->schema([
                 TextInput::make('name')->label(__('Bill name')),
                 Select::make('currency')->label(__('Currency'))
-                    ->options(CURRENCY::class),
+                    ->options(Currency::class),
                 Select::make('type')->label(__('Type bill'))
                     ->options(BillEnum::class),
                 TextInput::make('balance')->label(__('Bill balance')),
