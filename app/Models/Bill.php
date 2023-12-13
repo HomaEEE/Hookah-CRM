@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\BILL as BILLEnum;
-use App\Enums\CURRENCY;
+use App\Enums\Bill as BILLEnum;
+use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +14,7 @@ class Bill extends Model
     protected $fillable = ['name', 'type', 'currency', 'balance'];
 
     protected $casts = [
-        'currency' => CURRENCY::class,
+        'currency' => Currency::class,
         'type' => BILLEnum::class,
     ];
 
