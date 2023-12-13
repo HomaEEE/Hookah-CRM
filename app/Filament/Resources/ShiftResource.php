@@ -509,7 +509,7 @@ class ShiftResource extends Resource
 
 
                     Action::make('add_expense')->label(__('Add Expense'))
-                        ->icon('heroicon-s-banknotes')
+                        ->icon('heroicon-o-document-minus')
                         ->color('info')
                         ->modalHeading(__('Add Expense'))
                         ->requiresConfirmation()
@@ -538,6 +538,7 @@ class ShiftResource extends Resource
                                 [
                                     'place_id' => Filament::getTenant()->id,
                                     'user_id' => Auth::user()->id,
+                                    'category_id' => $data['category_id'],
                                     'sum' => $data['sum'],
                                     'added_at' => $data['added_at'],
                                     'comment' => $data['comment'],
@@ -545,7 +546,6 @@ class ShiftResource extends Resource
                                     'pay' => 1
                                 ],
                             );
-
 
                             Notification::make()
                             ->title(__('Expense added'))

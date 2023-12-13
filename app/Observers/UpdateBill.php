@@ -9,30 +9,35 @@ class UpdateBill
 {
     public function created(Model $model)
     {
-        Bill::updateOrCreate(
-            ['id' => $model->bill_id]
-        )
-        ->decrement('balance', $model->sum );
+        if($model->pay == true) {
+            Bill::updateOrCreate(
+                ['id' => $model->bill_id]
+            )->decrement('balance', $model->sum );
+        }
     }
 
     public function updated(Model $model)
     {
-        Bill::updateOrCreate(
-            ['id' => $model->getOriginal('bill_id')]
-        )
-        ->increment('balance', $model->getOriginal('sum') );
+        if($model->pay == true) {
+            Bill::updateOrCreate(
+                ['id' => $model->getOriginal('bill_id')]
+            )
+            ->increment('balance', $model->getOriginal('sum') );
 
-        Bill::updateOrCreate(
-            ['id' => $model->bill_id]
-        )
-        ->decrement('balance', $model->sum );
+            Bill::updateOrCreate(
+                ['id' => $model->bill_id]
+            )
+            ->decrement('balance', $model->sum );
+        }
     }
 
     public function deleted(Model $model)
     {
+        if($model->pay == true) {
         Bill::updateOrCreate(
             ['id' => $model->bill_id]
         )
         ->increment('balance', $model->sum );
+        }
     }
 }

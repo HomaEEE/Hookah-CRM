@@ -80,7 +80,10 @@ class ProductRelationManager extends RelationManager
                     // ->imageResizeMode('contain')
                     // ->imageResizeTargetHeight('400')
 
-            ]);
+            ])
+            ->deferLoading()
+            ->defaultPaginationPageOption(25)
+            ->striped();
     }
 
     public function infolist(Infolist $infolist): Infolist

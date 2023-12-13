@@ -197,7 +197,9 @@ class SupplyResource extends Resource
                     ->visibleFrom('md'),
 
             ])->defaultSort('added_at', 'desc')
-            ->deferLoading() //Ассинхронная загрузка
+            ->deferLoading()
+            ->defaultPaginationPageOption(25)
+            ->striped()
             ->filters([
                 SelectFilter::make('Place')
                     ->label(__('Place'))

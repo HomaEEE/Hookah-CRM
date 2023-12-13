@@ -64,57 +64,57 @@ class ExpenseResource extends Resource
     {
         return $form
             ->schema([
-                                Hidden::make('user_id')->default(Auth::user()->id),
+                Hidden::make('user_id')->default(Auth::user()->id),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
+                DateTimePicker::make('added_at')
+                    ->label(__('Date Added'))
+                    ->native(false)
+                    ->seconds(false)
+                    ->maxDate(now())->default(now()),
+                Select::make('category_id')->label(__('Category'))
+                    ->relationship('categories', 'name')
+                    ->searchable()
+                    ->required()
+                    ->reactive()
+                    ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
+                    ->createOptionForm([
+                        Section::make()
+                            ->schema([
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                DateTimePicker::make('added_at')
-                                    ->label(__('Date Added'))
-                                    ->native(false)
-                                    ->seconds(false)
-                                    ->maxDate(now())->default(now()),
-                                Select::make('category_id')->label(__('Category'))
-                                    ->relationship('categories', 'name')
-                                    ->searchable()
-                                    ->required()
-                                    ->reactive()
-                                    ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
-                                    ->createOptionForm([
-                                        Section::make()
-                                            ->schema([
-                                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                                TextInput::make('name')->translateLabel(),
-                                                TextInput::make('category_id')->translateLabel()->default(0),
-                                            ]),
-                                    ]),
-                                TextInput::make('sum')->label(__('Sum'))
-                                    ->numeric()
-                                    ->prefix('₴')
-                                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                Select::make('bill_id')->label(__('Bill'))
-                                    ->options(Bill::get()->pluck('name', 'id'))
-                                    ->required(),
-                                Textarea::make('comment')->translateLabel()->rows(2),
+                                TextInput::make('name')->translateLabel(),
+                                TextInput::make('category_id')->translateLabel()->default(0),
+                            ]),
+                    ]),
+                TextInput::make('sum')->label(__('Sum'))
+                    ->numeric()
+                    ->prefix('₴')
+                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                Select::make('bill_id')->label(__('Bill'))
+                    ->options(Bill::get()->pluck('name', 'id'))
+                    ->required(),
+                Textarea::make('comment')->translateLabel()->rows(2),
 
-                                SpatieMediaLibraryFileUpload::make('invoice')
-                                    ->collection('supplies')
-                                    ->translateLabel()
-                                    ->multiple()
-                                    ->imagePreviewHeight(350)
-                                    ->imageResizeMode('cover')
-                                    ->imageResizeTargetWidth('2100')
-                                    ->imageEditor()
-                                    ->optimize('webp')
-                                    ->resize(60)
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
-                                    ->reorderable()
-                                    ->openable()
+                SpatieMediaLibraryFileUpload::make('invoice')
+                    ->collection('supplies')
+                    ->translateLabel()
+                    ->multiple()
+                    ->imagePreviewHeight(350)
+                    ->imageResizeMode('cover')
+                    ->imageResizeTargetWidth('2100')
+                    ->imageEditor()
+                    ->optimize('webp')
+                    ->resize(60)
+                    ->imageEditorAspectRatios([
+                        null,
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->reorderable()
+                    ->openable()
 
-                            ->columns(['lg' => 1, 'md' => 1, 'xs' => 1]),
-                                    ]);
+                    ->columns(['lg' => 1, 'md' => 1, 'xs' => 1]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -161,8 +161,9 @@ class ExpenseResource extends Resource
                     }),
 
             ])->defaultSort('added_at', 'desc')
-
-
+            ->deferLoading()
+            ->defaultPaginationPageOption(25)
+            ->striped()
             ->filters([
                 SelectFilter::make('Place')
                     ->label(__('Place'))
@@ -226,7 +227,7 @@ class ExpenseResource extends Resource
                     ->trueLabel(__('Paid'))
                     ->falseLabel(__('Not Pay'))
                     ->queries(
-                        true: fn (Builder $query) => $query->where('pay' , 1),
+                        true: fn (Builder $query) => $query->where('pay', 1),
                         false: fn (Builder $query) => $query->where('pay', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
@@ -238,7 +239,7 @@ class ExpenseResource extends Resource
                     ->falseLabel(__('In Poster'))
                     ->trueLabel(__('Not in Poster'))
                     ->queries(
-                        true: fn (Builder $query) => $query->where('poster' , 1),
+                        true: fn (Builder $query) => $query->where('poster', 1),
                         false: fn (Builder $query) => $query->where('poster', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
