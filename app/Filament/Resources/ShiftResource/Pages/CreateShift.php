@@ -50,7 +50,7 @@ class CreateShift extends CreateRecord
 
         Bill::updateOrCreate(
             ['id' => 0],
-            ['balance' => $shift->shift]
+            ['balance' => (int) round( ( $shift->shift*0.987 ), 0) ]
         );
 
         Bill::updateOrCreate(
