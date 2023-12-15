@@ -47,7 +47,6 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
         //    // ->tenantProfile(EditPlaceProfile::class)
-            ->spa()
             ->login()
             ->registration()
             ->passwordReset()
