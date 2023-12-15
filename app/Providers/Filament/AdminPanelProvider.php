@@ -47,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
         //    // ->tenantProfile(EditPlaceProfile::class)
+            ->spa()
             ->login()
             ->registration()
             ->passwordReset()
@@ -60,21 +61,6 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
-            // ->navigationGroups([
-            //     NavigationGroup::make()
-            //     ->label('Dashboard')
-            //     ->icon('heroicon-o-shopping-cart'),
-            //     NavigationGroup::make()
-            //          ->label('Place')
-            //          ->icon('heroicon-o-shopping-cart'),
-            //     NavigationGroup::make()
-            //         ->label('Blog')
-            //         ->icon('heroicon-o-pencil'),
-            //     NavigationGroup::make()
-            //         ->label(fn (): string => __('navigation.settings'))
-            //         ->icon('heroicon-o-cog-6-tooth')
-            //         ->collapsed(),
-            // ])
             ->navigationGroups([
                 NavigationGroup::make()
                 ->label('Place'),
@@ -134,6 +120,5 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
-            //->spa();
     }
 }
