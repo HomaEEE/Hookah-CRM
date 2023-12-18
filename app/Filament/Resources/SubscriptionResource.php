@@ -143,7 +143,7 @@ class SubscriptionResource extends Resource
                         ->columnSpan(6)
                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                         ->default(fn (Subscription $record): int => $record->price),
-                        Select::make('type_pay')->translateLabel()
+                        Select::make('bill_id')->translateLabel()
                             ->columnSpan(6)
                             ->options(
                               Bill::get()->pluck('name', 'id')
@@ -164,7 +164,7 @@ class SubscriptionResource extends Resource
                                 'user_id' => Auth::user()->id,
                                 'category_id' => $record->category_id,
                                 'sum' => $record->price,
-                                'type_pay' => $data['type_pay'],
+                                'type_pay' => $data['bill_id'],
                                 'comment' => $record->name,
                             ]
                         );
