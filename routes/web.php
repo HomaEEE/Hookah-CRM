@@ -13,13 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\SiteController@home');
+Route::get('/', 'App\Http\Controllers\SiteController@index');
 // Route::get('/api/shift/{place_id}', 'App\Http\Controllers\PosterApiController@getCurrentShift');
 
 // Route::get('/getSpot/{place_id}', 'App\Http\Controllers\TestController@getSpot');
 
  //   Route::prefix('{suffix?}')->group(function () {
-        Route::get('/', 'App\Http\Controllers\SiteController@index');
         Route::get('/menu', 'App\Http\Controllers\SiteController@menu');
         Route::get('/vacancy', 'App\Http\Controllers\SiteController@vacancy');
         Route::get('/booking', 'App\Http\Controllers\SiteController@booking');

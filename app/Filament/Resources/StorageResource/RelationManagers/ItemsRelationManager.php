@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StorageResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -18,9 +19,12 @@ class ItemsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('Item')
+                TextInput::make('Item')->translateLabel()
                     ->required()
                     ->maxLength(255),
+                TextInput::make('price')->translateLabel()
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -29,7 +33,8 @@ class ItemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('Item')
             ->columns([
-                Tables\Columns\TextColumn::make('Item'),
+                Tables\Columns\TextColumn::make('item'),
+                Tables\Columns\TextColumn::make('price'),
             ])
             ->filters([
                 //

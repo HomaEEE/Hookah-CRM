@@ -8,8 +8,6 @@
 @section('content')
 <div class="page-container">
 
-    @include('site.nav')
-
     <div class="container">
         <h2>{{__('Feedbacks')}}</h2>
         <div class="row">

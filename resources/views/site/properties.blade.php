@@ -1,4 +1,3 @@
-<div class="container">
     <div class="row middle-xs">
         <div class="col-xs-12 col-sm-4 col-md-3 properties">
             <p> <i class="icon-map-pin"></i> <a
@@ -57,4 +56,3 @@
 
 
     </div>
-</div>

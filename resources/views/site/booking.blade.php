@@ -7,9 +7,6 @@
 
 @section('content')
 <div class="page-container">
-
-    @include('site.nav')
-
     <div class="container">
 
         <h2 class="divider line razor title">{{__('Booking')}}</h2>

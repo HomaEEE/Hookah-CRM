@@ -21,18 +21,11 @@ class SiteController extends Controller
         return Redirect::back();
     }
 
-    public function home()
-    {
-        $places = Place::all();
-
-        return view('site.index', compact('places'));
-    }
-
-    public function index($slug)
+    public function index($slug = "od")
     {
         $place = Place::where('slug', $slug)->first();
 
-        return view('site.index', compact('place'));
+        return view('site.home', compact('place'));
     }
 
     public function menu($slug = "od")
@@ -67,6 +60,15 @@ class SiteController extends Controller
         $feedbacks = Feedback::where('place_id', $place->id)->Approve(1)->get();
 
         return view('site.feedbacks', compact('place', 'feedbacks'));
+    }
+
+    public function vacancy($slug = "od")
+    {
+
+        $place = Place::where('slug', $slug)->first();
+        $vacancies = Feedback::where('place_id', $place->id)->Approve(1)->get();
+
+        return view('site.vacancy', compact('place', 'vacancies'));
     }
 
     public function contacts($slug = "od")

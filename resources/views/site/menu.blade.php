@@ -7,15 +7,11 @@
 
 @section('content')
 
-<div class="menu-container">
-
-    @include('site.nav')
-    @include('site.properties')
-
 <div class="container">
+@include('site.properties')
+    <div class="container">
     <div class="row">
-        <div class="col-xs-12 col-md-3">
-        <div class="tabs">
+        <div class="col-xs-12 col-md-3 tabs">
             <ul>
             @foreach ($categories as $cat)
             <li data-target="{{ $cat['slug'] }}"
@@ -25,10 +21,9 @@
             @endforeach
             </ul>
         </div>
-        </div>
 
-            <div class="col-xs-12 col-md-9 list">
-                @foreach ($categories as $category)
+        <div class="col-xs-12 col-md-9 list">
+            @foreach ($categories as $category)
                 <div class="positions {{ $loop->index == 0 ? 'active' : '' }} @isset( $category->class['gram-hidden'] ) {{'gram-hidden'}}@endisset"
                 id="{{$category['slug']}}">
                     <!--h3>{{$category['frontend_name'] ? $category['frontend_name'] : $category['category_name'] }}</!--h3-->

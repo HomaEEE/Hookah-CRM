@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Storage as EnumsStorage;
 use App\Filament\Resources\StorageResource\Pages;
 use App\Filament\Resources\StorageResource\RelationManagers;
 use App\Models\{Item, Storage, Workshop};
@@ -17,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -83,6 +85,7 @@ class StorageResource extends Resource
                                         ->openable(),
                                     ])->columns(2),
                             ]),
+                        Select::make('own')->translateLabel()->options(EnumsStorage::class),
                         TextInput::make('qty')->numeric()->label(__('Quantity')),
                         Textarea::make('comment')->translateLabel()
                         ]);
@@ -106,9 +109,11 @@ class StorageResource extends Resource
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
                     ->placeholder('No description.')
                     ->visibleFrom('md'),
+                TextColumn::make('own')->translateLabel()->badge(),
                 TextColumn::make('qty')->label(__('Quantity')),
                 TextColumn::make('item.price')->label(__('Price'))->searchable(),
             ])
+            ->allowDuplicates()
             ->filters([
                 //
             ])

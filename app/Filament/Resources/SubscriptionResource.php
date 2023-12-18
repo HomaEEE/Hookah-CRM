@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Bill as BillEnum;
 use App\Enums\Subscription as SubscriptionEnum;
 use App\Filament\Resources\SubscriptionResource\Pages;
-use App\Models\{Expense, ExpenseCategory, Subscription};
+use App\Models\{Bill, Expense, ExpenseCategory, Subscription};
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
@@ -146,10 +146,7 @@ class SubscriptionResource extends Resource
                         Select::make('type_pay')->translateLabel()
                             ->columnSpan(6)
                             ->options(
-                                [
-                                    0 => __('Cash'),
-                                    1 => __('Card')
-                                ]
+                              Bill::get()->pluck('name', 'id')
                             )
                             ->default('0'),
                     ])
