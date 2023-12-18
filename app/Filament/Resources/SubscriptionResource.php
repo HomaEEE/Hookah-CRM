@@ -164,7 +164,7 @@ class SubscriptionResource extends Resource
                                 'user_id' => Auth::user()->id,
                                 'category_id' => $record->category_id,
                                 'sum' => $record->price,
-                                'type_pay' => $data['bill_id'],
+                                'bill_id' => $data['bill_id'],
                                 'comment' => $record->name,
                             ]
                         );
