@@ -398,11 +398,11 @@ main .page-container .hero .links {
   list-style: none;
   text-transform: uppercase;
 }
-main .page-container .hero .splide__slide {
+main .page-container .hero .swiper-slide {
   height: 70vh;
   position: relative;
 }
-main .page-container .hero .splide__slide img {
+main .page-container .hero .swiper-slide img {
   position: absolute;
   height: 90%;
   top: 50%;

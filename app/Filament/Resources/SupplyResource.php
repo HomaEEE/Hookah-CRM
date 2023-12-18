@@ -7,6 +7,7 @@ use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
 use App\Models\Supplier;
 use App\Models\Supply;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
@@ -222,6 +223,14 @@ class SupplyResource extends Resource
                             }
                         }
                     ),
+                SelectFilter::make('user')->translateLabel()
+                ->options(
+                    User::whereHas('place', function ($query) {
+                        $query->where('place_id', Filament::getTenant()->id);
+                    })->get()
+                        ->pluck('name', 'id')
+                )
+                    ->attribute('user_id'),
 
                 Filter::make('created_at')
                     ->form([
