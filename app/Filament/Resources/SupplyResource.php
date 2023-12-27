@@ -120,10 +120,29 @@ class SupplyResource extends Resource
                     ->multiple()
                     ->imagePreviewHeight(350)
                     ->imageResizeMode('cover')
+                    ->imageResizeTargetWidth('1800')
+                    ->imageEditor()
+                    ->optimize('webp')
+                    ->resize(70)
+                    ->imageEditorAspectRatios([
+                        null,
+                        '16:9',
+                        '4:3',
+                        '1:1',
+                    ])
+                    ->reorderable()
+                    ->openable(),
+
+                    SpatieMediaLibraryFileUpload::make('receipt')
+                    ->collection('receipts')
+                    ->translateLabel()
+                    ->multiple()
+                    ->imagePreviewHeight(350)
+                    ->imageResizeMode('cover')
                     ->imageResizeTargetWidth('2100')
                     ->imageEditor()
                     ->optimize('webp')
-                    ->resize(60)
+                    ->resize(70)
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',

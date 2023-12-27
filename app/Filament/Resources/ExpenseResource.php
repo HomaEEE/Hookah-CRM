@@ -100,7 +100,7 @@ class ExpenseResource extends Resource
                     ->multiple()
                     ->imagePreviewHeight(350)
                     ->imageResizeMode('cover')
-                    ->imageResizeTargetWidth('2100')
+                    ->imageResizeTargetWidth('1800')
                     ->imageEditor()
                     ->optimize('webp')
                     ->resize(60)
@@ -112,8 +112,6 @@ class ExpenseResource extends Resource
                     ])
                     ->reorderable()
                     ->openable()
-
-                    ->columns(['lg' => 1, 'md' => 1, 'xs' => 1]),
             ]);
     }
 
@@ -165,25 +163,11 @@ class ExpenseResource extends Resource
             ->defaultPaginationPageOption(25)
             ->striped()
             ->filters([
-                SelectFilter::make('Place')
-                    ->label(__('Place'))
-                    ->form([
-                        Select::make('category_id')->label(__('Category'))
-                            ->searchable()
-                            ->preload()
-                            ->options(
-                                ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
-                            ),
-                    ])
-                    ->query(
-                        function (Builder $query, array $data) {
-                            $place_id = (int) Filament::getTenant()->id;
-                            $category_id = (int) $data['category_id'];
-
-                            if (!empty($category_id)) {
-                                $query->where('category_id', '=', $category_id);
-                            }
-                        }
+                SelectFilter::make('supplier_id')
+                    ->label(__('Supplier'))
+                    ->native(false)
+                    ->options(
+                        ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
                     ),
 
                 Filter::make('created_at')
