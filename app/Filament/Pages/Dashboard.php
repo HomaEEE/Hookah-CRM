@@ -97,6 +97,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                                 'place_id' => Filament::getTenant()->id,
                                 'user_id' => Auth::user()->id,
                                 'sum' => $data['sum'],
+                                'category_id' => $data['category_id'],
                                 'added_at' => $data['added_at'],
                                 'comment' => $data['comment'],
                                 'bill_id' => $data['bill_id'],

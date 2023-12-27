@@ -13,6 +13,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class SupplyToPay extends BaseWidget
 
@@ -57,7 +58,19 @@ class SupplyToPay extends BaseWidget
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
                 TextColumn::make('bill.name')->translateLabel()->badge(),
-                 IconColumn::make('pay')
+
+                SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
+                    ->collection('supplies')
+                    ->simpleLightbox()
+                    ->circular()
+                    ->stacked()
+                    ->limitedRemainingText()
+                    ->height(30)
+                    ->toggleable()
+                    ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                    ->placeholder('No description.'),
+
+                IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
                     ->trueIcon('heroicon-o-check')
