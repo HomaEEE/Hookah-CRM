@@ -95,10 +95,7 @@ class SupplyResource extends Resource
                                 TextInput::make('name')->label(__('Name')),
                                 TextInput::make('phone')->label(__('Phone')),
                                 TextInput::make('company')->label(__('Company')),
-                                TextInput::make('email')->label(__('Email'))->email(),
-                                KeyValue::make('data')
-                                    ->keyLabel(__('Rekvizites'))
-                                    ->valueLabel(__('Value')),
+                                TextInput::make('email')->label(__('Email'))->email()
                             ])->columns(2),
                     ]),
                 TextInput::make('sum')->label(__('Sum'))
@@ -324,7 +321,6 @@ class SupplyResource extends Resource
                 TextEntry::make('bill.name')->translateLabel()
                 ->badge(),
                 TextEntry::make('comment')->label(__('Comment'))->badge(),
-
             ]);
     }
 
