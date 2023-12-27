@@ -95,7 +95,10 @@ class SupplyResource extends Resource
                                 TextInput::make('name')->label(__('Name')),
                                 TextInput::make('phone')->label(__('Phone')),
                                 TextInput::make('company')->label(__('Company')),
-                                TextInput::make('email')->label(__('Email'))->email()
+                                TextInput::make('email')->label(__('Email'))->email(),
+                                KeyValue::make('data')
+                                    ->keyLabel(__('Rekvizites'))
+                                    ->valueLabel(__('Value')),
                             ])->columns(2),
                     ]),
                 TextInput::make('sum')->label(__('Sum'))
@@ -199,26 +202,11 @@ class SupplyResource extends Resource
             ->defaultPaginationPageOption(25)
             ->striped()
             ->filters([
-                SelectFilter::make('Place')
-                    ->label(__('Place'))
-                    // build the filter form
-                    ->form([
-                        Select::make('supplier_id')->label(__('Supplier'))
-                            ->searchable()
-                            ->preload()
-                            ->options(
-                                Supplier::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
-                            ),
-                    ])
-                    ->query(
-                        function (Builder $query, array $data) {
-                            $place_id = (int) Filament::getTenant()->id;
-                            $supplier_id = (int) $data['supplier_id'];
-
-                            if (!empty($supplier_id)) {
-                                $query->where('supplier_id', '=', $supplier_id);
-                            }
-                        }
+                SelectFilter::make('supplier_id')
+                    ->label(__('Supplier'))
+                    ->native(false)
+                    ->options(
+                        Supplier::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
                     ),
                 SelectFilter::make('user')->translateLabel()
                 ->options(
@@ -320,7 +308,7 @@ class SupplyResource extends Resource
                 TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
                 TextEntry::make('bill.name')->translateLabel()
                 ->badge(),
-                TextEntry::make('comment')->label(__('Comment'))->badge(),
+                TextEntry::make('comment')->label(__('Comment'))->badge()
             ]);
     }
 
