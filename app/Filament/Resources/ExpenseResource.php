@@ -167,7 +167,7 @@ class ExpenseResource extends Resource
                     ->label(__('Supplier'))
                     ->native(false)
                     ->options(
-                        ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
+                        ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
                     ),
 
                 Filter::make('created_at')
