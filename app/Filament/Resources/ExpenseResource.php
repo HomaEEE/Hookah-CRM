@@ -100,10 +100,10 @@ class ExpenseResource extends Resource
                     ->multiple()
                     ->imagePreviewHeight(350)
                     ->imageResizeMode('cover')
-                    ->imageResizeTargetWidth('1800')
+                    ->imageResizeTargetWidth('2100')
                     ->imageEditor()
                     ->optimize('webp')
-                    ->resize(60)
+                    ->resize(90)
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',
