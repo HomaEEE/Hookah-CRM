@@ -120,10 +120,9 @@ class SupplyResource extends Resource
                     ->multiple()
                     ->imagePreviewHeight(450)
                     ->imageResizeMode('cover')
-                    ->imageResizeTargetWidth('1800')
                     ->imageEditor()
                     ->optimize('webp')
-                    ->resize(90)
+                    ->resize(65)
                     ->required()
                     ->imageEditorAspectRatios([
                         null,

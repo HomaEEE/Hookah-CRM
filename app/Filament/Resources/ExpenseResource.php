@@ -102,7 +102,7 @@ class ExpenseResource extends Resource
                     ->imageResizeMode('cover')
                     ->imageEditor()
                     ->optimize('webp')
-                    ->resize(50)
+                    ->resize(65)
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',
