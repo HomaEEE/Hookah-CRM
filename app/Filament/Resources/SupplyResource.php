@@ -122,7 +122,7 @@ class SupplyResource extends Resource
                     ->imageResizeMode('cover')
                     ->imageEditor()
                     ->optimize('webp')
-                    ->resize(65)
+                    ->resize(70)
                     ->required()
                     ->imageEditorAspectRatios([
                         null,
