@@ -84,7 +84,7 @@ class ExciseResource extends Resource
                                     ->openable()
                                     ->imagePreviewHeight(350)
                                     ->imageResizeMode('cover')
-                                    ->imageResizeTargetWidth('1000')
+                                    ->imageResizeTargetWidth('1600')
                                     ->imageEditor()
                                     ->optimize('webp')
                             ])

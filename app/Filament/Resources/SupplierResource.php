@@ -27,6 +27,7 @@ use Filament\Support\RawJs;
 
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 
 class SupplierResource extends Resource
@@ -68,6 +69,12 @@ class SupplierResource extends Resource
                 TextInput::make('mail')->label(__('Email'))->email(),
                 TextInput::make('comment')->translateLabel(),
                 Toggle::make('visible')->translateLabel()->default(1),
+                Select::make('type')->label(__('Type'))
+                ->options([
+                    0 => __('Products'),
+                    1 => __('Alcohol'),
+                    2 => __('Tabacco')
+                ]),
                 KeyValue::make('data')
                     ->keyLabel(__('Rekvizites'))
                     ->valueLabel(__('Value')),
@@ -82,7 +89,13 @@ class SupplierResource extends Resource
                     ->searchable()
                     ->alignLeft()
                     ->description(fn (Supplier $record): string => $record->company, position: 'below'),
-                TextColumn::make('phone')
+                    SelectColumn::make('type')->label(__('Type'))
+                    ->options([
+                        0 => __('Products'),
+                        1 => __('Alcohol'),
+                        2 => __('Tabacco')
+                    ]),
+                    TextColumn::make('phone')
                     ->icon('heroicon-o-phone')
                     ->label(__('Phone'))
                     ->copyable()

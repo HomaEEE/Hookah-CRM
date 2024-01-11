@@ -118,12 +118,13 @@ class SupplyResource extends Resource
                 SpatieMediaLibraryFileUpload::make('invoice')
                     ->collection('supplies')
                     ->multiple()
-                    ->imagePreviewHeight(350)
+                    ->imagePreviewHeight(450)
                     ->imageResizeMode('cover')
                     ->imageResizeTargetWidth('1800')
                     ->imageEditor()
                     ->optimize('webp')
-                    ->resize(70)
+                    ->resize(90)
+                    ->required()
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',

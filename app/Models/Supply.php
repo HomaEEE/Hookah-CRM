@@ -51,6 +51,7 @@ class Supply extends Model implements HasMedia
         return $this->belongsTo(Bill::class);
     }
 
+
     public function scopeAllPaid($query)
     {
         return $query->whereIn('pay', [0, 1]);
