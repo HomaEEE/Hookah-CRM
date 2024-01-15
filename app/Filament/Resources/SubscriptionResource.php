@@ -155,7 +155,7 @@ class SubscriptionResource extends Resource
                         $record->update(
                             [
                                 'next_date' => Carbon::parse($record->next_date)->addMonth(),
-                                'sum' => $data['sum']
+                                'price' => $data['sum']
                             ]
                         );
                         $record->save();
