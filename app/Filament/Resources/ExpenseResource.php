@@ -95,8 +95,8 @@ class ExpenseResource extends Resource
                 Textarea::make('comment')->translateLabel()->rows(2),
 
                 SpatieMediaLibraryFileUpload::make('invoice')
+                    ->label(__('Invoice'))
                     ->collection('supplies')
-                    ->translateLabel()
                     ->multiple()
                     ->imagePreviewHeight(350)
                     ->imageResizeMode('cover')

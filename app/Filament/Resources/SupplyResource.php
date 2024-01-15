@@ -116,6 +116,7 @@ class SupplyResource extends Resource
                     ->default(false)
                     ->inline(),
                 SpatieMediaLibraryFileUpload::make('invoice')
+                    ->label(__('Invoice'))
                     ->collection('supplies')
                     ->multiple()
                     ->imagePreviewHeight(450)
@@ -135,7 +136,7 @@ class SupplyResource extends Resource
 
                     SpatieMediaLibraryFileUpload::make('receipt')
                     ->collection('receipts')
-                    ->translateLabel()
+                    ->label(__('Receipt'))
                     ->multiple()
                     ->imagePreviewHeight(350)
                     ->imageResizeMode('cover')
