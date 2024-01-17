@@ -29,6 +29,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Resources\RelationManagers\Concerns\Translatable;
 
 use Livewire\Component as Livewire;
+use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class ProductRelationManager extends RelationManager
 {
@@ -57,9 +58,11 @@ class ProductRelationManager extends RelationManager
                     ->label(__('Category'))
                     ->options(fn (Livewire $livewire) => Category::where('place_id', $livewire->ownerRecord->id)->pluck('category_name', 'category_id'))
                     ->searchable(),
-                KeyValue::make('frontend_name')->label(__('Front product name')),
-                KeyValue::make('frontend_desc')->label(__('Description')),
-
+                Translate::make()
+                    ->schema([
+                        TextInput::make('frontend_name')->label(__('Front product name')),
+                        Textarea::make('frontend_desc')->label(__('Description')),
+                    ]),
                 TextInput::make('sup')->label(__('sup')),
                 TextInput::make('barcode')->label('Barcode'),
 
@@ -77,13 +80,8 @@ class ProductRelationManager extends RelationManager
                     ->imagePreviewHeight('400')
                     ->imageResizeTargetWidth('400')
                     ->imageResizeMode('contain')
-                    // ->imageResizeMode('contain')
-                    // ->imageResizeTargetHeight('400')
+                ])->columns(1);
 
-            ])
-            ->deferLoading()
-            ->defaultPaginationPageOption(25)
-            ->striped();
     }
 
     public function infolist(Infolist $infolist): Infolist
@@ -145,6 +143,8 @@ class ProductRelationManager extends RelationManager
                          ]);
                      })
             ])
+            ->defaultPaginationPageOption(25)
+            ->striped()
             ->filters([
                 //
             ])

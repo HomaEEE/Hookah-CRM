@@ -34,6 +34,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
+use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExpenseResource extends Resource
 {
@@ -266,12 +267,14 @@ class ExpenseResource extends Resource
             ->schema([
                 TextEntry::make('added_at')->translateLabel()->badge()->dateTime('d F Y'),
                 TextEntry::make('user.name')->translateLabel()->badge(),
-                TextEntry::make('place.city')->translateLabel()->badge(),
                 TextEntry::make('bill.name')->translateLabel()->badge(),
                 TextEntry::make('category.name')->translateLabel()->badge(),
                 TextEntry::make('sum')->translateLabel()->badge(),
                 TextEntry::make('comment')->translateLabel()->badge(),
-                TextEntry::make('media')->translateLabel()
+                LightboxSpatieMediaLibraryImageEntry::make('invoice')
+                ->collection('supplies')
+                ->conversion('thumb')
+                ->translateLabel(),
             ]);
     }
 

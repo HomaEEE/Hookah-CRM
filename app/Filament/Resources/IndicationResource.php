@@ -44,7 +44,6 @@ class IndicationResource extends Resource
                 ->emptyLabel('Add ingredients to techcard')
                 ->schema([
                     Select::make('meter_id')->label(__('Meter'))
-                    ->relationship('meter', 'id')
                     ->options(
                         Meter::where('place_id', Filament::getTenant()->id)->pluck('type', 'id')
                     ),

@@ -31,6 +31,7 @@ use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 use Filament\Support\Colors\Color;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
+use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -79,9 +80,10 @@ class AdminPanelProvider extends PanelProvider
                 ->label('Settings')
             ])
             ->plugins([
-                    FilamentLanguageSwitchPlugin::make(),
                     SpatieLaravelTranslatablePlugin::make()
-                    ->defaultLocales(['en', 'ru', 'uk']),
+                    ->defaultLocales(['ru', 'uk', 'en']),
+                    FilamentTranslateFieldPlugin::make()
+                    ->defaultLocales(['ru', 'uk', 'en']),
                     BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)

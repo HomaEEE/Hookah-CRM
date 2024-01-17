@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Log;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -51,6 +52,12 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
         }
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['uk','en','ru']);
+        });
+
 
         // FilamentAsset::register([
         //     Js::make('admin-sw', '/resources/js/admin-sw.js'),

@@ -23,6 +23,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Infolists\Infolist;
 
 use Livewire\Component as Livewire;
+use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class CategoryRelationManager extends RelationManager
 {
@@ -51,8 +52,11 @@ class CategoryRelationManager extends RelationManager
                 TextInput::make('category_name')
                     ->required()
                     ->maxLength(255),
-                KeyValue::make('frontend_name')->label(__('Front category name')),
-                KeyValue::make('frontend_menu_name')->label(__('Front menu')),
+                    Translate::make()
+                    ->schema([
+                        TextInput::make('frontend_name')->label(__('Front category name')),
+                        TextInput::make('frontend_menu_name')->label(__('Front menu')),
+                    ]),
                 KeyValue::make('class')->label(__('Custom class')),
                 // ->default( fn (Livewire $livewire) =>  $livewire->ownerRecord->id),
                 Select::make('parent_category')
@@ -62,7 +66,7 @@ class CategoryRelationManager extends RelationManager
                 TextInput::make('slug')->label(__('Slug')),
                 Toggle::make('visible')->label(__('Visible')),
                 Toggle::make('visible_menu')->label(__('Visible menu')),
-            ]);
+            ])->columns(1);
     }
 
     public function infolist(Infolist $infolist): Infolist

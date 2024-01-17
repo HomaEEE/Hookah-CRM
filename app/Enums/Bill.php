@@ -6,8 +6,8 @@ use Filament\Support\Contracts\HasLabel;
 
 enum BILL: string implements HasLabel  /// Счета
 {
-    case CASH = __('Cash');
-    case CARD = __('CARD');
+    case CASH = '1';
+    case CARD = '2';
 
     public function getLabel(): ?string
     {
