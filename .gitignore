@@ -14,3 +14,4 @@ app/Policies
 public/storage
 /.DS_Store
 /*/.DS_Store
+phpstan.neon

@@ -30,6 +30,7 @@
         "njxqlus/filament-lightbox": "^2.1",
         "saade/filament-fullcalendar": "^3.0",
         "sakanjo/laravel-easy-metrics": "^1.0",
+        "salahhusa9/laravel-updater": "^1.0",
         "solution-forest/filament-simplelightbox": "^0.0.4",
         "solution-forest/filament-translate-field": "^0.0.2",
         "vemcogroup/laravel-translation": "*"
@@ -37,7 +38,7 @@
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "larastan/larastan": "^2.0",
-        "laravel/pint": "^1.0",
+        "laravel/pint": "^1.13",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",

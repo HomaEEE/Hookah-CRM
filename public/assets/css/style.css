@@ -663,8 +663,7 @@ main .page-container .about {
   color: #535353;
 }
 .list .positions .menu-item .description {
-  display: none;
-  padding: 20px 0px;
+  padding: 10px 0px;
   transition: all 1s linear;
 }
 .list .positions .menu-item .description img {
@@ -672,9 +671,6 @@ main .page-container .about {
 }
 .list .positions .menu-item .description a {
   z-index: 10;
-}
-.list .positions .menu-item .description.active {
-  display: flex;
 }
 @media screen and (max-width: 575px) {
   .list .positions .menu-item .property p {

@@ -14,6 +14,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\Summarizers\Sum;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class ExpensesShift extends BaseWidget
 {
@@ -59,7 +60,19 @@ class ExpensesShift extends BaseWidget
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
                 TextColumn::make('bill.name')->translateLabel()->badge(),
-                 IconColumn::make('pay')->translateLabel()
+                SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
+                    ->collection('supplies')
+                    ->simpleLightbox()
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->limitedRemainingText()
+                    ->height(30)
+                    ->toggleable()
+                    ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                    ->placeholder('No description.')
+                    ->visibleFrom('md'),
+                IconColumn::make('pay')->translateLabel()
                  ->boolean()
                     ->trueIcon('heroicon-o-check')
                     ->falseIcon('heroicon-o-x-mark')

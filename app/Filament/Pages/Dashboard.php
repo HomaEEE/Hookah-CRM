@@ -16,11 +16,13 @@ use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -110,6 +112,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     }),
 
                 Action::make('add_supply')->label(__('Supply'))
+                    ->model(Supply::class)
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
                     ->modalWidth('sm')
@@ -131,13 +134,14 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->prefix('₴')
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                         SpatieMediaLibraryFileUpload::make('invoice')
+                            ->translateLabel()
                             ->collection('supplies')
                             ->multiple()
                             ->imagePreviewHeight(150)
                             ->imageResizeMode('cover')
                             ->imageResizeTargetWidth('2100')
                             ->optimize('webp')
-                            ->resize(60),
+                            ->resize(80),
                         Textarea::make('comment')->label(__('Comment'))
                             ->rows(3),
                         Select::make('bill_id')->label(__('Type pay'))
@@ -154,20 +158,22 @@ class Dashboard extends \Filament\Pages\Dashboard
                                 'place_id' => Filament::getTenant()->id,
                                 'user_id' => Auth::user()->id,
                                 'sum' => $data['sum'],
+                                'supplier_id' => $data['supplier_id'],
                                 'added_at' => $data['added_at'],
                                 'comment' => $data['comment'],
                                 'bill_id' => $data['bill_id'],
-                                'supplier_id' => $data['supplier_id'],
                                 'pay' => $data['pay']
                             ],
                         );
+                    })
+                    ->successNotification(
                         Notification::make()
-                            ->title(__('Expense added'))
-                            ->send();
-                    }),
+                             ->success()
+                             ->icon('heroicon-o-inbox-arrow-down')
+                             ->title(__('Suuply added'))
+                     ),
 
-            ])
-                ->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
+            ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
 
             Action::make('addTips')
                 ->label(__('Add Tips'))

@@ -713,17 +713,13 @@ main {
 			}
 		}
 		.description {
-      display: none;
-      padding: 20px 0px;
+      padding: 10px 0px;
       transition: all 1s linear;
 			img {
 				width: 100px;
 			}
       a {
         z-index: 10;
-      }
-      &.active {
-          display: flex;
       }
 	}
   @media screen and (max-width: 575px) {

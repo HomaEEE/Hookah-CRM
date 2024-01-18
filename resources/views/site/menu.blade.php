@@ -40,17 +40,21 @@
                                 <p class="price">{{number_format($item['price'], 0)}} ₴</p>
                             </div>
                         </div>
-                        @if (isset($item['frontend_desc']))
+                        @if (!empty($item['frontend_desc']))
                         <div class="description">
-                            <p>{{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}</p>
-                            @if (!empty($item->getFirstMediaUrl('products')))
+                            <div class="row">
+                                <div class="col-xs-8 col-md-8">
+                                {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+                                </div>
+                                <div class="col-xs-4 col-md-4">
                                  @if (!empty($item->getFirstMediaUrl('products')))
                                             <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
                                             data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
                                             <img src="{{$item->getFirstMediaUrl('products')}}">
                                             </a>
                                         @endif
-                            @endif
+                                </div>
+                            </div>
                         </div>
                         @endif
                     </div>
@@ -62,26 +66,37 @@
                             <h3>{{$subcategory['frontend_name'] ? $subcategory['frontend_name'] : $subcategory['category_name'] }}</h3>
                                 @foreach ($subcategory->products as $item)
 
-                                <div class="menu-item">
+                    <div class="menu-item">
                                     <div class="item">
                                         <div class="title"> {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}</div>
                                         <div class="property">
                                             <p class="sup">{{$item['sup']}}</p>
-                                <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
+                                            <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
                                             <p class="price">{{number_format($item['price'], 0)}} ₴</p>
                                         </div>
                                     </div>
-                                  @if (isset($item['frontend_desc']))
-                                    <div class="description">
-                                        <p>{{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}</p>
-                                        @if (!empty($item->getFirstMediaUrl('products')))
+                     @if (!empty($item['frontend_desc']))
+                        <div class="description">
+                            <div class="row">
+                            @if (!empty($item->getFirstMediaUrl('products')))
+                                <div class="col-xs-8 col-md-8">
+                                {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+                                </div>
+                                <div class="col-xs-4 col-md-4">
                                             <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
                                             data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
                                             <img src="{{$item->getFirstMediaUrl('products')}}">
                                             </a>
-                                        @endif
-                                    </div>
-                                    @endif
+
+                                </div>
+                            @else
+                                <div class="col-xs-12 col-md-12">
+                                    {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+                                </div>
+                            @endif
+                            </div>
+                        </div>
+                        @endif
                                 </div>
                                 @endforeach
                         @endforeach

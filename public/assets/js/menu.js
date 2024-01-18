@@ -18,8 +18,6 @@ $(".tab-item").click(function (e) {
     }, 1000);
 });
 
-$(".menu-item").accordion({collapsible: true, active: false});
-
 Fancybox.bind("[data-fancybox]", {
     hideScrollbar: false,
     closeButton: "auto",

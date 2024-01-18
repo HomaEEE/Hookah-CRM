@@ -99,7 +99,7 @@ class ExpenseResource extends Resource
                     ->label(__('Invoice'))
                     ->collection('supplies')
                     ->multiple()
-                    ->imagePreviewHeight(350)
+                    ->imagePreviewHeight('350')
                     ->imageResizeMode('cover')
                     ->imageEditor()
                     ->optimize('webp')
@@ -132,7 +132,7 @@ class ExpenseResource extends Resource
                     ->wrap()
                     ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', 1)
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
                 TextColumn::make('bill.name')->translateLabel()->badge(),
                 IconColumn::make('pay')

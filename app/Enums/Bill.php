@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 
-enum BILL: string implements HasLabel  /// Счета
+enum Bill: string implements HasLabel  /// Счета
 {
     case CASH = '1';
     case CARD = '2';

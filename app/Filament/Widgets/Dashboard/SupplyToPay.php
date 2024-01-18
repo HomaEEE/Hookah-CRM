@@ -14,6 +14,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
 
 class SupplyToPay extends BaseWidget
 
@@ -56,7 +57,7 @@ class SupplyToPay extends BaseWidget
                 ->size('sm')
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total'))),
                 TextColumn::make('bill.name')->translateLabel()->badge(),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
