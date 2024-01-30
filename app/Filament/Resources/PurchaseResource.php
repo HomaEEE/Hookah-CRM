@@ -27,11 +27,12 @@ class PurchaseResource extends Resource
 {
     protected static ?string $model = Purchase::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-squares-plus';
-
     protected static ?string $recordTitleAttribute = 'id';
 
     protected static ?string $navigationGroup = 'Stocks';
+
+    protected static ?int $navigationSort = 4;
+
 
     public static function getPluralModelLabel(): string
     {

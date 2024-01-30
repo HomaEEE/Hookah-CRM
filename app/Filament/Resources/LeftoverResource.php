@@ -18,7 +18,7 @@ class LeftoverResource extends Resource
 {
     protected static ?string $model = Leftover::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
+    protected static ?int $navigationSort = 5;
 
     public static function getNavigationGroup(): ?string
     {

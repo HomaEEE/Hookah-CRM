@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Bill as BillEnum;
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
 use App\Models\Supplier;
@@ -11,8 +10,6 @@ use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -45,10 +42,9 @@ class SupplyResource extends Resource
 {
     protected static ?string $model = Supply::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
-
     protected static ?string $recordTitleAttribute = 'id';
 
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationGroup(): ?string
     {
@@ -226,7 +222,7 @@ class SupplyResource extends Resource
                     ->label(__('Supplier'))
                     ->native(false)
                     ->options(
-                        Supplier::where('place_id', Filament::getTenant()->id)->pluck('company', 'id')
+                        Supplier::where('place_id', Filament::getTenant()->id)->visible(1)->pluck('company', 'id')
                     ),
                 SelectFilter::make('user')->translateLabel()
                 ->options(
@@ -235,7 +231,7 @@ class SupplyResource extends Resource
                     })->get()
                         ->pluck('name', 'id')
                 )
-                    ->attribute('user_id'),
+                ->attribute('user_id'),
 
                 Filter::make('created_at')
                     ->form([

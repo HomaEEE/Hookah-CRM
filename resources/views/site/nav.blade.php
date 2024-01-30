@@ -1,15 +1,15 @@
 <header>
     <div class="container">
-    <button class="burger burger2"><span></span></button>
-    <div class="row  middle-md around-md">
-    <div class="col-xs-6 col-md-2">
+    <div class="row  middle-xs around-xs">
+    <div class="col-xs-4 col-md-2">
         <div class="logo">
-        <h1>
-            <a href="/"><img src="/assets/imgs/logo.svg" alt="Noire hookah Lounge"></a>
-        </h1>
+            <h1>
+                <a href="/"><img src="/assets/imgs/logo.svg" alt="Noire hookah Lounge"></a>
+            </h1>
+        </div>
     </div>
-    </div>
-    <div class="col-xs-6 hidden-xs col-md-10 middle-md">
+    <div class="col-xs-8 burger burger2"><span></span></div>
+    <div class="col-xs col-md-10 middle-md menu-header">
         <div class="row">
         <div class="col-xs">
             <ul class="menu">
@@ -39,7 +39,7 @@
                     </li>
                     @endif
                 </li>
-                @endforeach
+            @endforeach
     </div>
     </div>
 

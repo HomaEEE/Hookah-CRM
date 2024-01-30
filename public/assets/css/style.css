@@ -192,10 +192,12 @@ header .logo {
 }
 @media (max-width: 575px) {
   header .logo {
-    left: 90px;
-    width: 40%;
+    left: 20px;
+    width: 50%;
+    top: 10px;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    padding: 0;
   }
 }
 @media (max-width: 376px) {
@@ -214,44 +216,52 @@ header .logo {
     position: relative;
   }
 }
-header .menu {
+@media (max-width: 575px) {
+  header .menu-header {
+    visibility: none;
+  }
+  header .menu-header.active {
+    display: block;
+  }
+}
+header .menu-header .menu {
   list-style: none;
   display: flex;
 }
-header .menu li {
+header .menu-header .menu li {
   margin: 0 10px;
   padding: 3px;
   font-size: 0.8em;
   text-transform: uppercase;
 }
-header .address {
+header .menu-header .address {
   padding: 3px;
   font-size: 0.8em;
 }
-header .langs {
+header .menu-header .langs {
   display: flex;
   margin: 0;
   font-size: 0.8em;
 }
-header .langs li {
+header .menu-header .langs li {
   font-size: 1em;
   display: flex;
   padding: 3px;
 }
-header .langs li a {
+header .menu-header .langs li a {
   color: #e1e1e1;
   margin: 0 10px;
 }
-header .langs li.active {
+header .menu-header .langs li.active {
   padding: 3px;
   background: #e1e1e1;
 }
-header .langs li.active a {
+header .menu-header .langs li.active a {
   color: #151515;
 }
 
 .burger {
-  z-index: 101;
+  z-index: 100;
   width: 30px;
   height: 20px;
   border: none;

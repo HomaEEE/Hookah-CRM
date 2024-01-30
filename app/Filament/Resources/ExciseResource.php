@@ -30,14 +30,13 @@ class ExciseResource extends Resource
 {
     protected static ?string $model = Excise::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-beaker';
-
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Menu');
+        return __('Manage');
     }
 
     public static function getPluralModelLabel(): string

@@ -1,3 +1,8 @@
+$('.burger2').click(function() {
+    $('.burger2').toggleClass('on');
+    $('.header-menu').toggleClass('active');
+   });
+
 $(".tab-item").click(function (e) {
 	e.preventDefault();
 	var target = $(this).data("target");

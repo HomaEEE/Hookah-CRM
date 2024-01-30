@@ -18,7 +18,7 @@ class IndicationResource extends Resource
 {
     protected static ?string $model = Indication::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-light-bulb';
+    protected static ?int $navigationSort = 6;
 
     public static function getNavigationGroup(): ?string
     {

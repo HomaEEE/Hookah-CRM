@@ -31,7 +31,7 @@ class WithdrawalResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationGroup(): ?string
     {
@@ -57,7 +57,7 @@ class WithdrawalResource extends Resource
                 TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
                 Select::make('bill_id')->label(__('Bill'))
                 ->relationship('bills', 'name')
-                ->options(Bill::get()->pluck('name', 'id')),
+                ->options(Bill::get()->pluck('name', 'id'))->default(0),
             ])->columns(1);
     }
 

@@ -32,12 +32,17 @@ class UserResource extends Resource
 
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
-
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?int $navigationSort = 81;
 
 
     public static function getPluralModelLabel(): string
+    {
+        return __('Users');
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('Users');
     }

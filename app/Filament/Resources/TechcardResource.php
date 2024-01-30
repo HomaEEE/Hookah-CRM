@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TechcardResource\Pages;
 use App\Filament\Resources\TechcardResource\RelationManagers;
-use App\Models\{Ingredient, Techcard, Workshop};
+use App\Models\{Ingredient, Product, Techcard, Workshop};
 
 use Auth;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
@@ -39,7 +39,7 @@ class TechcardResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'techcard';
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+    protected static ?int $navigationSort = 7;
 
     public static function getPluralModelLabel(): string
     {
@@ -62,12 +62,13 @@ class TechcardResource extends Resource
             ->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('workshop_id')->label(__('Workshop'))
-                    ->options(function (Get $get) {
-                        return Workshop::where('place_id', $get('place_id'))->get()->pluck('name', 'id');
-                    })
+                    ->options( Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'id'))
                     ->reactive()
                     ->required(),
-                TextInput::make('techcard')->translateLabel(),
+                    Select::make('techcard')
+                    ->searchable()
+                    ->native(false)
+                    ->options( Product::where('place_id', Filament::getTenant()->id)->get()->pluck('product_name', 'id')),
 
                 Section::make()
                             ->schema([

@@ -3,9 +3,10 @@
 namespace App\Filament\Resources\SupplyResource\Pages;
 
 use App\Filament\Resources\SupplyResource;
-use App\Models\{Supply, Supplier};
+use App\Models\{Supply, Supplier, Workshop};
 use Auth;
 use Filament\Actions\CreateAction;
+use Filament\Facades\Filament;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ManageRecords;
@@ -45,13 +46,11 @@ class ManageSupplies extends ManageRecords
     // public function getTabs(): array
     // {
     //     return [
-    //         null => Tab::make('All')->label(__('All')),
-    //          __('Products') => Tab::make()->query(fn ($query) => $query->whereHas('supplier', function ($query) {
-    //             $query->where('supplier.type', 1);
-    //     })
-    // ),
-    //         // __('Alcohol') => Tab::make()->query(fn ($query) => $query->where('status', 'processing')),
-    //         // __('Tabacco') => Tab::make()->query(fn ($query) => $query->where('status', 'shipped')),
+    //         'all' => Tab::make(),
+    //         'contracts' => Tab::make()
+    //             ->modifyQueryUsing(fn (Builder $query) => $query->whereHas(
+
+    //             ))
     //     ];
     // }
 }

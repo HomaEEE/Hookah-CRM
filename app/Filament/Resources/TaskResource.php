@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Auth;
 use Filament\Actions\ActionGroup;
+use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
@@ -32,7 +33,7 @@ class TaskResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 7;
 
     public static function getPluralModelLabel(): string
     {
@@ -70,18 +71,13 @@ class TaskResource extends Resource
         return $form
             ->schema([
                 Hidden::make('user_id')->default(Auth::user()->id),
-                Select::make('place_id')->label(__('Place'))
-                    ->options(
-                        Auth::user()->place->pluck('nameCity', 'id')
-                    )
-                    ->afterStateUpdated(fn (callable $set) => $set('for_user_id', null))
-                    ->required()
-                    ->reactive(),
+                Hidden::make('place_id')->label(__('Place'))
+                    ->default(Filament::getTenant()->id),
                 Select::make('for_user_id')->label(__('For User'))
                     ->hidden(fn (Get $get) => $get('place_id') == null)
                     ->options(function (callable $get) {
-                        return User::whereHas('places', function ($query) use ($get) {
-                            $query->where('place_id', $get('place_id'));
+                        return User::whereHas('place', function ($query) {
+                            $query->where('place_id', Filament::getTenant()->id);
                         })->get()
                             ->pluck('name', 'id');
                     })
@@ -114,7 +110,7 @@ class TaskResource extends Resource
                         ]
                     );
                     $record->save();
-                })->visible(fn (Task $record) => $record->approve == 0),
+                })->visible(fn (Task $record) => $record->approve != 1),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()->visible(fn (Task $record) =>$record->approve == 0),

@@ -56,14 +56,14 @@ class ShiftResource extends Resource
 {
     protected static ?string $model = Shift::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-
     protected static ?string $recordTitleAttribute = 'id';
 
-    // public static function getNavigationGroup(): ?string
-    // {
-    //     return __('Place');
-    // }
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
 
     public static function getPluralModelLabel(): string
     {

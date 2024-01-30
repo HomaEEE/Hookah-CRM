@@ -34,8 +34,6 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-
     protected static ?string $recordTitleAttribute = 'company';
 
     public static function getPluralModelLabel(): string

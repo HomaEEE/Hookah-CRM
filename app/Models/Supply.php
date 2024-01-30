@@ -82,8 +82,9 @@ class Supply extends Model implements HasMedia
         return $query->where('poster', 0);
     }
 
-    public function Pay($query)
+    public function scopeType($query)
     {
-        return $query->update('pay', 1);
+        return $query->where('type', $query);
     }
+
 }

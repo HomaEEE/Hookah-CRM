@@ -9,9 +9,11 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
-/storage/framework/*
+storage/framework/*
 app/Policies
 public/storage
+public/manifest-admin.json
+public/manifest-site.json
 /.DS_Store
 /*/.DS_Store
 phpstan.neon

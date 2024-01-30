@@ -40,13 +40,16 @@ class ExpenseResource extends Resource
 {
     protected static ?string $model = Expense::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-minus';
-
     protected static ?string $recordTitleAttribute = 'id';
 
-    protected static ?string $navigationGroup = 'Finance';
+    protected static ?int $navigationSort = 2;
 
     public static function getPluralModelLabel(): string
+    {
+        return __('Expenses');
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('Expenses');
     }
@@ -163,8 +166,8 @@ class ExpenseResource extends Resource
             ->defaultPaginationPageOption(25)
             ->striped()
             ->filters([
-                SelectFilter::make('supplier_id')
-                    ->label(__('Supplier'))
+                SelectFilter::make('category_id')
+                    ->label(__('Category'))
                     ->native(false)
                     ->options(
                         ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')

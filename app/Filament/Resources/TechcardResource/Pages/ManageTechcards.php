@@ -23,7 +23,6 @@ class ManageTechcards extends ManageRecords
 
     public function getTabs(): array
     {
-
         $tabs = [null => Tab::make(__('All'))];
 
         $workshops = Workshop::where('place_id', Filament::getTenant()->id)->get();

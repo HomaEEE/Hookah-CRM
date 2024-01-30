@@ -42,11 +42,12 @@ class PlaceResource extends Resource
 
     protected static ?string $model = Place::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
-
     protected static ?string $recordTitleAttribute = 'nameCity';
 
     protected static ?string $slug = 'places';
+
+    protected static ?int $navigationSort = 80;
+
 
     public static function getPluralModelLabel(): string
     {
@@ -94,8 +95,7 @@ class PlaceResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label(__('Place'))
-                    ->description(fn (Place $record): string => $record->city),
+                TextColumn::make('name')->label(__('Place'))->description(fn (Place $record): string => $record->city),
                 TextColumn::make('phone')->label(__('Phone')),
                 IconColumn::make('opened')
                     ->label(__('Opened'))

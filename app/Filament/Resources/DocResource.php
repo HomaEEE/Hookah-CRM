@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DocResource\Pages;
 use App\Models\Doc;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\DatePicker;
@@ -15,19 +14,14 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-
-use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 
 class DocResource extends Resource
 {
     protected static ?string $model = Doc::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-paper-clip';
 
     protected static ?string $recordTitleAttribute = 'name';
 

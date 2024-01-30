@@ -25,10 +25,7 @@ class GuestResource extends Resource
 {
     protected static ?string $model = Guest::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
-
     protected static ?string $recordTitleAttribute = 'name';
-
 
     public static function getPluralModelLabel(): string
     {

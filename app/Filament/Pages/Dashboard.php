@@ -32,6 +32,8 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     protected static ?string $slug = 'dashboard';
 
+    protected static ?int $navigationSort = 1;
+
     public function getTitle(): string | Htmlable
     {
         return __('Dashboard');
@@ -170,7 +172,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                         Notification::make()
                              ->success()
                              ->icon('heroicon-o-inbox-arrow-down')
-                             ->title(__('Suuply added'))
+                             ->title(__('Supply added'))
                      ),
 
             ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),

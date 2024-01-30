@@ -33,13 +33,16 @@ class SubscriptionResource extends Resource
 {
     protected static ?string $model = Subscription::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
-
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationGroup = 'Finance';
+    protected static ?int $navigationSort = 2;
 
     public static function getPluralModelLabel(): string
+    {
+        return __('Subscriptions');
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('Subscriptions');
     }

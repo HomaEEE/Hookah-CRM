@@ -28,7 +28,8 @@ class WriteoffResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
+    protected static ?int $navigationSort = 6;
+
 
     public static function getPluralModelLabel(): string
     {

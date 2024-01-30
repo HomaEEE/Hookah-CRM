@@ -27,7 +27,12 @@ class Supplier extends Model
 
     public function supply()
     {
-        return $this->belongsTo(Supply::class, 'id');
+        return $this->hasOne(Supply::class);
+    }
+
+    public function supplies()
+    {
+        return $this->hasMany(Supply::class);
     }
 
     public function getNameCompanyAttribute()
@@ -39,4 +44,9 @@ class Supplier extends Model
     {
         return $query->where('visible', 1);
     }
+    public function scopeType($query)
+    {
+        return $query->where('type', $query);
+    }
+
 }

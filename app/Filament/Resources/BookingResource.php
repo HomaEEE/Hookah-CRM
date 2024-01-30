@@ -3,10 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BookingResource\Pages;
-use App\Models\Booking;
-use App\Models\Feedback;
-use App\Models\Place;
-use App\Models\Seet;
+use App\Models\{Booking, Place, Seet};
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
@@ -22,7 +19,6 @@ use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -32,9 +28,9 @@ class BookingResource extends Resource
 {
     protected static ?string $model = Booking::class;
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $recordTitleAttribute = 'name';
 
     // protected function getHeaderWidgets(): array
     // {
@@ -43,15 +39,14 @@ class BookingResource extends Resource
     //     ];
     // }
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Place');
+    }
 
     public static function getPluralModelLabel(): string
     {
         return __('Bookings');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Place');
     }
 
     public static function getNavigationLabel(): string
@@ -89,7 +84,7 @@ class BookingResource extends Resource
                         $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
                     JS))
                     ->translateLabel(),
-                    Select::make('table_id')->label(__('Table'))
+                Select::make('table_id')->label(__('Table'))
                     ->hidden(fn (Get $get) => $get('place_id') == null)
                     ->options(function (callable $get) {
                         if (null == ($get('place_id'))) {
@@ -116,9 +111,9 @@ class BookingResource extends Resource
                 TextColumn::make('time')->since()->translateLabel(),
                 TextColumn::make('seet.table_id')->translateLabel()->toggleable(),
                 TextColumn::make('phone')->translateLabel()->searchable()
-                ->copyable()
-                ->copyMessage(__('Phone copied'))
-                ->copyMessageDuration(1500),
+                    ->copyable()
+                    ->copyMessage(__('Phone copied'))
+                    ->copyMessageDuration(1500),
                 TextColumn::make('person')->translateLabel()->toggleable(),
             ])->defaultSort('time', 'desc')
             ->filters([
