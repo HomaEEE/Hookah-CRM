@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="col-xs-8 burger burger2"><span></span></div>
-    <div class="col-xs col-md-10 middle-md menu-header">
+    <div class="col-xs hidden-xs col-md-10 middle-md menu-header">
         <div class="row">
         <div class="col-xs">
             <ul class="menu">
