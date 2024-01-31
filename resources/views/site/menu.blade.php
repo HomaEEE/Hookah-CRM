@@ -75,9 +75,7 @@
                                         <div class="property">
                                             <p class="sup">{{$item['sup']}}</p>
                                             <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
-                                             @if (empty($item->getFirstMediaUrl('products')))
                                             <p class="price">{{number_format($item['price'], 0)}} ₴</p>
-                                            @endif
                                         </div>
                                     </div>
                      @if (!empty($item['frontend_desc']))
@@ -86,8 +84,6 @@
                             @if (!empty($item->getFirstMediaUrl('products')))
                                 <div class="col-xs-8 col-md-8">
                                 {{$item['frontend_desc'] ?  $item['frontend_desc'] : ""}}
-                                <p class="price">{{number_format($item['price'], 0)}} ₴</p>
-
                                 </div>
                                 <div class="col-xs-4 col-md-4">
                                             <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
