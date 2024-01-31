@@ -20,8 +20,8 @@ class ManageProducts extends ManageRecords
             Actions\Action::make('update')
             ->label(__('Update menu'))
             ->action(function (): void {
-                    (new PosterApiController())->getCategories(Filament::getTenant()->id());
-                    (new PosterApiController())->getProducts(Filament::getTenant()->id());
+                    (new PosterApiController())->getCategories(Filament::getTenant()->id);
+                    (new PosterApiController())->getProducts(Filament::getTenant()->id);
                     Notification::make()
                         ->title(__('Updated successfully'))
                         ->icon('heroicon-o-qr-code')

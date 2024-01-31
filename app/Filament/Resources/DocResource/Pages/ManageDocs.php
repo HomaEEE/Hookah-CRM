@@ -22,8 +22,16 @@ class ManageDocs extends ManageRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make(),
-            'contracts' => Tab::make()
+            __('all') => Tab::make(),
+            __('Pass') => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 1)),
+            __('License') => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 2)),
+            __('EDR') => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 3)),
+            __('Key') => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 4)),
+            __('contracts') => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('type', 5))
         ];
     }
