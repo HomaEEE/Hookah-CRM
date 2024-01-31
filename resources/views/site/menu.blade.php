@@ -7,11 +7,13 @@
 
 @section('content')
 
+
 <div class="container">
 @include('site.properties')
-    <div class="container">
+
     <div class="row">
-        <div class="col-xs-12 col-md-3 tabs">
+        <div class="col-xs-12 col-md-3">
+            <div class="tabs">
             <ul>
             @foreach ($categories as $cat)
             <li data-target="{{ $cat['slug'] }}"
@@ -20,6 +22,7 @@
             </li>
             @endforeach
             </ul>
+            </div>
         </div>
 
         <div class="col-xs-12 col-md-9 list">
@@ -72,7 +75,9 @@
                                         <div class="property">
                                             <p class="sup">{{$item['sup']}}</p>
                                             <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
+                                             @if (empty($item->getFirstMediaUrl('products')))
                                             <p class="price">{{number_format($item['price'], 0)}} ₴</p>
+                                            @endif
                                         </div>
                                     </div>
                      @if (!empty($item['frontend_desc']))
@@ -80,13 +85,15 @@
                             <div class="row">
                             @if (!empty($item->getFirstMediaUrl('products')))
                                 <div class="col-xs-8 col-md-8">
-                                {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+                                {{$item['frontend_desc'] ?  $item['frontend_desc'] : ""}}
+                                <p class="price">{{number_format($item['price'], 0)}} ₴</p>
+
                                 </div>
                                 <div class="col-xs-4 col-md-4">
                                             <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
                                             data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
                                             <img src="{{$item->getFirstMediaUrl('products')}}">
-                                            </a>
+                                        </a>
 
                                 </div>
                             @else
@@ -104,7 +111,6 @@
                      </div>
                 @endforeach
 
-        </div>
     </div>
 </div>
 </div>

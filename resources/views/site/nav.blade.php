@@ -18,7 +18,7 @@
     </div>
 
     <div class="col-xs-12 col-md-10 middle-md menu-header">
-        <div class="row">
+        <div class="row between-xs">
         <div class="col">
             <ul class="menu">
                 <li><a href="/">{{__('Home page')}}</a></li>

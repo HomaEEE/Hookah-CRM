@@ -130,6 +130,8 @@
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
   }
 }
 html {
@@ -145,6 +147,7 @@ body {
   font-style: normal;
   color: #e1e1e1;
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   min-height: 100vh;
   justify-content: space-between;
@@ -192,8 +195,8 @@ header .logo {
 }
 @media (max-width: 575px) {
   header .logo {
-    left: 10px;
-    width: 60%;
+    left: 15px;
+    width: 45%;
     top: 5px;
     position: relative;
     margin-bottom: 10px;
@@ -512,10 +515,6 @@ main .page-container .about {
 
 .tabs {
   position: sticky;
-  position: -webkit-sticky;
-  margin-bottom: 20px;
-  top: 2rem;
-  max-height: 100vh;
 }
 .tabs ul {
   margin: 0;
@@ -549,8 +548,6 @@ main .page-container .about {
 }
 @media screen and (max-width: 575px) {
   .tabs {
-    position: sticky;
-    position: -webkit-sticky;
     padding: 10px 0;
     margin: 0;
     top: 0;
@@ -636,11 +633,21 @@ main .page-container .about {
   color: #535353;
 }
 .list .positions .menu-item .description {
-  padding: 10px 0px;
+  padding: 5px 0px;
   transition: all 1s linear;
+  position: relative;
+}
+.list .positions .menu-item .description .price {
+  position: absolute;
+  bottom: 10px;
+  left: 0px;
+  font-size: 1rem;
 }
 .list .positions .menu-item .description img {
   width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 13px;
 }
 .list .positions .menu-item .description a {
   z-index: 10;
@@ -660,7 +667,7 @@ main .page-container .about {
 
 .properties {
   border: 1px solid #a3a3a3;
-  max-width: 80%;
+  max-width: 95%;
   text-align: left;
   padding: 15px;
   border-radius: 27px;
