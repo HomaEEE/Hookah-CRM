@@ -3,7 +3,6 @@
 namespace App\Filament\Pages;
 
 use App\Http\Controllers\PosterApiController;
-use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
 use App\Models\{Bill, Expense, ExpenseCategory, Supplier, Supply, Tip};
@@ -16,13 +15,11 @@ use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Support\Facades\Auth;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -94,6 +91,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->options(Bill::get()->pluck('name', 'id'))
                             ->required(),
                         Textarea::make('comment')->translateLabel()->rows(2),
+                        Toggle::make('pay')->label(__('Paid'))
+                        ->default(true)
+                        ->inline(),
                     ])
                     ->action(function (array $data): void {
                         Expense::create(
@@ -105,7 +105,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                                 'added_at' => $data['added_at'],
                                 'comment' => $data['comment'],
                                 'bill_id' => $data['bill_id'],
-                                'pay' => 1
+                                'pay' => $data['pay']
                             ],
                         );
                         Notification::make()
@@ -113,67 +113,67 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->send();
                     }),
 
-                Action::make('add_supply')->label(__('Supply'))
-                    ->model(Supply::class)
-                    ->icon('heroicon-o-inbox-arrow-down')
-                    ->modalHeading(__('Add Supply'))
-                    ->modalWidth('sm')
-                    ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->form([
-                        DateTimePicker::make('added_at')
-                            ->label(__('Date Added'))
-                            ->native(false)
-                            ->seconds(false)
-                            ->maxDate(now())->default(now()),
-                        Select::make('supplier_id')->label(__('Supplier'))
-                            ->searchable()
-                            ->native(false)
-                            ->required()
-                            ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
-                        TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->required()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->translateLabel()
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imagePreviewHeight(150)
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('2100')
-                            ->optimize('webp')
-                            ->resize(80),
-                        Textarea::make('comment')->label(__('Comment'))
-                            ->rows(3),
-                        Select::make('bill_id')->label(__('Type pay'))
-                            ->default(0)
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->required(),
-                        Toggle::make('pay')->label(__('Paid'))
-                            ->default(false)
-                            ->inline(),
-                    ])
-                    ->action(function (array $data): void {
-                        Supply::create(
-                            [
-                                'place_id' => Filament::getTenant()->id,
-                                'user_id' => Auth::user()->id,
-                                'sum' => $data['sum'],
-                                'supplier_id' => $data['supplier_id'],
-                                'added_at' => $data['added_at'],
-                                'comment' => $data['comment'],
-                                'bill_id' => $data['bill_id'],
-                                'pay' => $data['pay']
-                            ],
-                        );
-                    })
-                    ->successNotification(
-                        Notification::make()
-                             ->success()
-                             ->icon('heroicon-o-inbox-arrow-down')
-                             ->title(__('Supply added'))
-                     ),
+                // Action::make('add_supply')->label(__('Supply'))
+                //     ->model(Supply::class)
+                //     ->icon('heroicon-o-inbox-arrow-down')
+                //     ->modalHeading(__('Add Supply'))
+                //     ->modalWidth('sm')
+                //     ->modalIcon('heroicon-o-inbox-arrow-down')
+                //     ->form([
+                //         DateTimePicker::make('added_at')
+                //             ->label(__('Date Added'))
+                //             ->native(false)
+                //             ->seconds(false)
+                //             ->maxDate(now())->default(now()),
+                //         Select::make('supplier_id')->label(__('Supplier'))
+                //             ->searchable()
+                //             ->native(false)
+                //             ->required()
+                //             ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
+                //         TextInput::make('sum')->label(__('Sum'))
+                //             ->numeric()
+                //             ->required()
+                //             ->prefix('₴')
+                //             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                //         SpatieMediaLibraryFileUpload::make('invoice')
+                //             ->translateLabel()
+                //             ->collection('supplies')
+                //             ->multiple()
+                //             ->imagePreviewHeight(100)
+                //             ->imageResizeMode('cover')
+                //             ->imageResizeTargetWidth('2100')
+                //             ->optimize('webp')
+                //             ->resize(80),
+                //         Textarea::make('comment')->label(__('Comment'))
+                //             ->rows(3),
+                //         Select::make('bill_id')->label(__('Type pay'))
+                //             ->default(0)
+                //             ->options(Bill::get()->pluck('name', 'id'))
+                //             ->required(),
+                //         Toggle::make('pay')->label(__('Paid'))
+                //             ->default(false)
+                //             ->inline(),
+                //     ])
+                //     ->action(function (array $data): void {
+                //         Supply::create(
+                //             [
+                //                 'place_id' => Filament::getTenant()->id,
+                //                 'user_id' => Auth::user()->id,
+                //                 'sum' => $data['sum'],
+                //                 'supplier_id' => $data['supplier_id'],
+                //                 'added_at' => $data['added_at'],
+                //                 'comment' => $data['comment'],
+                //                 'bill_id' => $data['bill_id'],
+                //                 'pay' => $data['pay']
+                //             ],
+                //         );
+                //     })
+                //     ->successNotification(
+                //         Notification::make()
+                //              ->success()
+                //              ->icon('heroicon-o-inbox-arrow-down')
+                //              ->title(__('Supply added'))
+                //      ),
 
             ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
 
