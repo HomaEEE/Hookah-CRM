@@ -1,14 +1,14 @@
 <header>
     <div class="container">
-    <div class="row  middle-xs around-xs">
-    <div class="col-xs-4 col-md-2">
+    <div class="row  middle-xs between-xs">
+    <div class="col-xs-6 col-md-2">
         <div class="logo">
             <h1>
                 <a href="/"><img src="/assets/imgs/logo.svg" alt="Noire hookah Lounge"></a>
             </h1>
         </div>
     </div>
-    <div class="col-xs-8 burger burger2"><span></span></div>
+    <div class="col-xs-6 burger burger2"><span></span></div>
     <div class="col-xs hidden-xs col-md-10 middle-md menu-header">
         <div class="row">
         <div class="col-xs">

@@ -14,7 +14,6 @@
         @foreach ($feedbacks as $f)
             <div class="col-xs-12 col-md-6">
             <h4>{{ $f->name}} </h4>
-            <h5>{{ $f->contact}} </h5>
             <p>{{ $f->text}} </p>
             </div>
         @endforeach
