@@ -70,12 +70,16 @@ class Dashboard extends \Filament\Pages\Dashboard
             //     }),
             ActionGroup::make([
 
-                Action::make('add_expense')->label(__('Expense'))
+                CreateAction::make('add_expense')->label(__('Expense'))
+                    ->model(Expense::class)
+                    ->createAnother(false)
                     ->icon('heroicon-o-document-minus')
                     ->modalHeading(__('Add Expense'))
                     ->modalWidth('sm')
                     ->modalIcon('heroicon-o-document-minus')
                     ->form([
+                        Hidden::make('user_id')->default(Auth::user()->id),
+                        Hidden::make('place_id')->default(Filament::getTenant()->id),
                         DateTimePicker::make('added_at')
                             ->label(__('Date Added'))
                             ->native(false)
@@ -96,28 +100,18 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->default(true)
                         ->inline(),
                     ])
-                    ->action(function (array $data): void {
-                        Expense::create(
-                            [
-                                'place_id' => Filament::getTenant()->id,
-                                'user_id' => Auth::user()->id,
-                                'sum' => $data['sum'],
-                                'category_id' => $data['category_id'],
-                                'added_at' => $data['added_at'],
-                                'comment' => $data['comment'],
-                                'bill_id' => $data['bill_id'],
-                                'pay' => $data['pay']
-                            ],
-                        );
+                    ->successNotification(
                         Notification::make()
                             ->title(__('Expense added'))
-                            ->send();
-                    }),
+                            ->icon('heroicon-o-inbox-arrow-down')
+                            ->send()
+                    ),
 
                 CreateAction::make('add_supply')->label(__('Supply'))
                     ->model(Supply::class)
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
+                    ->createAnother(false)
                     ->modalWidth('sm')
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->form([
@@ -192,55 +186,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->iconColor('success')
                         ->send();
                 }),
-
-            // Action::make('add_expense')->label(__('Add Expense'))
-            // ->icon('heroicon-s-banknotes')
-            // ->color('info')
-            // ->modalHeading(__('Add Expense'))
-            // ->requiresConfirmation()
-            // ->form([
-            //         DateTimePicker::make('added_at')
-            //             ->label(__('Date Added'))
-            //             ->native(false)
-            //             ->seconds(false)
-            //             ->maxDate(now())->default(now()),
-            //         Select::make('category_id')->label(__('Category'))
-            //             ->relationship('categories', 'name')
-            //             ->searchable()
-            //             ->required()
-            //             ->reactive()
-            //             ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
-            //         TextInput::make('sum')->label(__('Sum'))
-            //             ->numeric()
-            //             ->prefix('₴')
-            //             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-            //         Select::make('type_pay')->label(__('Type pay'))
-            //             ->default(0)
-            //             ->options([
-            //                 0 => __('Cash'),
-            //                 1 => __('Card')
-            //             ])
-            //             ->required(),
-            //         Textarea::make('comment')->translateLabel()->rows(2),
-            // ])
-            // ->action(function  (array $data): void {
-            //     Expense::create(
-            //         [
-            //             'place_id' => Filament::getTenant()->id,
-            //             'user_id' => Auth::user()->id,
-            //             'sum' => $data['sum'],
-            //             'added_at' => $data['added_at'],
-            //             'comment' => $data['comment'],
-            //             'type_pay' => $data['type_pay'],
-            //             'pay' => 1
-            //         ],
-            //     );
-
-
-            //     Notification::make()
-            //     ->title(__('Expense added'))
-            //     ->send();
-            // }),
 
 
             Action::make('openShift')
