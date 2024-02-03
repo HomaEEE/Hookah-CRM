@@ -4,12 +4,9 @@ namespace App\Filament\Widgets\Dashboard;
 
 use Filament\Widgets\TableWidget as BaseWidget;
 use App\Models\Supply;
-use Auth;
-use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;

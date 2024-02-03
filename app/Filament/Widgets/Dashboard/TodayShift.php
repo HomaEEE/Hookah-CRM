@@ -15,7 +15,7 @@ class TodayShift extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected static ?string $pollingInterval = '5s';
+    protected static ?string $pollingInterval = '10s';
 
     protected function getStats(): array
     {

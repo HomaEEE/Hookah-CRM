@@ -17,7 +17,6 @@ class Supply extends Model implements HasMedia
     protected $casts = [
         'pay' => 'boolean',
         'poster' => 'boolean',
-        'invoice' => 'array',
         'added_at' => 'datetime',
     ];
 

@@ -32,7 +32,7 @@ class ExpensesShift extends BaseWidget
     protected function getTableQuery(): Builder
     {
     return Expense::query()->where('place_id', Filament::getTenant()->id)
-        ->whereDate('added_at', Carbon::today())->with('user', 'supply');
+        ->whereDate('added_at', Carbon::today())->with('user', 'supply')->wherePay('1');
     }
 
     public function getDefaultTableRecordsPerPageSelectOption(): int
@@ -70,12 +70,18 @@ class ExpensesShift extends BaseWidget
                     ->height(30)
                     ->toggleable()
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                    ->placeholder('No description.')
-                    ->visibleFrom('md'),
-                IconColumn::make('pay')->translateLabel()
-                 ->boolean()
+                    ->placeholder('No description.'),
+                IconColumn::make('pay')
+                    ->translateLabel()
+                    ->boolean()
                     ->trueIcon('heroicon-o-check')
                     ->falseIcon('heroicon-o-x-mark')
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
         ];
     }
 
