@@ -105,7 +105,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                              ->success()
                              ->title(__('Expense added'))
                              ->icon('heroicon-o-document-minus')
-                             ->body(''),
                     ),
 
                 CreateAction::make('add_supply')->label(__('Supply'))
@@ -157,7 +156,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                              ->success()
                              ->icon('heroicon-o-inbox-arrow-down')
                              ->title(__('Supply added'))
-                             ->body()
                      ),
 
             ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
