@@ -20,6 +20,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -135,7 +136,12 @@ class ProductResource extends Resource
         ->defaultPaginationPageOption(25)
         ->striped()
             ->filters([
-                //
+                SelectFilter::make('menu_category_id')
+                    ->label(__('Category'))
+                    ->native(false)
+                    ->options(
+                        Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id')
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
