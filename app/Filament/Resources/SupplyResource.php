@@ -26,6 +26,8 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\KeyValueEntry;
+use Filament\Infolists\Components\Section as ComponentsSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\IconColumn;
@@ -313,18 +315,26 @@ class SupplyResource extends Resource
     {
         return $infolist
             ->schema([
+                ComponentsSection::make()->schema([
                 TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
                     ->badge(),
                 TextEntry::make('user.name')->translateLabel(),
                 TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
-                LightboxSpatieMediaLibraryImageEntry::make('invoice')
-                ->collection('supplies')
-                ->conversion('thumb')
-                ->translateLabel(),
                 TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
                 TextEntry::make('bill.name')->translateLabel()
                 ->badge(),
-                TextEntry::make('comment')->label(__('Comment'))->badge()
+                TextEntry::make('comment')->label(__('Comment'))->badge(),
+                ])->columns(2)->collapsible(),
+                ComponentsSection::make(__('Invoice'))->schema([
+                    LightboxSpatieMediaLibraryImageEntry::make('invoice')
+                    ->collection('supplies')
+                    ->conversion('thumb')
+                    ->translateLabel(),
+                    KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
+                    ->keyLabel(' ')
+                    ->valueLabel('Реквизиты')
+                    ])->columns(2)->collapsed(),
+
             ]);
     }
 

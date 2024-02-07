@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad27963b071d23fe30aa34ccc9b293ac",
+    "content-hash": "1b89a4acf76e376f70abe0939d0d6889",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -74,20 +74,20 @@
         },
         {
             "name": "awcodes/filament-table-repeater",
-            "version": "v2.1.1",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/awcodes/filament-table-repeater.git",
-                "reference": "f8042ff9173cebe3d5da8d65544bfd96203af268"
+                "reference": "15c031d8804f409654882bc32c76d3e4a7076f73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/awcodes/filament-table-repeater/zipball/f8042ff9173cebe3d5da8d65544bfd96203af268",
-                "reference": "f8042ff9173cebe3d5da8d65544bfd96203af268",
+                "url": "https://api.github.com/repos/awcodes/filament-table-repeater/zipball/15c031d8804f409654882bc32c76d3e4a7076f73",
+                "reference": "15c031d8804f409654882bc32c76d3e4a7076f73",
                 "shasum": ""
             },
             "require": {
-                "filament/filament": "^3.1",
+                "filament/forms": "^3.1",
                 "php": "^8.1",
                 "spatie/laravel-package-tools": "^1.13.5"
             },
@@ -106,16 +106,13 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Awcodes\\FilamentTableRepeater\\FilamentTableRepeaterServiceProvider"
-                    ],
-                    "aliases": {
-                        "FilamentTableRepeater": "Awcodes\\FilamentTableRepeater\\Facades\\FilamentTableRepeater"
-                    }
+                        "Awcodes\\TableRepeater\\TableRepeaterServiceProvider"
+                    ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Awcodes\\FilamentTableRepeater\\": "src"
+                    "Awcodes\\TableRepeater\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -133,12 +130,14 @@
             "homepage": "https://github.com/awcodes/filament-table-repeater",
             "keywords": [
                 "awcodes",
-                "filament-table-repeater",
-                "laravel"
+                "filament",
+                "laravel",
+                "plugin",
+                "table repeater"
             ],
             "support": {
                 "issues": "https://github.com/awcodes/filament-table-repeater/issues",
-                "source": "https://github.com/awcodes/filament-table-repeater/tree/v2.1.1"
+                "source": "https://github.com/awcodes/filament-table-repeater/tree/v3.0.0"
             },
             "funding": [
                 {
@@ -146,7 +145,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-01-27T20:22:55+00:00"
+            "time": "2024-02-01T16:37:16+00:00"
         },
         {
             "name": "awobaz/compoships",

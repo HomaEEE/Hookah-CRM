@@ -66,7 +66,6 @@ class StorageResource extends Resource
                                 Section::make()
                                     ->schema([
                                         TextInput::make('name')->translateLabel(),
-                                        TextInput::make('price')->translateLabel(),
                                         SpatieMediaLibraryFileUpload::make('item')
                                         ->collection('storage')
                                         ->label(__('Photo'))
@@ -75,15 +74,10 @@ class StorageResource extends Resource
                                         ->imageResizeTargetWidth('900')
                                         ->imageEditor()
                                         ->optimize('webp')
-                                        ->imageEditorAspectRatios([
-                                            null,
-                                            '16:9',
-                                            '4:3',
-                                            '1:1',
-                                        ])
                                         ->openable(),
                                     ])->columns(2),
                             ]),
+                        TextInput::make('price')->translateLabel(),
                         Select::make('own')->translateLabel()->options(EnumsStorage::class),
                         TextInput::make('qty')->numeric()->label(__('Quantity')),
                         Textarea::make('comment')->translateLabel()
@@ -110,7 +104,8 @@ class StorageResource extends Resource
                     ->visibleFrom('md'),
                 TextColumn::make('own')->translateLabel()->badge(),
                 TextColumn::make('qty')->label(__('Quantity')),
-                TextColumn::make('item.price')->label(__('Price'))->searchable(),
+                TextColumn::make('price')->label(__('Price'))->money('UAH', divideBy: 1)->searchable(),
+                TextColumn::make('sum')->label(__('Sum'))->money('UAH', divideBy: 1),
             ])
             ->allowDuplicates()
             ->filters([

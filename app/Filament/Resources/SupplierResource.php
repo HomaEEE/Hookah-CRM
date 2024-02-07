@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SupplierResource\Pages;
 use App\Models\Supplier;
 use Auth;
+use Awcodes\TableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -14,6 +15,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -134,24 +136,24 @@ class SupplierResource extends Resource
     {
         return $infolist
         ->schema([
+            Section::make('Contacts')
+            ->schema([
+            TextEntry::make('company')->translateLabel(),
+            TextEntry::make('name')->translateLabel(),
 
-            TextEntry::make('place.city'),
-            TextEntry::make('company'),
-            TextEntry::make('name'),
-
-            TextEntry::make('phone')
+            TextEntry::make('phone')->translateLabel()
             ->icon('heroicon-m-phone')
             ->iconPosition(IconPosition::Before),
-            Section::make()
-                ->schema([
-                    RepeatableEntry::make('data')
-                    ->schema([
-                        TextEntry::make('key'),
-                        TextEntry::make('value')
-                    ])
-                    ->columns(2)
-                ])
-        ]);
+            TextEntry::make('email')
+            ->icon('heroicon-m-mail')
+            ->iconPosition(IconPosition::Before),
+            ]) ->columns(2)   ->collapsible()
+
+            ,
+            KeyValueEntry::make('data')->label(__('Rekvizites'))
+            ->keyLabel(' ')
+            ->valueLabel('Реквизиты')
+        ])->columns(1);
 
     }
 

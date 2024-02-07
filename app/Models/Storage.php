@@ -33,4 +33,9 @@ class Storage extends Model
         return $this->belongsTo(Item::class);
     }
 
+    public function getSumAttribute()
+    {
+        return $this->qty * $this->price;
+    }
+
 }
