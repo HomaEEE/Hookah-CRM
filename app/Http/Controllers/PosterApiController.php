@@ -225,11 +225,9 @@ class PosterApiController extends Controller
     public function getLocalWithdrawal($place_id)
     {
         $withdrawal = Withdrawal::select('sum')
-            ->where('place_id', $place_id)
+            ->where('place_id', $place_id)->where('bill_id', 0)
             ->whereDate('created_at', Carbon::today());
-        $TOTAL = $withdrawal->sum('sum');
-
-        return $TOTAL;
+        return $withdrawal->sum('sum');
     }
 
     public function getLocalTips($place_id)
