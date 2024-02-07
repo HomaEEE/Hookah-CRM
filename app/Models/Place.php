@@ -43,7 +43,7 @@ class Place extends Model implements HasAvatar
 
     public function suppliers()
     {
-        return $this->belongsToMany(Supplier::class);
+        return $this->hasMany(Supplier::class);
     }
 
     public function bookings()

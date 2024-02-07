@@ -169,8 +169,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ->requiresConfirmation()
                 ->form([
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
-                    TextInput::make('tips')
-                        ->label('')
+                    TextInput::make('tips')->label('')
                         ->numeric()
                         ->required()
                 ])
