@@ -501,6 +501,7 @@ class ShiftResource extends Resource
                                 [
                                     'place_id' => Filament::getTenant()->id,
                                     'user_id' => Auth::user()->id,
+                                    'bill_id' => $data['bill_id'],
                                     'sum' => $data['sum']
                                 ]
                             );

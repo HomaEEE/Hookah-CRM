@@ -46,7 +46,7 @@ class WithdrawalResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('Withdrawals');
-    } 
+    }
 
     public static function form(Form $form): Form
     {
@@ -71,7 +71,6 @@ class WithdrawalResource extends Resource
                 TextColumn::make('bill.name')->badge()
             ])
             ->defaultSort('created_at', 'desc')
-            ->defaultGroup('bill.name')
             ->filters([
                 Filter::make('created_at')
                     ->form([
