@@ -122,7 +122,6 @@ class SupplyResource extends Resource
                     ->imageEditor()
                     ->optimize('webp')
                     ->resize(70)
-                    ->required()
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',
