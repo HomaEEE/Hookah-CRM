@@ -89,12 +89,7 @@ class SupplierResource extends Resource
                     ->searchable()
                     ->alignLeft()
                     ->description(fn (Supplier $record): string => $record->company, position: 'below'),
-                    SelectColumn::make('type')->label(__('Type'))
-                    ->options([
-                        0 => __('Products'),
-                        1 => __('Alcohol'),
-                        2 => __('Tabacco')
-                    ]),
+                TextColumn::make('type')->label(__('Type'))->badge(),
                     TextColumn::make('phone')
                     ->icon('heroicon-o-phone')
                     ->label(__('Phone'))

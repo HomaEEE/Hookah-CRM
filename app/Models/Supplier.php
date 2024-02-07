@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SupplierType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,8 +12,7 @@ class Supplier extends Model
 
     protected $fillable = ['name', 'company', 'place_id', 'phone', 'comment', 'mail', 'data'];
 
-    protected $casts = ['data' => 'array'];
-
+    protected $casts = ['data' => 'array','type' => SupplierType::class];
     public $timestamps = false;
 
     public function place()
