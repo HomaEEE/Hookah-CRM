@@ -506,7 +506,6 @@ class ShiftResource extends Resource
                                 ]
                             );
 
-
                             $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
                             $set('withdrawal', $LocalWithdrawal);
                         }),

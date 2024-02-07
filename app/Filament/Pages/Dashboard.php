@@ -163,11 +163,10 @@ class Dashboard extends \Filament\Pages\Dashboard
             Action::make('addTips')
                 ->label(__('Add Tips'))
                 ->color('success')
+                ->modalWidth('xs')
                 ->icon('heroicon-o-banknotes')
                 ->modalHeading(__('Add Tips'))
-                ->slideOver()
                 ->requiresConfirmation()
-
                 ->form([
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')
