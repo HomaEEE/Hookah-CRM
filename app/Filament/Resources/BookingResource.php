@@ -95,6 +95,7 @@ class BookingResource extends Resource
                         $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
                     JS))
                     ->translateLabel(),
+                    TextInput::make('comment')->translateLabel(),
                 ])
                 ->editOptionForm([
                     TextInput::make('name')->label(__('Name'))->required(),
@@ -104,6 +105,7 @@ class BookingResource extends Resource
                         $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
                     JS))
                     ->translateLabel(),
+                    TextInput::make('comment')->translateLabel(),
                 ]),
                 Select::make('table_id')->label(__('Table'))
                     ->hidden(fn (Get $get) => $get('place_id') == null)
@@ -127,9 +129,9 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('guest.name')->translateLabel()->searchable()
+                TextColumn::make('guest.name')->label(__('Name'))->searchable()
                     ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
-                TextColumn::make('time')->since()->translateLabel(),
+                TextColumn::make('time')->since()->translateLabel()->badge(),
                 TextColumn::make('seet.table_id')->translateLabel()->toggleable(),
                 TextColumn::make('person')->translateLabel()->toggleable(),
             ])->defaultSort('time', 'desc')
