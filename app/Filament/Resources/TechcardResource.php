@@ -32,6 +32,7 @@ use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Marvinosswald\FilamentInputSelectAffix\TextInputSelectAffix;
 
 class TechcardResource extends Resource
 {
@@ -62,40 +63,45 @@ class TechcardResource extends Resource
             ->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('workshop_id')->label(__('Workshop'))
-                    ->options( Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'id'))
+                    ->options(Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'id'))
                     ->reactive()
                     ->required(),
-                    Select::make('techcard')
+                Select::make('techcard')
                     ->searchable()
                     ->native(false)
-                    ->options( Product::where('place_id', Filament::getTenant()->id)->get()->pluck('product_name', 'id')),
-
-                Section::make()
-                            ->schema([
-                                SpatieMediaLibraryFileUpload::make('photo')
-                                    ->collection('techcard')
-                                    ->multiple()
-                                    ->imageResizeTargetWidth('1200')
-                                    ->imageResizeMode('cover')
-                                    ->imagePreviewHeight(350)
-                                    ->openable()
-                            ])
-                            ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
+                    ->options(Product::where('place_id', Filament::getTenant()->id)->get()->pluck('product_name', 'id')),
+                SpatieMediaLibraryFileUpload::make('photo')
+                    ->collection('techcard')
+                    ->multiple()
+                    ->imageResizeTargetWidth('1200')
+                    ->imageResizeMode('cover')
+                    ->imagePreviewHeight(350)
+                    ->openable(),
 
                 Textarea::make('process')->label(__('Process')),
 
-                TableRepeater::make('ingredients')
-                ->schema([
-                    Select::make('ingredient_id')->label(__('Ingredient'))
-                    ->hiddenLabel()
-                    ->native(false)
-                    ->searchable()
-                        ->options(
-                            Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                        ),
-                    TextInput::make('heft')->suffix('гр.')->translateLabel()
-                    ->hiddenLabel()
-                ])->columnSpan('full')
+                Repeater::make('ingredients')
+                    ->schema([
+                        Select::make('ingredient_id')->label(__('Ingredient'))
+                            ->hiddenLabel()
+                            ->native(false)
+                            ->searchable()
+                            ->options(
+                                Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
+                            ),
+                        TextInputSelectAffix::make('heft')->hiddenLabel()
+                            ->numeric()
+                            ->select(
+                                fn () => Select::make('weight_unit')
+                                    ->extraAttributes([
+                                        'class' => 'w-[72px]' // if you want to constrain the selects size, depending on your usecase
+                                    ])
+                                    ->options([
+                                        'ml' => __('ml'),
+                                        'gr' => __('gr')
+                                    ])
+                            )
+                    ])->columnSpan('full')->columns(2)
             ]);
     }
 
@@ -106,9 +112,7 @@ class TechcardResource extends Resource
                 TextColumn::make('workshop.name')->translateLabel()->searchable(),
                 TextColumn::make('techcard')->translateLabel(),
             ])
-            ->filters([
-
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
@@ -124,15 +128,16 @@ class TechcardResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            TextEntry::make('process')->translateLabel(),
-            RepeatableEntry::make('ingredients')->hiddenLabel()
             ->schema([
-                TextEntry::make('ingredient.name')->hiddenLabel(),
-                TextEntry::make('heft')->hiddenLabel()->badge()
-            ])
-            ->grid(2)
-            ->columns(2)
+                TextEntry::make('process')->translateLabel(),
+                RepeatableEntry::make('ingredients')->hiddenLabel()
+                    ->schema([
+                        TextEntry::make('')->hiddenLabel(),
+                        TextEntry::make('heft')->hiddenLabel()->badge(),
+                        TextEntry::make('weight_unit')->hiddenLabel()
+                    ])
+                    ->grid(1)
+                    ->columns(3)
             ]);
     }
 

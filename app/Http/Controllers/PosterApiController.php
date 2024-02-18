@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Ingredient, Shift};
+use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Ingredient, Shift, Workshop};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -118,28 +118,20 @@ class PosterApiController extends Controller
 
             Ingredient::updateOrCreate(
                 [
-                    'product_name' => $ingredient['ingredient_name'],
+                    'ingredient' => $ingredient['ingredient_name'],
                     'place_id' => $place_id
                 ],
                 [
                     'ingredient' => $ingredient['ingredient_name'],
                     'unit' => $ingredient['ingredient_unit'],
-                ]
+                    'price' => 0
+                ]);
 
-                // $table->string('product_name')->index();
-                // $table->integer('barcode')->nullable();
-                // $table->integer('cost')->nullable();
-                // $table->integer('workshop_id')->nullable();
-                // $table->integer('product_id');
-                // $table->integer('cost')->nullable();
-                // $table->integer('type');
-                // $table->string('unit');
-                // $table->string('price');
-            );
-
-            $responseMenu = Http::get($this->urlApi . 'menu.getProducts?token=' . $place_api['api'])
+            $responseMenu = Http::get($this->urlApi . 'menu.getProducts?type=products&token=' . $place_api['api'])
                 ->throw()->json();
             $products = $responseMenu['response'];
+
+            dd($products);
 
             foreach ($products as $product) {
 
@@ -149,14 +141,21 @@ class PosterApiController extends Controller
                         'place_id' => $place_id
                     ],
                     [
-                        'product_name' => $product['product_name'],
-                        'menu_category_id' => $product['menu_category_id'],
-                        'cost' => $product['cost'] / 100,
-                        'price' => $product['spots'][0]['price'] / 100,
+                        'ingredient' => $ingredient['product_name'],
+                        'unit' => 'p',
+                        'price' => $ingredient['cost']
                     ]
                 );
             }
         }
+    }
+
+    public function getTechcards($place_id) {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $techcards = Http::get($this->urlApi . 'menu.getProducts?token=' . $place_api['api'] . '&type=batchtickets')
+            ->throw()->json();
+
+            dd($techcards);
     }
 
 
@@ -184,6 +183,31 @@ class PosterApiController extends Controller
             ->json('response');
 
         return $posterShift[0]['amount_end'] / 100;
+    }
+
+    public function getWorkshops($place_id)
+    {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $workshops = Http::get($this->urlApi . 'menu.getWorkshops?token='
+        . $place_api['api'])
+        ->json('response');
+
+        dd($place_id);
+
+        foreach ($workshops as $workshop) {
+
+            Workshop::updateOrCreate(
+                [
+                    'place_id' => $place_id,
+                    'name' => $workshop['workshop_name'],
+                ],
+                [
+                    'place_id' => $place_id,
+                    'name' => $workshop['workshop_name'],
+                    'workshop_id' => $workshop['workshop_id'],
+                ]
+            );
+        }
     }
 
     //Получение данных по цехам

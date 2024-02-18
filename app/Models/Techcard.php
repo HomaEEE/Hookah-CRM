@@ -15,12 +15,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Techcard extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
-    protected $fillable = ['product_name', 'workshop', 'process', 'ingredients'];
+    protected $fillable = ['product_name', 'workshop_id', 'process', 'ingredients'];
 
-    protected $casts = ['ingredients' => 'array'];
-
-    protected $attributes = ['ingredients' => '[]'];
+    protected $casts = ['ingredients' => 'json'];
 
     public $timestamps = false;
 
@@ -35,14 +34,13 @@ class Techcard extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
-    public function ingredient(): BelongsTo
+    public function ingredient(): HasOne
     {
-        return $this->belongsTo(Ingredient::class);
+        return $this->hasOne(Ingredient::class, 'ingredients->ingredient_id');
     }
-
-    public function ingredients(): HasMany
+    public function ingredients()
     {
-        return $this->hasMany(Ingredient::class);
+        return $this->hasMany(Ingredient::class, 'id');
     }
 
     public function workshop()

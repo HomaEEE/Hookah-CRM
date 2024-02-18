@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\{Booking,Expense, Shift, Supply};
+use App\Models\{Booking,Expense, Shift, Supply, Withdrawal};
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,6 +31,7 @@ class EventServiceProvider extends ServiceProvider
         Supply::observe(SupplyToExpense::class);
         Supply::observe(UpdateBill::class);
         Expense::observe(UpdateBill::class);
+        Withdrawal::observe(UpdateBill::class);
         Booking::observe(BookingToGuest::class);
     }
 

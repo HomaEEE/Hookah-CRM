@@ -110,6 +110,12 @@
     </div>
 </div>
 </div>
+{{--
+<div class="modal">
+    <div class="content">
+
+    </div>
+</div> --}}
 @endsection
 
 @push('scripts')

@@ -19,6 +19,7 @@ class ManageProducts extends ManageRecords
         return [
             Actions\Action::make('update')
             ->label(__('Update menu'))
+            ->icon('heroicon-o-arrow-path')
             ->action(function (): void {
                     (new PosterApiController())->getCategories(Filament::getTenant()->id);
                     (new PosterApiController())->getProducts(Filament::getTenant()->id);

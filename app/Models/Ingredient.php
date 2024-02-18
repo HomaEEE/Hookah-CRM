@@ -28,4 +28,9 @@ class Ingredient extends Model
         return $this->belongsTo(Purchase::class);
     }
 
+    public function getNameAttribute()
+    {
+        return $this->ingredient;
+    }
+
 }

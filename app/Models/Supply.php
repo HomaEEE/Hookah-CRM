@@ -40,6 +40,16 @@ class Supply extends Model implements HasMedia
         return $this->belongsTo(Supplier::class);
     }
 
+    public function supplyItems()
+    {
+        return $this->hasMany(SupplyItem::class);
+    }
+
+    public function ingredient()
+    {
+        return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
+    }
+
     public function expense()
     {
         return $this->belongsTo(Expense::class);

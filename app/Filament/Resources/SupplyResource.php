@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
+use App\Models\Ingredient;
 use App\Models\Supplier;
 use App\Models\Supply;
 use App\Models\User;
@@ -20,6 +21,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -27,6 +29,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\KeyValueEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section as ComponentsSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -113,43 +116,71 @@ class SupplyResource extends Resource
                 Toggle::make('pay')->label(__('Paid'))
                     ->default(false)
                     ->inline(),
-                SpatieMediaLibraryFileUpload::make('invoice')
-                    ->label(__('Invoice'))
-                    ->collection('supplies')
-                    ->multiple()
-                    ->imagePreviewHeight(450)
-                    ->imageResizeMode('cover')
-                    ->imageEditor()
-                    ->optimize('webp')
-                    ->resize(70)
-                    ->imageEditorAspectRatios([
-                        null,
-                        '16:9',
-                        '4:3',
-                        '1:1',
-                    ])
-                    ->reorderable()
-                    ->openable(),
 
-                    SpatieMediaLibraryFileUpload::make('receipt')
-                    ->collection('receipts')
-                    ->label(__('Receipt'))
-                    ->multiple()
-                    ->imagePreviewHeight(350)
-                    ->imageResizeMode('cover')
-                    ->imageResizeTargetWidth('2100')
-                    ->imageEditor()
-                    ->optimize('webp')
-                    ->resize(90)
-                    ->imageEditorAspectRatios([
-                        null,
-                        '16:9',
-                        '4:3',
-                        '1:1',
+                Section::make(__('Photo'))
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('invoice')
+                            ->label(__('Invoice'))
+                            ->collection('supplies')
+                            ->multiple()
+                            ->imagePreviewHeight(450)
+                            ->imageResizeMode('cover')
+                            ->imageEditor()
+                            ->optimize('webp')
+                            ->resize(70)
+                            ->imageEditorAspectRatios([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->reorderable()
+                            ->openable(),
+
+                        SpatieMediaLibraryFileUpload::make('receipt')
+                            ->collection('receipts')
+                            ->label(__('Receipt'))
+                            ->multiple()
+                            ->imagePreviewHeight(350)
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('2100')
+                            ->imageEditor()
+                            ->optimize('webp')
+                            ->resize(90)
+                            ->imageEditorAspectRatios([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->reorderable()
+                            ->openable()
                     ])
-                    ->reorderable()
-                    ->openable()
+                    ->columns(2)
+                    ->collapsible()
+                    ->persistCollapsed(),
+
+            //     Section::make(__('List'))
+            //         ->schema([
+            //             Repeater::make('supplyItems')->relationship()
+            //                 ->schema([
+            //                     Select::make('ingredient_id')
+            //                         ->native(false)
+            //                         ->searchable()
+            //                         ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
+            //                         ->required(),
+            //                     TextInput::make('qty')->translateLabel(),
+            //                     TextInput::make('sum')->translateLabel()
+            //                         ->prefix('₴')
+            //                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+            //                 ])
+            //                 ->columns(3)
+            //                 ->collapsed()
+
+            //         ])
+            //
             ])
+
             ->columns(['lg' => 2, 'md' => 2, 'xs' => 1]);
     }
 
@@ -158,17 +189,16 @@ class SupplyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->label(__('#'))->searchable()->visibleFrom('xl'),
-
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->badge()
                     ->size('sm')
                     ->description(fn (Supply $record): string => $record->user->name ?? ''),
 
-                    TextColumn::make('supplier.company')->label(__('Supplier'))->searchable()
+                TextColumn::make('supplier.company')->label(__('Supplier'))->searchable()
                     ->description(fn (Supply $record): string => $record->comment ?? '')->wrap(),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable()
-                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
@@ -183,7 +213,7 @@ class SupplyResource extends Resource
                     ->placeholder('No description.')
                     ->visibleFrom('md'),
 
-                    TextColumn::make('bill.name')->label(__('Bill'))
+                TextColumn::make('bill.name')->label(__('Bill'))
                     ->badge()
                     ->colors([
                         1 => 'info',
@@ -226,13 +256,13 @@ class SupplyResource extends Resource
                         Supplier::where('place_id', Filament::getTenant()->id)->visible(1)->pluck('company', 'id')
                     ),
                 SelectFilter::make('user')->translateLabel()
-                ->options(
-                    User::whereHas('place', function ($query) {
-                        $query->where('place_id', Filament::getTenant()->id);
-                    })->get()
-                        ->pluck('name', 'id')
-                )
-                ->attribute('user_id'),
+                    ->options(
+                        User::whereHas('place', function ($query) {
+                            $query->where('place_id', Filament::getTenant()->id);
+                        })->get()
+                            ->pluck('name', 'id')
+                    )
+                    ->attribute('user_id'),
 
                 Filter::make('created_at')
                     ->form([
@@ -277,7 +307,7 @@ class SupplyResource extends Resource
                     ->trueLabel(__('Paid'))
                     ->falseLabel(__('Not Pay'))
                     ->queries(
-                        true: fn (Builder $query) => $query->where('pay' , 1),
+                        true: fn (Builder $query) => $query->where('pay', 1),
                         false: fn (Builder $query) => $query->where('pay', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
@@ -289,7 +319,7 @@ class SupplyResource extends Resource
                     ->trueLabel(__('In Poster'))
                     ->falseLabel(__('Not in Poster'))
                     ->queries(
-                        true: fn (Builder $query) => $query->where('poster' , 1),
+                        true: fn (Builder $query) => $query->where('poster', 1),
                         false: fn (Builder $query) => $query->where('poster', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     )
@@ -315,24 +345,34 @@ class SupplyResource extends Resource
         return $infolist
             ->schema([
                 ComponentsSection::make()->schema([
-                TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
-                    ->badge(),
-                TextEntry::make('user.name')->translateLabel(),
-                TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
-                TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
-                TextEntry::make('bill.name')->translateLabel()
-                ->badge(),
-                TextEntry::make('comment')->label(__('Comment'))->badge(),
+                    TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
+                        ->badge(),
+                    TextEntry::make('user.name')->translateLabel(),
+                    TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
+                    TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
+                    TextEntry::make('bill.name')->translateLabel()
+                        ->badge(),
+                    TextEntry::make('comment')->label(__('Comment'))->badge(),
                 ])->columns(2)->collapsible(),
                 ComponentsSection::make(__('Invoice'))->schema([
                     LightboxSpatieMediaLibraryImageEntry::make('invoice')
-                    ->collection('supplies')
-                    ->conversion('thumb')
-                    ->translateLabel(),
+                        ->collection('supplies')
+                        ->conversion('thumb')
+                        ->translateLabel(),
                     KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
-                    ->keyLabel(' ')
-                    ->valueLabel('Реквизиты')
-                    ])->columns(2)->collapsed(),
+                        ->keyLabel(' ')
+                        ->valueLabel('Реквизиты')
+                ])->columns(2)->collapsed(),
+
+                // ComponentsSection::make(__('List'))->schema([
+                //     RepeatableEntry::make('supplyItems')->schema([
+                //         TextEntry::make('ingredient.ingredient'),
+                //         TextEntry::make('qty')->translateLabel(),
+                //         TextEntry::make('sum')->translateLabel()->badge(),
+                //     ])->columns(3)
+                //     ->contained(false)
+
+                // ])->columns(1)->collapsed(),
 
             ]);
     }

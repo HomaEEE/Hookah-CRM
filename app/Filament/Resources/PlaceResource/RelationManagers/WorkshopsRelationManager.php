@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
+use App\Http\Controllers\PosterApiController;
+use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -38,12 +41,23 @@ class WorkshopsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label(__('Workshop')),
+                Tables\Columns\TextColumn::make('workshop_id')->label(__('ID')),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
+                Tables\Actions\Action::make('getWorkshop')
+                ->label(__('Get Workshops'))
+                ->color('info')
+                ->icon('heroicon-o-arrow-down-circle')
+                ->slideOver()
+                ->modalHeading(__('Get Workshops'))
+                ->requiresConfirmation()
+                ->action(function (): void {
+                    (new PosterApiController())->getWorkshops(Filament::getTenant()->id);
+                }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -493,7 +493,6 @@ class ShiftResource extends Resource
                             Hidden::make('place_id')->default(Filament::getTenant()->id),
                             TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
                             Select::make('bill_id')->label(__('Bill'))
-                            ->relationship('bills', 'name')
                             ->options(Bill::get()->pluck('name', 'id'))
                         ])
                         ->action(function (Set $set, array $data): void {
