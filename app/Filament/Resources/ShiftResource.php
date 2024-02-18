@@ -12,6 +12,7 @@ use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
+use App\Http\Controllers\LocalApiController as LocalApi;
 use App\Models\{Bill, Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
@@ -23,6 +24,7 @@ use Filament\Forms\Components\Tabs;
 
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -97,11 +99,6 @@ class ShiftResource extends Resource
                         Section::make('Shift')->label(__('Shift'))
                             ->schema(static::getFormSchema('shift'))
                             ->visible(fn (Get $get) => $get('terminal') != null),
-
-
-                        Section::make('report')
-                            ->schema(static::getFormSchema('z-report'))
-                            ->hidden(fn (Get $get) => $get('place_id') == null),
                     ]),
             ]);
     }
@@ -124,12 +121,10 @@ class ShiftResource extends Resource
                     ->numeric()
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
-                TextColumn::make('expense')->translateLabel()
-                    ->numeric()
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
-
-                TextColumn::make('wages')->translateLabel()
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                TextColumn::make('sum')->translateLabel()->badge()
+                ->state(function (Shift $record): int {
+                    return $record->terminal * 0.987 + $record->cash;
+                })->money('UAH', true),
 
                 TextColumn::make('shift')
                     ->badge()
@@ -195,15 +190,6 @@ class ShiftResource extends Resource
 
     public static function getFormSchema(string $section = null): array
     {
-        if ($section === 'report') {
-            return [
-                Toggle::make('report.x-report-terminal')->label(__('X report terminal')),
-                Toggle::make('report.x-report-poster')->label(__('X report poster')),
-                Toggle::make('report.incassation')->label(__('Incassation')),
-                Toggle::make('report.z-report-terminal')->label(__('Z report terminal')),
-                Toggle::make('report.z-report-poster')->label(__('Z report poster')),
-            ];
-        }
 
         if ($section === 'poster') {
             return [
@@ -231,14 +217,14 @@ class ShiftResource extends Resource
 
                                     $set('terminal', $posterTodayShift['payed_card_sum'] / 100);
 
-                                    $posterLocalExpense = (new PosterApi())->getLocalExpenses($place->id);
+                                    $posterLocalExpense = (new LocalApi())->getLocalExpenses($place->id);
 
                                     $set('expense', (int) $posterLocalExpense);
 
-                                    $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal($place->id);
+                                    $LocalWithdrawal = (new LocalApi())->getLocalWithdrawal($place->id);
                                     $set('withdrawal', $LocalWithdrawal);
 
-                                    $localTips = (new PosterApi())->getLocalTips($place->id);
+                                    $localTips = (new LocalApi())->getLocalTips($place->id);
                                     $set('tips', $localTips);
 
                                     $posterTodayWorkshops = (new PosterApi())->getTodayWorkshops($place->id);
@@ -382,6 +368,7 @@ class ShiftResource extends Resource
                                     ->get()
                                     ->pluck('name', 'id')
                             )
+                            ->preload()
                             ->required()
                             ->reactive()
                             ->searchable()
@@ -476,8 +463,18 @@ class ShiftResource extends Resource
                         TextInput::make('cashout')->translateLabel()
                             ->hidden(fn (Get $get) => $get('wage_id') == null),
                     ])->columns(3)
-                    ->itemLabel(fn (array $state): ?string => $state['user_id.name'] ?? null)
+                    ->itemLabel(fn (array $state): ?string => $state['user.name'] ?? null),
 
+                    Placeholder::make('wages')->translateLabel()
+                    ->content(function (Set $set, $get) {
+                        $totalWage = collect($get('users'))
+                            ->pluck('cashout')
+                            ->sum();
+                        $set('wages', $totalWage);
+
+                        return $totalWage;
+                    })
+                    ->reactive(),
             ];
         }
         if ($section === 'shift') {
@@ -505,7 +502,7 @@ class ShiftResource extends Resource
                                 ]
                             );
 
-                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                            $LocalWithdrawal = (new LocalApi())->getLocalWithdrawal(Filament::getTenant()->id);
                             $set('withdrawal', $LocalWithdrawal);
                         }),
 
@@ -553,25 +550,25 @@ class ShiftResource extends Resource
                             ->title(__('Expense added'))
                             ->send();
 
-                            $posterLocalExpense = (new PosterApi())->getLocalExpenses(Filament::getTenant()->id);
+                            $posterLocalExpense = (new LocalApi())->getLocalExpenses(Filament::getTenant()->id);
                             $set('expense', (int) $posterLocalExpense);
 
-                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
-                            $set('withdrawal', $LocalWithdrawal);
+                            $LocalWithdrawal = (new LocalApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                            $set('withdrawal', (int) $LocalWithdrawal);
                         }),
 
                     Action::make('update_expenses')->translateLabel()
                         ->icon('heroicon-s-arrow-path')
                         ->color('danger')
                         ->action(function ( Set $set) {
-                            $posterLocalExpense = (new PosterApi())->getLocalExpenses(Filament::getTenant()->id);
+                            $posterLocalExpense = (new LocalApi())->getLocalExpenses(Filament::getTenant()->id);
                             $set('expense', (int) $posterLocalExpense);
 
-                            $localTips = (new PosterApi())->getLocalTips(Filament::getTenant()->id);
-                            $set('tips', $localTips);
+                            $localTips = (new LocalApi())->getLocalTips(Filament::getTenant()->id);
+                            $set('tips', (int) $localTips);
 
-                            $LocalWithdrawal = (new PosterApi())->getLocalWithdrawal(Filament::getTenant()->id);
-                            $set('withdrawal', $LocalWithdrawal);
+                            $LocalWithdrawal = (new LocalApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                            $set('withdrawal', (int) $LocalWithdrawal);
                         }),
 
                 ]),
@@ -600,17 +597,7 @@ class ShiftResource extends Resource
                         ->hidden(fn (Get $get) => $get('withdrawal') == 0)
                         ->numeric()->default(0),
 
-                    Hidden::make('wages'),
-                    Placeholder::make('wages_calc')->translateLabel()
-                        ->content(function (Set $set, $get) {
-                            $totalWage = collect($get('users'))
-                                ->pluck('cashout')
-                                ->sum();
-                            $set('wages', $totalWage);
-
-                            return $totalWage;
-                        })
-                        ->reactive(),
+                    Hidden::make('wages')
                 ])->columns(3),
 
 
@@ -653,6 +640,20 @@ class ShiftResource extends Resource
                         ->required()
                         ->reactive()
                 ])->columns(['md' => 2, 'xl' => 3]),
+
+                Fieldset::make(__('Reports'))->schema([
+                    CheckboxList::make('reports')->hiddenLabel()
+                    ->bulkToggleable()
+                    ->options([
+                        'x-report' => __('X report'),
+                        'z-report' => __('Z report'),
+                    ])
+                    ->descriptions([
+                        'x-report' => __('X-report of the terminal and poster are reconciled'),
+                        'z-report' => __('General reports taken from terminal and poster'),
+                    ])
+                    ->gridDirection('row')
+                ])
             ];
         }
         return [];
@@ -722,11 +723,11 @@ class ShiftResource extends Resource
                         ->trueIcon('heroicon-o-check')
                         ->falseIcon('heroicon-o-x-mark'),
 
-                        IconEntry::make('report.incassation')->label(__('Incassation'))
-                        ->boolean()
-                        ->trueIcon('heroicon-o-check')
-                        ->falseIcon('heroicon-o-x-mark')
-                    ])->columns(3)
+                        // IconEntry::make('report.incassation')->label(__('Incassation'))
+                        // ->boolean()
+                        // ->trueIcon('heroicon-o-check')
+                        // ->falseIcon('heroicon-o-x-mark')
+                    ])->columns(2)
             ]);
     }
 

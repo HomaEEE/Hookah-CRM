@@ -18,4 +18,9 @@ class Guest extends Model
         return $this->belongsTo(Place::class, 'place_id');
     }
 
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
 }

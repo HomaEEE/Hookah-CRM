@@ -89,11 +89,7 @@ class CreateShift extends CreateRecord
             Step::make('Shift')->translateLabel()
                 ->schema(
                    ShiftResource::getFormSchema('shift')
-                ),
-            Step::make('Reoprts')->translateLabel()
-                ->schema([
-                    Section::make(ShiftResource::getFormSchema('report')),
-                ]),
+                )
         ];
     }
 

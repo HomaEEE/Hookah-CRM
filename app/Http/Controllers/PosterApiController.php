@@ -233,38 +233,6 @@ class PosterApiController extends Controller
         dd($posterCategories);
     }
 
-    public function getLocalExpenses($place_id)
-    {
-        $cash_expense = Expense::select('sum')->where(
-            [
-                ['bill_id', 0],
-                ['place_id', $place_id],
-            ]
-        )
-            ->whereDate('added_at', Carbon::today());
-
-        return $cash_expense->sum('sum');
-    }
-
-    public function getLocalWithdrawal($place_id)
-    {
-        $withdrawal = Withdrawal::select('sum')
-            ->where('place_id', $place_id)->where('bill_id', 0)
-            ->whereDate('created_at', Carbon::today());
-        return $withdrawal->sum('sum');
-    }
-
-    public function getLocalTips($place_id)
-    {
-        $tips = Tip::select('tips')
-            ->where('place_id', $place_id)
-            ->whereDate('created_at', Carbon::today());
-        $TOTAL = $tips->sum('tips');
-
-        return $TOTAL;
-    }
-
-
     //Получить список сотрудников
     public function getEmployees($place_id)
     {

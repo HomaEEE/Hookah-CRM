@@ -32,7 +32,6 @@ class EventServiceProvider extends ServiceProvider
         Supply::observe(UpdateBill::class);
         Expense::observe(UpdateBill::class);
         Withdrawal::observe(UpdateBill::class);
-        Booking::observe(BookingToGuest::class);
     }
 
     /**

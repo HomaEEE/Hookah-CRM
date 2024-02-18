@@ -19,10 +19,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Place::class);
-            $table->string('name');
+            $table->integer('guest_id');
             $table->integer('person')->nullable();
             $table->date('time');
-            $table->string('phone')->nullable();
             $table->string('table_id')->nullable();
             $table->text('comment')->nullable();
             $table->timestamps();

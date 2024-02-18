@@ -9,7 +9,7 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'place_id', 'table_id', 'date', 'name', 'phone', 'time', 'person', 'comment'];
+    protected $fillable = ['user_id', 'place_id', 'table_id', 'date', 'guest_id', 'time', 'person', 'comment'];
 
     public function place()
     {
@@ -19,5 +19,10 @@ class Booking extends Model
     public function seet()
     {
         return $this->belongsTo(Seet::class, 'table_id');
+    }
+
+    public function guest()
+    {
+        return $this->belongsTo(Guest::class, 'guest_id');
     }
 }
