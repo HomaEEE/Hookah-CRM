@@ -642,7 +642,7 @@ class ShiftResource extends Resource
                 ])->columns(['md' => 2, 'xl' => 3]),
 
                 Fieldset::make(__('Reports'))->schema([
-                    CheckboxList::make('reports')->hiddenLabel()
+                    CheckboxList::make('report')->hiddenLabel()
                     ->bulkToggleable()
                     ->options([
                         'x-report' => __('X report'),
