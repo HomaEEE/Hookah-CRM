@@ -88,6 +88,7 @@ class BookingResource extends Resource
                 ->preload()
                 ->required()
                 ->createOptionForm([
+                    Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('name')->label(__('Name'))->required(),
                     TextInput::make('phone')->label(__('Phone'))->required()
                     ->tel()
@@ -98,6 +99,7 @@ class BookingResource extends Resource
                     TextInput::make('comment')->translateLabel(),
                 ])
                 ->editOptionForm([
+                    Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('name')->label(__('Name'))->required(),
                     TextInput::make('phone')->label(__('Phone'))->required()
                     ->tel()
