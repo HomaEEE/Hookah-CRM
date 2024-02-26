@@ -27,7 +27,7 @@ class Event extends Model
     public function getEventTimeAttribute()
     {
         return (new Carbon($this->datetime))->translatedFormat('l d/m') .', '
-        . (new Carbon($this->datetime))->translatedFormat('H:i') . '- '
+        . (new Carbon($this->datetime))->translatedFormat('H:i') . '-'
         . (new Carbon($this->end_time))->translatedFormat('H:i');
     }
 

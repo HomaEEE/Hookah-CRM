@@ -6,11 +6,9 @@ use App\Enums\EventType;
 use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
 use App\Models\Event;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Carbon\Carbon;
+use Filament\Forms\Components\{DateTimePicker,TimePicker,Select,Textarea, TextInput};
+use Filament\Forms\{Set, Get, Form};
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -37,6 +35,10 @@ class EventResource extends Resource
         return __('Events');
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return Event::query()->whereDate('datetime', '>=', Carbon::today())->count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -46,9 +48,17 @@ class EventResource extends Resource
                 Select::make('type')->options(EventType::class)->native(false),
                 DateTimePicker::make('datetime')->seconds(false)
                 ->native(false)
-                ->translateLabel(),
-                DateTimePicker::make('end_time')->seconds(false)
+                ->minDate(now())
+                ->default(now())
+                ->translateLabel()
+                ->reactive()->afterStateUpdated(
+                    function (Set $set, Get $get) {
+                        $set('end_time', $get('datetime'));
+                    }
+                ),
+                TimePicker::make('end_time')->seconds(false)
                 ->native(false)
+                ->default(now())
                 ->translateLabel(),
                 Textarea::make('comment')->translateLabel()->columns(1)
             ]);
@@ -58,17 +68,26 @@ class EventResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')->translateLabel(),
-                TextColumn::make('type')->label(__('Type'))->badge(),
+                TextColumn::make('type')->label(__('Type'))->badge()
+                ->description(fn (Event $record): string => $record->title, position: 'above'),
                 TextColumn::make('datetime')->label('Day')->since()
                 ->badge()
-                ->size('sm')
-                ->description(fn (Event $record): string => $record->eventTime),
+                ->description(fn (Event $record): string => $record->eventTime, position: 'above'),
             ])->defaultSort('datetime', 'desc')
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ReplicateAction::make()->form([
+                    DateTimePicker::make('datetime')->seconds(false)
+                    ->native(false)
+                    ->minDate(now())->default(now())
+                    ->translateLabel(),
+                    TimePicker::make('end_time')->seconds(false)
+                    ->native(false)
+                    ->minDate(now())->default(now()->subHours(2))
+                    ->translateLabel(),
+                ]),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
