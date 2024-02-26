@@ -78,7 +78,8 @@ class EventResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ReplicateAction::make()->form([
+                Tables\Actions\ReplicateAction::make()
+                ->form([
                     DateTimePicker::make('datetime')->seconds(false)
                     ->native(false)
                     ->minDate(now())->default(now())

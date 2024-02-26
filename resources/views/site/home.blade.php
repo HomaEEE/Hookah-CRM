@@ -24,7 +24,7 @@
 					</div>
 					<div class="swiper-slide">
 						<span class="text" data-swiper-parallax="-200">
-							<h2>{{ __("Coctails") }}</h2>
+							<h2>{{ __("Cocktails") }}</h2>
                             <h4>
                                 Класичні коктейлі
                             </h4>

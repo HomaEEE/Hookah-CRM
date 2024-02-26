@@ -71,6 +71,12 @@ class SiteController extends Controller
         return view('site.vacancy', compact('place', 'vacancies'));
     }
 
+    public function rules($slug = "od")
+    {
+        $place = Place::where('slug', $slug)->first();
+        return view('site.rules', compact('place'));
+    }
+
     public function contacts($slug = "od")
     {
         $place = Place::where('slug', $slug)->first();

@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Priority;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Models\Task;
 use App\Models\User;
 use Auth;
-use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Get;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
@@ -22,7 +23,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
@@ -83,6 +83,12 @@ class TaskResource extends Resource
                     })
                     ->allowHtml()
                     ->searchable(),
+                DateTimePicker::make('date')->translateLabel()
+                ->native(false)
+                ->seconds(false),
+                Select::make('priority')->translateLabel()
+                ->options(Priority::class)
+                ->native(false),
                 TextInput::make('name')->label(__('Task')),
                 RichEditor::make('text')->label(__('Task text')),
             ])->columns(1);
@@ -92,6 +98,12 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('priority')->translateLabel()->badge(),
+                TextColumn::make('date')->translateLabel()
+                ->badge()
+                ->dateTime('d-m-Y')
+                ->description(fn(Task $task): string => $task->time ? : ''),
+
                 TextColumn::make('name')->label(__('Task')),
                 TextColumn::make('forUser.name')->label(__('For User')),
             ])->defaultSort('created_at', 'desc')
@@ -126,7 +138,10 @@ class TaskResource extends Resource
     {
         return $infolist
         ->schema([
-            TextEntry::make('place.nameCity')->label(__('Place')),
+            TextEntry::make('priority')->translateLabel()->badge(),
+            TextEntry::make('date')
+            ->dateTime('d-m-Y')
+            ->translateLabel()->badge(),
             TextEntry::make('forUser.name')->label(__('For User')),
             TextEntry::make('text')->translateLabel()
             ->html(),

@@ -83,7 +83,7 @@ class BookingResource extends Resource
                 Select::make('guest_id')
                 ->relationship('guest', 'name')
                 ->options(Guest::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
-                ->searchable(['name', 'comment'])
+                ->searchable(['name', 'comment', 'phone'])
                 ->native(false)
                 ->preload()
                 ->required()
