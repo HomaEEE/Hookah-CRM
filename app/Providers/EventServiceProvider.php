@@ -7,7 +7,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use App\Observers\{SupplyToExpense, BookingToGuest, UpdateBill};
+use App\Observers\{SupplyToExpense, BookingToGuest, UpdateBill, WithdrawalBill};
 
 
 class EventServiceProvider extends ServiceProvider
@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider
         Supply::observe(SupplyToExpense::class);
         Supply::observe(UpdateBill::class);
         Expense::observe(UpdateBill::class);
-        Withdrawal::observe(UpdateBill::class);
+        Withdrawal::observe(WithdrawalBill::class);
     }
 
     /**

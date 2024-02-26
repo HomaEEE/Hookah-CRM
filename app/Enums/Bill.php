@@ -6,14 +6,14 @@ use Filament\Support\Contracts\HasLabel;
 
 enum Bill: string implements HasLabel  /// Счета
 {
-    case CASH = '1';
-    case CARD = '2';
+    case CASH = '0';
+    case CARD = '1';
 
     public function getLabel(): ?string
     {
         return match ($this) {
             self::CASH => __('Cash'),
-            self::CARD => __('CARD'),
+            self::CARD => __('Card'),
         };
     }
 

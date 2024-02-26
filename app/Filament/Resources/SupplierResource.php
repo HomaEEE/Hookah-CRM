@@ -90,7 +90,7 @@ class SupplierResource extends Resource
                     ->alignLeft()
                     ->description(fn (Supplier $record): string => $record->company, position: 'below'),
                 TextColumn::make('type')->label(__('Type'))->badge(),
-                    TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->icon('heroicon-o-phone')
                     ->label(__('Phone'))
                     ->copyable()
