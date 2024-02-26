@@ -46,6 +46,7 @@ class Dashboard extends \Filament\Pages\Dashboard
         ];
     }
 
+
     protected function getActions(): array
     {
         return [
@@ -83,6 +84,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                         DateTimePicker::make('added_at')
                             ->label(__('Date Added'))
                             ->native(false)
+                            ->seconds(false)
                             ->maxDate(now())->default(now()),
                         Select::make('category_id')->label(__('Category'))
                             ->searchable()

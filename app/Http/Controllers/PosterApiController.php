@@ -119,12 +119,12 @@ class PosterApiController extends Controller
             Ingredient::updateOrCreate(
                 [
                     'ingredient' => $ingredient['ingredient_name'],
-                    'place_id' => $place_id
+                    'place_id' => $place_id,
                 ],
                 [
                     'ingredient' => $ingredient['ingredient_name'],
                     'unit' => $ingredient['ingredient_unit'],
-                    'price' => 0
+                    'workshop_id' => $ingredient['workshop'],
                 ]);
 
             $responseMenu = Http::get($this->urlApi . 'menu.getProducts?type=products&token=' . $place_api['api'])

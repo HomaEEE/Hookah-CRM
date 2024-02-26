@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
 use App\Models\Workshop;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -26,7 +27,7 @@ class WagesRelationManager extends RelationManager
         return $form
             ->schema([
                 Hidden::make('place_id')->label(__('Place'))
-                    ->default(fn (Livewire $livewire) => $livewire->ownerRecord->id),
+                    ->default(Filament::getTenant()->id),
                 TextInput::make('name')->translateLabel()
                     ->required()
                     ->maxLength(255),
@@ -38,10 +39,9 @@ class WagesRelationManager extends RelationManager
                 Repeater::make('procent')
                     ->schema([
                         Select::make('workshop_id')->translateLabel()
-                            ->options(fn (Livewire $livewire) => Workshop::where('place_id', $livewire->ownerRecord->id)->get()->pluck('name', 'id')),
+                            ->options(Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'workshop_id')),
                         TextInput::make('num')->translateLabel()->numeric()
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-
                     ]),
             ])->columns(1);
 

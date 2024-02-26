@@ -29,14 +29,14 @@
             </ul>
         </div>
 
-        <div class="col-xs-12 col-md-2 address">
+        <div class="col address">
             <a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}">
                 {{$place->city}},
                 <span>{{$place->address}}</span>
                 <a class="phone hidden-md hidden-lg hidden-xl" href="tel:0684442454">068 444 24 54</a>
             </a>
         </div>
-        <div class="col-xs-12 col-md-2 langs">
+        <div class="col langs">
                 @foreach (Config::get('app.languages') as $lang => $language)
                     @if ($lang != App::getLocale())
                     <li>

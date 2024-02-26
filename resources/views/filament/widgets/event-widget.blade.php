@@ -1,5 +1,5 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        {{-- Widget content --}}
+        @livewire(\App\Filament\Widgets\EventWidget::class)
     </x-filament::section>
 </x-filament-widgets::widget>

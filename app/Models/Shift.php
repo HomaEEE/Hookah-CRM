@@ -16,7 +16,9 @@ class Shift extends Model
                             ];
 
     protected $casts = [
-        'report' => 'array'
+        'report' => 'json',
+      //  'report.x-report' => 'boolean',
+       // 'report.z-report' => 'boolean',
     ];
 
     public function place()

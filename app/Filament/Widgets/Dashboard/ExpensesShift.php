@@ -59,7 +59,16 @@ class ExpensesShift extends BaseWidget
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
-                TextColumn::make('bill.name')->translateLabel()->badge(),
+                IconColumn::make('bill_id')->label(__('Bill'))
+                ->icon(fn (string $state): string => match ($state) {
+                    '0' => 'heroicon-o-banknotes',
+                    '1' => 'heroicon-o-credit-card',
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    '1' => 'warning',
+                    '0' => 'success',
+                    default => 'gray',
+                }),
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
                     ->simpleLightbox()

@@ -56,6 +56,11 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Guest::class);
     }
 
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
     public function service()
     {
         return $this->hasMany(Service::class, 'place_id');
