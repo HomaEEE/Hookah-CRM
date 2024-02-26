@@ -268,7 +268,7 @@ class CreateShift extends CreateRecord
                                             $all_procents = 0;
                                             if (isset($wage)) {
                                                 foreach ($wage->procent as $num) {
-                                                    $workshop = Workshop::where('id', $num['workshop_id'])->first();
+                                                    $workshop = Workshop::where('workshop_id', $num['workshop_id'])->first();
 
                                                     if ($workshop->name == 'Бар') {
                                                         $all_procents += $get('../../bar') * $num['num'] / 100;
