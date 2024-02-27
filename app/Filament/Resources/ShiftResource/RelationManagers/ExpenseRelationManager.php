@@ -40,19 +40,10 @@ class ExpenseRelationManager extends RelationManager
                 ->badge()
                 ->description(fn ($record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->translateLabel()->badge()
-                ->description(fn ($record): string => $record->supplier->company ?? ''),
+                ->description(fn ($record): string => $record->comment ?? ''),
                 TextColumn::make('sum')->translateLabel()->moneY('UAH', true)->badge()
                 ->summarize(Sum::make()->label(__('Total'))),
-                IconColumn::make('bill_id')->label(__('Bill'))
-                ->icon(fn (string $state): string => match ($state) {
-                    '0' => 'heroicon-o-banknotes',
-                    '1' => 'heroicon-o-credit-card',
-                })
-                ->color(fn (string $state): string => match ($state) {
-                    '1' => 'warning',
-                    '0' => 'success',
-                    default => 'gray',
-                }),
+                IconColumn::make('bill.type')->label(__('Bill')),
                 IconColumn::make('pay')->translateLabel()
                ->boolean()
                     ->trueIcon('heroicon-o-check')

@@ -5,52 +5,24 @@ namespace App\Filament\Resources;
 use Auth;
 use Carbon\Carbon;
 
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-
 use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 
 use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Http\Controllers\LocalApiController as LocalApi;
 use App\Models\{Bill, Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
-use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\Tabs;
 
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Notifications\Notification;
-
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Textarea;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Fieldset as InfolistFeildSet;
 use Filament\Infolists\Components\IconEntry;
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Resources\Pages\ListRecords\Tab;
-use Filament\Tables\Columns\Layout\Split;
-use Filament\Tables\Grouping\Group;
-
 use Filament\Tables\Columns\Summarizers\Sum;
 
 class ShiftResource extends Resource
@@ -87,7 +59,7 @@ class ShiftResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('created_at')->dateTime('d/m/Y')
-                    ->badge()->translateLabel(),
+                    ->translateLabel(),
 
                 TextColumn::make('terminal')->translateLabel()->badge()
                     ->money('UAH')
@@ -96,16 +68,16 @@ class ShiftResource extends Resource
                     })
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
-                TextColumn::make('cash')->translateLabel()->badge()
+                TextColumn::make('cash')->translateLabel()->badge()->color('warning')
                     ->money('UAH')
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
-                TextColumn::make('sum')->translateLabel()->badge()
+                TextColumn::make('sum')->translateLabel()->badge()->color('gray')
                     ->state(function (Shift $record): int {
                         return $record->terminal * 0.987 + $record->cash;
                     })->money('UAH'),
 
-                TextColumn::make('shift')
+                TextColumn::make('shift')->color('info')
                     ->badge()
                     ->money('UAH')->translateLabel(),
 
@@ -174,23 +146,27 @@ class ShiftResource extends Resource
                 InfolistFeildSet::make('Shift')->translateLabel()
                     ->schema([
                         TextEntry::make('cash')->translateLabel()
-                            ->badge(),
+                            ->badge()->color('warning'),
                         TextEntry::make('terminal')->translateLabel()
                             ->badge(),
 
                         TextEntry::make('sum')->translateLabel()
                             ->badge()
+                            ->color('gray')
                             ->getStateUsing(fn (Shift $record): int => $record->cash + $record->terminal ?? ''),
 
                         TextEntry::make('calc_shift')->translateLabel()
-                            ->badge(),
+                            ->badge()
+                            ->color('gray'),
 
                         TextEntry::make('shift')->translateLabel()
-                            ->badge(),
+                            ->badge()
+                            ->color('info'),
 
                         TextEntry::make('different')->translateLabel()
                             ->badge()
-                            ->getStateUsing(fn (Shift $record): int => $record->calc_shift - $record->shift ?? ''),
+                            ->color('danger')
+                            ->getStateUsing(fn (Shift $record): int => $record->shift - $record->calc_shift ?? ''),
                     ])->columns(['md' => 2, 'xl' => 3]),
 
                 InfolistFeildSet::make('Workshops')->translateLabel()
