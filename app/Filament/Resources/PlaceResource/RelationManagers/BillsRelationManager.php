@@ -23,13 +23,14 @@ class BillsRelationManager extends RelationManager
 
     public static function getPluralModelLabel(): string
     {
-        return __('Indications');
+        return __('Bills');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Indications');
+        return __('Bills');
     }
+
 
     public function form(Form $form): Form
     {

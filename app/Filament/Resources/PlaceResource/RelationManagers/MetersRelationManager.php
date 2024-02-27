@@ -26,6 +26,17 @@ class MetersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Meter';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('Meters');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Meters');
+    }
+
+
     public function form(Form $form): Form
     {
         return $form

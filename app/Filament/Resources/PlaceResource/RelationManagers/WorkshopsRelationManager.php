@@ -20,6 +20,17 @@ class WorkshopsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Workshops';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('Workshops');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Workshops');
+    }
+
+
     public function form(Form $form): Form
     {
         return $form

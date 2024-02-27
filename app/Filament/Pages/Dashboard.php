@@ -42,7 +42,6 @@ class Dashboard extends \Filament\Pages\Dashboard
         return [
             \App\Filament\Widgets\Dashboard\TodayShift::class,
             \App\Filament\Widgets\Dashboard\PosterShift::class,
-            \App\Filament\Widgets\Dashboard\TabWidget::class,
         ];
     }
 

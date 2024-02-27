@@ -21,6 +21,17 @@ class WagesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('Wages');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Wages');
+    }
+
+
     public function form(Form $form): Form
     {
 

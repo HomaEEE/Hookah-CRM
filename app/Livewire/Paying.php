@@ -1,64 +1,40 @@
 <?php
 
-namespace App\Filament\Widgets\Dashboard;
+namespace App\Livewire;
 
-use App\Enums\Bill as BillEnum;
-use App\Models\Expense;
-use Auth;
+use App\Models\Supply;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\Summarizers\Sum;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
-class ExpensesShift extends BaseWidget
+class Paying extends BaseWidget
 {
 
     use HasWidgetShield;
 
-    protected int | string | array $columnSpan = 'full';
-
-
     protected function getTableHeading(): string | Htmlable
     {
-        return __('Expenses of Shift');
+        return __('Supplies to pay');
     }
 
-    protected function getTableQuery(): Builder
+    public function table(Table $table): Table
     {
-    return Expense::query()->where('place_id', Filament::getTenant()->id)
-        ->whereDate('added_at', Carbon::today())->with('user', 'supply')->wherePay('1');
-    }
-
-    public function getDefaultTableRecordsPerPageSelectOption(): int
-    {
-        return 10;
-    }
-
-    protected function getDefaultTableSortColumn(): ?string
-    {
-        return 'created_at';
-    }
-
-    protected function getDefaultTableSortDirection(): ?string
-    {
-        return 'desc';
-    }
-
-    protected function getTableColumns(): array
-    {
-        return [
+        return $table
+        ->query(Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
+        ->where('pay', 0))
+            ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-                    ->size('sm')
-                    ->description(fn (Expense $record): string => $record->user->name ?? ''),
-                TextColumn::make('category.name')->label(__('Category'))->badge()
-                ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
+                ->size('sm')
+                ->description(fn (Supply $record): string => $record->user->name ?? ''),
+                TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total'))),
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {
                     '0' => 'heroicon-o-banknotes',
@@ -74,12 +50,12 @@ class ExpensesShift extends BaseWidget
                     ->simpleLightbox()
                     ->circular()
                     ->stacked()
-                    ->limit(3)
                     ->limitedRemainingText()
                     ->height(30)
                     ->toggleable()
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
                     ->placeholder('No description.'),
+
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
@@ -91,7 +67,6 @@ class ExpensesShift extends BaseWidget
                             $name => ! $record->$name,
                         ]);
                     }),
-        ];
+            ])->defaultSort('created_at', 'desc');
     }
-
 }
