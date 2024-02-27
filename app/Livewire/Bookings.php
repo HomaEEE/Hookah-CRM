@@ -25,11 +25,11 @@ class Bookings extends BaseWidget
         ->whereDate('time', '>=', Carbon::today()))
 
             ->columns([
-                TextColumn::make('name')->translateLabel()
-                ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
+                TextColumn::make('guest.name')->translateLabel()
+                ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : ' ', position: 'below'),
                 TextColumn::make('time')->since()->translateLabel(),
                 TextColumn::make('seet.table_id')->translateLabel(),
-                TextColumn::make('phone')->translateLabel()
+                TextColumn::make('guest.phone')->translateLabel()
                 ->copyable()
                     ->copyMessage(__('Phone copied'))
                     ->copyMessageDuration(1500),
