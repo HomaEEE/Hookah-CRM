@@ -30,7 +30,7 @@
                 <livewire:ExpensesDay/>
             </div>
             <div x-show="tab === 'tab2'">
-                <livewire:Booking/>
+                <livewire:Bookings/>
             </div>
 
              <div x-show="tab === 'tab3'">
