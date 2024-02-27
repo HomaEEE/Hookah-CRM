@@ -33,7 +33,7 @@ class ExpensesDay extends BaseWidget
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                 ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total')))  ,
+                TextColumn::make('sum')->label(__('Sum'))->money('UAH')->summarize(Sum::make()->label(__('Total'))),
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {
                     '0' => 'heroicon-o-banknotes',

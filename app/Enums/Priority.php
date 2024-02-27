@@ -2,13 +2,15 @@
 
 namespace App\Enums;
 
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum Priority: string implements HasLabel  /// Счета
+enum Priority: string implements HasLabel, HasIcon, HasColor
 {
-    case Low = '0';
-    case Middle = '1';
-    case High = '2';
+    case Low = 'low';
+    case Middle = 'middle';
+    case High = 'high';
 
     public function getLabel(): ?string
     {

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Number;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Connection;
@@ -33,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Model::unguard();
+        Number::useLocale('ru');
+
 
         if (app()->environment('production')) {
             URL::forceScheme('https');

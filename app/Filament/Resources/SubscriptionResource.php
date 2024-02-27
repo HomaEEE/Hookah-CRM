@@ -107,7 +107,7 @@ class SubscriptionResource extends Resource
 
                 TextColumn::make('price')
                     ->translateLabel()
-                    ->money('uah', true)
+                    ->money('uah')
                     ->searchable()
                     ->sortable()
                     ->toggleable()

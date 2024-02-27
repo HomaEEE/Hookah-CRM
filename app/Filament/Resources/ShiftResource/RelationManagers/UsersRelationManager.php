@@ -9,12 +9,18 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Illuminate\Contracts\Support\Htmlable;
 
 class UsersRelationManager extends RelationManager
 {
     protected static string $relationship = 'shift_users';
 
     protected static ?string $recordTitleAttribute = 'user_id';
+
+    protected function getTableHeading(): string | Htmlable
+    {
+        return __('Shift');
+    }
 
     public function form(Form $form): Form
     {

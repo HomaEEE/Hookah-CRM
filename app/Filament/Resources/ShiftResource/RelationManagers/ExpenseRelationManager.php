@@ -9,6 +9,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ExpenseRelationManager extends RelationManager
 {
@@ -19,6 +20,11 @@ class ExpenseRelationManager extends RelationManager
     public static function getNavigationLabel(): string
     {
         return __('Expenses');
+    }
+
+    protected function getTableHeading(): string | Htmlable
+    {
+        return __('Expenses of Shift');
     }
 
     public function table(Table $table): Table

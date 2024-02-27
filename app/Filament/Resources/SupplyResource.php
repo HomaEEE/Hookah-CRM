@@ -111,6 +111,7 @@ class SupplyResource extends Resource
                     ->rows(3),
                 Select::make('bill_id')->label(__('Type pay'))
                     ->default(0)
+                    ->native(false)
                     ->options(Bill::get()->pluck('name', 'id'))
                     ->required(),
                 Toggle::make('pay')->label(__('Paid'))
@@ -197,7 +198,7 @@ class SupplyResource extends Resource
                 TextColumn::make('supplier.company')->label(__('Supplier'))->searchable()
                     ->description(fn (Supply $record): string => $record->comment ?? '')->wrap(),
 
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->searchable()
+                TextColumn::make('sum')->label(__('Sum'))->money('UAH')->searchable()
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
@@ -213,12 +214,7 @@ class SupplyResource extends Resource
                     ->placeholder('No description.')
                     ->visibleFrom('md'),
 
-                TextColumn::make('bill.name')->label(__('Bill'))
-                    ->badge()
-                    ->colors([
-                        1 => 'info',
-                        2 => 'danger',
-                    ]),
+                TextColumn::make('bill.type')->label(__('Bill'))->badge(),
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()

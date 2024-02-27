@@ -89,25 +89,25 @@ class ShiftResource extends Resource
                 TextColumn::make('created_at')->dateTime('d/m/Y')
                     ->badge()->translateLabel(),
 
-                TextColumn::make('terminal')->translateLabel()
-                    ->numeric()
+                TextColumn::make('terminal')->translateLabel()->badge()
+                    ->money('UAH')
                     ->state(function (Shift $record): int {
                         return $record->terminal * 0.987;
                     })
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
-                TextColumn::make('cash')->translateLabel()
-                    ->numeric()
+                TextColumn::make('cash')->translateLabel()->badge()
+                    ->money('UAH')
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
 
                 TextColumn::make('sum')->translateLabel()->badge()
                     ->state(function (Shift $record): int {
                         return $record->terminal * 0.987 + $record->cash;
-                    })->money('UAH', true),
+                    })->money('UAH'),
 
                 TextColumn::make('shift')
                     ->badge()
-                    ->money('uah', true)->translateLabel(),
+                    ->money('UAH')->translateLabel(),
 
                 //   TextColumn::make('shift_users.user_id')->badge(),
 
@@ -161,8 +161,8 @@ class ShiftResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UsersRelationManager::class,
             RelationManagers\ExpenseRelationManager::class,
+            RelationManagers\UsersRelationManager::class
         ];
     }
 

@@ -135,9 +135,9 @@ class ExpenseResource extends Resource
                     ->wrap()
                     ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', 1)
+                TextColumn::make('sum')->label(__('Sum'))->money('UAH')
                     ->summarize(Sum::make()->money('uah')->label(__('Total'))),
-                TextColumn::make('bill.name')->translateLabel()->badge(),
+                TextColumn::make('bill.type')->translateLabel()->badge(),
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
