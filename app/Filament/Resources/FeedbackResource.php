@@ -57,8 +57,11 @@ class FeedbackResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->translateLabel(),
-                TextColumn::make('contact')->label(__('Phone')),
+                TextColumn::make('name')->translateLabel()
+                ->description(fn (Feedback $record): string => $record->contact  ? : ''),
+                TextColumn::make('created_at')->translateLabel()->dateTime('d-m-Y')
+                ->size('md')
+                ->badge(),
                 TextColumn::make('text')->wrap(),
 
                 IconColumn::make('approve')
