@@ -7,7 +7,6 @@
 
 @section('content')
 
-
 <div class="container">
 @include('site.properties')
 

@@ -702,6 +702,16 @@ main {
         }
       }
     }
+
+    .feedbacks {
+      box-sizing: content-box;
+      .feedback {
+        border: 1px solid $text-dark-grey;
+        border-radius: 17px;
+        padding: 20px;
+        margin: 10px auto;
+      }
+    }
   }
 
 

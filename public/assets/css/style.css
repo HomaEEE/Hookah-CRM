@@ -631,6 +631,15 @@ main .page-container .about .flex-panel div:nth-child(2) {
   flex: 1;
   order: 1;
 }
+main .feedbacks {
+  box-sizing: content-box;
+}
+main .feedbacks .feedback {
+  border: 1px solid #535353;
+  border-radius: 17px;
+  padding: 20px;
+  margin: 10px auto;
+}
 
 .reserve-message.hidden {
   visibility: hidden;
