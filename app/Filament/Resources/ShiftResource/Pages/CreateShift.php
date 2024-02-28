@@ -447,21 +447,6 @@ class CreateShift extends CreateRecord
                                     $LocalWithdrawal = (new LocalApiController())->getLocalWithdrawal(Filament::getTenant()->id);
                                     $set('withdrawal', (int) $LocalWithdrawal);
                                 }),
-
-                            Action::make('update_expenses')->translateLabel()
-                                ->icon('heroicon-s-arrow-path')
-                                ->color('danger')
-                                ->action(function (Set $set) {
-                                    $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
-                                    $set('expense', (int) $posterLocalExpense);
-
-                                    $localTips = (new LocalApiController())->getLocalTips(Filament::getTenant()->id);
-                                    $set('tips', (int) $localTips);
-
-                                    $LocalWithdrawal = (new LocalApiController())->getLocalWithdrawal(Filament::getTenant()->id);
-                                    $set('withdrawal', (int) $LocalWithdrawal);
-                                }),
-
                         ]),
 
                         FieldSet::make(__('Expenses & Income'))->schema([
@@ -476,11 +461,38 @@ class CreateShift extends CreateRecord
                                 ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                                 ->numeric()
                                 ->default(0)
-                                ->hidden(fn (Get $get) => $get('expense') == 0),
+                                ->hidden(fn (Get $get) => $get('expense') == 0)
+                                ->suffixAction(
+                                    Action::make('update_expenses')
+                                        ->translateLabel()
+                                        ->icon('heroicon-o-arrow-path')
+                                        ->action(function (Set $set) {
+                                            $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
+                                            $set('expense', (int) $posterLocalExpense);
+
+                                            Notification::make()
+                                                ->title(__('Expenses updated'))
+                                                ->send();
+                                        })
+                                ),
 
                             TextInput::make('tips')->translateLabel()
                                 ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                                ->numeric()->default(0),
+                                ->numeric()->default(0)
+                                ->suffixAction(
+                                    Action::make('update_tips')
+                                        ->translateLabel()
+                                        ->icon('heroicon-o-arrow-path')
+                                        ->action(function (Set $set) {
+                                            $localTips = (new LocalApiController())->getLocalTips(Filament::getTenant()->id);
+                                            $set('tips', (int) $localTips);
+
+                                            Notification::make()
+                                            ->title(__('Tips updated'))
+                                            ->send();
+
+                                        })
+                                ),
                             TextInput::make('withdrawal')->translateLabel()
                                 ->disabled()
                                 ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
@@ -530,6 +542,14 @@ class CreateShift extends CreateRecord
                                 ->numeric()
                                 ->required()
                                 ->reactive()
+                                ->hintAction(
+                                    Action::make('copy_shift')
+                                        ->translateLabel()
+                                        ->icon('heroicon-o-clipboard')
+                                        ->action(function (Set $set, get $get) {
+                                            $set('shift', $get('calc_shift'));
+                                        })
+                                ),
                         ])->columns(['md' => 2, 'xl' => 3]),
 
                         Fieldset::make(__('Reports'))->schema([

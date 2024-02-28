@@ -77,6 +77,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->modalHeading(__('Add Expense'))
                     ->modalWidth('sm')
                     ->modalIcon('heroicon-o-document-minus')
+                    ->keyBindings(['command+s', 'ctrl+s'])
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
                         Hidden::make('place_id')->default(Filament::getTenant()->id),
@@ -114,6 +115,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->modalHeading(__('Add Supply'))
                     ->createAnother(false)
                     ->modalWidth('sm')
+                    ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
@@ -167,6 +169,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ->modalWidth('xs')
                 ->icon('heroicon-o-banknotes')
                 ->modalHeading(__('Add Tips'))
+                ->keyBindings(['command+s', 'ctrl+s'])
                 ->requiresConfirmation()
                 ->form([
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
