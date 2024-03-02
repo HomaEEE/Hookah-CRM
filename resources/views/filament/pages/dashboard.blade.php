@@ -21,6 +21,11 @@
             icon="heroicon-o-briefcase">
                 {{ __('Tasks')}}
             </x-filament::tabs.item>
+
+             <x-filament::tabs.item @click="tab = 'tab5'" :alpine-active="'tab === \'tab5\''"
+            icon="heroicon-o-calendar-days">
+                {{ __('Events')}}
+            </x-filament::tabs.item>
         </x-filament::tabs>
 
         {{-- Display Events Resource Table --}}
@@ -32,13 +37,14 @@
             <div x-show="tab === 'tab2'">
                 <livewire:Bookings/>
             </div>
-
              <div x-show="tab === 'tab3'">
                 <livewire:Paying/>
             </div>
-
              <div x-show="tab === 'tab4'">
                 <livewire:Tasks/>
+            </div>
+            <div x-show="tab === 'tab5'">
+                <livewire:EventTable/>
             </div>
 
         </div>

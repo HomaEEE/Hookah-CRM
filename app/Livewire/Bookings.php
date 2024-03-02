@@ -22,7 +22,7 @@ class Bookings extends BaseWidget
     {
         return $table
         ->query(Booking::query()->where('place_id', Filament::getTenant()->id)
-        ->whereDate('time', '>=', Carbon::today()))
+        ->whereBetween('time', [Carbon::now(), Carbon::now()->addDays(7)]))
 
             ->columns([
                 TextColumn::make('guest.name')->label(__('Name'))
@@ -34,7 +34,7 @@ class Bookings extends BaseWidget
                     ->copyMessage(__('Phone copied'))
                     ->copyMessageDuration(1500),
                 TextColumn::make('person')->translateLabel(),
-            ]);
+            ])->defaultSort('time', 'asc');
     }
 
 }
