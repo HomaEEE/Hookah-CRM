@@ -29,25 +29,7 @@
         </x-filament::tabs>
 
         <div class="mt-2">
-          <div class="mt-2">
             <div x-show="tab === 'tab1'">
-                <livewire:ExpensesDay/>
-            </div>
-            <div x-show="tab === 'tab2'">
-                <livewire:Bookings/>
-            </div>
-
-             <div x-show="tab === 'tab3'">
-                <livewire:Paying/>
-            </div>
-
-             <div x-show="tab === 'tab4'">
-                <livewire:Tasks/>
-            </div>
-            <div x-show="tab === 'tab5'">
-                <livewire:EventTable/>
-            </div>
-            {{-- <div x-show="tab === 'tab1'">
                 @livewire(\App\Livewire\ExpensesDay::class)
             </div>
             <div x-show="tab === 'tab2'">
@@ -61,7 +43,7 @@
             </div>
             <div x-show="tab === 'tab5'">
                 @livewire(\App\Livewire\EventTable::class)
-            </div> --}}
+            </div>
 
         </div>
     </div>

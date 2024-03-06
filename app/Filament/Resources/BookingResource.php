@@ -128,7 +128,7 @@ class BookingResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('guest.name')->label(__('Name'))->searchable()
-                    ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
+                ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : $record->guest->phone, position: 'below'),
                 TextColumn::make('time')->since()->translateLabel()->badge()
                 ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
                 TextColumn::make('table')->translateLabel()
@@ -168,7 +168,6 @@ class BookingResource extends Resource
                 TextEntry::make('guest.name')->hiddenLabel(),
                 TextEntry::make('guest.phone')->hiddenLabel()->copyable(),
                 TextEntry::make('comment')->hiddenLabel(),
-
                 TextEntry::make('time')->translateLabel()->dateTime('l d/m, H:i'),
                 TextEntry::make('table')->translateLabel()->badge(),
                 TextEntry::make('person')->translateLabel(),

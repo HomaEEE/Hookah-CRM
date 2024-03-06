@@ -26,9 +26,10 @@ class Bookings extends BaseWidget
 
             ->columns([
                 TextColumn::make('guest.name')->label(__('Name'))
-                ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : ' ', position: 'below'),
-                TextColumn::make('time')->since()->translateLabel(),
-                TextColumn::make('seet.table_id')->translateLabel(),
+                ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : $record->guest->phone, position: 'below'),
+                TextColumn::make('time')->since()->translateLabel()
+                ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
+                TextColumn::make('table')->translateLabel()->badge(),
                 TextColumn::make('guest.phone')->label(__('Phone'))
                 ->copyable()
                     ->copyMessage(__('Phone copied'))
