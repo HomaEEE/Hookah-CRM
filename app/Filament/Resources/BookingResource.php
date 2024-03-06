@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\{Booking, Place, Seet, Guest};
 use Auth;
 use Carbon\Carbon;
+use Filament\Actions\ReplicateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -109,15 +111,9 @@ class BookingResource extends Resource
                     ->translateLabel(),
                     TextInput::make('comment')->translateLabel(),
                 ]),
-                Select::make('table_id')->label(__('Table'))
-                    ->hidden(fn (Get $get) => $get('place_id') == null)
-                    ->options(function (callable $get) {
-                        if (null == ($get('place_id'))) {
-                            return Seet::all()->pluck('table_id', 'id');
-                        } else {
-                            return Seet::where('place_id', $get('place_id'))->pluck('table_id', 'id');
-                        }
-                    }),
+                Select::make('table')->label(__('Table'))->options(
+                    Seet::where('place_id', Filament::getTenant()->id)->pluck('table_id', 'id')
+                )->multiple(),
                 DateTimePicker::make('time')->label(__('Booking Time'))
                     ->reactive()->required()->native(false)
                     ->seconds(false)
@@ -134,15 +130,25 @@ class BookingResource extends Resource
                 TextColumn::make('guest.name')->label(__('Name'))->searchable()
                     ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
                 TextColumn::make('time')->since()->translateLabel()->badge(),
-                TextColumn::make('seet.table_id')->translateLabel()->toggleable(),
+                TextColumn::make('table')->translateLabel()
+                ->badge(),
                 TextColumn::make('person')->translateLabel()->toggleable(),
             ])->defaultSort('time', 'desc')
             ->filters([
                 Filter::make('today')->translateLabel()
                     ->query(fn (Builder $query): Builder => $query->whereDate('time', Carbon::today())),
-
             ])
             ->actions([
+                Tables\Actions\ReplicateAction::make(),
+                // ->form([
+                //     DateTimePicker::make('time')->seconds(false)
+                //     ->native(false)
+                //     ->minDate(now())->default(now())
+                //     ->translateLabel()
+                // ])->beforeSave(function (ReplicateAction $action, Event $record, array  $data) {
+                //     $record['time'] = $data['time'];
+                //     // Access and apply form data (e.g., $record->custom_field = $data['custom_field'])
+                // }),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),

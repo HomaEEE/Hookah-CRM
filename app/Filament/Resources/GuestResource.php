@@ -47,8 +47,7 @@ class GuestResource extends Resource
         return $form
             ->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                TextInput::make('name')->label(__('Name'))
-                ->description(fn (Guest $record): string => $record->comment ? : '', position: 'above'),
+                TextInput::make('name')->label(__('Name')),
                 TextInput::make('phone')->label(__('Phone'))
                     ->tel()
                     ->mask(RawJs::make(<<<'JS'

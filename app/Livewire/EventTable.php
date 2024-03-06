@@ -17,6 +17,10 @@ class EventTable extends BaseWidget
     {
         return __('Events');
     }
+    public static function getBadge(): ?string
+    {
+        return '3';//Event::whereBetween('datetime', [Carbon::now(), Carbon::now()->addDays(7)])->count();
+    }
 
     public function table(Table $table): Table
     {

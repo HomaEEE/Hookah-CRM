@@ -47,6 +47,18 @@
                             <div class="row">
                                 <div class="col-xs-8 col-md-8">
                                 {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+
+                                {{-- <div class="item-properties">
+                                    <div class="rating-holder">
+                                        <div class="c-rating c-rating--regular" data-rating-value="2">
+                                            <button>1</button>
+                                            <button>2</button>
+                                            <button>3</button>
+                                            <button>4</button>
+                                            <button>5</button>
+                                        </div>
+                                    </div>
+                                </div> --}}
                                 </div>
                                 <div class="col-xs-4 col-md-4">
                                  @if (!empty($item->getFirstMediaUrl('products')))

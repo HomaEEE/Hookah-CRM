@@ -25,6 +25,9 @@
              <x-filament::tabs.item @click="tab = 'tab5'" :alpine-active="'tab === \'tab5\''"
             icon="heroicon-o-calendar-days">
                 {{ __('Events')}}
+                {{-- <x-slot name="badge">
+                    @livewire(\App\Livewire\EventTable::getBadge())
+                </x-slot> --}}
             </x-filament::tabs.item>
         </x-filament::tabs>
 
@@ -32,19 +35,20 @@
 
         <div class="mt-2">
             <div x-show="tab === 'tab1'">
-                <livewire:ExpensesDay/>
+                @livewire(\App\Livewire\ExpensesDay::class)
             </div>
             <div x-show="tab === 'tab2'">
-                <livewire:Bookings/>
+                @livewire(\App\Livewire\Bookings::class)
             </div>
              <div x-show="tab === 'tab3'">
-                <livewire:Paying/>
+                @livewire(\App\Livewire\Paying::class)
             </div>
              <div x-show="tab === 'tab4'">
-                <livewire:Tasks/>
+                @livewire(\App\Livewire\Tasks::class)
+
             </div>
             <div x-show="tab === 'tab5'">
-                <livewire:EventTable/>
+                @livewire(\App\Livewire\EventTable::class)
             </div>
 
         </div>

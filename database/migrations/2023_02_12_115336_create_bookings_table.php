@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('guest_id');
             $table->integer('person')->nullable();
             $table->date('time');
-            $table->string('table_id')->nullable();
+            $table->string('table')->nullable();
             $table->text('comment')->nullable();
             $table->timestamps();
         });
