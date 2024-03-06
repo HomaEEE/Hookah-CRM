@@ -169,8 +169,8 @@ class BookingResource extends Resource
                 TextEntry::make('guest.phone')->hiddenLabel()->copyable(),
                 TextEntry::make('comment')->hiddenLabel(),
 
-                TextEntry::make('time')->translateLabel()->dateTime('d/m/Y H:m'),
-                TextEntry::make('seet.table_id')->translateLabel(),
+                TextEntry::make('time')->translateLabel()->dateTime('l d/m, H:i'),
+                TextEntry::make('table')->translateLabel()->badge(),
                 TextEntry::make('person')->translateLabel(),
             ])->columns(3);
     }
