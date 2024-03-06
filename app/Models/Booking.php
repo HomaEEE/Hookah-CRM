@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,5 +27,11 @@ class Booking extends Model
     public function guest()
     {
         return $this->belongsTo(Guest::class, 'guest_id');
+    }
+
+    public function getBookingTimeAttribute()
+    {
+        return (new Carbon($this->time))->translatedFormat('l d/m') .', '
+        . (new Carbon($this->time))->translatedFormat('H:i');
     }
 }

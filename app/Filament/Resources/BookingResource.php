@@ -129,7 +129,8 @@ class BookingResource extends Resource
             ->columns([
                 TextColumn::make('guest.name')->label(__('Name'))->searchable()
                     ->description(fn (Booking $record): string => $record->comment ? $record->comment : ' ', position: 'below'),
-                TextColumn::make('time')->since()->translateLabel()->badge(),
+                TextColumn::make('time')->since()->translateLabel()->badge()
+                ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
                 TextColumn::make('table')->translateLabel()
                 ->badge(),
                 TextColumn::make('person')->translateLabel()->toggleable(),
