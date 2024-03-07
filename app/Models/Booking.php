@@ -19,15 +19,21 @@ class Booking extends Model
         return $this->belongsTo(Place::class, 'place_id');
     }
 
-    public function seet()
+    public function table()
     {
-        return $this->belongsTo(Seet::class, 'table');
+        return $this->hasMany(Seet::class, 'table', 'id');
     }
 
     public function guest()
     {
         return $this->belongsTo(Guest::class, 'guest_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 
     public function getBookingTimeAttribute()
     {

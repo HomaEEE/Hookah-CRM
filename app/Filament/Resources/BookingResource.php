@@ -132,7 +132,7 @@ class BookingResource extends Resource
                 TextColumn::make('time')->since()->translateLabel()->badge()
                 ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
                 TextColumn::make('table')->translateLabel()
-                ->badge(),
+                ->badge()->separator(','),
                 TextColumn::make('person')->translateLabel()->toggleable(),
             ])->defaultSort('time', 'desc')
             ->filters([
@@ -166,11 +166,12 @@ class BookingResource extends Resource
         return $infolist
             ->schema([
                 TextEntry::make('guest.name')->hiddenLabel(),
-                TextEntry::make('guest.phone')->hiddenLabel()->copyable(),
                 TextEntry::make('comment')->hiddenLabel(),
+                TextEntry::make('guest.phone')->hiddenLabel()->copyable(),
                 TextEntry::make('time')->translateLabel()->dateTime('l d/m, H:i'),
                 TextEntry::make('table')->translateLabel()->badge(),
                 TextEntry::make('person')->translateLabel(),
+                TextEntry::make('user.name')->translateLabel(),
             ])->columns(3);
     }
 

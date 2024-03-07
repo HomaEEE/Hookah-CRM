@@ -21,6 +21,6 @@ class Seet extends Model
 
     public function booking()
     {
-        return $this->hasOne(Booking::class, 'table_id');
+        return $this->belongsToMany(Booking::class, 'id', 'table');
     }
 }
