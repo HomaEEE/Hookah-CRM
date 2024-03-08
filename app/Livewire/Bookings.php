@@ -70,7 +70,7 @@ class Bookings extends BaseWidget
                 ->form([
                     Hidden::make('user_id')->default(Auth::user()->id),
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
-                    Select::make('guest_id')
+                    Select::make('guest_id')->label(__('Guest'))
                     ->relationship('guest', 'name')
                     ->options(Guest::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
                     ->searchable(['name', 'comment', 'phone'])
