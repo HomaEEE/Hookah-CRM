@@ -122,7 +122,7 @@ class TaskResource extends Resource
                         ]
                     );
                     $record->save();
-                })->visible(fn (Task $record) => $record->approve != 1),
+                })->visible(fn (Task $record) => $record['approve'] == 0),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()->visible(fn (Task $record) =>$record->approve == 0),
