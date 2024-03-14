@@ -83,8 +83,8 @@ class BookingResource extends Resource
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('guest_id')->label(__('Guest'))
-                ->relationship('guest', 'name')
-                ->options(Guest::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
+                ->relationship('guest', 'fullName')
+                ->options(Guest::where('place_id', Filament::getTenant()->id)->get()->pluck('FullName', 'id'))
                 ->searchable(['name', 'comment', 'phone'])
                 ->native(false)
                 ->preload()
@@ -127,8 +127,8 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('guest.name')->label(__('Name'))->searchable()
-                ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : $record->guest->phone, position: 'below'),
+                TextColumn::make('guest.fullName')->label(__('Name'))->searchable()
+                ->description(fn (Booking $record): string => $record->guest->phone ? $record->guest->phone : '', position: 'below'),
                 TextColumn::make('time')->since()->translateLabel()->badge()
                 ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
                 TextColumn::make('seet.number')->translateLabel()

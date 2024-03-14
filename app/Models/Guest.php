@@ -23,9 +23,13 @@ class Guest extends Model
         return $this->belongsTo(Booking::class);
     }
 
-    public function getnameCommentAttribute()
+    public function getFullNameAttribute()
     {
-        return $this->name + '(' + $this->comment + ')';
+        if (isset($this->comment)) {
+        return $this->name . ' (' . $this->comment . ')';
+        } else {
+            return $this->name;
+        }
     }
 
 }
