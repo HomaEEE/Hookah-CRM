@@ -69,6 +69,7 @@ class Bookings extends BaseWidget
             ->headerActions([
                 CreateAction::make()
                     ->model(Booking::class)
+                    ->createAnother(false)
                     ->modalWidth('sm')
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
