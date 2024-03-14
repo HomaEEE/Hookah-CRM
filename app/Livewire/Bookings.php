@@ -37,16 +37,15 @@ class Bookings extends BaseWidget
         ->whereBetween('time', [Carbon::now(), Carbon::now()->addDays(7)]))
 
             ->columns([
-                TextColumn::make('guest.fullName')->label(__('Name'))->searchable()
-                ->description(fn (Booking $record): string => $record->guest->phone ? $record->guest->phone : '', position: 'below'),
-                TextColumn::make('time')->since()->translateLabel()
-                ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
+                TextColumn::make('guest.phone')->label(__('Name'))->searchable()
+                ->copyable()
+                ->copyMessage(__('Phone copied'))
+                ->copyMessageDuration(1500)
+                ->description(fn (Booking $record): string => $record->guest->fullName ? $record->guest->fullName : $record->guest->name, position: 'above'),
+                TextColumn::make('time')->since()->translateLabel()->badge()
+                ->description(fn (Booking $record): string => $record->bookingTime, position: 'above'),
                 TextColumn::make('seet.number')->translateLabel()
                 ->badge()->separator(','),
-                TextColumn::make('guest.phone')->label(__('Phone'))
-                ->copyable()
-                    ->copyMessage(__('Phone copied'))
-                    ->copyMessageDuration(1500),
                 TextColumn::make('person')->translateLabel(),
             ])->defaultSort('time', 'asc')
             ->actions([
