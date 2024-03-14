@@ -101,7 +101,7 @@ class Bookings extends BaseWidget
                         TextInput::make('comment')->translateLabel(),
                     ]),
                     Select::make('seet_ids')->label(__('Table'))->options(
-                        Seet::where('place_id', Filament::getTenant()->id)->pluck('table_id', 'id')
+                        Seet::where('place_id', Filament::getTenant()->id)->pluck('number', 'id')
                     )->multiple(),
                     DateTimePicker::make('time')->label(__('Booking Time'))
                         ->reactive()->required()->native(false)
