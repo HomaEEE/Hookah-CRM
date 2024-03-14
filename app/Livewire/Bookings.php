@@ -41,7 +41,8 @@ class Bookings extends BaseWidget
                 ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : $record->guest->phone, position: 'below'),
                 TextColumn::make('time')->since()->translateLabel()
                 ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
-                TextColumn::make('table')->translateLabel()->badge(),
+                TextColumn::make('seet.number')->translateLabel()
+                ->badge()->separator(','),
                 TextColumn::make('guest.phone')->label(__('Phone'))
                 ->copyable()
                     ->copyMessage(__('Phone copied'))
@@ -99,7 +100,7 @@ class Bookings extends BaseWidget
                         ->translateLabel(),
                         TextInput::make('comment')->translateLabel(),
                     ]),
-                    Select::make('table')->label(__('Table'))->options(
+                    Select::make('seet_ids')->label(__('Table'))->options(
                         Seet::where('place_id', Filament::getTenant()->id)->pluck('table_id', 'id')
                     )->multiple(),
                     DateTimePicker::make('time')->label(__('Booking Time'))
