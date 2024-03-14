@@ -37,7 +37,7 @@ class Bookings extends BaseWidget
         ->whereBetween('time', [Carbon::now(), Carbon::now()->addDays(7)]))
 
             ->columns([
-                TextColumn::make('guest.phone')->label(__('Name'))->searchable()
+                TextColumn::make('guest.phone')->label(__('Name'))
                 ->copyable()
                 ->copyMessage(__('Phone copied'))
                 ->copyMessageDuration(1500)

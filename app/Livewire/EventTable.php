@@ -24,11 +24,10 @@ class EventTable extends BaseWidget
             ->query(Event::query()->where('place_id', Filament::getTenant()->id)
                 ->whereBetween('datetime', [Carbon::now(), Carbon::now()->addDays(7)])
             )
-
             ->columns([
                 TextColumn::make('type')->label(__('Type'))->badge()
                     ->description(fn (Event $record): string => $record->title, position: 'above'),
-                TextColumn::make('datetime')->label('Day')->since()
+                TextColumn::make('datetime')->label(__('Day'))->since()
                     ->badge()
                     ->description(fn (Event $record): string => $record->eventTime, position: 'above'),
             ])->defaultSort('datetime', 'asc');
