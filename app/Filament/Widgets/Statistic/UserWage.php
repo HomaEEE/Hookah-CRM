@@ -48,6 +48,9 @@ class UserWage extends BaseWidget
                 ->summarize(Sum::make()->money('uah')->label(__('Total wages'))),
                 TextColumn::make('cashout')->translateLabel()
                 ->summarize(Sum::make()->money('uah')->label(__('Total')))
+            ])
+            ->filters([
+                // ...
             ]);
     }
 }

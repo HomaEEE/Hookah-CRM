@@ -20,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -94,9 +95,13 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->numeric()
                             ->prefix('₴')
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                        Select::make('bill_id')->label(__('Type pay'))
+                        ToggleButtons::make('bill_id')->label(__('Type pay'))
                             ->options(Bill::get()->pluck('name', 'id'))
-                            ->required(),
+                            ->default(0)
+                            ->required()
+                            ->inline()
+                            ->grouped()
+                            ->live(),
                         Textarea::make('comment')->translateLabel()->rows(2),
                         Toggle::make('pay')->label(__('Paid'))
                         ->default(true)
@@ -146,10 +151,13 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->resize(80),
                         Textarea::make('comment')->label(__('Comment'))
                             ->rows(3),
-                        Select::make('bill_id')->label(__('Type pay'))
-                            ->default(0)
+                            ToggleButtons::make('bill_id')->label(__('Type pay'))
                             ->options(Bill::get()->pluck('name', 'id'))
-                            ->required(),
+                            ->default(0)
+                            ->required()
+                            ->inline()
+                            ->grouped()
+                            ->live(),
                         Toggle::make('pay')->label(__('Paid'))
                             ->default(false)
                             ->inline(),
