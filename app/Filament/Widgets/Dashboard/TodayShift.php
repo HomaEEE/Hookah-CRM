@@ -27,13 +27,13 @@ class TodayShift extends BaseWidget
             $expenseShift = Expense::where('place_id', Filament::getTenant()->id)->whereDate('added_at', Carbon::today())->sum('sum');
 
             return [
-                Stat::make('Открытие смены', $shift != null ? $shift->shift : 0)
+                Stat::make(__('Shift Poster'), $shift != null ? $shift->shift : 0)
                 ->icon('heroicon-o-lock-open'),
 
-                Stat::make('Чаевые', $tipsShift != null ? $tipsShift : 0)
+                Stat::make(__('Tips'), $tipsShift != null ? $tipsShift : 0)
                 ->icon('heroicon-o-banknotes'),
 
-                Stat::make('Расходы', $expenseShift != null ? $expenseShift : 0)
+                Stat::make(__('Expenses'), $expenseShift != null ? $expenseShift : 0)
                 ->icon('heroicon-o-arrow-up-on-square-stack')
             ];
     }

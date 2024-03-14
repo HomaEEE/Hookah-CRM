@@ -21,13 +21,13 @@ class PosterShift extends BaseWidget
         $posterTodayShift = (new PosterApi())->getTodayShift(Filament::getTenant()->id);
 
         return [
-            Stat::make('Выручка за смену', $posterTodayShift != null ? $posterTodayShift['payed_sum_sum'] / 100 : 0)
+            Stat::make(__('Shift'), $posterTodayShift != null ? $posterTodayShift['payed_sum_sum'] / 100 : 0)
             ->icon('heroicon-o-calendar-days'),
 
-            Stat::make('Наличные', $posterTodayShift != null ? $posterTodayShift['payed_cash_sum'] / 100 : 0)
+            Stat::make(__('Cash'), $posterTodayShift != null ? $posterTodayShift['payed_cash_sum'] / 100 : 0)
             ->icon('heroicon-o-banknotes'),
 
-            Stat::make('Терминал', $posterTodayShift != null ? $posterTodayShift['payed_card_sum'] / 100 : 0)
+            Stat::make(__('Terminal'), $posterTodayShift != null ? $posterTodayShift['payed_card_sum'] / 100 : 0)
             ->icon('heroicon-o-credit-card')
         ];
     }
