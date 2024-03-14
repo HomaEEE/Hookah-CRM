@@ -9,19 +9,20 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
-    protected $fillable = ['user_id', 'place_id', 'table', 'date', 'guest_id', 'time', 'person', 'comment'];
+    protected $fillable = ['user_id', 'place_id', 'seet_ids', 'date', 'guest_id', 'time', 'person', 'comment'];
 
-    protected $casts = ['table' => 'array'];
+    protected $casts = ['seet_ids' => 'json'];
 
     public function place()
     {
         return $this->belongsTo(Place::class, 'place_id');
     }
 
-    public function table()
+    public function seet()
     {
-        return $this->hasMany(Seet::class, 'table', 'id');
+        return $this->belongsToJson(Seet::class, 'seet_ids');
     }
 
     public function guest()

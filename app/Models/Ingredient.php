@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ingredient extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
     protected $fillable = ['ingredient', 'unit', 'workshop_id', 'place_id', 'price'];
 
@@ -20,7 +21,7 @@ class Ingredient extends Model
 
     public function techcard()
     {
-        return $this->belongsTo(Techcard::class);
+        return $this->hasManyJson(Techcard::class, 'ingedients->ingedient_id');
     }
 
     public function purchase()

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArrearResource\Pages;
-use App\Models\{Arrear,User};
+use App\Models\{Arrear, Ingredient, User};
 
 use Auth;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -24,6 +24,8 @@ use Filament\Infolists\Components;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Tabs;
+
+use function Laravel\Prompts\select;
 
 class ArrearResource extends Resource
 {

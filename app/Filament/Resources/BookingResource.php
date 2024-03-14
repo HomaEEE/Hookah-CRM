@@ -111,8 +111,8 @@ class BookingResource extends Resource
                     ->translateLabel(),
                     TextInput::make('comment')->translateLabel(),
                 ]),
-                Select::make('table')->label(__('Table'))->options(
-                    Seet::where('place_id', Filament::getTenant()->id)->pluck('table_id', 'id')
+                Select::make('seet_ids')->label(__('Table'))->options(
+                    Seet::where('place_id', Filament::getTenant()->id)->pluck('number', 'id')
                 )->multiple(),
                 DateTimePicker::make('time')->label(__('Booking Time'))
                     ->reactive()->required()->native(false)
@@ -131,7 +131,7 @@ class BookingResource extends Resource
                 ->description(fn (Booking $record): string => $record->guest->comment ? $record->guest->comment : $record->guest->phone, position: 'below'),
                 TextColumn::make('time')->since()->translateLabel()->badge()
                 ->description(fn (Booking $record): string => $record->bookingTime, position: 'below'),
-                TextColumn::make('table')->translateLabel()
+                TextColumn::make('seet.number')->translateLabel()
                 ->badge()->separator(','),
                 TextColumn::make('person')->translateLabel()->toggleable(),
             ])->defaultSort('time', 'desc')

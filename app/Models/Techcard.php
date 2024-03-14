@@ -23,7 +23,6 @@ class Techcard extends Model implements HasMedia
 
     public $timestamps = false;
 
-
     public function place()
     {
         return $this->belongsTo(Place::class);
@@ -36,11 +35,11 @@ class Techcard extends Model implements HasMedia
 
     public function ingredient(): HasOne
     {
-        return $this->hasOne(Ingredient::class, 'ingredients->ingredient_id');
+        return $this->hasOne(Ingredient::class);
     }
     public function ingredients()
     {
-        return $this->hasMany(Ingredient::class, 'id');
+        return $this->belongsToJson(Ingredient::class, 'ingedients->ingedient_id');
     }
 
     public function workshop()

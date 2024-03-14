@@ -132,11 +132,11 @@ class TechcardResource extends Resource
                 TextEntry::make('process')->translateLabel(),
                 RepeatableEntry::make('ingredients')->hiddenLabel()
                     ->schema([
-                        TextEntry::make('')->hiddenLabel(),
+                        TextEntry::make('ingredient.ingredient')->hiddenLabel(),
                         TextEntry::make('heft')->hiddenLabel()->badge(),
                         TextEntry::make('weight_unit')->hiddenLabel()
                     ])
-                    ->grid(1)
+                    ->grid(3)
                     ->columns(3)
             ]);
     }
