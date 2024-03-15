@@ -81,7 +81,7 @@ class BookingResource extends Resource
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('guest_id')->label(__('Guest'))
-                    ->relationship('guest', 'fullName')
+                    ->relationship('guest', 'name')
                     ->options(Guest::where('place_id', Filament::getTenant()->id)->get()->pluck('FullName', 'id'))
                     ->searchable(['name', 'comment', 'phone'])
                     ->native(false)
