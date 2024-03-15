@@ -13,7 +13,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -55,8 +55,13 @@ class WithdrawalResource extends Resource
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
-                Select::make('bill_id')->label(__('Bill'))
-                ->options(Bill::get()->pluck('name', 'id'))->default(0),
+                ToggleButtons::make('bill_id')->label(__('Type pay'))
+                ->options(Bill::get()->pluck('name', 'id'))
+                ->default(0)
+                ->required()
+                ->inline()
+                ->grouped()
+                ->live()
             ])->columns(1);
     }
 

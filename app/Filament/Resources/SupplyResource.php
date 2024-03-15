@@ -28,6 +28,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section as ComponentsSection;
@@ -109,11 +110,13 @@ class SupplyResource extends Resource
                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                 Textarea::make('comment')->label(__('Comment'))
                     ->rows(3),
-                Select::make('bill_id')->label(__('Type pay'))
-                    ->default(0)
-                    ->native(false)
+                ToggleButtons::make('bill_id')->label(__('Type pay'))
                     ->options(Bill::get()->pluck('name', 'id'))
-                    ->required(),
+                    ->default(0)
+                    ->required()
+                    ->inline()
+                    ->grouped()
+                    ->live(),
                 Toggle::make('pay')->label(__('Paid'))
                     ->default(false)
                     ->inline(),

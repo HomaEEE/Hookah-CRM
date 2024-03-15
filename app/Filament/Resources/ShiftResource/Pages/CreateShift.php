@@ -9,7 +9,7 @@ use Auth;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\{CheckboxList, DateTimePicker, Hidden, Placeholder, Repeater, Select, Textarea, TextInput};
+use Filament\Forms\Components\{CheckboxList, DateTimePicker, Hidden, Placeholder, Repeater, Select, Textarea, TextInput, ToggleButtons};
 use Filament\Forms\Components\Section;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
@@ -379,8 +379,13 @@ class CreateShift extends CreateRecord
                                     Hidden::make('user_id')->default(Auth::user()->id),
                                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                                     TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
-                                    Select::make('bill_id')->label(__('Bill'))
-                                        ->options(Bill::get()->pluck('name', 'id'))
+                                    ToggleButtons::make('bill_id')->label(__('Bill'))
+                                    ->options(Bill::get()->pluck('name', 'id'))
+                                    ->default(0)
+                                    ->required()
+                                    ->inline()
+                                    ->grouped()
+                                    ->live(),
                                 ])
                                 ->action(function (Set $set, array $data): void {
                                     Withdrawal::create(
@@ -418,9 +423,13 @@ class CreateShift extends CreateRecord
                                         ->numeric()
                                         ->prefix('₴')
                                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                                    Select::make('bill_id')->label(__('Type pay'))
+                                    ToggleButtons::make('bill_id')->label(__('Type pay'))
                                         ->options(Bill::get()->pluck('name', 'id'))
-                                        ->required(),
+                                        ->default(0)
+                                        ->required()
+                                        ->inline()
+                                        ->grouped()
+                                        ->live(),
                                     Textarea::make('comment')->translateLabel()->rows(2),
                                 ])
                                 ->action(function (Set $set, array $data): void {

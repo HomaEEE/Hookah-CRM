@@ -13,7 +13,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
@@ -146,12 +146,13 @@ class SubscriptionResource extends Resource
                         ->columnSpan(6)
                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                         ->default(fn (Subscription $record): int => $record->price),
-                        Select::make('bill_id')->translateLabel()
-                            ->columnSpan(6)
-                            ->options(
-                              Bill::get()->pluck('name', 'id')
-                            )
-                            ->default('0'),
+                        ToggleButtons::make('bill_id')->label(__('Type pay'))
+                        ->options(Bill::get()->pluck('name', 'id'))
+                        ->default(0)
+                        ->required()
+                        ->inline()
+                        ->grouped()
+                        ->live(),
                     ])
                     ->action(function (Subscription $record, array $data): void {
 

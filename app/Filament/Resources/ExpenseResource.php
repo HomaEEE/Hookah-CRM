@@ -26,6 +26,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\IconColumn;
@@ -93,9 +94,13 @@ class ExpenseResource extends Resource
                     ->numeric()
                     ->prefix('₴')
                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                Select::make('bill_id')->label(__('Bill'))
+                ToggleButtons::make('bill_id')->label(__('Type pay'))
                     ->options(Bill::get()->pluck('name', 'id'))
-                    ->required(),
+                    ->default(0)
+                    ->required()
+                    ->inline()
+                    ->grouped()
+                    ->live(),
                 Textarea::make('comment')->translateLabel()->rows(2),
 
                 SpatieMediaLibraryFileUpload::make('invoice')
