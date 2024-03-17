@@ -2,7 +2,8 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-
+app/Filament/Pages/Test.php
+app/Liwevire/TestLiwevire
 storage/*.key
 .env
 Homestead.yaml
