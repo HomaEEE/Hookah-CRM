@@ -39,7 +39,7 @@ class Techcard extends Model implements HasMedia
     }
     public function ingredients()
     {
-        return $this->belongsToJson(Ingredient::class, 'ingedients->ingedient_id');
+        return $this->hasManyJson(Ingredient::class, 'ingedient->ingedient_id');
     }
 
     public function workshop()

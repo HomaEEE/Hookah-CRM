@@ -7,7 +7,7 @@ use App\Filament\Resources\TechcardResource\RelationManagers;
 use App\Models\{Ingredient, Product, Techcard, Workshop};
 
 use Auth;
-use Awcodes\FilamentTableRepeater\Components\TableRepeater;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -80,16 +80,18 @@ class TechcardResource extends Resource
 
                 Textarea::make('process')->label(__('Process')),
 
-                Repeater::make('ingredients')
-                    ->schema([
-                        Select::make('ingredient_id')->label(__('Ingredient'))
+                TableRepeater::make('ingredients')
+                ->relationship('ingredients')
+                ->schema([
+                    Select::make('ingredient_id')->label(__('Ingredient'))
                             ->hiddenLabel()
                             ->native(false)
                             ->searchable()
                             ->options(
                                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
                             ),
-                        TextInputSelectAffix::make('heft')->hiddenLabel()
+                    TextInputSelectAffix::make('heft')
+                    ->hiddenLabel()
                             ->numeric()
                             ->select(
                                 fn () => Select::make('weight_unit')
@@ -101,7 +103,14 @@ class TechcardResource extends Resource
                                         'gr' => __('gr')
                                     ])
                             )
-                    ])->columnSpan('full')->columns(2)
+                ])
+                ->reorderable()
+                ->cloneable()
+                ->collapsible()
+                ->defaultItems(3)
+                ->columnSpan('full'),
+
+
             ]);
     }
 

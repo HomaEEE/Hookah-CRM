@@ -14,11 +14,20 @@ class ItemImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make('name')
-                ->requiredMapping()
+            ImportColumn::make('item.name')
                 ->rules(['required', 'max:255']),
+            ImportColumn::make('qty')
+                ->numeric()
+                ->rules(['integer']),
+            ImportColumn::make('own')
+                ->rules(['integer'])
+                ->ignoreBlankState(),
+            ImportColumn::make('storage_id')
+                ->rules(['integer'])
+                ->ignoreBlankState(),
             ImportColumn::make('price')
                 ->numeric()
+                ->ignoreBlankState()
                 ->rules(['integer']),
         ];
     }

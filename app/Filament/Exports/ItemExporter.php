@@ -16,8 +16,12 @@ class ItemExporter extends Exporter
         return [
             ExportColumn::make('id')
                 ->label('ID'),
-            ExportColumn::make('name'),
-            ExportColumn::make('price'),
+            ExportColumn::make('item.name')
+            ->label(__('Name')),
+            ExportColumn::make('qty')
+            ->label(__('qty')),
+            ExportColumn::make('price')
+            ->label(__('Price'))
         ];
     }
 

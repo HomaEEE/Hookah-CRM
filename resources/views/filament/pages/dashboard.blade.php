@@ -26,6 +26,7 @@
             icon="heroicon-o-calendar-days">
                 {{ __('Events')}}
             </x-filament::tabs.item>
+
         </x-filament::tabs>
 
         <div class="mt-2">
@@ -47,5 +48,8 @@
 
         </div>
     </div>
+
+                @livewire(\App\Filament\Widgets\CalendarEventWidget::class)
+
 
 </x-filament-panels::page>

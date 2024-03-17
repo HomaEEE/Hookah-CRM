@@ -9,12 +9,15 @@ use App\Models\Product;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action as ActionsAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -54,6 +57,7 @@ class ProductResource extends Resource
                 Toggle::make('visible')->label(__('Visible'))->inline(),
                 Toggle::make('visible_menu')->label(__('Visible menu'))->inline(),
                 TextInput::make('product_name')
+                    ->translateLabel()
                     ->required()
                     ->maxLength(255),
                 Select::make('menu_category_id')
@@ -62,8 +66,8 @@ class ProductResource extends Resource
                     ->searchable(),
                 Translate::make()
                     ->schema([
-                        TextInput::make('frontend_name')->label(__('Front product name')),
-                        Textarea::make('frontend_desc')->label(__('Description')),
+                        TextInput::make('frontend_name')->label(__('Front product name'))->translatable(),
+                        Textarea::make('frontend_desc')->label(__('Description'))->translatable(),
                     ]),
                 TextInput::make('sup')->label(__('sup')),
                 TextInput::make('barcode')->label('Barcode'),
