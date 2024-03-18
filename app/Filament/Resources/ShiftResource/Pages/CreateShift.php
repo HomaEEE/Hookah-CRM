@@ -397,7 +397,7 @@ class CreateShift extends CreateRecord
                                         ]
                                     );
 
-                                    $LocalWithdrawal = (new LocalApi())->getLocalWithdrawal(Filament::getTenant()->id);
+                                    $LocalWithdrawal = (new LocalApiController())->getLocalWithdrawal(Filament::getTenant()->id);
                                     $set('withdrawal', $LocalWithdrawal);
                                 }),
 
