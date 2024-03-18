@@ -49,7 +49,6 @@
         </div>
     </div>
 
-                @livewire(\App\Filament\Widgets\CalendarEventWidget::class)
-
+    {{-- @livewire(\App\Filament\Widgets\CalendarEventWidget::class) --}}
 
 </x-filament-panels::page>
