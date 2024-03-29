@@ -95,6 +95,15 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->numeric()
                             ->prefix('₴')
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                        SpatieMediaLibraryFileUpload::make('invoice')
+                            ->label(__('Invoice'))
+                            ->collection('supplies')
+                            ->multiple()
+                            ->imagePreviewHeight(450)
+                            ->imageResizeMode('cover')
+                            ->imageEditor()
+                            ->optimize('webp')
+                            ->resize(80),
                         ToggleButtons::make('bill_id')->label(__('Type pay'))
                             ->options(Bill::get()->pluck('name', 'id'))
                             ->default(0)
@@ -141,12 +150,12 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->prefix('₴')
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                         SpatieMediaLibraryFileUpload::make('invoice')
-                            ->translateLabel()
+                            ->label(__('Invoice'))
                             ->collection('supplies')
                             ->multiple()
-                            ->imagePreviewHeight(100)
+                            ->imagePreviewHeight(450)
                             ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('2100')
+                            ->imageEditor()
                             ->optimize('webp')
                             ->resize(80),
                         Textarea::make('comment')->label(__('Comment'))
