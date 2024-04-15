@@ -9,7 +9,7 @@ use Auth;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\{CheckboxList, DateTimePicker, Hidden, Placeholder, Repeater, Select, Textarea, TextInput, ToggleButtons};
+use Filament\Forms\Components\{CheckboxList, DatePicker, DateTimePicker, Hidden, Placeholder, Repeater, Select, Textarea, TextInput, ToggleButtons};
 use Filament\Forms\Components\Section;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
@@ -525,7 +525,11 @@ class CreateShift extends CreateRecord
                         // ->reactive(),
 
                         FieldSet::make('Shift')->translateLabel()->schema([
-
+                            // DatePicker::make('shift_day')->translateLabel()
+                            // ->default(now())
+                            // ->displayFormat('d/m/Y')
+                            // ->closeOnDateSelection()
+                            // ->native(false),
                             Placeholder::make('total_shift')->translateLabel()
                                 ->content(function (Set $set, Get $get) {
                                     $totalCash =

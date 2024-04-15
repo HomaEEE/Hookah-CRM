@@ -61,15 +61,15 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Event::class);
     }
 
-    public function service()
+    public function services()
     {
-        return $this->hasMany(Service::class, 'place_id');
+        return $this->hasMany(Service::class);
     }
 
     //Показания счетчиков
     public function indications()
     {
-        return $this->hasMany(Indication::class, 'place_id');
+        return $this->hasMany(Indication::class);
     }
 
     public function rooms()

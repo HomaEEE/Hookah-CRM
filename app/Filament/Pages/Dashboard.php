@@ -211,7 +211,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ->label(__('Open Shift'))
                 ->color('info')
                 ->icon('heroicon-o-lock-open')
-                ->slideOver()
                 ->modalHeading(__('Open Shift'))
                 ->requiresConfirmation()
                 ->form([
@@ -223,6 +222,22 @@ class Dashboard extends \Filament\Pages\Dashboard
                     (new PosterApiController())->openShift($data);
                 }),
 
+            // Action::make('onShift')
+            //     ->label(__('On Shift'))
+            //     ->color('info')
+            //     ->icon('heroicon-o-user-plus')
+            //     ->modalHeading(__('On Shift'))
+            //     ->modalWidth('sm')
+            //     ->requiresConfirmation()
+            //     ->form([
+            //         Hidden::make('place_id')->default(Filament::getTenant()->id)
+            //             ->required()
+            //             ->reactive(),
+            //         Select::make(;)
+            //     ])
+            //     ->action(function (array $data): void {
+            //         (new PosterApiController())->openShift($data);
+            //     }),
 
         ];
     }

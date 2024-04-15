@@ -19,7 +19,7 @@ class TodayShift extends BaseWidget
 
     protected function getStats(): array
     {
-            $shift = Shift::where('place_id', Filament::getTenant()->id)->select('shift')->latest()->first();
+            $shift = Shift::where('place_id', Filament::getTenant()->id)->select('shift', 'created_at')->latest()->first();
 
             $tipsShift = Tip::where('place_id', Filament::getTenant()->id)
             ->whereDate('created_at', Carbon::today())->value('tips');
@@ -28,7 +28,8 @@ class TodayShift extends BaseWidget
 
             return [
                 Stat::make(__('Shift Poster'), $shift != null ? $shift->shift : 0)
-                ->icon('heroicon-o-lock-open'),
+                ->icon('heroicon-o-lock-open')
+                ->description($shift->created_at->since()),
 
                 Stat::make(__('Tips'), $tipsShift != null ? $tipsShift : 0)
                 ->icon('heroicon-o-banknotes'),
