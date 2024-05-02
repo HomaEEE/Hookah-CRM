@@ -58,8 +58,10 @@ class ShiftResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('created_at')->dateTime('d/m/Y')
-                    ->translateLabel(),
+                TextColumn::make('created_at')->dateTime('l')->translateLabel()
+                ->badge()
+                ->size('xs')
+                ->description(fn (Shift $record): string => $record->created_at->format('d-m-Y') ?? ''),
 
                 TextColumn::make('terminal')->translateLabel()->badge()
                     ->money('UAH')
