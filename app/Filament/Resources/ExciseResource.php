@@ -120,7 +120,7 @@ class ExciseResource extends Resource
                 //
             ])
             ->actions([
-                Action::make('add_portion')->label(__('Portions'))
+                Action::make('add_portion')->hiddenLabel()
                     ->icon('heroicon-o-plus')
                     ->button()
                     ->modalHeading(__('Portions'))
