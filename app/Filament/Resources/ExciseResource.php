@@ -16,14 +16,17 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\{Form, Set, Get};
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Actions\Action as FormAction;
+
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExciseResource extends Resource
@@ -65,10 +68,10 @@ class ExciseResource extends Resource
                                 Select::make('volume')->translateLabel()
                                 ->native(false)
                                 ->options([
-                                    '0.5' => '0.5',
-                                    '0.7' => '0.7',
-                                    '0.75' => '0.75',
-                                    '0.1' => '0.1'
+                                    '0.5' => '0.5L',
+                                    '0.7' => '0.7L',
+                                    '0.75' => '0.75L',
+                                    '1' => '1L'
                                 ])
                             ]),
                     ]),
@@ -101,6 +104,7 @@ class ExciseResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->badge(),
                 TextColumn::make('added_at')->dateTime('d/m/Y')->badge()->translateLabel(),
                 TextColumn::make('title')->translateLabel(),
                 TextColumn::make('excise')->translateLabel(),
@@ -116,21 +120,44 @@ class ExciseResource extends Resource
                 //
             ])
             ->actions([
-                Action::make('add_portion')->label(__('Add portions'))
-                    ->icon('heroicon-o-shield-check')
+                Action::make('add_portion')->label(__('Portions'))
+                    ->icon('heroicon-o-plus')
                     ->button()
-                    ->modalHeading(__('Add portions'))
-                    ->color('success')
-                    ->modalWidth('sm')
+                    ->modalHeading(__('Portions'))
+                    ->color('info')
+                    ->modalWidth('xs')
                     ->form([
-                        Forms\Components\TextInput::make('portion')
-                            ->label(__('Add portions'))->numeric()
-                            ->required(),
+                        TextInput::make('portions')
+                            ->hiddenLabel()->numeric()
+                            ->default(1)
+                            ->required()
+                            ->disabled()
+                            ->suffixAction(
+                                FormAction::make('plus')
+                                    ->size(ActionSize::Large)
+                                    ->color('success')
+                                    ->icon('heroicon-o-plus')
+                                    ->iconButton()
+                                    ->disabled(fn (Get $get): bool => empty($get('portions')) || $get('portions') >= 25)
+                                    ->action(function (Get $get, Set $set, $state): void {
+                                        $set('portions', $get('portions') + 1);
+                                    })
+                            )
+                            ->prefixAction(
+                                FormAction::make('minus')
+                                    ->size(ActionSize::Large)
+                                    ->icon('heroicon-o-minus')
+                                    ->color('danger')
+                                    ->iconButton()
+                                    ->disabled(fn (Get $get): bool => empty($get('portions')) || $get('portions') <= 1)
+                                    ->action(function (Get $get, Set $set, $state): void {
+                                        $set('portions', $get('portions') - 1);
+                                    })
+                            ),
+
                     ])
                     ->action(function (Excise $record, array $data): void {
-                        $record->update(
-                            [$record->portions += $data['portion']]
-                        );
+                        $record->increment('portions', $data['portions']);
                     }),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
