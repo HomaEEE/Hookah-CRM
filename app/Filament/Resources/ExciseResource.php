@@ -59,33 +59,38 @@ class ExciseResource extends Resource
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                DateTimePicker::make('added_at')->label(__('Date Added'))->maxDate(now())->default(now()),
-                                TextInput::make('title')->translateLabel()->required(),
-                                TextInput::make('excise')->translateLabel()->required(),
-                                Select::make('volume')->translateLabel()->required()
-                                    ->options(
-                                        [
-                                            '0.5' => '0.5',
-                                            '0.7' => '0.7',
-                                            '0.75' => '0.75',
-                                            '1' => '1',
-                                        ]
-                                    ),
+                                DateTimePicker::make('added_at')->label(__('Date Added'))->default(now()),
+                                TextInput::make('title')->translateLabel(),
+                                TextInput::make('excise')->translateLabel(),
+                                Select::make('volume')->translateLabel()
+                                ->native(false)
+                                ->options([
+                                    '0.5' => '0.5',
+                                    '0.7' => '0.7',
+                                    '0.75' => '0.75',
+                                    '0.1' => '0.1'
+                                ])
                             ]),
                     ]),
                 Group::make()
                     ->schema([
                         Section::make()
                             ->schema([
-                                SpatieMediaLibraryFileUpload::make('excise')
-                                    ->collection('excise')
-                                    ->image()
-                                    ->openable()
-                                    ->imagePreviewHeight(350)
+                                SpatieMediaLibraryFileUpload::make('excise_photos')
+                                    ->collection('excises')
+                                    ->imagePreviewHeight('350')
                                     ->imageResizeMode('cover')
-                                    ->imageResizeTargetWidth('1600')
                                     ->imageEditor()
                                     ->optimize('webp')
+                                    ->resize(70)
+                                    ->imageEditorAspectRatios([
+                                        null,
+                                        '16:9',
+                                        '4:3',
+                                        '1:1',
+                                    ])
+                                    ->reorderable()
+                                    ->openable()
                             ])
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
                     ])->columns(2),
