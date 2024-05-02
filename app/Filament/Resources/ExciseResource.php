@@ -131,7 +131,6 @@ class ExciseResource extends Resource
                             ->hiddenLabel()->numeric()
                             ->default(1)
                             ->required()
-                            ->disabled()
                             ->suffixAction(
                                 FormAction::make('plus')
                                     ->size(ActionSize::Large)
