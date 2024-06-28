@@ -67,7 +67,7 @@ class WorkshopsRelationManager extends RelationManager
                 ->modalHeading(__('Get Workshops'))
                 ->requiresConfirmation()
                 ->action(function (): void {
-                    (new PosterApiController())->getWorkshops(Filament::getTenant()->id);
+                    (new PosterApiController())->getWorkshops($this->ownerRecord->id);
                 }),
             ])
             ->actions([

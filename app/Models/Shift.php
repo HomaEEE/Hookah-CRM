@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,5 +50,10 @@ class Shift extends Model
     public function workshop()
     {
         return $this->belongsTo(Workshop::class, 'place_id');
+    }
+
+    protected function getOldShift(): Attribute
+    {
+        return $this->shift;
     }
 }

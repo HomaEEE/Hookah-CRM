@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Models\Place;
-use BezhanSalleh\FilamentLanguageSwitch\FilamentLanguageSwitchPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -30,8 +29,6 @@ use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 
 use Filament\Support\Colors\Color;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
-use pxlrbt\FilamentSpotlight\SpotlightPlugin;
-use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 
@@ -123,15 +120,10 @@ class AdminPanelProvider extends PanelProvider
                         rules: [Password::default()->mixedCase()->uncompromised(3)], // you may pass an array of validation rules as well. (default = ['min:8'])
                         requiresCurrentPassword: false, // when false, the user can update their password without entering their current password. (default = true)
                         ),
-                    SpotlightPlugin::make(),
                     EnvironmentIndicatorPlugin::make(),
                     SimpleLightBoxPlugin::make(),
                     FilamentShieldPlugin::make(),
                     FilamentApexChartsPlugin::make(),
-
-                    FilamentFullCalendarPlugin::make()
-                    ->selectable()
-                    ->editable()
                 ])
             ->authGuard('web')
             ->middleware([

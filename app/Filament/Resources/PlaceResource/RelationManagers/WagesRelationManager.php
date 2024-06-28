@@ -50,7 +50,8 @@ class WagesRelationManager extends RelationManager
                 Repeater::make('procent')
                     ->schema([
                         Select::make('workshop_id')->translateLabel()
-                            ->options(Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'workshop_id')),
+                            ->native(false)
+                            ->options(Workshop::where('place_id', $this->ownerRecord->id)->get()->pluck('name', 'workshop_id')),
                         TextInput::make('num')->translateLabel()->numeric()
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                     ]),
@@ -63,8 +64,7 @@ class WagesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->translateLabel(),
-                Tables\Columns\TextColumn::make('wage')->translateLabel()->badge(),
-
+                Tables\Columns\TextColumn::make('wage')->translateLabel()->badge()
             ])
             ->filters([
                 //

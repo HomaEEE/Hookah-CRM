@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Ingredient, Shift, Workshop};
+use Auth;
+use App\Models\{Bill, Withdrawal, Tip, Supply, Product, Place, Expense, Category, ExpenseCategory, Ingredient, Shift, Workshop};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -122,9 +123,7 @@ class PosterApiController extends Controller
                     'place_id' => $place_id,
                 ],
                 [
-                    'ingredient' => $ingredient['ingredient_name'],
                     'unit' => $ingredient['ingredient_unit'],
-                    'workshop_id' => $ingredient['workshop'],
                 ]);
 
             $responseMenu = Http::get($this->urlApi . 'menu.getProducts?type=products&token=' . $place_api['api'])
@@ -192,8 +191,6 @@ class PosterApiController extends Controller
         . $place_api['api'])
         ->json('response');
 
-        dd($place_id);
-
         foreach ($workshops as $workshop) {
 
             Workshop::updateOrCreate(
@@ -224,13 +221,52 @@ class PosterApiController extends Controller
         return $posterWorkshops;
     }
 
-    //Получить список категорий счетов
-    public function getTransatcionCategories($place_id)
+    public function getBills($place_id) {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $bills = Http::get($this->urlApi . 'finance.getAccounts?token=' . $place_api['api'])
+        ->json('response');
+
+        dd($bills);
+
+        foreach ($bills as $bill) {
+
+            Bill::updateOrCreate(
+                [
+                    'place_id' => $place_id,
+                    'name' => $bill['name'],
+                ],
+                [
+                    'place_id' => $place_id,
+                    'name' => $bill['name'],
+                    'type' => $bill['type'],
+                ]
+            );
+        }
+    }
+
+    //Получить список категорий
+    public function getExpenseCategories($place_id)
     {
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
         $posterCategories = Http::get($this->urlApi . 'finance.getCategories?token=' . $place_api['api'])
             ->json('response');
-        dd($posterCategories);
+
+        // dd($posterCategories);
+
+        foreach ($posterCategories as $category) {
+
+            ExpenseCategory::updateOrCreate(
+                [
+                    'place_id' => $place_id,
+                    'name' => $category['name'],
+                ],
+                [
+                    'place_id' => $place_id,
+                    'name' => $category['name'],
+                    'poster_category_id' => $category['category_id'],
+                ]
+            );
+        }
     }
 
     //Получить список сотрудников
@@ -301,5 +337,14 @@ class PosterApiController extends Controller
             'comment'       => $data['comment']
         ]);
 
+    }
+
+    public function deleteReceipt($data) {
+        $place_api = Place::whereId($data['place_id'])->select('settings->Poster_api  as api')->first();
+
+        Http::post($this->urlApi . 'transactions.removeTransaction?token=' . $place_api['api'], [
+            'spot_tablet_id' => 1,
+            'transaction_id' => $data['receipt_id'],
+        ]);
     }
 }

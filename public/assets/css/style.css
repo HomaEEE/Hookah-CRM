@@ -783,6 +783,7 @@ main .feedbacks .feedback {
   transition: flex 0.5s ease;
   text-transform: uppercase;
   color: #535353;
+  cursor: pointer;
 }
 .tabs ul li a {
   color: var(text-dark-grey);
@@ -795,9 +796,9 @@ main .feedbacks .feedback {
   color: #e1e1e1;
 }
 .tabs ul li:hover a {
-  color: var(text-grey);
+  color: #a3a3a3;
 }
-@media screen and (max-width: 575px) {
+@media screen and (max-width: 614px) {
   .tabs {
     padding: 10px 0;
     margin: 0;
@@ -819,7 +820,10 @@ main .feedbacks .feedback {
     padding: 5px 10px;
     transition: font-size 0.5s ease;
     text-transform: uppercase;
+    width: auto;
     color: #535353;
+    cursor: pointer;
+    text-wrap: nowrap;
   }
   .tabs ul li a {
     text-decoration: none;
@@ -827,11 +831,11 @@ main .feedbacks .feedback {
     text-transform: uppercase;
   }
   .tabs ul li.active {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     padding: 0 10px;
     color: #e1e1e1;
   }
-  .tabs ul li:hover a {
+  .tabs ul li::hover a {
     font-size: 1.25rem;
     padding: 0 10px;
     color: #e1e1e1;
@@ -855,18 +859,21 @@ main .feedbacks .feedback {
 .list .positions h3 {
   text-transform: uppercase;
   font-size: 1.25rem;
-  padding: 10px 0;
+  padding: 10px;
 }
 .list .positions .menu-item {
-  padding: 0px 10px 20px 0px;
+  box-sizing: border-box;
+  padding: 20px;
   margin-bottom: 20px;
-  border-bottom: 1px solid;
+  border-radius: 16px;
+  background-color: #151515;
 }
 .list .positions .menu-item .item {
   display: flex;
   font-size: 1rem;
   flex-direction: row;
   justify-content: space-between;
+  width: 100%;
 }
 .list .positions .menu-item .item .title {
   flex: 2 1 300px;
@@ -874,14 +881,17 @@ main .feedbacks .feedback {
   padding: 0;
   margin: 0;
 }
-.list .positions .menu-item .item .property {
-  display: flex;
-  justify-content: space-between;
-  flex: 1 0 auto;
-  flex-flow: row;
+.list .positions .menu-item .item .title .sup {
+  float: right;
 }
-.list .positions .menu-item .item .property p .gram {
-  color: #535353;
+.list .positions .menu-item .img {
+  box-sizing: content-box;
+}
+.list .positions .menu-item .img img {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 13px;
 }
 .list .positions .menu-item .description {
   padding: 5px 0px;
@@ -893,12 +903,6 @@ main .feedbacks .feedback {
   bottom: 10px;
   left: 0px;
   font-size: 1rem;
-}
-.list .positions .menu-item .description img {
-  width: 100px;
-  height: 100px;
-  overflow: hidden;
-  border-radius: 13px;
 }
 .list .positions .menu-item .description a {
   z-index: 10;

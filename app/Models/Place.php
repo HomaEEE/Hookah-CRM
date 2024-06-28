@@ -112,6 +112,11 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Expense::class);
     }
 
+    public function incomes()
+    {
+        return $this->hasMany(Income::class);
+    }
+
     public function purchases()
     {
         return $this->hasMany(Purchase::class);
@@ -127,9 +132,9 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Doc::class);
     }
 
-    public function expensecategories()
+    public function expenseCategories()
     {
-        return $this->hasMany(ExpenseCategory::class, 'place_id');
+        return $this->hasMany(ExpenseCategory::class);
     }
 
     public function menu()

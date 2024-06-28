@@ -130,21 +130,17 @@ class PlaceResource extends Resource
             ->schema([
                 Tabs::make('Label')
                 ->tabs([
-                    Tabs\Tab::make('Tab 1')
+                    Tabs\Tab::make(__('Place'))
                         ->schema([
-                            TextEntry::make('name'),
-                            TextEntry::make('slug'),
-                            TextEntry::make('opened'),
-                        ]),
-                        Tabs\Tab::make('Tab 2')
-                        ->schema([
-                            TextEntry::make('name'),
-                            TextEntry::make('slug'),
-                            TextEntry::make('opened'),
-                            ])
-                        ]),
-
-            ]);
+                            TextEntry::make('name')->translateLabel(),
+                            TextEntry::make('city')->translateLabel(),
+                            TextEntry::make('address')->translateLabel(),
+                            TextEntry::make('phone')->translateLabel(),
+                            TextEntry::make('instagram')->translateLabel(),
+                            TextEntry::make('time')->translateLabel(),
+                        ])->columns(2),
+                        ])
+                        ]);
         }
 
     public static function getRelations(): array
@@ -152,6 +148,7 @@ class PlaceResource extends Resource
         return [
             RelationManagers\StorageRelationManager::class,
             RelationManagers\WagesRelationManager::class,
+            RelationManagers\ExpenseCategoryRelationManager::class,
             RelationManagers\WorkshopsRelationManager::class,
             RelationManagers\BillsRelationManager::class,
             RelationGroup::make(__('Room & Seets'), [

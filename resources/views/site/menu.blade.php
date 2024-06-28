@@ -31,47 +31,7 @@
                     <!--h3>{{$category['frontend_name'] ? $category['frontend_name'] : $category['category_name'] }}</!--h3-->
 
                     @foreach ($category->products as $item)
-                    <div class="menu-item">
-                        <div class="item">
-                            <div class="title">
-                                {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}
-                            </div>
-                            <div class="property">
-                                <p class="sup">{{$item['sup']}}</p>
-                                <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
-                                <p class="price">{{number_format($item['price'], 0)}} ₴</p>
-                            </div>
-                        </div>
-                        @if (!empty($item['frontend_desc']))
-                        <div class="description">
-                            <div class="row">
-                                <div class="col-xs-8 col-md-8">
-                                {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
-
-                                {{-- <div class="item-properties">
-                                    <div class="rating-holder">
-                                        <div class="c-rating c-rating--regular" data-rating-value="2">
-                                            <button>1</button>
-                                            <button>2</button>
-                                            <button>3</button>
-                                            <button>4</button>
-                                            <button>5</button>
-                                        </div>
-                                    </div>
-                                </div> --}}
-                                </div>
-                                <div class="col-xs-4 col-md-4">
-                                 @if (!empty($item->getFirstMediaUrl('products')))
-                                            <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
-                                            data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
-                                            <img src="{{$item->getFirstMediaUrl('products')}}">
-                                            </a>
-                                        @endif
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                    </div>
+                        @include('site.partials.menu-item' , ['item'=> $item] )
                     @endforeach
 
                     @if(isset($category->childs))
@@ -79,44 +39,12 @@
                         @foreach($category->childs as $subcategory)
                             <h3>{{$subcategory['frontend_name'] ? $subcategory['frontend_name'] : $subcategory['category_name'] }}</h3>
                                 @foreach ($subcategory->products as $item)
-
-                    <div class="menu-item">
-                                    <div class="item">
-                                        <div class="title"> {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}</div>
-                                        <div class="property">
-                                            <p class="sup">{{$item['sup']}}</p>
-                                            <!--p class="gram">{{number_format($item['out'], 0)}} gr</p-->
-                                            <p class="price">{{number_format($item['price'], 0)}} ₴</p>
-                                        </div>
-                                    </div>
-                     @if (!empty($item['frontend_desc']))
-                        <div class="description">
-                            <div class="row">
-                            @if (!empty($item->getFirstMediaUrl('products')))
-                                <div class="col-xs-8 col-md-8">
-                                {{$item['frontend_desc'] ?  $item['frontend_desc'] : ""}}
-                                </div>
-                                <div class="col-xs-4 col-md-4">
-                                            <a data-fancybox href="{{$item->getFirstMediaUrl('products')}}"
-                                            data-caption=" {{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}">
-                                            <img src="{{$item->getFirstMediaUrl('products')}}">
-                                        </a>
-
-                                </div>
-                            @else
-                                <div class="col-xs-12 col-md-12">
-                                    {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
-                                </div>
-                            @endif
-                            </div>
-                        </div>
-                        @endif
-                                </div>
+                                    @include('site.partials.menu-item' , ['item'=> $item] )
                                 @endforeach
                         @endforeach
                     @endif
                      </div>
-                @endforeach
+            @endforeach
 
     </div>
 </div>

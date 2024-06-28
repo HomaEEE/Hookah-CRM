@@ -6,12 +6,19 @@ use App\Enums\Priority;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
+use Mokhosh\FilamentKanban\Concerns\HasRecentUpdateIndication;
+
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, HasRecentUpdateIndication;
 
     protected $fillable = ['place_id', 'name', 'priority', 'text', 'date', 'user_id', 'for_user_id', 'approve'];
+
+    protected $guarded = [];
+
 
     protected $casts = [
         'priority' => Priority::class
@@ -22,6 +29,12 @@ class Task extends Model
     {
         return $this->belongsTo(Place::class, 'place_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
     public function forUser()
     {

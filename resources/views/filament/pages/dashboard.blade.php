@@ -26,6 +26,11 @@
             icon="heroicon-o-calendar-days">
                 {{ __('Events')}}
             </x-filament::tabs.item>
+{{--
+    <x-filament::tabs.item @click="tab = 'tab6'" :alpine-active="'tab === \'tab6\''"
+                icon="heroicon-o-calendar-days">
+                    {{ __('Shift Users')}}
+            </x-filament::tabs.item> --}}
 
         </x-filament::tabs>
 
@@ -45,6 +50,10 @@
             <div x-show="tab === 'tab5'">
                 @livewire(\App\Livewire\EventTable::class)
             </div>
+
+            {{-- <div x-show="tab === 'tab6'">
+                @livewire(\App\Livewire\ShiftUsers::class)
+            </div> --}}
 
         </div>
     </div>

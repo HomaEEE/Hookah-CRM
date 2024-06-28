@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Ingredient, Shift, Workshop};
+use App\Models\{Withdrawal, Tip, Supply, Product, Place, Expense, Category, Income, Ingredient, Shift, ShiftUser, Workshop};
 use Carbon\Carbon;
+use Filament\Facades\Filament;
+use Auth;
 use Illuminate\Support\Facades\Http;
 
 class LocalApiController extends Controller
@@ -40,4 +42,42 @@ class LocalApiController extends Controller
         return $cash_expense->sum('sum');
     }
 
+    public function getLocalIncomes($place_id)
+    {
+        $cash_incomes = Income::select('sum')
+        ->where('place_id', $place_id)
+        ->whereDate('created_at', Carbon::today());
+
+        return $cash_incomes->sum('sum');
+    }
+
+    public function openShift($data)
+    {
+      $old_shift = Shift::latest('id')->where('place_id', Filament::getTenant()->id)->select('shift')->first();
+       $shift =  Shift::create(
+            [
+                'place_id' => $data['place_id'],
+                'created_at' => Carbon::now(),
+                'user_id' => Auth::user()->id,
+                'old_shift' => $old_shift->shift,
+            ]
+        );
+
+        ShiftUser::create([
+            'shift_id' => $shift->id,
+            'user_id' => Auth::user()->id,
+            'wage_id' => Auth::user()->wage_id,
+        ]);
+    }
+
+    public function AddUserToShift($data) {
+
+        dd(Shift::latest('id')->where([['place_id', Filament::getTenant()->id],['created_at', Carbon::today()]]));
+        $addToShift = ShiftUser::create([
+            'shift_id' => Shift::latest('id')->where([['place_id', Filament::getTenant()->id],['created_at', Carbon::today()]])->select('id'),
+            'user_id' => Auth::user()->id,
+            'wage_id' => Auth::user()->wage_id,
+        ]
+    );
+    }
 }

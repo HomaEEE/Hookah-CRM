@@ -838,6 +838,7 @@ main {
       transition: flex 0.5s ease;
       text-transform: uppercase;
       color: $text-dark-grey;
+      cursor: pointer;
       a {
         color: var(text-dark-grey);
         text-decoration: none;
@@ -850,13 +851,13 @@ main {
       }
       &:hover {
         a {
-          color: var(text-grey);
+          color: $text-grey;
         }
       }
     }
   }
 
-  @media screen and (max-width: 575px) {
+  @media screen and (max-width:614px) {
     &::-webkit-scrollbar {
       display: none;
     }
@@ -875,18 +876,21 @@ main {
         padding: 5px 10px;
         transition: font-size 0.5s ease;
         text-transform: uppercase;
+        width: auto;
         color: $text-dark-grey;
+        cursor: pointer;
+        text-wrap: nowrap;
         a {
           text-decoration: none;
           transition: color 0.4s ease;
           text-transform: uppercase;
         }
         &.active {
-          font-size: 1.25rem;
+          font-size: 1.15rem;
           padding: 0 10px;
           color: $text;
         }
-        &:hover {
+        &::hover {
           a {
             font-size: 1.25rem;
             padding: 0 10px;
@@ -912,33 +916,38 @@ main {
     h3 {
       text-transform: uppercase;
       font-size: 1.25rem;
-      padding: 10px 0;
+      padding: 10px;
     }
     .menu-item {
-      padding: 0px 10px 20px 0px;
+      box-sizing:border-box;
+      padding: 20px;
       margin-bottom: 20px;
-      border-bottom: 1px solid;
+      border-radius: 16px;
+      background-color: #151515;
       .item {
         display: flex;
         font-size: 1rem;
         flex-direction: row;
         justify-content: space-between;
+        width: 100%;
         .title {
           flex: 2 1 300px;
           text-transform: uppercase;
           padding: 0;
           margin: 0;
-        }
-        .property {
-          display: flex;
-          justify-content: space-between;
-          flex: 1 0 auto;
-          flex-flow: row;
-          p {
-            .gram {
-              color: $text-dark-grey;
-            }
+          .sup {
+            float: right;
           }
+        }
+      }
+
+      .img {
+        box-sizing: content-box;
+        img {
+          width: 120px;
+          height: 120px;
+          overflow: hidden;
+          border-radius: 13px;
         }
       }
       .description {
@@ -952,12 +961,6 @@ main {
           font-size: 1rem;
         }
 
-        img {
-          width: 100px;
-          height: 100px;
-          overflow: hidden;
-          border-radius: 13px;
-        }
         a {
           z-index: 10;
         }

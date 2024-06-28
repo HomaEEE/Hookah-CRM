@@ -71,8 +71,10 @@ class WriteoffResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('user.name')->translateLabel(),
-                TextColumn::make('workshop.name')->translateLabel(),
+                TextColumn::make('workshop.name')->translateLabel()
+                ->description(fn (Writeoff $record): string => $record->whiteoff ?? '', position: 'before'),
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 //

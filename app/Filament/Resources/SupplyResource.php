@@ -128,7 +128,7 @@ class SupplyResource extends Resource
                             ->collection('supplies')
                             ->multiple()
                             ->imagePreviewHeight(450)
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->imageEditor()
                             ->optimize('webp')
                             ->resize(70)
@@ -164,25 +164,25 @@ class SupplyResource extends Resource
                     ->collapsible()
                     ->persistCollapsed(),
 
-            //     Section::make(__('List'))
-            //         ->schema([
-            //             Repeater::make('supplyItems')->relationship()
-            //                 ->schema([
-            //                     Select::make('ingredient_id')
-            //                         ->native(false)
-            //                         ->searchable()
-            //                         ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
-            //                         ->required(),
-            //                     TextInput::make('qty')->translateLabel(),
-            //                     TextInput::make('sum')->translateLabel()
-            //                         ->prefix('₴')
-            //                         ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-            //                 ])
-            //                 ->columns(3)
-            //                 ->collapsed()
+                // Section::make(__('List'))
+                //     ->schema([
+                //         Repeater::make('supplyItems')->relationship()
+                //             ->schema([
+                //                 Select::make('ingredient_id')
+                //                     ->native(false)
+                //                     ->searchable()
+                //                     ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
+                //                     ->required(),
+                //                 TextInput::make('qty')->translateLabel(),
+                //                 TextInput::make('sum')->translateLabel()
+                //                     ->prefix('₴')
+                //                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                //             ])
+                //             ->columns(3)
+                //             ->collapsed()
 
-            //         ])
-            //
+                //     ])
+
             ])
 
             ->columns(['lg' => 2, 'md' => 2, 'xs' => 1]);
@@ -249,6 +249,7 @@ class SupplyResource extends Resource
             ->striped()
             ->filters([
                 SelectFilter::make('supplier_id')
+                    ->multiple()
                     ->label(__('Supplier'))
                     ->native(false)
                     ->options(

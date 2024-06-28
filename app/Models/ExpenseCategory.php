@@ -28,8 +28,4 @@ class ExpenseCategory extends Model
         return $this->hasMany(Expense::class);
     }
 
-    public function getNameCatAttribute()
-    {
-        return $this->name.' '.$this->city;
-    }
 }

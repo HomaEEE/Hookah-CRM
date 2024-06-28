@@ -2,11 +2,13 @@
 
 namespace App\Filament\Pages;
 
+use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
 use Illuminate\Contracts\Support\Htmlable;
 
-use App\Models\{Bill, Expense, ExpenseCategory, Supplier, Supply, Tip};
+use App\Models\{Bill, Expense, ExpenseCategory, Shift, ShiftUser, Supplier, Supply, Tip, Wage};
 
+use Auth;
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
@@ -21,7 +23,6 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
-use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -69,6 +70,24 @@ class Dashboard extends \Filament\Pages\Dashboard
             //             [$record->portions += $data['portion']]
             //         );
             //     }),
+
+            // Action::make('ImOnShift')
+            // ->label(__('I\'m on shift'))
+            // ->color('info')
+            // ->modalWidth('xs')
+            // ->icon('heroicon-o-user-plus')
+            // ->modalHeading(__('I\'m on shift'))
+            // ->requiresConfirmation()
+            // ->action(function (array $data): void {
+            //     (new LocalApiController)->AddUserToShift($data);
+
+            //     Notification::make()
+            //         ->title(__('User added'))
+            //         ->icon('heroicon-o-user-plus')
+            //         ->iconColor('success')
+            //         ->send();
+            // }),
+
             ActionGroup::make([
 
                 CreateAction::make('add_expense')->label(__('Expense'))
@@ -149,15 +168,23 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->required()
                             ->prefix('₴')
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+
                         SpatieMediaLibraryFileUpload::make('invoice')
                             ->label(__('Invoice'))
                             ->collection('supplies')
                             ->multiple()
-                            ->imagePreviewHeight(450)
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->imageEditor()
                             ->optimize('webp')
-                            ->resize(80),
+                            ->resize(70)
+                            ->imageEditorAspectRatios([
+                                null,
+                                '16:9',
+                                '4:3',
+                                '1:1',
+                            ])
+                            ->reorderable()
+                            ->openable(),
                         Textarea::make('comment')->label(__('Comment'))
                             ->rows(3),
                             ToggleButtons::make('bill_id')->label(__('Type pay'))
@@ -177,6 +204,34 @@ class Dashboard extends \Filament\Pages\Dashboard
                              ->icon('heroicon-o-inbox-arrow-down')
                              ->title(__('Supply added'))
                      ),
+
+                    CreateAction::make('addIncome')->label(__('Income'))
+                        ->icon('heroicon-o-inbox-arrow-down')
+                        ->modalHeading(__('Add Income'))
+                        ->createAnother(false)
+                        ->modalWidth('sm')
+                        ->keyBindings(['command+s', 'ctrl+s'])
+                        ->modalIcon('heroicon-o-inbox-arrow-down')
+                        ->form([
+                            Hidden::make('user_id')->default(Auth::user()->id),
+                            Hidden::make('place_id')->default(Filament::getTenant()->id),
+                            TextInput::make('sum')->label(__('Sum'))
+                            ->numeric()
+                            ->required()
+                            ->prefix('₴')
+                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                        ])
+                        ->action(function (array $data): void {
+                            Shift::latest('id')->where('place_id', Filament::getTenant()->id)
+                            ->first()
+                            ->update(['income'=>$data['sum']]);
+                        })
+                        ->successNotification(
+                            Notification::make()
+                                 ->success()
+                                 ->icon('heroicon-o-plus-circle')
+                                 ->title(__('Income added'))
+                         ),
 
             ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
 
@@ -206,22 +261,45 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->send();
                 }),
 
+            ActionGroup::make([
 
             Action::make('openShift')
                 ->label(__('Open Shift'))
-                ->color('info')
                 ->icon('heroicon-o-lock-open')
                 ->modalHeading(__('Open Shift'))
+                ->requiresConfirmation()
+                ->form([
+                    Hidden::make('place_id')->default(Filament::getTenant()->id),
+                ])
+                ->action(function (array $data): void {
+                    (new PosterApiController())->openShift($data);
+                   // (new LocalApiController())->openShift($data);
+
+                    Notification::make()
+                    ->title(__('Shift opened'))
+                    ->icon('heroicon-o-banknotes')
+                    ->iconColor('success')
+                    ->send();
+                }),
+
+            Action::make('deleteReceipt')
+                ->label(__('Delete Receipt'))
+                ->icon('heroicon-o-backspace')
+                ->modalHeading(__('Delete Receipt'))
                 ->requiresConfirmation()
                 ->form([
                     Hidden::make('place_id')->default(Filament::getTenant()->id)
                         ->required()
                         ->reactive(),
+                    TextInput::make('receipt_id')->numeric()->label(__('#'))->required()
                 ])
                 ->action(function (array $data): void {
-                    (new PosterApiController())->openShift($data);
+                    (new PosterApiController())->deleteReceipt($data);
+                    Notification::make()
+                    ->title(__('Delete Receipt'))
+                    ->icon('heroicon-o-backspace')
+                    ->send();
                 }),
-
             // Action::make('onShift')
             //     ->label(__('On Shift'))
             //     ->color('info')
@@ -239,6 +317,8 @@ class Dashboard extends \Filament\Pages\Dashboard
             //         (new PosterApiController())->openShift($data);
             //     }),
 
+            ])
+            ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info')
         ];
     }
 }

@@ -107,8 +107,10 @@ class CreateShift extends CreateRecord
                                             $set('terminal', $posterTodayShift['payed_card_sum'] / 100);
 
                                             $posterLocalExpense = (new LocalApiController())->getLocalExpenses($place->id);
-
                                             $set('expense', (int) $posterLocalExpense);
+
+                                            $posterLocalIncomes = (new LocalApiController())->getLocalIncomes(Filament::getTenant()->id);
+                                            $set('income', (int) $posterLocalIncomes);
 
                                             $LocalWithdrawal = (new LocalApiController())->getLocalWithdrawal($place->id);
                                             $set('withdrawal', $LocalWithdrawal);
@@ -401,10 +403,45 @@ class CreateShift extends CreateRecord
                                     $set('withdrawal', $LocalWithdrawal);
                                 }),
 
+                                Action::make('add_income')->label(__('Add Income'))
+                                ->icon('heroicon-o-document-plus')
+                                ->color('info')
+                                ->modalHeading(__('Add Income'))
+                                ->requiresConfirmation()
+                                ->form([
+                                    Hidden::make('user_id')->default(Auth::user()->id),
+                                    Hidden::make('place_id')->default(Filament::getTenant()->id),
+                                    TextInput::make('sum')->label(__('Sum'))
+                                        ->numeric()
+                                        ->prefix('₴')
+                                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
+                                    Textarea::make('comment')->translateLabel()->rows(2),
+                                ])
+                                ->action(function (Set $set, array $data): void {
+                                    Expense::create(
+                                        [
+                                            'place_id' => Filament::getTenant()->id,
+                                            'user_id' => Auth::user()->id,
+                                            'category_id' => $data['category_id'],
+                                            'sum' => $data['sum'],
+                                            'added_at' => $data['added_at'],
+                                            'comment' => $data['comment'],
+                                            'bill_id' => $data['bill_id'],
+                                            'pay' => 1
+                                        ],
+                                    );
+
+                                    Notification::make()
+                                        ->title(__('Expense added'))
+                                        ->send();
+
+                                    $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
+                                    $set('expense', (int) $posterLocalExpense);
+                                }),
 
                             Action::make('add_expense')->label(__('Add Expense'))
                                 ->icon('heroicon-o-document-minus')
-                                ->color('info')
+                                ->color('danger')
                                 ->modalHeading(__('Add Expense'))
                                 ->requiresConfirmation()
                                 ->form([
@@ -452,9 +489,6 @@ class CreateShift extends CreateRecord
 
                                     $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
                                     $set('expense', (int) $posterLocalExpense);
-
-                                    $LocalWithdrawal = (new LocalApiController())->getLocalWithdrawal(Filament::getTenant()->id);
-                                    $set('withdrawal', (int) $LocalWithdrawal);
                                 }),
                         ]),
 
@@ -463,8 +497,20 @@ class CreateShift extends CreateRecord
                                 ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                                 ->numeric()
                                 ->reactive()
-                                ->minValue(0)
-                                ->default(0),
+                                ->default(0)
+                                ->suffixAction(
+                                    Action::make('update_incomes')
+                                        ->translateLabel()
+                                        ->icon('heroicon-o-arrow-path')
+                                        ->action(function (Set $set) {
+                                            $posterLocalIncomes = (new LocalApiController())->getLocalIncomes(Filament::getTenant()->id);
+                                            $set('income', (int) $posterLocalIncomes);
+
+                                            Notification::make()
+                                                ->title(__('Incomes updated'))
+                                                ->send();
+                                        })
+                                ),
 
                             TextInput::make('expense')->translateLabel()
                                 ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])

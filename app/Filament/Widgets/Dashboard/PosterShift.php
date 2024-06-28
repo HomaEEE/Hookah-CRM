@@ -12,7 +12,7 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PosterShift extends BaseWidget
 {
-    protected static ?string $pollingInterval = '10s';
+    protected static ?string $pollingInterval = '60s';
 
     use HasWidgetShield;
 

@@ -11,7 +11,7 @@ use App\Models\Shift;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Support\Htmlable;
 
-class GraphWagess extends ChartWidget
+class GraphWages extends ChartWidget
 {
 
     public function getHeading(): string
