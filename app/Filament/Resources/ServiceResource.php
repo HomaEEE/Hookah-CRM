@@ -28,7 +28,8 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $recordTitleAttribute = 'name';
+
 
     public static function getPluralModelLabel(): string
     {
@@ -75,7 +76,7 @@ class ServiceResource extends Resource
                     ->label(__('Phone'))
                     ->copyable()
                     ->searchable()
-                    ->copyMessage('Phone copied')
+                    ->copyMessage(__('Phone copied'))
                     ->copyMessageDuration(1500)
                     ->alignLeft(),
             ])

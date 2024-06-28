@@ -12,10 +12,10 @@ class Excise extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['sum', 'added_at', 'title', 'volume', 'user_id', 'place_id'];
+    protected $fillable = ['sum', 'added_at', 'title', 'excise', 'volume', 'user_id', 'place_id', 'portions'];
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 }

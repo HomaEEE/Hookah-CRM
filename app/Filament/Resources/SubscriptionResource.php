@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Bill as BillEnum;
 use App\Enums\Subscription as SubscriptionEnum;
 use App\Filament\Resources\SubscriptionResource\Pages;
-use App\Models\{Expense, ExpenseCategory, Subscription};
+use App\Models\{Bill, Expense, ExpenseCategory, Subscription};
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
@@ -13,9 +13,11 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -31,11 +33,16 @@ class SubscriptionResource extends Resource
 {
     protected static ?string $model = Subscription::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationGroup = 'Finance';
+    protected static ?int $navigationSort = 2;
 
     public static function getPluralModelLabel(): string
+    {
+        return __('Subscriptions');
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('Subscriptions');
     }
@@ -100,7 +107,7 @@ class SubscriptionResource extends Resource
 
                 TextColumn::make('price')
                     ->translateLabel()
-                    ->money('uah', true)
+                    ->money('uah')
                     ->searchable()
                     ->sortable()
                     ->toggleable()
@@ -121,34 +128,38 @@ class SubscriptionResource extends Resource
                 //
             ])
 
-            ->groups([
-                Group::make('place.city')
-                ->label(__('Place city')),
-            ])
-
             ->actions([
                 Action::make('paid')->button()->translateLabel()
                     ->icon('heroicon-s-banknotes')
                     ->color('success')
-                    ->modalHeading('Оплата платежа')->translateLabel()
+                    ->modalIcon('heroicon-o-banknotes')
+                    ->modalIconColor('success')
+                    ->modalHeading('Оплата платежа')
                     ->requiresConfirmation()
+                    ->modalWidth(MaxWidth::Small)
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
-                        Select::make('type_pay')->translateLabel()
-                            ->columnSpan(['md' => 6])
-                            ->options(
-                                [
-                                    0 => __('Cash'),
-                                    1 => __('Card')
-                                ]
-                            )
-                            ->default('0'),
+                        TextInput::make('sum')->translateLabel()
+                        ->numeric()
+                        ->required()
+                        ->prefix('₴')
+                        ->columnSpan(6)
+                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                        ->default(fn (Subscription $record): int => $record->price),
+                        ToggleButtons::make('bill_id')->label(__('Type pay'))
+                        ->options(Bill::get()->pluck('name', 'id'))
+                        ->default(0)
+                        ->required()
+                        ->inline()
+                        ->grouped()
+                        ->live(),
                     ])
                     ->action(function (Subscription $record, array $data): void {
 
                         $record->update(
                             [
                                 'next_date' => Carbon::parse($record->next_date)->addMonth(),
+                                'price' => $data['sum']
                             ]
                         );
                         $record->save();
@@ -157,8 +168,8 @@ class SubscriptionResource extends Resource
                                 'place_id' => $record->place_id,
                                 'user_id' => Auth::user()->id,
                                 'category_id' => $record->category_id,
-                                'sum' => $record->price,
-                                'type_pay' => $data['type_pay'],
+                                'sum' => $data['sum'],
+                                'bill_id' => $data['bill_id'],
                                 'comment' => $record->name,
                             ]
                         );

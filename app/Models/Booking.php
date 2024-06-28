@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
-    protected $fillable = ['user_id', 'place_id', 'table_id', 'date', 'name', 'phone', 'time', 'person', 'comment'];
+    protected $fillable = ['user_id', 'place_id', 'seet_ids', 'date', 'guest_id', 'time', 'person', 'comment'];
+
+    protected $casts = ['seet_ids' => 'json'];
 
     public function place()
     {
@@ -18,6 +22,23 @@ class Booking extends Model
 
     public function seet()
     {
-        return $this->belongsTo(Seet::class, 'table_id');
+        return $this->belongsToJson(Seet::class, 'seet_ids');
+    }
+
+    public function guest()
+    {
+        return $this->belongsTo(Guest::class, 'guest_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    public function getBookingTimeAttribute()
+    {
+        return (new Carbon($this->time))->translatedFormat('l d/m') .', '
+        . (new Carbon($this->time))->translatedFormat('H:i');
     }
 }

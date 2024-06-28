@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DocResource\Pages;
 use App\Models\Doc;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\DatePicker;
@@ -15,16 +14,16 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-
-use Auth;
-use Filament\Tables\Columns\BadgeColumn;
+use Carbon\Carbon;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn;
 
 class DocResource extends Resource
 {
     protected static ?string $model = Doc::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-paper-clip';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function getPluralModelLabel(): string
     {
@@ -45,10 +44,7 @@ class DocResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('place_id')->label(__('Place'))
-                ->options(
-                    Auth::user()->place->pluck('nameCity', 'id')
-                )->required(),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name'))->required(),
                 Select::make('type')->label(__('Type'))
                 ->options([
@@ -56,15 +52,21 @@ class DocResource extends Resource
                     '2' => __('License'),
                     '3' => __('EDR'),
                     '4' => __('Key'),
+                    '5' => __('Contract'),
                 ])->required(),
-                DatePicker::make('date')->label(__('Date Expired')),
-                SpatieMediaLibraryFileUpload::make('invoice')
-                        ->collection('supplies')
+                DatePicker::make('date')->label(__('Date Expired'))->native(false),
+                SpatieMediaLibraryFileUpload::make('files')->translateLabel()
+                        ->collection('docs')
                         ->multiple()
-                        ->maxFiles(10)
-                        ->imagePreviewHeight('250')
-                        ->imageResizeMode('contain')
+                        ->imageResizeTargetWidth('1600')
+                        ->imageResizeMode('cover')
+                        ->reorderable()
                         ->openable()
+                        ->imagePreviewHeight('250')
+                        ->loadingIndicatorPosition('left')
+                        ->removeUploadedFileButtonPosition('right')
+                        ->uploadButtonPosition('left')
+                        ->uploadProgressIndicatorPosition('left')
             ])->columns(1);
     }
 
@@ -80,8 +82,9 @@ class DocResource extends Resource
                         '2' => __('License'),
                         '3' => __('EDR'),
                         '4' => __('Key'),
+                        '5' => __('Contract'),
                     }),
-                TextColumn::make('date')->dateTime('d/m/Y')->label(__('Date Expired')),
+                TextColumn::make('date')->dateTime('d/m/Y')->label(__('Date Expired'))->badge(),
 
             ])
             ->filters([

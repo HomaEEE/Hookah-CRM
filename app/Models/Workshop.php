@@ -9,7 +9,7 @@ class Workshop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['place_id', 'name', 'procent'];
+    protected $fillable = ['place_id', 'name', 'workshop_id'];
 
     public function place()
     {
@@ -18,7 +18,7 @@ class Workshop extends Model
 
     public function wage()
     {
-        return $this->belongsTo(Wage::class, 'place_id');
+        return $this->belongsTo(Wage::class, 'place_id', 'workshop_id');
     }
 
     public function writeoff()

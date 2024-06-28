@@ -27,7 +27,7 @@ class Wage extends Model
 
     public function workshops()
     {
-        return $this->belongsTo(Workshop::class, 'workshop_id');
+        return $this->belongsTo(Workshop::class, 'workshop_id', 'workshop_id');
     }
 
     public function shift()

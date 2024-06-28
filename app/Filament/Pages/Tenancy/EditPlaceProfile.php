@@ -20,7 +20,6 @@ class EditPlaceProfile extends EditTenantProfile
             ->schema([
                 TextInput::make('name')->translateLabel(),
                 TextInput::make('city')->translateLabel()
-                // ...
             ]);
     }
 }

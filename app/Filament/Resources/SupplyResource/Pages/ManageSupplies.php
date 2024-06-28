@@ -3,11 +3,12 @@
 namespace App\Filament\Resources\SupplyResource\Pages;
 
 use App\Filament\Resources\SupplyResource;
-use App\Models\Place;
-use App\Models\Supply;
+use App\Models\{Supply, Supplier, Workshop};
 use Auth;
 use Filament\Actions\CreateAction;
-use Filament\Resources\Pages\ListRecords\Tab;
+use Filament\Facades\Filament;
+use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -38,7 +39,18 @@ class ManageSupplies extends ManageRecords
     protected function getActions(): array
     {
         return [
-            CreateAction::make()->slideOver(),
+            CreateAction::make(),
         ];
     }
+
+    // public function getTabs(): array
+    // {
+    //     return [
+    //         'all' => Tab::make(),
+    //         'contracts' => Tab::make()
+    //             ->modifyQueryUsing(fn (Builder $query) => $query->whereHas(
+
+    //             ))
+    //     ];
+    // }
 }

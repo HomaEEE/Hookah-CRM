@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Assets\Js;
@@ -10,6 +11,12 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Number;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\Log;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,10 +34,33 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Model::unguard();
+        Number::useLocale('ru');
+
 
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
+
+
+        if (app()->environment('local')) {
+            DB::whenQueryingForLongerThan(500, function (Connection $connection) {
+                Log::warning("Database queries exceeded 5 seconds on {$connection->getName()}");
+            });
+
+            DB::listen(function ($query) {
+                if ($query->time > 1000) {
+                    Log::warning("An individual database query exceeded 1 second.", [
+                        'sql' => $query->sql
+                    ]);
+                }
+            });
+        }
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['uk','en','ru']);
+        });
+
 
         // FilamentAsset::register([
         //     Js::make('admin-sw', '/resources/js/admin-sw.js'),

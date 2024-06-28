@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
 use App\Enums\Bill as BillEnum;
-use App\Enums\CURRENCY;
+use App\Enums\Currency;
+use App\Http\Controllers\PosterApiController;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -18,13 +19,25 @@ class BillsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Bills');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Bills');
+    }
+
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')->label(__('Bill name')),
                 Select::make('currency')->label(__('Currency'))
-                    ->options(CURRENCY::class),
+                    ->options(Currency::class),
                 Select::make('type')->label(__('Type bill'))
                     ->options(BillEnum::class),
                 TextInput::make('balance')->label(__('Bill balance')),
@@ -44,6 +57,16 @@ class BillsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
+                Tables\Actions\Action::make('getBills')
+                ->label(__('Get Bills'))
+                ->color('info')
+                ->icon('heroicon-o-arrow-down-circle')
+                ->slideOver()
+                ->modalHeading(__('Get Bills'))
+                ->requiresConfirmation()
+                ->action(function (): void {
+                    (new PosterApiController())->getBills($this->ownerRecord->id);
+                }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -8,6 +8,8 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Illuminate\Contracts\Support\Htmlable;
 
 class UsersRelationManager extends RelationManager
 {
@@ -15,13 +17,10 @@ class UsersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'user_id';
 
-    public array $data_list = [
-        'calc_columns' => [
-            'wage',
-            'procent_day',
-            'cashout',
-        ],
-    ];
+    protected function getTableHeading(): string | Htmlable
+    {
+        return __('Shift');
+    }
 
     public function form(Form $form): Form
     {
@@ -39,22 +38,19 @@ class UsersRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('user.name')->translateLabel(),
                 TextColumn::make('days')->translateLabel(),
-                TextColumn::make('wage')->translateLabel(),
-                TextColumn::make('procent_day')->translateLabel(),
-                TextColumn::make('cashout')->translateLabel(),
+                TextColumn::make('wage')->translateLabel()->summarize(Sum::make()->label(__('Wage'))),
+                TextColumn::make('procent_day')->translateLabel()->summarize(Sum::make()->label(__('Procent'))),
+                TextColumn::make('cashout')->translateLabel()->summarize(Sum::make()->label(__('Total'))),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\AttachAction::make(),
-
-                // Tables\Actions\CreateAction::make(),
             ])
         ->actions([
             Tables\Actions\EditAction::make(),
-        //     Tables\Actions\DetachAction::make(),
-        //     Tables\Actions\DeleteAction::make(),
+            Tables\Actions\DetachAction::make(),
         ]);
         // ->bulkActions([
         //     Tables\Actions\DetachBulkAction::make(),

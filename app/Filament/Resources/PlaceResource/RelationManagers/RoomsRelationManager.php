@@ -14,6 +14,16 @@ class RoomsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'room';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('Rooms');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Rooms');
+    }
+
     public  function form(Form $form): Form
     {
         return $form

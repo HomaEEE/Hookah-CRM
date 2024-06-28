@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArrearResource\Pages;
-use App\Models\{Arrear,User};
+use App\Models\{Arrear, Ingredient, User};
 
 use Auth;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -25,11 +25,13 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\Tabs;
 
+use function Laravel\Prompts\select;
+
 class ArrearResource extends Resource
 {
     protected static ?string $model = Arrear::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationGroup(): ?string
     {
@@ -69,11 +71,10 @@ class ArrearResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('place.city')->translateLabel()->toggleable(),
                 TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('sm')
                     ->description(fn (Arrear $record): string => $record->user->name),
-                TextColumn::make('fromUser.name')->label(__('From User')),
+                TextColumn::make('fromUser.name')->label(__('User')),
                 TextColumn::make('arrear')->translateLabel(),
             ])
             ->defaultSort('created_at', 'desc')

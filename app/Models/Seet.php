@@ -8,19 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Seet extends Model
 {
-    use HasFactory, Compoships;
+    use HasFactory;
+    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
-    protected $fillable = ['table_id', 'tags', 'room_id', 'place_id'];
+    protected $fillable = ['number', 'tags', 'room_id', 'place_id'];
 
     public $timestamps = false;
 
     public function room()
     {
-        return $this->belongsTo(Room::class, ['room_id', 'place_id'], ['id', 'place_id']);
+        return $this->belongsTo(Room::class);
     }
 
     public function booking()
     {
-        return $this->hasOne(Booking::class, 'table_id');
+        return $this->hasManyJson(Booking::class, 'seet_ids');
     }
 }

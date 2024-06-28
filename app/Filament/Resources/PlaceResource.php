@@ -42,11 +42,12 @@ class PlaceResource extends Resource
 
     protected static ?string $model = Place::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
-
     protected static ?string $recordTitleAttribute = 'nameCity';
 
     protected static ?string $slug = 'places';
+
+    protected static ?int $navigationSort = 80;
+
 
     public static function getPluralModelLabel(): string
     {
@@ -94,8 +95,7 @@ class PlaceResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label(__('Place'))
-                    ->description(fn (Place $record): string => $record->city),
+                TextColumn::make('name')->label(__('Place'))->description(fn (Place $record): string => $record->city),
                 TextColumn::make('phone')->label(__('Phone')),
                 IconColumn::make('opened')
                     ->label(__('Opened'))
@@ -130,21 +130,17 @@ class PlaceResource extends Resource
             ->schema([
                 Tabs::make('Label')
                 ->tabs([
-                    Tabs\Tab::make('Tab 1')
+                    Tabs\Tab::make(__('Place'))
                         ->schema([
-                            TextEntry::make('name'),
-                            TextEntry::make('slug'),
-                            TextEntry::make('opened'),
-                        ]),
-                        Tabs\Tab::make('Tab 2')
-                        ->schema([
-                            TextEntry::make('name'),
-                            TextEntry::make('slug'),
-                            TextEntry::make('opened'),
-                            ])
-                        ]),
-
-            ]);
+                            TextEntry::make('name')->translateLabel(),
+                            TextEntry::make('city')->translateLabel(),
+                            TextEntry::make('address')->translateLabel(),
+                            TextEntry::make('phone')->translateLabel(),
+                            TextEntry::make('instagram')->translateLabel(),
+                            TextEntry::make('time')->translateLabel(),
+                        ])->columns(2),
+                        ])
+                        ]);
         }
 
     public static function getRelations(): array
@@ -152,13 +148,14 @@ class PlaceResource extends Resource
         return [
             RelationManagers\StorageRelationManager::class,
             RelationManagers\WagesRelationManager::class,
+            RelationManagers\ExpenseCategoryRelationManager::class,
             RelationManagers\WorkshopsRelationManager::class,
             RelationManagers\BillsRelationManager::class,
             RelationGroup::make(__('Room & Seets'), [
                 RelationManagers\SeetsRelationManager::class,
                 RelationManagers\RoomsRelationManager::class
-            ])
-
+            ]),
+            RelationManagers\MetersRelationManager::class,
         ];
     }
 

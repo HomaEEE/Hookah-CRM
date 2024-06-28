@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
-use App\Enums\Meter as MeterEnum;
+use App\Enums\MeterType;
 use App\Models\Place;
 use App\Models\Room;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -25,19 +26,28 @@ class MetersRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Meter';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('Meters');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Meters');
+    }
+
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('room_id')->label(__('Room'))
-                    ->relationship('room', 'room', fn (Builder $query, Livewire $livewire) => $query->where('place_id', $livewire->ownerRecord->id))
-                    ->preload(),
-                // ->options( fn (Livewire $livewire) =>  Room::where('place_id', $livewire->ownerRecord->id)->pluck('room', 'id') ),
+                    ->relationship('room', 'room')
+                    ->options( Room::where('place_id', Filament::getTenant()->id)->pluck('room', 'id')),
                 Select::make('type')
                     ->label(__('Type'))
-                    ->options(MeterEnum::$TYPE)
-                    ->preload(),
-                TextInput::make('price')->label(__('Tarif')),
+                    ->options(MeterType::class),
+                TextInput::make('price')->label(__('Tarif'))->inputMode('decimal')
             ]);
     }
 
@@ -45,13 +55,8 @@ class MetersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('room.roomName')->label(__('Room')),
-                BadgeColumn::make('type')->label(__('Type meter'))
-                    ->enum(MeterEnum::$TYPE)
-                    ->colors([
-                        'primary' => 0,
-                        'success' => 1,
-                    ]),
+                TextColumn::make('room.roomName')->label(__('Room')),
+                TextColumn::make('type')->label(__('Type meter'))->badge(),
                 TextColumn::make('price')
                     ->label(__('Tarif'))->money('uah', true)
                     ->sortable(),

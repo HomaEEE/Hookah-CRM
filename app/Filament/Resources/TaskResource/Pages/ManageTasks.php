@@ -26,7 +26,7 @@ class ManageTasks extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()->slideOver(),
+            Actions\CreateAction::make()->slideOver()->createAnother(false),
         ];
     }
 

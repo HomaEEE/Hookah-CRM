@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(Place::class);
             $table->foreignIdFor(User::class);
             $table->integer('sum');
+            $table->integer('bill_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
             $table->softDeletes();

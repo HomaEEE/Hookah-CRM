@@ -6,9 +6,7 @@
 @section('page', __('Vacancy page'))
 
 @section('content')
-<div class="page-container">
-
-    @include('site.od.nav')
+<div class="page-container container">
 
     <h2>{{__('Page in develop')}}</h2>
 

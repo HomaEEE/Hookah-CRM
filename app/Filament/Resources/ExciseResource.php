@@ -16,24 +16,30 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\{Form, Set, Get};
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Actions\Action as FormAction;
+
+use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExciseResource extends Resource
 {
     protected static ?string $model = Excise::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-beaker';
+    protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Menu');
+        return __('Manage');
     }
 
     public static function getPluralModelLabel(): string
@@ -56,30 +62,39 @@ class ExciseResource extends Resource
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                DateTimePicker::make('added_at')->label(__('Date Added'))->maxDate(now())->default(now()),
-                                TextInput::make('title')->translateLabel()->required(),
-                                Select::make('volume')->translateLabel()->required()
-                                    ->options(
-                                        [
-                                            '0.5' => '0.5',
-                                            '0.7' => '0.7',
-                                            '0.75' => '0.75',
-                                            '1' => '1',
-                                        ]
-                                    ),
+                                DateTimePicker::make('added_at')->label(__('Date Added'))->default(now()),
+                                TextInput::make('title')->translateLabel(),
+                                TextInput::make('excise')->translateLabel(),
+                                Select::make('volume')->translateLabel()
+                                ->native(false)
+                                ->options([
+                                    '0.5' => '0.5L',
+                                    '0.7' => '0.7L',
+                                    '0.75' => '0.75L',
+                                    '1' => '1L'
+                                ])
                             ]),
                     ]),
                 Group::make()
                     ->schema([
                         Section::make()
                             ->schema([
-                                SpatieMediaLibraryFileUpload::make('excise')
-                                    ->collection('excise')
-                                    ->image()
-                                    ->imageResizeMode('contain')
+                                SpatieMediaLibraryFileUpload::make('excise_photos')
+                                    ->collection('excises')
+                                    ->imagePreviewHeight('350')
+                                    ->imageResizeMode('cover')
+                                    ->imageEditor()
+                                    ->optimize('webp')
+                                    ->resize(70)
+                                    ->imageEditorAspectRatios([
+                                        null,
+                                        '16:9',
+                                        '4:3',
+                                        '1:1',
+                                    ])
+                                    ->reorderable()
                                     ->openable()
                             ])
-
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
                     ])->columns(2),
             ]);
@@ -89,8 +104,10 @@ class ExciseResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->badge(),
                 TextColumn::make('added_at')->dateTime('d/m/Y')->badge()->translateLabel(),
                 TextColumn::make('title')->translateLabel(),
+                TextColumn::make('excise')->translateLabel(),
                 TextColumn::make('volume')->translateLabel(),
                 TextColumn::make('portions')->translateLabel(),
                 TextColumn::make('left')->translateLabel()
@@ -98,26 +115,48 @@ class ExciseResource extends Resource
                         // return whatever you need to show
                         return $record->volume * 1000 / 40 - $record->portions;
                     }),
-            ])
+            ])->defaultSort('added_at', 'desc')
             ->filters([
                 //
             ])
             ->actions([
-                Action::make('add_portion')->label(__('Add portions'))
-                    ->icon('heroicon-o-shield-check')
+                Action::make('add_portion')->hiddenLabel()
+                    ->icon('heroicon-o-plus')
                     ->button()
-                    ->modalHeading(__('Add portions'))
-                    ->color('success')
-                    ->modalWidth('sm')
+                    ->modalHeading(__('Portions'))
+                    ->color('info')
+                    ->modalWidth('xs')
                     ->form([
-                        Forms\Components\TextInput::make('portion')
-                            ->label(__('Add portions'))->numeric()
-                            ->required(),
+                        TextInput::make('portions')
+                            ->hiddenLabel()->numeric()
+                            ->default(1)
+                            ->required()
+                            ->suffixAction(
+                                FormAction::make('plus')
+                                    ->size(ActionSize::Large)
+                                    ->color('success')
+                                    ->icon('heroicon-o-plus')
+                                    ->iconButton()
+                                    ->disabled(fn (Get $get): bool => empty($get('portions')) || $get('portions') >= 25)
+                                    ->action(function (Get $get, Set $set, $state): void {
+                                        $set('portions', $get('portions') + 1);
+                                    })
+                            )
+                            ->prefixAction(
+                                FormAction::make('minus')
+                                    ->size(ActionSize::Large)
+                                    ->icon('heroicon-o-minus')
+                                    ->color('danger')
+                                    ->iconButton()
+                                    ->disabled(fn (Get $get): bool => empty($get('portions')) || $get('portions') <= 1)
+                                    ->action(function (Get $get, Set $set, $state): void {
+                                        $set('portions', $get('portions') - 1);
+                                    })
+                            ),
+
                     ])
                     ->action(function (Excise $record, array $data): void {
-                        $record->update(
-                            [$record->portions += $data['portion']]
-                        );
+                        $record->increment('portions', $data['portions']);
                     }),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
@@ -137,6 +176,7 @@ class ExciseResource extends Resource
         ->schema([
             TextEntry::make('added_at')->translateLabel(),
             TextEntry::make('title')->translateLabel(),
+            TextEntry::make('excise')->translateLabel(),
             TextEntry::make('volume')->translateLabel(),
             TextEntry::make('portions')->translateLabel(),
             TextEntry::make('left')->translateLabel()
@@ -145,6 +185,10 @@ class ExciseResource extends Resource
                 return $record->volume * 1000 / 40 - $record->portions;
             })
             ->html(),
+
+            LightboxSpatieMediaLibraryImageEntry::make('excise')->translateLabel()
+            ->collection('excise')
+            ->conversion('thumb')
         ]);
     }
 

@@ -2,11 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Pages\Widgets\Statistic\GraphExpenses;
 use Filament\Pages\Page;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Illuminate\Contracts\Support\Htmlable;
-use Filament\Infolists\Components\Tabs;
-use Filament\Infolists\Infolist;
 
 class Statistic extends Page
 {
@@ -17,6 +16,7 @@ class Statistic extends Page
 
     protected static string $view = 'filament.pages.statistic';
 
+    protected static ?int $navigationSort = 2;
 
     public static function getPluralModelLabel(): string
     {
@@ -33,28 +33,11 @@ class Statistic extends Page
         return __('Statistic');
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    protected function getHeaderWidgets(): array
     {
-        return $infolist
-            ->schema([
-                Tabs::make('Label')
-                ->tabs([
-                    Tabs\Tab::make('Tab 1')
-                        ->schema([
-                            TextEntry::make('name'),
-                            TextEntry::make('slug'),
-                            TextEntry::make('opened'),
-                        ]),
-                        Tabs\Tab::make('Tab 2')
-                        ->schema([
-                            TextEntry::make('name'),
-                            TextEntry::make('slug'),
-                            TextEntry::make('opened'),
-                            ])
-                        ]),
-
-            ]);
-        }
-
-
+        return [
+            \App\Filament\Widgets\Statistic\Bills::make(),
+            \App\Filament\Widgets\Statistic\UserWage::make()
+        ];
+    }
 }

@@ -4,12 +4,16 @@ return [
     'shield_resource' => [
         'should_register_navigation' => true,
         'slug' => 'shield/roles',
-        'navigation_sort' => -1,
-        'navigation_badge' => true,
-        'navigation_group' => true,
+        'navigation_sort' => 100,
+        'navigation_badge' => false,
+        'navigation_group' => false,
         'is_globally_searchable' => false,
         'show_model_path' => true,
+        'is_scoped_to_tenant' => true,
+
     ],
+
+
 
     'auth_provider_model' => [
         'fqcn' => 'App\\Models\\User',
@@ -18,13 +22,13 @@ return [
     'super_admin' => [
         'enabled' => true,
         'name' => 'super_admin',
-        'define_via_gate' => true,
+        'define_via_gate' => false,
         'intercept_gate' => 'before', // after
     ],
 
-    'filament_user' => [
+    'panel_user' => [
         'enabled' => true,
-        'name' => 'filament_user',
+        'name' => 'panel_user',
     ],
 
     'permission_prefixes' => [
@@ -70,6 +74,12 @@ return [
         ],
 
         'resources' => [],
+    ],
+
+    'discovery' => [
+        'discover_all_resources' => false,
+        'discover_all_widgets' => false,
+        'discover_all_pages' => false,
     ],
 
     'register_role_policy' => [

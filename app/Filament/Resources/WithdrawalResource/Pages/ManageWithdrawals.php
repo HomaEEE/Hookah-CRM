@@ -3,11 +3,12 @@
 namespace App\Filament\Resources\WithdrawalResource\Pages;
 
 use App\Filament\Resources\WithdrawalResource;
-use App\Models\Withdrawal;
+use App\Models\Bill;
 use Auth;
-use Filament\Pages\Actions;
+use Filament\Actions\CreateAction;
+use Filament\Facades\Filament;
 use Filament\Resources\Pages\ManageRecords;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Resources\Components\Tab;
 
 class ManageWithdrawals extends ManageRecords
 {
@@ -16,12 +17,24 @@ class ManageWithdrawals extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make()->modalWidth('xs')->createAnother(false),
         ];
     }
 
-    protected function getTableQuery(): Builder
+
+    public function getTabs(): array
     {
-        return Withdrawal::query()->whereIn('place_id', Auth::user()->place->pluck('id'));
+        $tabs = [null => Tab::make(__('All'))];
+
+        $bills = Bill::where('place_id', Filament::getTenant()->id)->get();
+
+        foreach ($bills as $bill) {
+            $tabs[$bill->name] = Tab::make()->query(function ($query) use ($bill) {
+                $query->where('bill_id', $bill->id);
+            });
+        }
+
+        return $tabs;
     }
+
 }

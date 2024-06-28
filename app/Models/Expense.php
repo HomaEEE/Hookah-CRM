@@ -13,16 +13,17 @@ class Expense extends Model implements HasMedia
     use HasFactory, SoftDeletes;
     use InteractsWithMedia;
 
-    protected $fillable = ['sum', 'added_at', 'poster', 'type_pay', 'category_id', 'supply_id', 'user_id', 'place_id', 'comment'];
+    protected $fillable = ['sum', 'added_at', 'poster', 'bill_id',
+    'category_id', 'supply_id', 'user_id', 'place_id', 'comment'];
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function user()
     {
-        return $this->HasOne(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function categories()
@@ -42,7 +43,7 @@ class Expense extends Model implements HasMedia
 
     public function bill()
     {
-        return $this->HasOne(Bill::class);
+        return $this->belongsTo(Bill::class, 'bill_id');
     }
 
 }

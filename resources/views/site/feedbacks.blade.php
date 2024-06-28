@@ -6,18 +6,18 @@
 @section('page', __('Feedbacks'))
 
 @section('content')
-<div class="page-container">
-
-    @include('site.nav')
-
-    <div class="container">
+    <div class="container feedbacks">
         <h2>{{__('Feedbacks')}}</h2>
+        @include('site.properties')
+
         <div class="row">
         @foreach ($feedbacks as $f)
-            <div class="col-xs-12 col-md-6">
-            <h4>{{ $f->name}} </h4>
-            <h5>{{ $f->contact}} </h5>
-            <p>{{ $f->text}} </p>
+            <div class="col-xs-12 col-md-4">
+            <div class="feedback">
+                <h4>{{ $f->name}} </h4>
+                <p>{{ $f->text}} </p>
+            </div>
+
             </div>
         @endforeach
         </div>

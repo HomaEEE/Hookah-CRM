@@ -13,22 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\SiteController@home');
-
-
-
+Route::get('/', 'App\Http\Controllers\SiteController@index');
 // Route::get('/api/shift/{place_id}', 'App\Http\Controllers\PosterApiController@getCurrentShift');
 
 // Route::get('/getSpot/{place_id}', 'App\Http\Controllers\TestController@getSpot');
 
-    Route::prefix('{suffix?}')->group(function () {
-        Route::get('/', 'App\Http\Controllers\SiteController@index');
+ //   Route::prefix('{suffix?}')->group(function () {
         Route::get('/menu', 'App\Http\Controllers\SiteController@menu');
         Route::get('/vacancy', 'App\Http\Controllers\SiteController@vacancy');
+        Route::get('/rules', 'App\Http\Controllers\SiteController@rules');
         Route::get('/booking', 'App\Http\Controllers\SiteController@booking');
         Route::get('/feedbacks', 'App\Http\Controllers\SiteController@feedbacks');
         Route::get('/contacts', 'App\Http\Controllers\SiteController@contacts');
-    });
+   // });
 
 
 Route::post('/sendFeedback', 'App\Http\Controllers\SiteController@sendFeedback');

@@ -1,9 +1,10 @@
-$('.burger2').click(function() {
-  $('.burger2').toggleClass('on');
-  $('.header').toggleClass('active');
- });
-
  $(document).ready(function () {
+
+  $('.menu-icon').click(function() {
+    console.log('click');
+    $('.menu-icon').toggleClass('nav-active');
+    $('.menu-header').toggleClass('active');
+   });
 
   $('#comment').click(function() {
     $('.modal-feedback').toggleClass('active');

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PlaceResource\RelationManagers;
 
 use App\Models\Workshop;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -20,13 +21,24 @@ class WagesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getPluralModelLabel(): string
+    {
+        return __('Wages');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Wages');
+    }
+
+
     public function form(Form $form): Form
     {
 
         return $form
             ->schema([
                 Hidden::make('place_id')->label(__('Place'))
-                    ->default(fn (Livewire $livewire) => $livewire->ownerRecord->id),
+                    ->default(Filament::getTenant()->id),
                 TextInput::make('name')->translateLabel()
                     ->required()
                     ->maxLength(255),
@@ -38,10 +50,10 @@ class WagesRelationManager extends RelationManager
                 Repeater::make('procent')
                     ->schema([
                         Select::make('workshop_id')->translateLabel()
-                            ->options(fn (Livewire $livewire) => Workshop::where('place_id', $livewire->ownerRecord->id)->get()->pluck('name', 'id')),
+                            ->native(false)
+                            ->options(Workshop::where('place_id', $this->ownerRecord->id)->get()->pluck('name', 'workshop_id')),
                         TextInput::make('num')->translateLabel()->numeric()
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-
                     ]),
             ])->columns(1);
 
@@ -52,9 +64,7 @@ class WagesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->translateLabel(),
-                Tables\Columns\BadgeColumn::make('wage')->translateLabel(),
-                Tables\Columns\TextColumn::make('procent.workshop_id')->translateLabel(),
-
+                Tables\Columns\TextColumn::make('wage')->translateLabel()->badge()
             ])
             ->filters([
                 //

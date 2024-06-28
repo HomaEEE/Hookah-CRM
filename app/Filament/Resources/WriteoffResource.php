@@ -26,7 +26,10 @@ class WriteoffResource extends Resource
 {
     protected static ?string $model = Writeoff::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
+    protected static ?string $recordTitleAttribute = 'id';
+
+    protected static ?int $navigationSort = 6;
+
 
     public static function getPluralModelLabel(): string
     {
@@ -68,8 +71,10 @@ class WriteoffResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('user.name')->translateLabel(),
-                TextColumn::make('workshop.name')->translateLabel(),
+                TextColumn::make('workshop.name')->translateLabel()
+                ->description(fn (Writeoff $record): string => $record->whiteoff ?? '', position: 'before'),
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 //

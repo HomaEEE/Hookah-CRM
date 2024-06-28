@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources\ShiftResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ExpenseRelationManager extends RelationManager
 {
@@ -16,11 +17,18 @@ class ExpenseRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'added_at';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Expenses');
+    }
+
+    protected function getTableHeading(): string | Htmlable
+    {
+        return __('Expenses of Shift');
+    }
 
     public function table(Table $table): Table
     {
-
-
         return $table
         ->modifyQueryUsing(fn (Builder $query) =>
             $query->where(
@@ -31,11 +39,15 @@ class ExpenseRelationManager extends RelationManager
                 ->size('sm')
                 ->badge()
                 ->description(fn ($record): string => $record->user->name ?? ''),
-
-                TextColumn::make('category.name')->translateLabel(),
-                TextColumn::make('sum')->translateLabel(),
-                TextColumn::make('type_pay')->translateLabel(),
-                TextColumn::make('pay')->translateLabel(),
+                TextColumn::make('category.name')->translateLabel()->badge()
+                ->description(fn ($record): string => $record->comment ?? ''),
+                TextColumn::make('sum')->translateLabel()->moneY('UAH', true)->badge()
+                ->summarize(Sum::make()->label(__('Total'))),
+                IconColumn::make('bill.type')->label(__('Bill')),
+                IconColumn::make('pay')->translateLabel()
+               ->boolean()
+                    ->trueIcon('heroicon-o-check')
+                    ->falseIcon('heroicon-o-x-mark')
             ])
             ->filters([
                 //

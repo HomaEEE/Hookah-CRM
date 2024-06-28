@@ -12,12 +12,11 @@ class Supply extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['place_id', 'supplier_id', 'added_at', 'sum', 'comment', 'type_pay', 'pay', 'poster', 'user_id'];
+    protected $fillable = ['place_id', 'supplier_id', 'added_at', 'sum', 'comment', 'bill_id', 'pay', 'poster', 'user_id'];
 
     protected $casts = [
         'pay' => 'boolean',
         'poster' => 'boolean',
-        'invoice' => 'array',
         'added_at' => 'datetime',
     ];
 
@@ -41,6 +40,16 @@ class Supply extends Model implements HasMedia
         return $this->belongsTo(Supplier::class);
     }
 
+    public function supplyItems()
+    {
+        return $this->hasMany(SupplyItem::class);
+    }
+
+    public function ingredient()
+    {
+        return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
+    }
+
     public function expense()
     {
         return $this->belongsTo(Expense::class);
@@ -48,8 +57,9 @@ class Supply extends Model implements HasMedia
 
     public function bill()
     {
-        return $this->HasOne(Bill::class);
+        return $this->belongsTo(Bill::class);
     }
+
 
     public function scopeAllPaid($query)
     {
@@ -81,8 +91,9 @@ class Supply extends Model implements HasMedia
         return $query->where('poster', 0);
     }
 
-    public function Pay($query)
+    public function scopeType($query)
     {
-        return $query->update('pay', 1);
+        return $query->where('type', $query);
     }
+
 }

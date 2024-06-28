@@ -21,7 +21,7 @@ class FeedbackResource extends Resource
 {
     protected static ?string $model = Feedback::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left';
+    protected static ?int $navigationSort = 4;
 
     public static function getPluralModelLabel(): string
     {
@@ -40,7 +40,7 @@ class FeedbackResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Feedback::approve(0)->count();
+        return static::getModel()::approve(0)->count();
     }
 
     public static function form(Form $form): Form
@@ -57,8 +57,11 @@ class FeedbackResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->translateLabel(),
-                TextColumn::make('contact')->label(__('Phone')),
+                TextColumn::make('name')->translateLabel()
+                ->description(fn (Feedback $record): string => $record->contact  ? : ''),
+                TextColumn::make('created_at')->translateLabel()->dateTime('d-m-Y')
+                ->size('md')
+                ->badge(),
                 TextColumn::make('text')->wrap(),
 
                 IconColumn::make('approve')

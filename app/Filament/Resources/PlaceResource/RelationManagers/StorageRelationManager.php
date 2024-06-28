@@ -10,7 +10,7 @@ use Filament\Tables\Table;
 
 class StorageRelationManager extends RelationManager
 {
-    protected static string $relationship = 'storage';
+    protected static string $relationship = 'storages';
 
     protected static ?string $recordTitleAttribute = 'name';
 

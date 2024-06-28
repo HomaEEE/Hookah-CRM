@@ -42,12 +42,17 @@
 
     </head>
     <body>
+        @include('site.nav')
+
+        <main>
          @yield('content')
+         </main>
         <footer>
             <div class="dev">{{__('Created by')}}
                 <a href="https://black-design.pw" rel="noopener noreferrer"><img src="https://black-design.pw/themes/black-design/assets/images/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
             </div>
         </footer>
         @stack('scripts')
+
     </body>
 </html>
