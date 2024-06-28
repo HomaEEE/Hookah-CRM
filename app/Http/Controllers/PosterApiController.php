@@ -126,11 +126,10 @@ class PosterApiController extends Controller
                     'unit' => $ingredient['ingredient_unit'],
                 ]);
 
+            }
             $responseMenu = Http::get($this->urlApi . 'menu.getProducts?type=products&token=' . $place_api['api'])
                 ->throw()->json();
             $products = $responseMenu['response'];
-
-            dd($products);
 
             foreach ($products as $product) {
 
@@ -146,7 +145,7 @@ class PosterApiController extends Controller
                     ]
                 );
             }
-        }
+
     }
 
     public function getTechcards($place_id) {
