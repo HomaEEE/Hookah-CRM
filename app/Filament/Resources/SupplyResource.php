@@ -25,14 +25,18 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\{Set, Get};
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section as ComponentsSection;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Components\Actions\Action;
+
 use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -121,67 +125,61 @@ class SupplyResource extends Resource
                     ->default(false)
                     ->inline(),
 
-                Section::make(__('Photo'))
-                    ->schema([
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->label(__('Invoice'))
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imagePreviewHeight(450)
-                            ->imageResizeMode('contain')
-                            ->imageEditor()
-                            ->optimize('webp')
-                            ->resize(70)
-                            ->imageEditorAspectRatios([
-                                null,
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->reorderable()
-                            ->openable(),
 
-                        SpatieMediaLibraryFileUpload::make('receipt')
-                            ->collection('receipts')
-                            ->label(__('Receipt'))
-                            ->multiple()
-                            ->imagePreviewHeight(350)
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('2100')
-                            ->imageEditor()
-                            ->optimize('webp')
-                            ->resize(90)
-                            ->imageEditorAspectRatios([
-                                null,
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->reorderable()
-                            ->openable()
+
+                Section::make()
+                    ->schema([
+                        Tabs::make('Tabs')
+                        ->tabs([
+                            Tabs\Tab::make(__('Photo'))
+                                ->schema([
+                                    SpatieMediaLibraryFileUpload::make('invoice')
+                                ->label(__('Invoice'))
+                                ->collection('supplies')
+                                ->multiple()
+                                ->imagePreviewHeight(450)
+                                ->imageResizeMode('contain')
+                                ->imageEditor()
+                                ->optimize('webp')
+                                ->resize(70)
+                                ->imageEditorAspectRatios([
+                                    null,
+                                    '16:9',
+                                    '4:3',
+                                    '1:1',
+                                ])
+                                ->reorderable()
+                                ->openable(),
+
+                            SpatieMediaLibraryFileUpload::make('receipt')
+                                ->collection('receipts')
+                                ->label(__('Receipt'))
+                                ->multiple()
+                                ->imagePreviewHeight(350)
+                                ->imageResizeMode('cover')
+                                ->imageResizeTargetWidth('2100')
+                                ->imageEditor()
+                                ->optimize('webp')
+                                ->resize(90)
+                                ->imageEditorAspectRatios([
+                                    null,
+                                    '16:9',
+                                    '4:3',
+                                    '1:1',
+                                ])
+                                ->reorderable()
+                                ->openable()
+                                ])->columns(2),
+                            Tabs\Tab::make(__('List'))
+                                ->schema([
+                                    static::getItemsRepeater()
+                                ]),
+
+                            ]),
                     ])
-                    ->columns(2)
+                    ->columns(1)
                     ->collapsible()
                     ->persistCollapsed(),
-
-                // Section::make(__('List'))
-                //     ->schema([
-                //         Repeater::make('supplyItems')->relationship()
-                //             ->schema([
-                //                 Select::make('ingredient_id')
-                //                     ->native(false)
-                //                     ->searchable()
-                //                     ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
-                //                     ->required(),
-                //                 TextInput::make('qty')->translateLabel(),
-                //                 TextInput::make('sum')->translateLabel()
-                //                     ->prefix('₴')
-                //                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                //             ])
-                //             ->columns(3)
-                //             ->collapsed()
-
-                //     ])
 
             ])
 
@@ -382,5 +380,80 @@ class SupplyResource extends Resource
         return [
             'index' => Pages\ManageSupplies::route('/'),
         ];
+    }
+
+    public static function getItemsRepeater(): Repeater
+    {
+        return Repeater::make('items')
+            ->relationship()
+            ->schema([
+                Select::make('ingredient_id')
+                    ->label('Product')
+                    ->options(Ingredient::query()->pluck('ingredient', 'id'))
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(fn ($state, Set $set) => $set('unit_price', Ingredient::find($state)?->price/100 ?? 0))
+                    ->distinct()
+                    ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                    ->columnSpan([
+                        'md' => 6,
+                    ])
+                    ->searchable(),
+
+                TextInput::make('qty')
+                    ->label('Quantity')
+                    ->numeric()
+                    ->default(1)
+                    ->columnSpan([
+                        'md' => 2,
+                    ])
+                    ->afterStateUpdated(fn (Set $set, Get $get) => $set('sum', $get('qty')*$get('unit_price') ))
+                    ->reactive()
+                    ->required(),
+
+                TextInput::make('unit_price')
+                    ->label('Unit Price')
+                    ->disabled()
+                    ->dehydrated()
+                    ->numeric()
+                    ->required()
+                    ->columnSpan([
+                        'md' => 2,
+                    ]),
+
+                TextInput::make('sum')
+                    ->label('Sum')
+                    ->disabled()
+                    ->dehydrated()
+                    ->numeric()
+                    ->required()
+                    ->columnSpan([
+                        'md' => 2,
+                    ]),
+            ])
+            // ->extraItemActions([
+            //     Action::make('openProduct')
+            //         ->tooltip('Open product')
+            //         ->icon('heroicon-m-arrow-top-right-on-square')
+            //         ->url(function (array $arguments, Repeater $component): ?string {
+            //             $itemData = $component->getRawItemState($arguments['item']);
+
+            //             $ingredient = Ingredient::find($itemData['ingredient_id']);
+
+            //             if (! $ingredient) {
+            //                 return null;
+            //             }
+
+            //             return IngredientResource::getUrl('index', ['record' => $ingredient]);
+            //         }, shouldOpenInNewTab: true)
+            //         ->hidden(fn (array $arguments, Repeater $component): bool => blank($component->getRawItemState($arguments['item'])['ingredient_id'])),
+            // ])
+            // ->orderColumn('ingredient')
+            ->defaultItems(1)
+            ->hiddenLabel()
+            ->columns([
+                'md' => 12,
+            ])
+            ->required();
     }
 }

@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supply_item', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Supply::class);
-            $table->foreignIdFor(Ingredient::class);
-            $table->integer('qty')->default(0);
-            $table->integer('sum')->default(0);
-            $table->timestamps();
+        Schema::table('supplies', function (Blueprint $table) {
+            $table->json('items')->nullable();
         });
     }
 
@@ -28,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('supply_item');
+        Schema::table('supplies', function (Blueprint $table) {
+            $table->json('items')->nullable();
+        });
     }
 };

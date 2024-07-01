@@ -4,9 +4,11 @@ namespace App\Filament\Resources\SupplierResource\Pages;
 
 use App\Enums\SupplierType;
 use App\Filament\Resources\SupplierResource;
+use App\Http\Controllers\PosterApiController;
 use App\Models\Supplier;
 use Filament\Actions;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -19,6 +21,17 @@ class ManageSuppliers extends ManageRecords
     protected function getActions(): array
     {
         return [
+            Actions\Action::make('update')
+            ->label(__('Update suppliers'))
+            ->icon('heroicon-o-arrow-path')
+            ->action(function (): void {
+                    (new PosterApiController())->getSuppliers(Filament::getTenant()->id);
+                    Notification::make()
+                        ->title(__('Updated successfully'))
+                        ->icon('heroicon-o-users')
+                        ->iconColor('success')
+                        ->send();
+            }),
             Actions\CreateAction::make()->createAnother(false),
         ];
     }

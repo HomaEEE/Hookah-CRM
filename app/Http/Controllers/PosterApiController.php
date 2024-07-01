@@ -135,17 +135,16 @@ class PosterApiController extends Controller
 
                 Ingredient::updateOrCreate(
                     [
-                        'product_id' => $product['product_id'],
+                        'ingredient' => $product['product_id'],
                         'place_id' => $place_id
                     ],
                     [
-                        'ingredient' => $ingredient['product_name'],
-                        'unit' => 'p',
-                        'price' => $ingredient['cost']
+                        'ingredient' => $product['product_name'],
+                        'unit' => 'u',
+                        'price' => $product['cost']
                     ]
                 );
             }
-
     }
 
     public function getTechcards($place_id) {
@@ -155,6 +154,14 @@ class PosterApiController extends Controller
 
             dd($techcards);
     }
+
+    public function getSuppliers($place_id) {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $suppliers = Http::get($this->urlApi . 'storage.getSuppliers?token=' . $place_api['api'] . '&type=batchtickets')
+            ->throw()->json();
+            dd($suppliers);
+    }
+
 
 
     //Получение Кассы и терминала за день

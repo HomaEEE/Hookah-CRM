@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -43,11 +44,13 @@ class IngredientResource extends Resource
                 Select::make('unit')->translateLabel()->options([
                     'l' => __('Liter'),
                     'kg' => __('Kilogram'),
-                    'p' => __('Piece'),
+                    'p' => __('Unit'),
 
                 ]),
                 TextInput::make('price')->translateLabel()
-
+                ->mask(RawJs::make('$money($input)'))
+                ->stripCharacters(',')
+                ->numeric()
             ]);
     }
 
@@ -57,15 +60,21 @@ class IngredientResource extends Resource
             ->columns([
                 TextColumn::make('ingredient')->translateLabel(),
                 TextColumn::make('unit')->translateLabel(),
-                TextColumn::make('price')->translateLabel()
-
-
+                TextColumn::make('price')->translateLabel()->money('UAH', divideBy: 100)
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->mutateRecordDataUsing(function (array $data): array {
+                    $data['price'] =  $data['price']/100;
+                    return $data;
+                })
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['price'] =  $data['price']*100;
+                    return $data;
+                }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

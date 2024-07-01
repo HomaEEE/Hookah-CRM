@@ -40,7 +40,7 @@ class ExpenseRelationManager extends RelationManager
                 ->badge()
                 ->description(fn ($record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->translateLabel()->badge()
-                ->description(fn ($record): string => $record->comment ?? ''),
+                ->description(fn ($record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
                 TextColumn::make('sum')->translateLabel()->moneY('UAH', true)->badge()
                 ->summarize(Sum::make()->label(__('Total'))),
                 IconColumn::make('bill.type')->label(__('Bill')),
