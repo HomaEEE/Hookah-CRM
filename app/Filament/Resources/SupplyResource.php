@@ -172,7 +172,7 @@ class SupplyResource extends Resource
                                 ])->columns(2),
                             Tabs\Tab::make(__('List'))
                                 ->schema([
-                                    static::getItemsRepeater()
+                                    //static::getItemsRepeater()
                                 ]),
 
                             ]),

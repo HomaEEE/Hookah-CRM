@@ -33,8 +33,7 @@ class EditShift extends EditRecord
                 })->numeric(),
             Grid::make()
                 ->schema([
-                    Card::make()
-                        ->schema([
+
                             Placeholder::make('cash')->translateLabel()
                                 ->content(function (Shift $record) {
                                     return $record->cash;
@@ -47,10 +46,7 @@ class EditShift extends EditRecord
                                 ->content(function (Shift $record) {
                                     return $record->cash + $record->terminal;
                                 }),
-                        ])->columns(1)
-                        ->columnSpan(['lg' => 1]),
-                    Card::make()
-                        ->schema([
+
                             Placeholder::make('Wages')->translateLabel()
                                 ->content(function (Shift $record) {
                                     return $record->wages;
@@ -67,10 +63,7 @@ class EditShift extends EditRecord
                                     return $diff;
                                 }
                                 ),
-                        ])->columns(1)
-                        ->columnSpan(['lg' => 1]),
-                    Card::make()
-                        ->schema([
+
                             Placeholder::make('bar')->translateLabel()
                                 ->content(function (Shift $record) {
                                     return $record->bar;
@@ -83,10 +76,7 @@ class EditShift extends EditRecord
                                 ->content(function (Shift $record) {
                                     return $record->hookah;
                                 }),
-                        ])->columns(1)
-                        ->columnSpan(['lg' => 1]),
-                    Card::make()
-                        ->schema([
+
                             Placeholder::make('income')->translateLabel()
                                 ->content(function (Shift $record) {
                                     return $record->income;
@@ -101,7 +91,7 @@ class EditShift extends EditRecord
                                 }),
                         ])->columns(1)
                         ->columnSpan(['lg' => 1]),
-                ])->columns(4),
+
         ];
     }
 }

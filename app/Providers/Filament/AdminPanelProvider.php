@@ -124,7 +124,6 @@ class AdminPanelProvider extends PanelProvider
                     SimpleLightBoxPlugin::make(),
                     FilamentShieldPlugin::make(),
                     FilamentApexChartsPlugin::make(),
-
                 ])
             ->authGuard('web')
             ->middleware([
