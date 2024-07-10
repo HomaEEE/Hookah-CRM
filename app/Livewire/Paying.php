@@ -35,6 +35,7 @@ class Paying extends BaseWidget
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah', true)->summarize(Sum::make()->label(__('Total'))),
+
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {
                     '0' => 'heroicon-o-banknotes',
@@ -44,7 +45,14 @@ class Paying extends BaseWidget
                     '1' => 'warning',
                     '0' => 'success',
                     default => 'gray',
+                })
+                ->action(function ($record, $column) {
+                    $name = $column->getName();
+                    $record->update([
+                        $name => ! $record->$name,
+                    ]);
                 }),
+
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
                     ->simpleLightbox()

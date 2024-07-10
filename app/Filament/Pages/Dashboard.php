@@ -119,9 +119,10 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->collection('supplies')
                             ->multiple()
                             ->imagePreviewHeight(450)
-                            ->imageResizeMode('cover')
-                            ->imageEditor()
+                            ->imageResizeMode('contain')
                             ->optimize('webp')
+                            ->imageResizeTargetWidth('2100')
+                            ->imageEditor()
                             ->resize(80),
                         ToggleButtons::make('bill_id')->label(__('Type pay'))
                             ->options(Bill::get()->pluck('name', 'id'))
@@ -174,9 +175,11 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->collection('supplies')
                             ->multiple()
                             ->imageResizeMode('contain')
-                            ->imageEditor()
                             ->optimize('webp')
-                            ->resize(70)
+                            ->imageResizeTargetWidth('2100')
+                            ->imageEditor()
+                            ->resize(80)
+                            ->imageEditor()
                             ->imageEditorAspectRatios([
                                 null,
                                 '16:9',

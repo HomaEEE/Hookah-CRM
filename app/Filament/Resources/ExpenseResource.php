@@ -108,10 +108,11 @@ class ExpenseResource extends Resource
                     ->collection('supplies')
                     ->multiple()
                     ->imagePreviewHeight('350')
-                    ->imageResizeMode('cover')
-                    ->imageEditor()
+                    ->imageResizeMode('contain')
                     ->optimize('webp')
-                    ->resize(70)
+                    ->imageResizeTargetWidth('2100')
+                    ->imageEditor()
+                    ->resize(80)
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',
