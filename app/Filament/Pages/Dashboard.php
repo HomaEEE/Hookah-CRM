@@ -174,8 +174,8 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->collection('supplies')
                             ->multiple()
                             ->imagePreviewHeight(250)
-                            ->imageResizeTargetWidth('1800')
-                            ->imageResizeTargetHeight('1200')
+                            ->imageResizeTargetWidth('2400')
+                            ->imageResizeTargetHeight('1600')
                             ->optimize('webp')
                             ->resize(70)
                             ->reorderable(),
