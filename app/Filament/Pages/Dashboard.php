@@ -175,6 +175,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->multiple()
                             ->imagePreviewHeight(250)
                             ->imageResizeTargetWidth('1800')
+                            ->imageResizeTargetHeight('1200')
                             ->optimize('webp')
                             ->resize(70)
                             ->reorderable(),
