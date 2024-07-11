@@ -173,7 +173,8 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->label(__('Invoice'))
                             ->collection('supplies')
                             ->multiple()
-                            ->imagePreviewHeight(450)
+                            ->imagePreviewHeight(250)
+                            ->imageResizeTargetWidth('1800')
                             ->optimize('webp')
                             ->resize(70)
                             ->reorderable(),
