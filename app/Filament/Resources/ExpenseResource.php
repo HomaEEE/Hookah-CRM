@@ -107,12 +107,11 @@ class ExpenseResource extends Resource
                     ->label(__('Invoice'))
                     ->collection('supplies')
                     ->multiple()
-                    ->imagePreviewHeight('350')
-                    ->imageResizeMode('contain')
+                    ->imagePreviewHeight(250)
+                    ->imageResizeTargetWidth('2400')
+                    ->imageResizeTargetHeight('1600')
                     ->optimize('webp')
-                    ->imageResizeTargetWidth('2100')
                     ->imageEditor()
-                    ->resize(80)
                     ->imageEditorAspectRatios([
                         null,
                         '16:9',

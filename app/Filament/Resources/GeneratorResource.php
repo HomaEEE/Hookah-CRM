@@ -61,7 +61,6 @@ class GeneratorResource extends Resource
                     '2' => 'success',
                     '3' => 'danger',
                 }),
-
             ])
             ->filters([
                 //

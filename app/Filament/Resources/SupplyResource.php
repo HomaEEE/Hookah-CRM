@@ -155,12 +155,11 @@ class SupplyResource extends Resource
                                 ->collection('receipts')
                                 ->label(__('Receipt'))
                                 ->multiple()
-                                ->imagePreviewHeight(350)
-                                ->imageResizeMode('cover')
-                                ->imageResizeTargetWidth('2100')
-                                ->imageEditor()
+                                ->imagePreviewHeight(250)
+                                ->imageResizeTargetWidth('2400')
+                                ->imageResizeTargetHeight('1600')
                                 ->optimize('webp')
-                                ->resize(90)
+                                ->imageEditor()
                                 ->imageEditorAspectRatios([
                                     null,
                                     '16:9',
