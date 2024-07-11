@@ -118,10 +118,11 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->label(__('Invoice'))
                             ->collection('supplies')
                             ->multiple()
+                            ->imagePreviewHeight(450)
                             ->imageResizeMode('cover')
                             ->optimize('webp')
-                            ->imageResizeTargetWidth('2100')
-                            ->imageEditor(),
+                            ->imageEditor()
+                            ->resize(80),
                         ToggleButtons::make('bill_id')->label(__('Type pay'))
                             ->options(Bill::get()->pluck('name', 'id'))
                             ->default(0)
@@ -172,9 +173,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->label(__('Invoice'))
                             ->collection('supplies')
                             ->multiple()
+                            ->imagePreviewHeight(450)
                             ->imageResizeMode('cover')
                             ->optimize('webp')
-                            ->imageEditor()
                             ->resize(80)
                             ->imageEditor()
                             ->imageEditorAspectRatios([
