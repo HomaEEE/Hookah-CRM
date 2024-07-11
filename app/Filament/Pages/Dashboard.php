@@ -174,18 +174,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->collection('supplies')
                             ->multiple()
                             ->imagePreviewHeight(450)
-                            ->imageResizeMode('contain')
                             ->optimize('webp')
-                            ->resize(100)
-                            ->imageEditor()
-                            ->imageEditorAspectRatios([
-                                null,
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->reorderable()
-                            ->openable(),
+                            ->resize(70)
+                            ->reorderable(),
                         Textarea::make('comment')->label(__('Comment'))
                             ->rows(3),
                             ToggleButtons::make('bill_id')->label(__('Type pay'))
