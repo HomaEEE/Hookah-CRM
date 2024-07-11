@@ -174,9 +174,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->collection('supplies')
                             ->multiple()
                             ->imagePreviewHeight(450)
-                            ->imageResizeMode('cover')
+                            ->imageResizeMode('contain')
                             ->optimize('webp')
-                            ->resize(80)
+                            ->resize(100)
                             ->imageEditor()
                             ->imageEditorAspectRatios([
                                 null,
