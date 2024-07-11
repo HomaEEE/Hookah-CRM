@@ -177,7 +177,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->imageResizeTargetWidth('2400')
                             ->imageResizeTargetHeight('1600')
                             ->optimize('webp')
-                            ->resize(70)
+                            ->resize(90)
                             ->reorderable(),
                         Textarea::make('comment')->label(__('Comment'))
                             ->rows(3),
