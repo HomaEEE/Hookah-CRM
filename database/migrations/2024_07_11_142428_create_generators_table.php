@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('tech');
             $table->integer('load')->nullable();
             $table->integer('phase');
+            $table->json('box');
         });
     }
 

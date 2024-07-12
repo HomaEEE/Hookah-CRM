@@ -9,7 +9,10 @@ class Generator extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tech', 'place_id', 'load', 'phase'];
+    protected $fillable = ['tech', 'place_id', 'load', 'phase', 'box'];
+
+    protected $casts = ['box' => 'json'];
+
 
     public $timestamps = false;
 

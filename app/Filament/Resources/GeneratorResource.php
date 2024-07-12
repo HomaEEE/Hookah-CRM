@@ -8,6 +8,7 @@ use App\Models\Generator;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -42,7 +43,13 @@ class GeneratorResource extends Resource
         return $form
             ->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                TextInput::make('tech')->translateLabel()->required(),
+                TextInput::make('tech')->translateLabel()->required()->columns(1),
+                Select::make('box.num')->label(__('Switch Box'))->options([
+                    '1' => __('Bar'),
+                    '2' => __('Hookah'),
+                    '3' => __('Kitchen'),
+            ])->native(false),
+                TextInput::make('box.switch')->label(__('Switcher'))->numeric(),
                 TextInput::make('load')->translateLabel()->numeric(),
                 TextInput::make('phase')->translateLabel()->numeric()->minValue(1)->maxValue(3),
             ]);
@@ -53,6 +60,19 @@ class GeneratorResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('tech')->translateLabel(),
+                TextColumn::make('box.num')->label(__('Switch Box'))->badge()
+                ->formatStateUsing(fn (string $state): string => match ($state) {
+                    '1' => __('Bar'),
+                    '2' => __('Hookah'),
+                    '3' => __('Kitchen'),
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    '1' => __('Bar'),
+                    '2' => __('Hookah'),
+                    '3' => __('Kitchen'),
+                }),
+                TextColumn::make('box.switch')->label(__('Switcher')),
+
                 TextColumn::make('load')->translateLabel()
                 ->formatStateUsing(fn (string $state): string => $state/100),
                 TextColumn::make('phase')->translateLabel()->badge()
