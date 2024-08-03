@@ -1406,6 +1406,23 @@ main {
   }
 }
 
+.page {
+  padding: 20px;
+  h2 {
+    margin: 20px auto;
+  }
+  h4 {
+    margin: 15px auto;
+  }
+  ul {
+    font-size: 1rem;
+    padding: 15px;
+    li{
+      margin-bottom: 5px;
+    }
+  }
+}
+
 footer {
   margin: 0;
   padding: 0;

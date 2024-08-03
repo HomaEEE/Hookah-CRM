@@ -1355,6 +1355,23 @@ main .feedbacks .feedback {
   visibility: hidden;
 }
 
+.page {
+  padding: 20px;
+}
+.page h2 {
+  margin: 20px auto;
+}
+.page h4 {
+  margin: 15px auto;
+}
+.page ul {
+  font-size: 1rem;
+  padding: 15px;
+}
+.page ul li {
+  margin-bottom: 5px;
+}
+
 footer {
   margin: 0;
   padding: 0;

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SupplyResource\Pages;
 
+use App\Enums\SupplierType;
 use App\Filament\Resources\SupplyResource;
 use App\Models\{Supply, Supplier, Workshop};
 use Auth;
@@ -45,12 +46,19 @@ class ManageSupplies extends ManageRecords
 
     // public function getTabs(): array
     // {
-    //     return [
-    //         'all' => Tab::make(),
-    //         'contracts' => Tab::make()
-    //             ->modifyQueryUsing(fn (Builder $query) => $query->whereHas(
+    //     $tabs = [null => Tab::make(__('All'))];
 
-    //             ))
-    //     ];
+    //     $types = SupplierType::class ;
+
+    //     dd($types);
+
+    //     foreach ($types as $type) {
+    //         $tabs[__($type->value)] = Tab::make()->query(function ($query) use ($type) {
+    //             $query->where('type', $type->key)
+    //             ;
+    //         });
+    //     }
+
+    //     return $tabs;
     // }
 }

@@ -5,8 +5,11 @@ namespace App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Exports\ProductExporter;
 use App\Filament\Resources\ProductResource;
 use App\Http\Controllers\PosterApiController;
+use App\Models\Category;
+use App\Models\Product;
 use Filament\Actions;
 use Filament\Facades\Filament;
+use Filament\Resources\Components\Tab;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -34,4 +37,20 @@ class ManageProducts extends ManageRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    // public function getTabs(): array
+    // {
+    //     $tabs = [null => Tab::make(__('All'))];
+
+    //     $categories = Category::where('parent_category', 0)->get();
+
+    //     foreach ($categories as $category) {
+    //         $tabs[__($category->category_name)] = Tab::make()->query(function ($query) use ($category) {
+    //             $query->where('menu_category_id', $category->category_id)
+    //             ;
+    //         })->badge(Product::query()->where('menu_category_id', $category->category_id)->count());
+    //     }
+
+    //     return $tabs;
+    // }
 }

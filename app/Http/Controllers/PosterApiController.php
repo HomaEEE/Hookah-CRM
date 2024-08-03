@@ -176,6 +176,19 @@ class PosterApiController extends Controller
         return $posterShift['total'];
     }
 
+    //Получить все чеки
+    public function getAllBills($place_id)
+    {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $getAllBills = Http::get($this->urlApi . 'dash.getTransactions?token='
+            . $place_api['api']
+            . '&dateFrom=' . Carbon::today()->format('Ymd')
+            . '&dateTo=' . Carbon::today()->format('Ymd'))
+            ->json('response');
+
+    //   -->>> EDIT RETURN
+    //         return $getAllBills['total'];
+    }
 
     //Получение прошлой смены
     public function getShift($place_id)
