@@ -136,15 +136,6 @@ class ShiftResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            RelationManagers\ExpenseRelationManager::class,
-            RelationManagers\UsersRelationManager::class
-        ];
-    }
-
-
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
