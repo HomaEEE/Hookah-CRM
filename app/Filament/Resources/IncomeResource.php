@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Components\IncomeForm;
 use App\Filament\Resources\IncomeResource\Pages;
 use App\Filament\Resources\IncomeResource\RelationManagers;
 use App\Models\Income;
@@ -43,12 +44,9 @@ class IncomeResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Hidden::make('user_id')->default(Auth::user()->id),
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                TextInput::make('sum')->numeric()->translateLabel(),
-                Textarea::make('comment')->translateLabel()
-            ]);
+            ->schema(
+                IncomeForm::schema()
+            );
     }
 
     public static function table(Table $table): Table

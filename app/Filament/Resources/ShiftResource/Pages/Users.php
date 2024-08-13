@@ -20,11 +20,16 @@ class Users extends ManageRelatedRecords
 
     protected static string $relationship = 'shift_users';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function getNavigationLabel(): string
     {
-        return 'Shift Users';
+        return __('Shift Users');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Shift Users');
     }
 
     public function form(Form $form): Form
@@ -42,9 +47,8 @@ class Users extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('user_id')
             ->modifyQueryUsing(fn (Builder $query) =>
-            $query->where(
-                    'place_id', $this->getOwnerRecord()->place_id)
-                    ->whereDate('added_at', $this->getOwnerRecord()->created_at ) )
+                $query->where('shift_id', $this->getOwnerRecord()->id)
+                      ->whereDate('added_at', $this->getOwnerRecord()->created_at ) )
             ->columns([
                 TextColumn::make('user.name')->translateLabel(),
                 TextColumn::make('days')->translateLabel(),

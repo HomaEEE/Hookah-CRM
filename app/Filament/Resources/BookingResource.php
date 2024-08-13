@@ -2,31 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Components\BookingForm;
 use App\Filament\Resources\BookingResource\Pages;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\{Booking, Seet, Guest};
+use App\Models\{Booking};
 use Auth;
 use Carbon\Carbon;
-use Filament\Facades\Filament;
-use Filament\Forms\{Get, Set};
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\ActionSize;
-use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\Actions\Action as FormAction;
 
 class BookingResource extends Resource
 {
@@ -64,77 +55,15 @@ class BookingResource extends Resource
     protected function getTableQuery(): Builder
     {
 
-        return Booking::query();
+        return Booking::query()->whereDate('time', '>=', Carbon::today());
     }
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Hidden::make('user_id')->default(Auth::user()->id),
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                Select::make('guest_id')->label(__('Guest'))
-                    ->relationship('guest', 'name')
-                    ->options(Guest::where('place_id', Filament::getTenant()->id)->get()->pluck('FullName', 'id'))
-                    ->searchable(['name', 'comment', 'phone'])
-                    ->native(false)
-                    ->preload()
-                    ->required()
-                    ->createOptionForm([
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        TextInput::make('name')->label(__('Name'))->required(),
-                        TextInput::make('phone')->label(__('Phone'))->required()
-                            ->tel()
-                            ->mask(RawJs::make(<<<'JS'
-                        $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
-                    JS))
-                        ->translateLabel(),
-                        TextInput::make('comment')->translateLabel(),
-                    ])
-                    ->editOptionForm([
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        TextInput::make('name')->label(__('Name'))->required(),
-                        TextInput::make('phone')->label(__('Phone'))->required()
-                            ->tel()
-                            ->mask(RawJs::make(<<<'JS'
-                        $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
-                    JS))
-                            ->translateLabel(),
-                        TextInput::make('comment')->translateLabel(),
-                    ]),
-                Select::make('seet_ids')->label(__('Table'))->options(
-                    Seet::where('place_id', Filament::getTenant()->id)->pluck('number', 'id')
-                )->multiple(),
-                DateTimePicker::make('time')->label(__('Booking Time'))
-                    ->reactive()->required()->native(false)
-                    ->seconds(false)
-                    ->minDate(now())->default(now()),
-                TextInput::make('person')->label(__('Person'))->numeric()->default(3)
-
-                    ->suffixAction(
-                        FormAction::make('PersonPlus')
-                            ->size(ActionSize::Large)
-                            ->color('success')
-                            ->icon('heroicon-o-user-plus')
-                            ->iconButton()
-                            ->disabled(fn (Get $get): bool => empty($get('person')) || $get('person') >= 20)
-                            ->action(function (Get $get, Set $set, $state): void {
-                                $set('person', $get('person') + 1);
-                            })
-                    )
-                    ->prefixAction(
-                        FormAction::make('PersonMinus')
-                            ->size(ActionSize::Large)
-                            ->icon('heroicon-o-user-minus')
-                            ->color('danger')
-                            ->iconButton()
-                            ->disabled(fn (Get $get): bool => empty($get('person')) || $get('person') <= 1)
-                            ->action(function (Get $get, Set $set, $state): void {
-                                $set('person', $get('person') - 1);
-                            })
-                    ),
-                Textarea::make('comment')->label(__('Comment')),
-            ]);
+            ->schema(
+                BookingForm::schema()
+            );
     }
 
     public static function table(Table $table): Table

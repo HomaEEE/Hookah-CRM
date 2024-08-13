@@ -16,6 +16,11 @@ use Illuminate\Contracts\Support\Htmlable;
 class ExpensesDay extends BaseWidget
 {
 
+    public static function badge(): ?string
+    {
+        return Expense::query()->whereDate('added_at', '>=', Carbon::today())->count();
+    }
+
     protected function getTableHeading(): string | Htmlable
     {
         return __('Expenses of Shift');
@@ -44,17 +49,18 @@ class ExpensesDay extends BaseWidget
                     '0' => 'success',
                     default => 'gray',
                 }),
-                SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
-                    ->collection('supplies')
-                    ->simpleLightbox()
-                    ->circular()
-                    ->stacked()
-                    ->limit(3)
-                    ->limitedRemainingText()
-                    ->height(30)
-                    ->toggleable()
-                    ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                    ->placeholder('No description.'),
+                SpatieMediaLibraryImageColumn::make('supply')->label(__('Invoice'))
+                ->collection('supplies')
+                ->simpleLightbox()
+                ->circular()
+                ->stacked()
+                ->limit(3)
+                ->height(40)
+                ->toggleable()
+                ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                ->placeholder('No description.')
+                ->visibleFrom('sm'),
+
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()

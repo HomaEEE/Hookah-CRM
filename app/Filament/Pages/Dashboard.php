@@ -2,6 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Components\ExpenseForm;
+use App\Filament\Components\IncomeForm;
+use App\Filament\Components\SupplyForm;
+
 use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
 use Illuminate\Contracts\Support\Htmlable;
@@ -17,13 +21,6 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Get;
 use Filament\Support\RawJs;
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -100,43 +97,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->modalWidth('sm')
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
-                    ->form([
-                        Hidden::make('user_id')->default(Auth::user()->id),
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        DateTimePicker::make('added_at')
-                            ->label(__('Date Added'))
-                            ->native(false)
-                            ->seconds(false)
-                            ->maxDate(now())->default(now()),
-                        Select::make('category_id')->label(__('Category'))
-                            ->searchable()
-                            ->required()
-                            ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
-                        TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->label(__('Invoice'))
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imagePreviewHeight(450)
-                            ->imageResizeMode('cover')
-                            ->optimize('webp')
-                            ->imageEditor()
-                            ->resize(80),
-                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->live(),
-                        Textarea::make('comment')->translateLabel()->rows(2),
-                        Toggle::make('pay')->label(__('Paid'))
-                        ->default(true)
-                        ->inline(),
-                    ])
+                    ->form(
+                        ExpenseForm::schema(),
+                    )
                     ->successNotification(
                         Notification::make()
                              ->success()
@@ -152,50 +115,11 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->modalWidth('sm')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->form([
-                        Hidden::make('user_id')->default(Auth::user()->id),
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        DateTimePicker::make('added_at')
-                            ->label(__('Date Added'))
-                            ->native(false)
-                            ->seconds(false)
-                            ->maxDate(now())->default(now()),
-                        Select::make('supplier_id')->label(__('Supplier'))
-                            ->searchable()
-                            ->native(false)
-                            ->required()
-                            ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
-                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->live(),
-                        TextInput::make('invoice_number')->translateLabel()
-                            ->visible(fn (Get $get) => $get('bill_id') == '1'),
-                        TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->required()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->label(__('Invoice'))
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imagePreviewHeight(250)
-                            ->imageResizeTargetWidth('2400')
-                            ->imageResizeTargetHeight('1600')
-                            ->optimize('webp')
-                            ->reorderable(),
-                        Textarea::make('comment')->label(__('Comment'))
-                            ->rows(3),
-
-                        Toggle::make('pay')->label(__('Paid'))
-                            ->default(false)
-                            ->inline(),
-                    ])
+                    ->form(
+                        SupplyForm::schema(options: [
+                            'tabsHidden' => true,
+                        ]),
+                    )
                     ->successNotification(
                         Notification::make()
                              ->success()
@@ -210,20 +134,14 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->modalWidth('sm')
                         ->keyBindings(['command+s', 'ctrl+s'])
                         ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->form([
-                            Hidden::make('user_id')->default(Auth::user()->id),
-                            Hidden::make('place_id')->default(Filament::getTenant()->id),
-                            TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->required()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                        ])
-                        ->action(function (array $data): void {
-                            Shift::latest('id')->where('place_id', Filament::getTenant()->id)
-                            ->first()
-                            ->update(['income'=>$data['sum']]);
-                        })
+                        ->form(
+                            IncomeForm::schema()
+                        )
+                        // ->action(function (array $data): void {
+                        //     Shift::latest('id')->where('place_id', Filament::getTenant()->id)
+                        //     ->first()
+                        //     ->update(['income'=>$data['sum']]);
+                        // })
                         ->successNotification(
                             Notification::make()
                                  ->success()

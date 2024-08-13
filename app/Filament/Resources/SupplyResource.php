@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Components\SupplyForm;
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
 use App\Models\Ingredient;
@@ -17,39 +18,16 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\{DatePicker, Repeater,Select, TextInput};
 use Filament\Forms\{Set, Get};
-use Filament\Infolists\Components\KeyValueEntry;
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section as ComponentsSection;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\Tabs as ComponentsTabs;
+use Filament\Infolists\Components\{KeyValueEntry, TextEntry,ImageEntry, Tabs};
 use Filament\Infolists\Infolist;
-use Filament\Support\RawJs;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\{IconColumn, SpatieMediaLibraryImageColumn, TextColumn};
 use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class SupplyResource extends Resource
 {
@@ -82,111 +60,11 @@ class SupplyResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Hidden::make('user_id')->default(Auth::user()->id),
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                DateTimePicker::make('added_at')
-                    ->label(__('Date Added'))
-                    ->native(false)
-                    ->seconds(false)
-                    ->maxDate(now())->default(now()),
-                Select::make('supplier_id')->label(__('Supplier'))
-                    ->relationship('supplier', 'company')
-                    ->searchable()
-                    ->native(false)
-                    ->preload()
-                    ->required()
-                    ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
-                    ->createOptionForm([
-                        Section::make()
-                            ->schema([
-                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                TextInput::make('name')->label(__('Name')),
-                                TextInput::make('phone')->label(__('Phone')),
-                                TextInput::make('company')->label(__('Company')),
-                                TextInput::make('email')->label(__('Email'))->email(),
-                                KeyValue::make('data')
-                                    ->keyLabel(__('Rekvizites'))
-                                    ->valueLabel(__('Value')),
-                            ])->columns(2),
-                    ]),
-                ToggleButtons::make('bill_id')->label(__('Type pay'))
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->default(0)
-                    ->required()
-                    ->inline()
-                    ->grouped()
-                    ->live(),
-                TextInput::make('sum')->label(__('Sum'))
-                    ->numeric()
-                    ->required()
-                    ->prefix('₴')
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(' '),
-                TextInput::make('invoice_number')->label(__('Invoice'))
-                ->visible(fn (Get $get) => $get('bill_id') == '1'),
-                Textarea::make('comment')->label(__('Comment'))
-                    ->rows(3),
-                Toggle::make('pay')->label(__('Paid'))
-                    ->default(false)
-                    ->inline(),
-
-                Section::make()
-                    ->compact()
-                    ->schema([
-                        Tabs::make('Tabs')
-                        ->contained(false)
-                        ->tabs([
-                            Tabs\Tab::make(__('Photo'))
-                                ->schema([
-                                    SpatieMediaLibraryFileUpload::make('invoice')
-                                ->label(__('Invoice'))
-                                ->collection('supplies')
-                                ->multiple()
-                                ->imagePreviewHeight(450)
-                                ->imageResizeMode('contain')
-                                ->imageEditor()
-                                ->optimize('webp')
-                                ->resize(80)
-                                ->imageEditorAspectRatios([
-                                    null,
-                                    '16:9',
-                                    '4:3',
-                                    '1:1',
-                                ])
-                                ->reorderable()
-                                ->openable(),
-
-                            SpatieMediaLibraryFileUpload::make('receipt')
-                                ->collection('receipts')
-                                ->label(__('Receipt'))
-                                ->multiple()
-                                ->imagePreviewHeight(250)
-                                ->imageResizeTargetWidth('2400')
-                                ->imageResizeTargetHeight('1600')
-                                ->optimize('webp')
-                                ->imageEditor()
-                                ->imageEditorAspectRatios([
-                                    null,
-                                    '16:9',
-                                    '4:3',
-                                    '1:1',
-                                ])
-                                ->reorderable()
-                                ->openable()
-                                ])->columns(2),
-                            Tabs\Tab::make(__('List'))
-                                ->schema([
-                                    //static::getItemsRepeater()
-                                ]),
-
-                            ]),
-                    ])
-                    ->columns(1),
-
-            ])
-
-            ->columns(['lg' => 2, 'md' => 2, 'xs' => 1]);
+            ->schema(
+                SupplyForm::schema(options: [
+                    'tabsHidden' => true,
+                ]),
+            );
     }
 
     public static function table(Table $table): Table
@@ -368,9 +246,9 @@ class SupplyResource extends Resource
         return $infolist
             ->schema([
 
-                ComponentsTabs::make('Tabs')
+                Tabs::make('Tabs')
                 ->tabs([
-                    ComponentsTabs\Tab::make(__('Supply'))
+                    Tabs\Tab::make(__('Supply'))
                         ->schema([
                             TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
                                 ->badge(),
@@ -381,13 +259,13 @@ class SupplyResource extends Resource
                                 ->badge(),
                             TextEntry::make('comment')->label(__('Comment'))->badge(),
                         ])->columns(2),
-                        ComponentsTabs\Tab::make(__('Invoice'))
+                        Tabs\Tab::make(__('Invoice'))
                         ->schema([
                             ImageEntry::make('invoice')
                             ->simpleLightbox(fn ($record) =>  $record->getImageUrl())
                             ->translateLabel(),
                         ]),
-                        ComponentsTabs\Tab::make(__('Bill'))
+                        Tabs\Tab::make(__('Bill'))
                         ->schema([
                             KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
                         ->keyLabel(' ')

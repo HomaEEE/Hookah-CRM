@@ -46,6 +46,12 @@ class Expense extends Model implements HasMedia
         return $this->HasOne(Supply::class, 'id', 'supply_id');
     }
 
+    public function supplyPhoto()
+    {
+        return $this->hasOne(Supply::class, 'id', 'supply_id');
+    }
+
+
     public function bill()
     {
         return $this->belongsTo(Bill::class, 'bill_id');

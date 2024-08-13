@@ -5,6 +5,9 @@
             <x-filament::tabs.item @click="tab = 'tab1'" :alpine-active="'tab === \'tab1\''"
                     icon="heroicon-o-queue-list">
                 {{ __('Expenses')}}
+
+                {{-- <x-slot name="badge">
+                </x-slot> --}}
             </x-filament::tabs.item>
 
             <x-filament::tabs.item @click="tab = 'tab2'" :alpine-active="'tab === \'tab2\''"

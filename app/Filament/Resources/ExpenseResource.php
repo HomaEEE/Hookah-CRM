@@ -2,15 +2,13 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Bill as BillEnum;
+use App\Filament\Components\ExpenseForm;
 use App\Filament\Resources\ExpenseResource\Pages;
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Bill, Expense, ExpenseCategory, Supply};
-use Auth;
+use App\Models\{Bill, Expense, ExpenseCategory};
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Get;
 
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,24 +16,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Columns\{IconColumn, Summarizers\Sum};
+use Filament\Tables\Filters\{Filter, SelectFilter, TernaryFilter};
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Filters\TernaryFilter;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExpenseResource extends Resource
@@ -69,59 +54,9 @@ class ExpenseResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Hidden::make('user_id')->default(Auth::user()->id),
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                DateTimePicker::make('added_at')
-                    ->label(__('Date Added'))
-                    ->native(false)
-                    ->seconds(false)
-                    ->maxDate(now())->default(now()),
-                Select::make('category_id')->label(__('Category'))
-                    ->relationship('categories', 'name')
-                    ->searchable()
-                    ->required()
-                    ->reactive()
-                    ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
-                    ->createOptionForm([
-                        Section::make()
-                            ->schema([
-                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                TextInput::make('name')->translateLabel(),
-                                TextInput::make('category_id')->translateLabel()->default(0),
-                            ]),
-                    ]),
-                TextInput::make('sum')->label(__('Sum'))
-                    ->numeric()
-                    ->prefix('₴')
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                ToggleButtons::make('bill_id')->label(__('Type pay'))
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->default(0)
-                    ->required()
-                    ->inline()
-                    ->grouped()
-                    ->live(),
-                Textarea::make('comment')->translateLabel()->rows(2),
-
-                SpatieMediaLibraryFileUpload::make('invoice')
-                    ->label(__('Invoice'))
-                    ->collection('supplies')
-                    ->multiple()
-                    ->imagePreviewHeight(250)
-                    ->imageResizeTargetWidth('2400')
-                    ->imageResizeTargetHeight('1600')
-                    ->optimize('webp')
-                    ->imageEditor()
-                    ->imageEditorAspectRatios([
-                        null,
-                        '16:9',
-                        '4:3',
-                        '1:1',
-                    ])
-                    ->reorderable()
-                    ->openable()
-            ]);
+            ->schema(
+                ExpenseForm::schema()
+        );
     }
 
     public static function table(Table $table): Table
