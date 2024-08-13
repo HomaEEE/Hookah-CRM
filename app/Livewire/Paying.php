@@ -34,7 +34,7 @@ class Paying extends BaseWidget
                 ->size('sm')
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah', 100)->summarize(Sum::make()->label(__('Total'))),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
 
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {
