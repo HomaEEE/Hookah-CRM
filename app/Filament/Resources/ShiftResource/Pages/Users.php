@@ -48,7 +48,7 @@ class Users extends ManageRelatedRecords
             ->recordTitleAttribute('user_id')
             ->modifyQueryUsing(fn (Builder $query) =>
                 $query->where('shift_id', $this->getOwnerRecord()->id)
-                      ->whereDate('added_at', $this->getOwnerRecord()->created_at ) )
+                      ->whereDate('created_at', $this->getOwnerRecord()->created_at ) )
             ->columns([
                 TextColumn::make('user.name')->translateLabel(),
                 TextColumn::make('days')->translateLabel(),
