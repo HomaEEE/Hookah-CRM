@@ -103,11 +103,11 @@ class ProductResource extends Resource
                 ->description(fn (Product $record): string => $record->frontend_name ?? '', position: 'before')
                 ->description(fn (Product $record): string => $record->category['category_name'] ?? '', position: 'above'),
 
-            TextColumn::make('cost')->money('uah', true)->translateLabel()
+            TextColumn::make('cost')->money('uah')->translateLabel()
                 ->searchable()
                 ->visibleFrom('md')
                 ->sortable(),
-            TextColumn::make('price')->money('uah', true)->translateLabel()
+            TextColumn::make('price')->money('uah')->translateLabel()
                 ->searchable()
                 ->sortable(),
             // IconColumn::make('visible')

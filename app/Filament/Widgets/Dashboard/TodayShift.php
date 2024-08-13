@@ -15,7 +15,7 @@ class TodayShift extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected static ?string $pollingInterval = '10s';
+    protected static ?string $pollingInterval = '300s';
 
     protected function getStats(): array
     {
@@ -34,7 +34,7 @@ class TodayShift extends BaseWidget
                 Stat::make(__('Tips'), $tipsShift != null ? $tipsShift : 0)
                 ->icon('heroicon-o-banknotes'),
 
-                Stat::make(__('Expenses'), $expenseShift != null ? $expenseShift : 0)
+                Stat::make(__('Expenses'), $expenseShift != null ? $expenseShift/100 : 0)
                 ->icon('heroicon-o-arrow-up-on-square-stack')
             ];
     }

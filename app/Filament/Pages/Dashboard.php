@@ -23,6 +23,8 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Get;
+use Filament\Support\RawJs;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -163,6 +165,15 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->native(false)
                             ->required()
                             ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
+                        ToggleButtons::make('bill_id')->label(__('Type pay'))
+                            ->options(Bill::get()->pluck('name', 'id'))
+                            ->default(0)
+                            ->required()
+                            ->inline()
+                            ->grouped()
+                            ->live(),
+                        TextInput::make('invoice_number')->translateLabel()
+                            ->visible(fn (Get $get) => $get('bill_id') == '1'),
                         TextInput::make('sum')->label(__('Sum'))
                             ->numeric()
                             ->required()
@@ -180,13 +191,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->reorderable(),
                         Textarea::make('comment')->label(__('Comment'))
                             ->rows(3),
-                            ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->live(),
+
                         Toggle::make('pay')->label(__('Paid'))
                             ->default(false)
                             ->inline(),
@@ -240,12 +245,14 @@ class Dashboard extends \Filament\Pages\Dashboard
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')->label('')
                         ->numeric()
+                        ->mask(RawJs::make('$money($input)'))
+                        ->stripCharacters(',')
                         ->required()
                 ])
                 ->action(function (array $data): void {
                     Tip::updateOrCreate(
                         ['created_at' => Carbon::today(), 'place_id' => $data['place_id']],
-                    )->increment('tips', $data['tips']);
+                    )->increment('tips', $data['tips']*100);
 
                     Notification::make()
                         ->title(__('Tips added'))

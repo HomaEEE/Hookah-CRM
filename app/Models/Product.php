@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,8 @@ class Product extends Model implements HasMedia
         'category_id', 'image', 'sort_order', 'visible',  'visible_menu'];
 
     protected $casts = [
+        'cost' => MoneyCast::class,
+        'price' => MoneyCast::class,
         'visible' => 'boolean',
         'visible_menu' => 'boolean'];
 

@@ -36,9 +36,12 @@ use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section as ComponentsSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Components\Actions\Action;
-
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Tabs as ComponentsTabs;
 use Filament\Infolists\Infolist;
+use Filament\Support\RawJs;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -107,13 +110,6 @@ class SupplyResource extends Resource
                                     ->valueLabel(__('Value')),
                             ])->columns(2),
                     ]),
-                TextInput::make('sum')->label(__('Sum'))
-                    ->numeric()
-                    ->required()
-                    ->prefix('₴')
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                Textarea::make('comment')->label(__('Comment'))
-                    ->rows(3),
                 ToggleButtons::make('bill_id')->label(__('Type pay'))
                     ->options(Bill::get()->pluck('name', 'id'))
                     ->default(0)
@@ -121,15 +117,25 @@ class SupplyResource extends Resource
                     ->inline()
                     ->grouped()
                     ->live(),
+                TextInput::make('sum')->label(__('Sum'))
+                    ->numeric()
+                    ->required()
+                    ->prefix('₴')
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(' '),
+                TextInput::make('invoice_number')->label(__('Invoice'))
+                ->visible(fn (Get $get) => $get('bill_id') == '1'),
+                Textarea::make('comment')->label(__('Comment'))
+                    ->rows(3),
                 Toggle::make('pay')->label(__('Paid'))
                     ->default(false)
                     ->inline(),
 
-
-
                 Section::make()
+                    ->compact()
                     ->schema([
                         Tabs::make('Tabs')
+                        ->contained(false)
                         ->tabs([
                             Tabs\Tab::make(__('Photo'))
                                 ->schema([
@@ -176,9 +182,7 @@ class SupplyResource extends Resource
 
                             ]),
                     ])
-                    ->columns(1)
-                    ->collapsible()
-                    ->persistCollapsed(),
+                    ->columns(1),
 
             ])
 
@@ -199,7 +203,7 @@ class SupplyResource extends Resource
                     ->description(fn (Supply $record): string => $record->comment ?? '')->wrap(),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->searchable()
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('UAH')->label(__('Total'))),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
@@ -207,14 +211,28 @@ class SupplyResource extends Resource
                     ->circular()
                     ->stacked()
                     ->limit(3)
-                    ->limitedRemainingText()
-                    ->height(30)
+                    ->height(40)
                     ->toggleable()
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
                     ->placeholder('No description.')
-                    ->visibleFrom('md'),
+                    ->visibleFrom('sm'),
 
-                TextColumn::make('bill.type')->label(__('Bill'))->badge(),
+                    IconColumn::make('bill_id')->label(__('Bill'))
+                    ->icon(fn (string $state): string => match ($state) {
+                        '0' => 'heroicon-o-banknotes',
+                        '1' => 'heroicon-o-credit-card',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        '1' => 'warning',
+                        '0' => 'success',
+                        default => 'gray',
+                    })
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
@@ -324,8 +342,16 @@ class SupplyResource extends Resource
 
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->slideOver(),
-                    Tables\Actions\EditAction::make()->slideOver(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                    ->mutateRecordDataUsing(function (array $data): array {
+                        $data['sum'] =  $data['sum']/100;
+                        return $data;
+                    })
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['sum'] =  $data['sum']*100;
+                        return $data;
+                    }),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -341,25 +367,34 @@ class SupplyResource extends Resource
     {
         return $infolist
             ->schema([
-                ComponentsSection::make()->schema([
-                    TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
-                        ->badge(),
-                    TextEntry::make('user.name')->translateLabel(),
-                    TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
-                    TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
-                    TextEntry::make('bill.name')->translateLabel()
-                        ->badge(),
-                    TextEntry::make('comment')->label(__('Comment'))->badge(),
-                ])->columns(2)->collapsible(),
-                ComponentsSection::make(__('Invoice'))->schema([
-                    LightboxSpatieMediaLibraryImageEntry::make('invoice')
-                        ->collection('supplies')
-                        ->conversion('thumb')
-                        ->translateLabel(),
-                    KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
+
+                ComponentsTabs::make('Tabs')
+                ->tabs([
+                    ComponentsTabs\Tab::make(__('Supply'))
+                        ->schema([
+                            TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
+                                ->badge(),
+                            TextEntry::make('user.name')->translateLabel(),
+                            TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
+                            TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', divideBy: 100),
+                            TextEntry::make('bill.name')->translateLabel()
+                                ->badge(),
+                            TextEntry::make('comment')->label(__('Comment'))->badge(),
+                        ])->columns(2),
+                        ComponentsTabs\Tab::make(__('Invoice'))
+                        ->schema([
+                            ImageEntry::make('invoice')
+                            ->simpleLightbox(fn ($record) =>  $record->getImageUrl())
+                            ->translateLabel(),
+                        ]),
+                        ComponentsTabs\Tab::make(__('Bill'))
+                        ->schema([
+                            KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
                         ->keyLabel(' ')
-                        ->valueLabel('Реквизиты')
-                ])->columns(2)->collapsed(),
+                        ->valueLabel('Реквизиты'),
+                    TextEntry::make('invoice_number')->translateLabel()->badge()->copyable()
+                        ]),
+                ])
 
                 // ComponentsSection::make(__('List'))->schema([
                 //     RepeatableEntry::make('supplyItems')->schema([
@@ -387,9 +422,12 @@ class SupplyResource extends Resource
             ->relationship()
             ->schema([
                 Select::make('ingredient_id')
-                    ->label('Product')
-                    ->options(Ingredient::query()->pluck('ingredient', 'id'))
+                    ->label('Product')->translateLabel()
+                    ->relationship('ingredient', 'id')
+                    ->options(Ingredient::where('place_id', Filament::getTenant()->id)->get()->pluck('ingredient', 'id'))
+                    ->searchable(['ingredient', 'barcode'])
                     ->required()
+                    ->native(false)
                     ->reactive()
                     ->afterStateUpdated(fn ($state, Set $set) => $set('unit_price', Ingredient::find($state)?->price/100 ?? 0))
                     ->distinct()
@@ -400,7 +438,7 @@ class SupplyResource extends Resource
                     ->searchable(),
 
                 TextInput::make('qty')
-                    ->label('Quantity')
+                    ->translateLabel()
                     ->numeric()
                     ->default(1)
                     ->columnSpan([

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3aaeb3092523d544dfba242d1f81b1ba",
+    "content-hash": "58f22da93cd876cdfd4796263d80fbee",
     "packages": [
         {
             "name": "afsakar/filament-translate-action",
@@ -5240,83 +5240,6 @@
             "time": "2024-07-01T20:03:41+00:00"
         },
         {
-            "name": "njxqlus/filament-lightbox",
-            "version": "2.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/njxqlus/filament-lightbox.git",
-                "reference": "420549a4cf9b3241ffa858a8f53f9a970a60edc6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/njxqlus/filament-lightbox/zipball/420549a4cf9b3241ffa858a8f53f9a970a60edc6",
-                "reference": "420549a4cf9b3241ffa858a8f53f9a970a60edc6",
-                "shasum": ""
-            },
-            "require": {
-                "filament/filament": "^3.0",
-                "illuminate/contracts": "^10.0",
-                "php": "^8.1",
-                "spatie/laravel-package-tools": "^1.15.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^7.9",
-                "nunomaduro/larastan": "^2.0.1",
-                "orchestra/testbench": "^8.0",
-                "pestphp/pest": "^2.0",
-                "pestphp/pest-plugin-arch": "^2.0",
-                "pestphp/pest-plugin-laravel": "^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Njxqlus\\Filament\\Components\\FilamentLightboxServiceProvider"
-                    ],
-                    "aliases": {
-                        "FilamentLightbox": "Njxqlus\\Filament\\Components\\Facades\\FilamentLightbox"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Njxqlus\\Filament\\Components\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mikael Ahabalyants",
-                    "email": "njxqlus@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Lightbox entry for Filament",
-            "homepage": "https://github.com/njxqlus/filament-lightbox",
-            "keywords": [
-                "filament",
-                "filament-lightbox",
-                "laravel",
-                "lightbox",
-                "njxqlus"
-            ],
-            "support": {
-                "issues": "https://github.com/njxqlus/filament-lightbox/issues",
-                "source": "https://github.com/njxqlus/filament-lightbox"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/njxqlus",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-12-11T20:19:21+00:00"
-        },
-        {
             "name": "nunomaduro/termwind",
             "version": "v1.15.1",
             "source": {
@@ -6531,74 +6454,6 @@
                 }
             ],
             "time": "2024-02-26T18:08:49+00:00"
-        },
-        {
-            "name": "sakanjo/laravel-easy-metrics",
-            "version": "v1.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sakanjo/laravel-easy-metrics.git",
-                "reference": "9ab5d759a5f7326b25d2f5123ee31bb5149d1839"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sakanjo/laravel-easy-metrics/zipball/9ab5d759a5f7326b25d2f5123ee31bb5149d1839",
-                "reference": "9ab5d759a5f7326b25d2f5123ee31bb5149d1839",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^10.0|^11.0",
-                "illuminate/http": "^10.0|^11.0",
-                "illuminate/support": "^10.0|^11.0",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.13",
-                "orchestra/testbench": "^8.14",
-                "pestphp/pest": "^2.24",
-                "phpstan/phpstan": "^1.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "SaKanjo\\EasyMetrics\\EasyMetricsServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "SaKanjo\\EasyMetrics\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Salah Kanjo",
-                    "email": "dev.salah.kanjo@gmail.com"
-                }
-            ],
-            "description": "Generate metrics with ease and precision.",
-            "keywords": [
-                "Metrics",
-                "charts",
-                "laravel",
-                "reports"
-            ],
-            "support": {
-                "issues": "https://github.com/sakanjo/laravel-easy-metrics/issues",
-                "source": "https://github.com/sakanjo/laravel-easy-metrics/tree/v1.0.8"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sakanjo",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-06-07T15:03:26+00:00"
         },
         {
             "name": "salahhusa9/laravel-updater",
@@ -10081,66 +9936,6 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.2.7"
             },
             "time": "2023-12-08T13:03:43+00:00"
-        },
-        {
-            "name": "vemcogroup/laravel-translation",
-            "version": "3.0.13",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vemcogroup/laravel-translation.git",
-                "reference": "6bcc418e9fe33abdac3a2e1a2173ac9d891eff83"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vemcogroup/laravel-translation/zipball/6bcc418e9fe33abdac3a2e1a2173ac9d891eff83",
-                "reference": "6bcc418e9fe33abdac3a2e1a2173ac9d891eff83",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "^6.3|^7.0",
-                "laravel/framework": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "php": "^7.3|^8.0",
-                "symfony/finder": "^4.3|^5.0|^6.0|^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Vemcogroup\\Translation\\TranslationServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Vemcogroup\\Translation\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Henrik B Hansen",
-                    "email": "hbh@vemcount.com",
-                    "homepage": "https://www.vemcogroup.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Translation package for Laravel to scan for localisations and up/download to poeditor",
-            "homepage": "https://github.com/vemcogroup/laravel-translation",
-            "keywords": [
-                "Poeditor",
-                "i18n",
-                "laravel",
-                "translations"
-            ],
-            "support": {
-                "issues": "https://github.com/vemcogroup/laravel-translation/issues",
-                "source": "https://github.com/vemcogroup/laravel-translation/tree/3.0.13"
-            },
-            "time": "2024-03-29T14:26:23+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

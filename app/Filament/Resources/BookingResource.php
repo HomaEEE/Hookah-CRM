@@ -36,13 +36,6 @@ class BookingResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    // protected function getHeaderWidgets(): array
-    // {
-    //     return [
-    //         \App\Filament\Widgets\CalendarWidget::class,
-    //     ];
-    // }
-
     public static function getNavigationGroup(): ?string
     {
         return __('Place');
@@ -95,7 +88,7 @@ class BookingResource extends Resource
                             ->mask(RawJs::make(<<<'JS'
                         $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
                     JS))
-                            ->translateLabel(),
+                        ->translateLabel(),
                         TextInput::make('comment')->translateLabel(),
                     ])
                     ->editOptionForm([

@@ -95,7 +95,9 @@ class SiteController extends Controller
         return response()->json(['success'=>'Send Feedback']);
     }
 
-    public function sendReserve( Request $request) {
+    public function sendReserve(Request $request) {
+
+        echo $request;
 
         Booking::create([
             'user_id' => 1,

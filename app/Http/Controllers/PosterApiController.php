@@ -62,7 +62,7 @@ class PosterApiController extends Controller
                     'menu_category_id' => $product['menu_category_id'],
                     'product_id' => $product['product_id'],
                     'cost' => $product['cost'],
-                    'price' => $product['spots'][0]['price'] / 100,
+                    'price' => $product['spots'][0]['price'],
                     'out' => $product['out'],
                     'ingredients' => empty($ingredient_array) ? '' : implode(', ', $ingredient_array),
                 ]
@@ -124,6 +124,8 @@ class PosterApiController extends Controller
                 ],
                 [
                     'unit' => $ingredient['ingredient_unit'],
+                     'barcode' => $ingredient['ingredient_barcode'],
+
                 ]);
 
             }
@@ -140,7 +142,8 @@ class PosterApiController extends Controller
                     ],
                     [
                         'ingredient' => $product['product_name'],
-                        'unit' => 'u',
+                        'unit' => 'p',
+                        'barcode' => $ingredient['ingredient_barcode'],
                         'price' => $product['cost']
                     ]
                 );
@@ -347,15 +350,14 @@ class PosterApiController extends Controller
             'dateFrom' => Carbon::today()->format('Ymd')
         ])->json('response');
 
-        Http::post($this->urlApi . 'finance.closeCashShift?token=' . $place_api['api'], [
+        $response = Http::post($this->urlApi . 'finance.closeCashShift?token=' . $place_api['api'], [
             'cash_shift_id' => $getShift[0]['cash_shift_id'],
             'user_id'       => $getShift[0]['user_id_start'],
             'amount'        => $data['shift'],
             'time'          => Carbon::now()->subMinute(2)->format('Y-m-d H:i'),
             'is_fiscal'     => 0,
-            'comment'       => $data['comment']
+            'comment'       => 'CRM'
         ]);
-
     }
 
     public function deleteReceipt($data) {

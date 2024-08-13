@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,10 @@ class Expense extends Model implements HasMedia
 
     protected $fillable = ['sum', 'added_at', 'poster', 'bill_id',
     'category_id', 'supply_id', 'user_id', 'place_id', 'comment'];
+
+    protected $casts = [
+        'sum' => MoneyCast::class,
+    ];
 
     public function place()
     {

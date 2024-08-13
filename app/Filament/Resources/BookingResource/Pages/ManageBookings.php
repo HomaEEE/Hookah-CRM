@@ -16,7 +16,7 @@ class ManageBookings extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()->slideOver()->createAnother(false),
+            Actions\CreateAction::make()->createAnother(false),
         ];
     }
 

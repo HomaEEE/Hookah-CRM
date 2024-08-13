@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,12 @@ class ShiftUser extends Model
         'wage',
         'procent_day',
         'cashout',
+    ];
+
+    protected $casts = [
+        'wage' => MoneyCast::class,
+        'procent_day' => MoneyCast::class,
+        'cashout' => MoneyCast::class
     ];
 
     public function shift()

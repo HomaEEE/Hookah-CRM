@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,8 +19,17 @@ class Shift extends Model
 
     protected $casts = [
         'report' => 'json',
-      //  'report.x-report' => 'boolean',
-       // 'report.z-report' => 'boolean',
+        'cash' => MoneyCast::class,
+        'terminal' => MoneyCast::class,
+        'old_shift' => MoneyCast::class,
+        'bar' => MoneyCast::class,
+        'kitchen' => MoneyCast::class,
+        'wages' => MoneyCast::class,
+        'tips' => MoneyCast::class,
+        'expense' => MoneyCast::class,
+        'income' => MoneyCast::class,
+        'calc_shift' => MoneyCast::class,
+        'shift' => MoneyCast::class
     ];
 
     public function place()

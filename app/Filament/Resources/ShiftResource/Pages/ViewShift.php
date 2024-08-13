@@ -18,4 +18,9 @@ class ViewShift extends ViewRecord
         ];
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Shift');
+    }
+
 }

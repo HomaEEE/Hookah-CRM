@@ -12,14 +12,13 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PosterShift extends BaseWidget
 {
-    protected static ?string $pollingInterval = '60s';
+    protected static ?string $pollingInterval = '600s';
 
     use HasWidgetShield;
 
     protected function getCards(): array
     {
         $posterTodayShift = (new PosterApi())->getTodayShift(Filament::getTenant()->id);
-
         return [
             Stat::make(__('Shift'), $posterTodayShift != null ? $posterTodayShift['payed_sum_sum'] / 100 : 0)
             ->icon('heroicon-o-calendar-days'),

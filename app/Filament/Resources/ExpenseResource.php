@@ -27,6 +27,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\IconColumn;
@@ -134,15 +135,31 @@ class ExpenseResource extends Resource
 
                 TextColumn::make('category.name')->label(__('Category'))
                     ->badge()
-                    ->description(fn (Expense $record): string => $record->comment ?? ''),
-
-                TextColumn::make('supply_id')->badge()->label(__('Supply'))
-                    ->wrap()
                     ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
+
+                TextColumn::make('supply_id')->badge()->label(__('Supply'))
+                    ->wrap(),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
-                TextColumn::make('bill.type')->translateLabel()->badge(),
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
+
+                IconColumn::make('bill_id')->label(__('Bill'))
+                ->icon(fn (string $state): string => match ($state) {
+                    '0' => 'heroicon-o-banknotes',
+                    '1' => 'heroicon-o-credit-card',
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    '1' => 'warning',
+                    '0' => 'success',
+                    default => 'gray',
+                })
+                ->action(function ($record, $column) {
+                    $name = $column->getName();
+                    $record->update([
+                        $name => ! $record->$name,
+                    ]);
+                }),
+
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
@@ -168,7 +185,7 @@ class ExpenseResource extends Resource
 
             ])->defaultSort('added_at', 'desc')
             ->deferLoading()
-            ->defaultPaginationPageOption(25)
+            ->defaultPaginationPageOption(10)
             ->striped()
             ->filters([
                 SelectFilter::make('category_id')
@@ -259,8 +276,8 @@ class ExpenseResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->slideOver(),
-                    Tables\Actions\EditAction::make()->slideOver(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -280,9 +297,12 @@ class ExpenseResource extends Resource
                 TextEntry::make('sum')->translateLabel()->badge(),
                 TextEntry::make('comment')->translateLabel()->badge(),
                 LightboxSpatieMediaLibraryImageEntry::make('invoice')
-                ->collection('supplies')
-                ->conversion('thumb')
-                ->translateLabel(),
+                    ->collection('supplies')
+                    ->conversion('thumb')
+                    ->translateLabel(),
+                // ImageEntry::make('invoice')
+                // ->simpleLightbox(fn ($record) =>  $record?->image ?? "Your Image Url address", defaultDisplayUrl: true)
+                // ->translateLabel(),
             ]);
     }
 
@@ -296,7 +316,7 @@ class ExpenseResource extends Resource
     protected function getHeaderWidgets(): array
     {
         return [
-            App\Filament\Widgets\ExpenseChart::class
+           // App\Filament\Widgets\ExpenseChart::class
         ];
     }
 

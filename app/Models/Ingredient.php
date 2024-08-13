@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
+use App\Enums\SupplyUnit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +14,14 @@ class Ingredient extends Model
 
     protected $fillable = ['ingredient', 'unit', 'workshop_id', 'place_id', 'price'];
 
+
+    protected $casts = [
+        'price' => MoneyCast::class,
+    ];
+
+    // protected $casts = [
+    //     'unit' => SupplyUnit::class,
+    // ];
     public $timestamps = false;
 
     public function place()

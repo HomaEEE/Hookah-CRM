@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -14,7 +15,9 @@ class Supply extends Model implements HasMedia
 
     protected $fillable = ['place_id', 'supplier_id', 'added_at', 'sum', 'items', 'comment', 'bill_id', 'pay', 'poster', 'user_id'];
 
+
     protected $casts = [
+        'sum' => MoneyCast::class,
         'pay' => 'boolean',
         'poster' => 'boolean',
         'items' => 'json',

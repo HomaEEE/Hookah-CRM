@@ -15,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Pages\SubNavigationPosition;
+use Filament\Resources\Pages\Page;
 
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +34,8 @@ class ShiftResource extends Resource
     protected static ?string $recordTitleAttribute = 'id';
 
     protected static ?int $navigationSort = 1;
+
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     public static function getNavigationGroup(): ?string
     {
@@ -68,11 +72,11 @@ class ShiftResource extends Resource
                     ->state(function (Shift $record): int {
                         return $record->terminal * 0.987;
                     })
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
                 TextColumn::make('cash')->translateLabel()->badge()->color('warning')
                     ->money('UAH')
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
                 TextColumn::make('sum')->translateLabel()->badge()->color('gray')
                     ->state(function (Shift $record): int {
@@ -207,6 +211,16 @@ class ShiftResource extends Resource
         return parent::getEloquentQuery();
     }
 
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            Pages\ViewShift::class,
+            Pages\Users::class,
+            Pages\Expenses::class,
+        ]);
+    }
+
     public static function getPages(): array
     {
         return [
@@ -214,6 +228,8 @@ class ShiftResource extends Resource
             'create' => Pages\CreateShift::route('/create'),
             'view' => Pages\ViewShift::route('/{record}/view'),
             'edit' => Pages\EditShift::route('/{record}/edit'),
+            'expenses' => Pages\Expenses::route('/{record}/expenses'),
+            'users' => Pages\Users::route('/{record}/users'),
         ];
     }
 }

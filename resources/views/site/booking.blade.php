@@ -6,7 +6,7 @@
 @section('page', __('Booking page'))
 
 @section('content')
-<div class="page-container">
+<div class="container page">
     <div class="container">
 
         <h2 class="divider line razor title">{{__('Booking')}}</h2>
@@ -31,17 +31,17 @@
               </div>
 
               <div class="input-group">
-                <input type="number" name="person" id="person" placeholder=" " required/>
+                <input type="number" name="person" id="person" placeholder=" " required min="1"/>
                 <label for="person">{{__('Persons')}}</label>
               </div>
 
               <div class="input-group">
-                <input  name="date" id="date" placeholder="{{__('Date placeholder')}}" required/>
+                <input  name="date" id="date" type="date" placeholder="{{__('Date placeholder')}}" required/>
                 <label for="date">{{__('Date')}}</label>
               </div>
 
               <div class="input-group">
-                <input name="time" id="time" placeholder="12:00" required/>
+                <input name="time" id="time"  type="time" required/>
                 <label for="time">{{__('Time')}}</label>
               </div>
 

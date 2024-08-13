@@ -47,6 +47,7 @@ class IngredientResource extends Resource
                     'p' => __('Unit'),
 
                 ]),
+                TextInput::make('barcode')->translateLabel(),
                 TextInput::make('price')->translateLabel()
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')
@@ -58,23 +59,18 @@ class IngredientResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('ingredient')->translateLabel(),
-                TextColumn::make('unit')->translateLabel(),
-                TextColumn::make('price')->translateLabel()->money('UAH', divideBy: 100)
+                TextColumn::make('ingredient')->translateLabel()
+                ->searchable(['ingredient', 'barcode'])
+                ->size('sm')
+                ->description(fn (Ingredient $record): string => $record->barcode ?? ''),
+                TextColumn::make('unit')->translateLabel()->badge(),
+                TextColumn::make('price')->translateLabel()->money('UAH')
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                ->mutateRecordDataUsing(function (array $data): array {
-                    $data['price'] =  $data['price']/100;
-                    return $data;
-                })
-                ->mutateFormDataUsing(function (array $data): array {
-                    $data['price'] =  $data['price']*100;
-                    return $data;
-                }),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
