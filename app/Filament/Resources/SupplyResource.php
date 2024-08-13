@@ -203,7 +203,7 @@ class SupplyResource extends Resource
                     ->description(fn (Supply $record): string => $record->comment ?? '')->wrap(),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->searchable()
-                    ->summarize(Sum::make()->money('UAH')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
