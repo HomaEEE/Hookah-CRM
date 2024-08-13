@@ -575,7 +575,7 @@ class CreateShift extends CreateRecord
                                     (float) $get('wages') - (float) $get('expense') - (float) $get('withdrawal');
 
                                     $set('calc', $totalCash);
-                                    return  number_format($totalCash, 2);
+                                    return  number_format($totalCash, 0);
                                 }),
 
                             Hidden::make('calc_shift')->default(0),
