@@ -7,25 +7,22 @@ use Auth;
 
 use App\Http\Controllers\{LocalApiController, PosterApiController};
 use App\Models\{Expense, Income, Place, Shift, Withdrawal};
-use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\{Fieldset, Hidden, Section, TextInput};
 use Filament\Forms\{Get, Set};
 use Filament\Notifications\Notification;
 
+use Filament\Forms\Components\{Actions, Wizard\Step, CheckboxList, Placeholder};
 
-use Filament\Forms\Components\{Actions, Actions\Action, CheckboxList, Placeholder};
-use Filament\Support\RawJs;
-use Filament\Actions\CreateAction;
-
+use Filament\Forms\Components\Actions\Action;
 class ShiftWizard
 {
     public static function schema(): array
     {
         return [
+
             // Actions::make([
-            //     CreateAction::make('Add Withdrawal')->label(__('Add Withdrawal'))
-            //         ->model(Withdrawal::class)
+            //     Action::make('Add Withdrawal')->label(__('Add Withdrawal'))
             //         ->icon('heroicon-s-banknotes')
             //         ->color('success')
             //         ->modalHeading(__('Add Withdrawal'))
@@ -47,9 +44,7 @@ class ShiftWizard
             //             $set('withdrawal', $LocalWithdrawal / 100);
             //         }),
 
-            //     CreateAction::make('add_income')->label(__('Add Income'))
-            //         ->model(Income::class)
-
+            //         Action::make('add_income')->label(__('Add Income'))
             //         ->icon('heroicon-o-document-plus')
             //         ->color('info')
             //         ->modalHeading(__('Add Income'))
@@ -75,11 +70,10 @@ class ShiftWizard
             //             $set('income', (int) $posterLocalIncomes / 100);
             //         }),
 
-            //     CreateAction::make('add_expense')->label(__('Add Expense'))
+            //         Action::make('add_expense')->label(__('Add Expense'))
             //         ->icon('heroicon-o-document-minus')
             //         ->color('danger')
             //         ->modalHeading(__('Add Expense'))
-            //         ->model(Expense::class)
             //         ->requiresConfirmation()
             //         ->form(
             //             ExpenseForm::schema()
@@ -105,7 +99,7 @@ class ShiftWizard
             //             $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
             //             $set('expense', (int) $posterLocalExpense / 100);
             //         }),
-            //     ]),
+            //     ])->fullWidth(),
 
             FieldSet::make(__('Expenses & Income'))->schema([
                 TextInput::make('income')->translateLabel()
@@ -167,18 +161,6 @@ class ShiftWizard
             ])->columns(3),
 
 
-
-            // Placeholder::make('coupurs_calc')->translateLabel()
-            // ->content(function (Set $set, $get) {
-            //     $total = collect($get('coupurs'))
-            //         ->pluck('sum')
-            //         ->sum();
-            //     $set('shift', $total);
-            //     return $total;
-            // })
-            // ->reactive(),
-
-
             FieldSet::make('Shift')->translateLabel()->schema([
                 Hidden::make('wages')->default(0),
 
@@ -230,6 +212,6 @@ class ShiftWizard
                     ])
                     ->gridDirection('row')
             ])
-        ];
+    ];
     }
 }
