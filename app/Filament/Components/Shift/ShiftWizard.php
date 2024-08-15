@@ -109,8 +109,6 @@ class ShiftWizard
 
             FieldSet::make(__('Expenses & Income'))->schema([
                 TextInput::make('income')->translateLabel()
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
                     ->numeric()
                     ->reactive()
                     ->default(0)
@@ -131,8 +129,6 @@ class ShiftWizard
                 TextInput::make('expense')->translateLabel()
                     ->numeric()
                     ->default(0)
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
                     ->hidden(fn (Get $get) => $get('expense') == 0)
                     ->suffixAction(
                         Action::make('update_expenses')
@@ -150,8 +146,6 @@ class ShiftWizard
 
                 TextInput::make('tips')->translateLabel()
                     ->numeric()->default(0)
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
                     ->suffixAction(
                         Action::make('update_tips')
                             ->translateLabel()
@@ -169,8 +163,6 @@ class ShiftWizard
                     ->numeric()
                     ->default(0)
                     ->reactive()
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
                     ->hidden(fn (Get $get) => $get('withdrawal') == 0),
             ])->columns(3),
 
@@ -211,8 +203,6 @@ class ShiftWizard
                         }
                     }),
                 TextInput::make('shift')->translateLabel()
-                    ->mask(RawJs::make('$money($input)'))
-                    ->stripCharacters(',')
                     ->inputMode('decimal')
                     ->numeric()
                     ->required()

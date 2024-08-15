@@ -58,7 +58,7 @@ class Expenses extends ManageRelatedRecords
                 ->description(fn ($record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->translateLabel()->badge()
                 ->description(fn ($record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
-                TextColumn::make('sum')->translateLabel()->moneY('UAH', true)->badge()
+                TextColumn::make('sum')->translateLabel()->money('UAH', 100)->badge()
                 ->summarize(Sum::make()->label(__('Total'))),
                 IconColumn::make('bill.type')->label(__('Bill')),
             ])

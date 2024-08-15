@@ -52,9 +52,9 @@ class Users extends ManageRelatedRecords
             ->columns([
                 TextColumn::make('user.name')->translateLabel(),
                 TextColumn::make('days')->translateLabel(),
-                TextColumn::make('wage')->translateLabel()->summarize(Sum::make()->label(__('Wage'))),
-                TextColumn::make('procent_day')->translateLabel()->summarize(Sum::make()->label(__('Procent'))),
-                TextColumn::make('cashout')->translateLabel()->summarize(Sum::make()->label(__('Total'))),
+                TextColumn::make('wage')->translateLabel()->summarize(Sum::make()->money('UAH', 100)->label(__('Wage'))),
+                TextColumn::make('procent_day')->translateLabel()->summarize(Sum::make()->money('UAH', 100)->label(__('Procent'))),
+                TextColumn::make('cashout')->translateLabel()->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
             ])
             ->filters([
                 //
