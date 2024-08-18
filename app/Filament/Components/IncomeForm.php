@@ -21,6 +21,7 @@ class IncomeForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
+                ->autocomplete(false)
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(','),
             Textarea::make('comment')->translateLabel()->rows(2),

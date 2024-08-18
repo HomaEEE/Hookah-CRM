@@ -27,6 +27,7 @@ class Paying extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
+        ->deferLoading()
         ->query(Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
         ->where('pay', 0))
             ->columns([

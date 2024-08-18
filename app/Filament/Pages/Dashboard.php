@@ -16,12 +16,11 @@ use Auth;
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\CreateAction;
+use Filament\Actions\{Action, ActionGroup, CreateAction};
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Support\RawJs;
+use Illuminate\Support\Str;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -46,6 +45,13 @@ class Dashboard extends \Filament\Pages\Dashboard
         ];
     }
 
+
+    public function updated($name)
+    {
+        if (Str::of($name)->contains(['mountedCreateAction','mountedTableAction', 'mountedTableBulkAction'])) {
+            $this->emit('updateTodayShift');
+        }
+    }
 
     protected function getActions(): array
     {
@@ -178,7 +184,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->iconColor('success')
                         ->send();
                 }),
-
             ActionGroup::make([
 
             Action::make('openShift')

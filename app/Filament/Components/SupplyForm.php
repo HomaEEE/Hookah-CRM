@@ -52,6 +52,7 @@ class SupplyForm
                     ->live(),
                 TextInput::make('sum')->label(__('Sum'))
                     ->numeric()
+                    ->autocomplete(false)
                     ->inputMode('decimal')
                     ->stripCharacters(',')
                     ->required()

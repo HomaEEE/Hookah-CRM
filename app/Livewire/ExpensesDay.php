@@ -16,9 +16,13 @@ use Illuminate\Contracts\Support\Htmlable;
 class ExpensesDay extends BaseWidget
 {
 
+    protected static ?string $pollingInterval = null;
+
+    protected $listeners = ['updateTodayShift' => '$refresh'];
+
     public static function badge(): ?string
     {
-        return Expense::query()->whereDate('added_at', '>=', Carbon::today())->count();
+        return Expense::query()->with('supplies')->whereDate('added_at', '>=', Carbon::today())->count();
     }
 
     protected function getTableHeading(): string | Htmlable
@@ -29,6 +33,7 @@ class ExpensesDay extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
+        ->deferLoading()
         ->query(Expense::query()->where('place_id', Filament::getTenant()->id)
         ->whereDate('added_at', Carbon::today())->with('user', 'supply')->wherePay('1'))
 

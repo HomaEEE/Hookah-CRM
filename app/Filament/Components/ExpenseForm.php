@@ -31,6 +31,7 @@ class ExpenseForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
+                ->autocomplete(false)
                 ->inputMode('decimal')
                 ->stripCharacters(',')
                 ->mask(RawJs::make('$money($input)')),

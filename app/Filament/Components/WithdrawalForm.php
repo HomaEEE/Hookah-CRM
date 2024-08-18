@@ -21,6 +21,7 @@ class WithdrawalForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()->prefix('₴')
                 ->default(3000)
+                ->autocomplete(false)
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(','),
             ToggleButtons::make('bill_id')->label(__('Bill'))
