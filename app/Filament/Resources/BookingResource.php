@@ -47,10 +47,10 @@ class BookingResource extends Resource
         return 'time';
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return Booking::query()->whereDate('time', '>=', Carbon::today())->count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return Booking::query()->whereDate('time', '>=', Carbon::today())->count();
+    // }
 
     protected function getTableQuery(): Builder
     {

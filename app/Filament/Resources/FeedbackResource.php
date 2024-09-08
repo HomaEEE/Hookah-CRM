@@ -38,10 +38,10 @@ class FeedbackResource extends Resource
         return __('Feedbacks');
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::approve(0)->count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return Feedback::count();
+    // }
 
     public static function form(Form $form): Form
     {

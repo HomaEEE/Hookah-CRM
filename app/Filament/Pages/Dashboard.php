@@ -46,13 +46,6 @@ class Dashboard extends \Filament\Pages\Dashboard
     }
 
 
-    public function updated($name)
-    {
-        if (Str::of($name)->contains(['mountedCreateAction','mountedTableAction', 'mountedTableBulkAction'])) {
-            $this->emit('updateTodayShift');
-        }
-    }
-
     protected function getActions(): array
     {
         return [
@@ -118,13 +111,12 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
                     ->createAnother(false)
-                    ->modalWidth('sm')
+                    ->modalWidth('xl')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
+                    ->slideOver()
                     ->form(
-                        SupplyForm::schema(options: [
-                            'tabsHidden' => true,
-                        ]),
+                        SupplyForm::schema(),
                     )
                     ->successNotification(
                         Notification::make()
@@ -166,7 +158,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ->keyBindings(['command+s', 'ctrl+s'])
                 ->requiresConfirmation()
                 ->form([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id),
+                   Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')->label('')
                         ->numeric()
                         ->mask(RawJs::make('$money($input)'))

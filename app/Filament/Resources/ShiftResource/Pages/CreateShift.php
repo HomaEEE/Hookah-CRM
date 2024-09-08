@@ -56,13 +56,6 @@ class CreateShift extends CreateRecord
             ['id' => 1],
         )->increment('balance', $shift->terminal);
 
-        Notification::make()
-            ->title(__('Balances are updated'))
-            ->send();
-
-        Notification::make()
-            ->title(__('Wages added in expenses'))
-            ->send();
 
         Notification::make()
             ->title(__('Shift are closed'))

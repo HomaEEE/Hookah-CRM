@@ -329,5 +329,7 @@
   "qty": "кол.",
   "reserve-message": null,
   "reserve-message-content": null,
-  "sup": "подтекст"
+  "sup": "подтекст",
+  "today": "Сегодня",
+  "tomorrow": "Завтра"
 }

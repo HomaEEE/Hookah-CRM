@@ -51,7 +51,7 @@ class Supply extends Model implements HasMedia
 
     public function items()
     {
-        return $this->hasMany(Ingredient::class, 'id', 'ingredient_id');
+        return $this->belongsTo(Ingredient::class, 'id', 'ingredient_id');
     }
 
 

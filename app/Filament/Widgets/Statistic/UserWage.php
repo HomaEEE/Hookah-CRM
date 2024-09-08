@@ -43,11 +43,11 @@ class UserWage extends BaseWidget
             ->columns([
                 TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')->badge(),
                 TextColumn::make('procent_day')->translateLabel()
-                ->summarize(Sum::make()->money('uah')->label(__('Total procents'))),
+                ->summarize(Sum::make()->money('uah', 100)->label(__('Total procents'))),
                 TextColumn::make('wage')->translateLabel()
-                ->summarize(Sum::make()->money('uah')->label(__('Total wages'))),
+                ->summarize(Sum::make()->money('uah', 100)->label(__('Total wages'))),
                 TextColumn::make('cashout')->translateLabel()
-                ->summarize(Sum::make()->money('uah')->label(__('Total')))
+                ->summarize(Sum::make()->money('uah', 100)->label(__('Total')))
             ])
             ->filters([
                 // ...

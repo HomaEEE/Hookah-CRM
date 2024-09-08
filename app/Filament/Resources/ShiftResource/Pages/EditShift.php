@@ -33,26 +33,15 @@ class EditShift extends EditRecord
                 })->numeric(),
             Grid::make()
                 ->schema([
+                            TextInput::make('cash')->translateLabel(),
+                            TextInput::make('terminal')->translateLabel(),
+                            TextInput::make('Total')->translateLabel()
+                            ->default(function (Shift $record) {
+                                return $record->cash + $record->terminal;
+                            })->numeric(),
+                            TextInput::make('Wages')->translateLabel(),
 
-                            Placeholder::make('cash')->translateLabel()
-                                ->content(function (Shift $record) {
-                                    return $record->cash;
-                                }),
-                            Placeholder::make('terminal')->translateLabel()
-                                ->content(function (Shift $record) {
-                                    return $record->terminal;
-                                }),
-                            Placeholder::make('Total')->translateLabel()
-                                ->content(function (Shift $record) {
-                                    return $record->cash + $record->terminal;
-                                }),
-
-                            Placeholder::make('Wages')->translateLabel()
-                                ->content(function (Shift $record) {
-                                    return $record->wages;
-                                }),
-
-                            Placeholder::make('calc_shift')->label(__('Calc shift'))
+                            TextInput::make('calc_shift')->label(__('Calc shift'))
                                 ->content(function (Shift $record) {
                                     return $record->calc_shift;
                                 }),

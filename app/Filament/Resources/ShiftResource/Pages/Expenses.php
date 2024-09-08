@@ -23,6 +23,8 @@ class Expenses extends ManageRelatedRecords
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+
+
     public static function getNavigationLabel(): string
     {
         return __('Expenses');
@@ -58,8 +60,8 @@ class Expenses extends ManageRelatedRecords
                 ->description(fn ($record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->translateLabel()->badge()
                 ->description(fn ($record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
-                TextColumn::make('sum')->translateLabel()->money('UAH', 100)->badge()
-                ->summarize(Sum::make()->label(__('Total'))),
+                TextColumn::make('sum')->label(__('Sum'))->money('UAH')
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
                 IconColumn::make('bill.type')->label(__('Bill')),
             ])
             ->filters([

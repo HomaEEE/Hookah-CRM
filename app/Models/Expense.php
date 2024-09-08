@@ -18,7 +18,7 @@ class Expense extends Model implements HasMedia
     'category_id', 'supply_id', 'user_id', 'place_id', 'comment'];
 
     protected $casts = [
-        'sum' => MoneyCast::class,
+       'sum' => MoneyCast::class,
     ];
 
     public function place()

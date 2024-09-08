@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Components\ExpenseForm;
+use App\Filament\Components\Filters\LastMonthRecords;
 use App\Filament\Resources\ExpenseResource\Pages;
 use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Models\{Bill, Expense, ExpenseCategory};
@@ -123,43 +124,46 @@ class ExpenseResource extends Resource
             ->defaultPaginationPageOption(10)
             ->striped()
             ->filters([
-                SelectFilter::make('category_id')
-                    ->label(__('Category'))
-                    ->native(false)
-                    ->options(
-                        ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
-                    ),
-
-                Filter::make('created_at')
+                    Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')->translateLabel()->native(false)
+                            ->default(now()->subMonth())
                             ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
                         DatePicker::make('created_until')->translateLabel()->native(false)
+                            ->default(now())
                             ->placeholder(fn ($state): string => now()->format('d/m/Y')),
                     ])
+                    ->default()
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
                             )
                             ->when(
                                 $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
 
                         if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Расходы с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                            $indicators['created_from'] = 'С ' . Carbon::parse($data['created_from'])->format('d/m/Y');
                         }
                         if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'Расходы до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                            $indicators['created_until'] = 'До ' . Carbon::parse($data['created_until'])->format('d/m/Y');
                         }
 
                         return $indicators;
                     }),
+
+                SelectFilter::make('category_id')
+                    ->label(__('Category'))
+                    ->native(false)
+                    ->options(
+                        ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
+                    ),
                 SelectFilter::make('bill')->translateLabel()
                     ->options(Bill::get()->pluck('name', 'id'))
                     ->attribute('bill_id'),

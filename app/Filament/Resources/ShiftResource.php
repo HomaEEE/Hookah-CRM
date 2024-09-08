@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Components\Filters\LastMonthRecords;
 use Auth;
 use Carbon\Carbon;
 
@@ -11,6 +12,7 @@ use App\Filament\Resources\ShiftResource\RelationManagers;
 use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Http\Controllers\LocalApiController as LocalApi;
 use App\Models\{Bill, Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,6 +21,7 @@ use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
 
@@ -26,6 +29,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Fieldset as InfolistFeildSet;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Support\Facades\DB;
 
 class ShiftResource extends Resource
 {
@@ -54,7 +59,7 @@ class ShiftResource extends Resource
 
     protected function getTableQuery(): Builder
     {
-        return Shift::query()->with('place');
+        return Shift::query()->fastPaginate();
     }
 
 
@@ -90,39 +95,9 @@ class ShiftResource extends Resource
                 //   TextColumn::make('shift_users.user_id')->badge(),
 
             ])->defaultSort('id', 'desc')
-            ->filters([
-                Tables\Filters\Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->translateLabel()->native(false)
-                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                        DatePicker::make('created_until')->translateLabel()->native(false)
-                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Смены с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                        }
-                        if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
-
-            ])
+            ->filters(
+                LastMonthRecords::schema()
+            )
 
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -197,10 +172,7 @@ class ShiftResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery();
-    }
+
 
 
     public static function getRecordSubNavigation(Page $page): array

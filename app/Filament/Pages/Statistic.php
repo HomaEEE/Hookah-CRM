@@ -37,6 +37,7 @@ class Statistic extends Page
     {
         return [
             \App\Filament\Widgets\Statistic\Bills::make(),
+            //\App\Filament\Widgets\Statistic\GraphProfit::make(),
             \App\Filament\Widgets\Statistic\UserWage::make()
         ];
     }

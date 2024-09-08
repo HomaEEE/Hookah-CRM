@@ -56,14 +56,14 @@ class TaskResource extends Resource
     }
 
 
-    public static function getNavigationBadge(): ?string
-    {
-        return Task::query()->whereIn('place_id', Auth::user()->place->pluck('id'))
-        ->where(function ($query) {
-            $query->where('for_user_id', Auth::user()->id)->where('approve', 0)
-                ->orWhere('for_user_id', null);
-        })->count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return Task::query()->whereIn('place_id', Auth::user()->place->pluck('id'))
+    //     ->where(function ($query) {
+    //         $query->where('for_user_id', Auth::user()->id)->where('approve', 0)
+    //             ->orWhere('for_user_id', null);
+    //     })->count();
+    // }
 
 
     public static function form(Form $form): Form

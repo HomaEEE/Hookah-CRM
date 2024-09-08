@@ -312,6 +312,8 @@
   "reserve-message": null,
   "reserve-message-content": null,
   "sup": "підтекст",
+  "today": "Сьогодні",
+  "tomorrow": "Завтра",
   "Плащі": "Заклади",
   "Реквізити": "Реквізити",
   "Термінал": "Термінал"

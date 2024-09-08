@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\MoneyCast;
 use Attribute;
+use Awobaz\Compoships\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +14,7 @@ class Shift extends Model
 
 
     protected $fillable = ['place_id', 'user_id', 'cash', 'terminal','old_shift', 'bar',
-                            'kitchen', 'hookah', 'bulbs', 'report',
+                            'kitchen', 'hookah', 'bulbs', 'report', 'withdrawal',
                             'wages', 'tips', 'expense', 'income', 'calc_shift', 'shift',
                             ];
 
@@ -28,6 +29,7 @@ class Shift extends Model
         'tips' => MoneyCast::class,
         'expense' => MoneyCast::class,
         'income' => MoneyCast::class,
+        'withdrawal' => MoneyCast::class,
         'calc_shift' => MoneyCast::class,
         'shift' => MoneyCast::class
     ];
@@ -65,5 +67,14 @@ class Shift extends Model
     protected function getOldShift(): Attribute
     {
         return $this->shift;
+    }
+
+
+    protected function getMonthsAndYearsForSelect()
+    {
+        return $this->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month')
+                ->groupBy('year', 'month')
+                ->orderBy('year', 'asc')
+                ->orderBy('month', 'asc');
     }
 }
