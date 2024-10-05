@@ -36,8 +36,7 @@
         "salahhusa9/laravel-updater": "^1.0",
         "solution-forest/filament-simplelightbox": "^0.0.4",
         "solution-forest/filament-translate-field": "^0.0.2",
-        "staudenmeir/eloquent-json-relations": "^1.1",
-        "tomatophp/filament-fcm": "^1.0"
+        "staudenmeir/eloquent-json-relations": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

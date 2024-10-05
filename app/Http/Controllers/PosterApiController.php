@@ -347,14 +347,14 @@ class PosterApiController extends Controller
 
         $getShift = Http::get($this->urlApi . 'finance.getCashShifts', [
             'token' => $place_api['api'],
-            'dateFrom' => Carbon::yesterday()->format('Ymd')
+            'dateFrom' => Carbon::today()->format('Ymd')
         ])->json('response');
 
         $response = Http::post($this->urlApi . 'finance.closeCashShift?token=' . $place_api['api'], [
             'cash_shift_id' => $getShift[0]['cash_shift_id'],
             'user_id'       => $getShift[0]['user_id_start'],
             'amount'        => $data['shift'],
-            'time'          => Carbon::now()->subMinute(2)->format('Y-m-d H:i'),
+            'time'          => Carbon::now()->subMinute(1)->format('Y-m-d H:i'),
             'is_fiscal'     => 0,
             'comment'       => 'CRM'
         ]);
