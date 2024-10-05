@@ -54,6 +54,12 @@ class Shift extends Model
         return $this->hasMany(ShiftUser::class, 'shift_id');
     }
 
+
+    public function wage()
+    {
+        return $this->belongsTo(Wage::class);
+    }
+
     public function expenses()
     {
         return $this->hasMany(Expense::class, 'place_id', 'place_id');

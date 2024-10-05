@@ -12,7 +12,7 @@ use Filament\Forms\Components\{Fieldset, Hidden, Section, TextInput};
 use Filament\Forms\{Get, Set};
 use Filament\Notifications\Notification;
 
-use Filament\Forms\Components\{Actions, Wizard\Step, CheckboxList, Placeholder};
+use Filament\Forms\Components\{Actions, Wizard\Step, CheckboxList, DateTimePicker, Placeholder};
 
 use Filament\Forms\Components\Actions\Action;
 class ShiftWizard
@@ -163,7 +163,7 @@ class ShiftWizard
 
             FieldSet::make('Shift')->translateLabel()->schema([
                 Hidden::make('wages')->default(0),
-
+               // DateTimePicker::make('')
                 Placeholder::make('total_shift')->translateLabel()
                     ->content(function (Set $set, Get $get) {
                         $totalCash =

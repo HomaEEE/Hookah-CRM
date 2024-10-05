@@ -22,6 +22,7 @@ use Filament\Infolists\Infolist;
 use Filament\Tables\Columns\{IconColumn, Summarizers\Sum};
 use Filament\Tables\Filters\{Filter, SelectFilter, TernaryFilter};
 use Illuminate\Database\Eloquent\Builder;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExpenseResource extends Resource
@@ -124,39 +125,7 @@ class ExpenseResource extends Resource
             ->defaultPaginationPageOption(10)
             ->striped()
             ->filters([
-                    Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->translateLabel()->native(false)
-                            ->default(now()->subMonth())
-                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                        DatePicker::make('created_until')->translateLabel()->native(false)
-                            ->default(now())
-                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                    ])
-                    ->default()
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'С ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                        }
-                        if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'До ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
+                LastMonthRecords::schema(),
 
                 SelectFilter::make('category_id')
                     ->label(__('Category'))
