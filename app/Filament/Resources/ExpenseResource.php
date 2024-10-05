@@ -125,8 +125,13 @@ class ExpenseResource extends Resource
             ->defaultPaginationPageOption(10)
             ->striped()
             ->filters([
-                LastMonthRecords::schema(),
-
+                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                ->startDate(Carbon::now()->subMonth())->endDate(Carbon::now())
+                ->modifyQueryUsing(fn(Builder $query, ?Carbon $startDate , ?Carbon $endDate , $dateString) =>
+                    $query->when(!empty($dateString),
+                        fn (Builder $query) : Builder =>
+                            $query->whereBetween('created_at', [$startDate,$endDate]))
+            ),
                 SelectFilter::make('category_id')
                     ->label(__('Category'))
                     ->native(false)
@@ -135,6 +140,7 @@ class ExpenseResource extends Resource
                     ),
                 SelectFilter::make('bill')->translateLabel()
                     ->options(Bill::get()->pluck('name', 'id'))
+                    ->native(false)
                     ->attribute('bill_id'),
 
                 TernaryFilter::make('pay')
@@ -146,12 +152,13 @@ class ExpenseResource extends Resource
                     ->queries(
                         true: fn (Builder $query) => $query->where('pay', 1),
                         false: fn (Builder $query) => $query->where('pay', 0),
-                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                        blank: fn (Builder $query) => $query
                     ),
 
                 TernaryFilter::make('poster')
                     ->translateLabel()
                     ->nullable()
+                    ->native(false)
                     ->placeholder(__('All'))
                     ->falseLabel(__('In Poster'))
                     ->trueLabel(__('Not in Poster'))

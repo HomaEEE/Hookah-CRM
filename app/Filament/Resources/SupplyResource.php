@@ -28,6 +28,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class SupplyResource extends Resource
 {
@@ -143,39 +144,13 @@ class SupplyResource extends Resource
             ->striped()
             ->filters([
 
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->translateLabel()->native(false)
-                            ->default(now()->subMonth())
-                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                        DatePicker::make('created_until')->translateLabel()->native(false)
-                            ->default(now())
-                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                    ])
-                    ->default()
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'С ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                        }
-                        if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'До ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
+             DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                ->startDate(Carbon::now()->subMonth())->endDate(Carbon::now())
+                ->modifyQueryUsing(fn(Builder $query, ?Carbon $startDate , ?Carbon $endDate , $dateString) =>
+                    $query->when(!empty($dateString),
+                        fn (Builder $query) : Builder =>
+                            $query->whereBetween('created_at', [$startDate,$endDate]))
+            ),
                 SelectFilter::make('supplier_id')
                     ->multiple()
                     ->label(__('Supplier'))
@@ -195,6 +170,7 @@ class SupplyResource extends Resource
 
 
                 SelectFilter::make('bill')->translateLabel()
+                    ->native(false)
                     ->options(Bill::get()->pluck('name', 'id'))
                     ->attribute('bill_id'),
 
@@ -214,6 +190,7 @@ class SupplyResource extends Resource
                 TernaryFilter::make('poster')
                     ->translateLabel()
                     ->nullable()
+                    ->native(false)
                     ->placeholder(__('All'))
                     ->trueLabel(__('In Poster'))
                     ->falseLabel(__('Not in Poster'))
