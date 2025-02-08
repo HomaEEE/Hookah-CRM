@@ -128,20 +128,19 @@ class SupplyForm
                             SpatieMediaLibraryFileUpload::make('invoice')
                                 ->label(__('Invoice'))
                                 ->collection('supplies')
-                              //  ->multiple()
+                                ->multiple()
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('contain')
-                              //  ->imageEditor()
-                               // ->optimize('webp')
-                               // ->resize(80)
+                                ->imageEditor()
+                                ->optimize('webp')
+                                ->resize(80)
                                // ->imageEditorAspectRatios([
                                 //     null,
                                 //     '16:9',
                                 //     '4:3',
                                 //     '1:1',
                                 // ])
-                                // ->reorderable()
-                                // ->openable(),
+                               ->openable(),
                         ]),
                     // Tabs\Tab::make(__('Receipt'))
                     //     ->schema([

@@ -101,9 +101,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->slideOver()
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
-                    // ->form(
-                    //     ExpenseForm::schema(),
-                    // )
+                    ->form(
+                        ExpenseForm::schema(),
+                    )
                     ->successNotification(
                         Notification::make()
                              ->success()
