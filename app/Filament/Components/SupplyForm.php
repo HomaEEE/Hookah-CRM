@@ -129,11 +129,10 @@ class SupplyForm
                                 ->label(__('Invoice'))
                                 ->collection('supplies')
                                 ->multiple()
-                               //->imagePreviewHeight(450)
+                               ->imagePreviewHeight(1600)
                                 ->imageResizeMode('contain')
-                                ->imageEditor()
-                                ->optimize('webp')
-                                ->resize(90)
+                                ->optimize('jpg')
+                                ->resize(80)
                                // ->imageEditorAspectRatios([
                                 //     null,
                                 //     '16:9',
