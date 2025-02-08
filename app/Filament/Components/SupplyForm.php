@@ -131,9 +131,14 @@ class SupplyForm
                                 ->multiple()
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('contain')
+
                                 ->imageEditor()
                                 ->optimize('webp')
-                                ->resize(80)
+                                ->resize(90)
+
+                                ->imageResizeTargetWidth('2400')
+                                ->imageResizeTargetHeight('1600')
+
                                 ->imageEditorAspectRatios([
                                     null,
                                     '16:9',
