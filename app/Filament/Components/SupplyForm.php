@@ -119,80 +119,80 @@ class SupplyForm
                 ->rows(3),
 
 
-            // Tabs::make('Tabs')
-            //     ->contained(false)
-            //     ->tabs([
+            Tabs::make('Tabs')
+                ->contained(false)
+                ->tabs([
 
-            //         Tabs\Tab::make(__('Photo'))
-            //             ->schema([
-            //                 SpatieMediaLibraryFileUpload::make('invoice')
-            //                     ->label(__('Invoice'))
-            //                     ->collection('supplies')
-            //                     ->multiple()
-            //                     ->imagePreviewHeight(450)
-            //                     ->imageResizeMode('contain')
-            //                     ->imageEditor()
-            //                    // ->optimize('webp')
-            //                    // ->resize(80)
-            //                     ->imageEditorAspectRatios([
-            //                         null,
-            //                         '16:9',
-            //                         '4:3',
-            //                         '1:1',
-            //                     ])
-            //                     ->reorderable()
-            //                     ->openable(),
-            //             ]),
-            //         Tabs\Tab::make(__('Receipt'))
-            //             ->schema([
-            //                 SpatieMediaLibraryFileUpload::make('receipt')
-            //                     ->collection('receipts')
-            //                     ->label(__('Receipt'))
-            //                     ->multiple()
-            //                     ->imagePreviewHeight(250)
-            //                     ->imageResizeTargetWidth('2400')
-            //                     ->imageResizeTargetHeight('1600')
-            //                     ->optimize('webp')
-            //                     ->imageEditor()
-            //                     ->imageEditorAspectRatios([
-            //                         null,
-            //                         '16:9',
-            //                         '4:3',
-            //                         '1:1',
-            //                     ])
-            //                     ->reorderable()
-            //                     ->openable()
+                    Tabs\Tab::make(__('Photo'))
+                        ->schema([
+                            SpatieMediaLibraryFileUpload::make('invoice')
+                                ->label(__('Invoice'))
+                                ->collection('supplies')
+                                //->multiple()
+                                ->imagePreviewHeight(450)
+                                ->imageResizeMode('contain')
+                               // ->imageEditor()
+                               // ->optimize('webp')
+                               // ->resize(80)
+                                // ->imageEditorAspectRatios([
+                                //     null,
+                                //     '16:9',
+                                //     '4:3',
+                                //     '1:1',
+                                // ])
+                                ->reorderable()
+                                ->openable(),
+                        ]),
+                    // Tabs\Tab::make(__('Receipt'))
+                    //     ->schema([
+                    //         SpatieMediaLibraryFileUpload::make('receipt')
+                    //             ->collection('receipts')
+                    //             ->label(__('Receipt'))
+                    //             ->multiple()
+                    //             ->imagePreviewHeight(250)
+                    //             ->imageResizeTargetWidth('2400')
+                    //             ->imageResizeTargetHeight('1600')
+                    //             ->optimize('webp')
+                    //             ->imageEditor()
+                    //             ->imageEditorAspectRatios([
+                    //                 null,
+                    //                 '16:9',
+                    //                 '4:3',
+                    //                 '1:1',
+                    //             ])
+                    //             ->reorderable()
+                    //             ->openable()
 
 
-            //                 // ])->columns(1),
-            //                 // Tabs\Tab::make(__('List'))
-            //                 //     ->schema([
-            //                 //         TableRepeater::make('items')
-            //                 //             ->schema([
-            //                 //                 Select::make('ingredient_id')->label(__('Ingredient'))
-            //                 //                     ->searchable()
-            //                 //                     ->preload()
-            //                 //                     ->required()
-            //                 //                     ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
-            //                 //                     ->reactive(),
-            //                 //                 TextInput::make('qty')->translateLabel()
-            //                 //                     ->reactive()
-            //                 //                     ->suffix(static function (Get $get, $state) {
-            //                 //                         $ingredient = Ingredient::find($get('ingredient_id'));
-            //                 //                         return $ingredient;
-            //                 //                     }),
-            //                 //                 TextInput::make('price')->translateLabel()->suffix('')
-            //                 //                     ->numeric()
-            //                 //                     ->autocomplete(false)
-            //                 //                     ->inputMode('decimal')
-            //                 //                     ->stripCharacters(',')
-            //                 //                     ->required()
-            //                 //                     ->prefix('₴'),
+                            // ])->columns(1),
+                            // Tabs\Tab::make(__('List'))
+                            //     ->schema([
+                            //         TableRepeater::make('items')
+                            //             ->schema([
+                            //                 Select::make('ingredient_id')->label(__('Ingredient'))
+                            //                     ->searchable()
+                            //                     ->preload()
+                            //                     ->required()
+                            //                     ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
+                            //                     ->reactive(),
+                            //                 TextInput::make('qty')->translateLabel()
+                            //                     ->reactive()
+                            //                     ->suffix(static function (Get $get, $state) {
+                            //                         $ingredient = Ingredient::find($get('ingredient_id'));
+                            //                         return $ingredient;
+                            //                     }),
+                            //                 TextInput::make('price')->translateLabel()->suffix('')
+                            //                     ->numeric()
+                            //                     ->autocomplete(false)
+                            //                     ->inputMode('decimal')
+                            //                     ->stripCharacters(',')
+                            //                     ->required()
+                            //                     ->prefix('₴'),
 
-            //                 //             ])
-            //             ]),
+                            //             ])
+                        ]),
 
-            //     ]),
+                ]),
         ];
     }
 }
