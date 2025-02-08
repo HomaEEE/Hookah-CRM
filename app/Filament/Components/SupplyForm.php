@@ -129,6 +129,7 @@ class SupplyForm
                                 ->label(__('Invoice'))
                                 ->collection('supplies')
                                 ->multiple()
+                                ->maxParallelUploads(2)
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('contain')
                                 ->imageEditor()
