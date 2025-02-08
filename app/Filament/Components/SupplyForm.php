@@ -129,8 +129,6 @@ class SupplyForm
                                 ->label(__('Invoice'))
                                 ->collection('supplies')
                                 ->multiple()
-                                ->imageResizeTargetWidth(1600)
-                                ->imageResizeMode('contain')
                                 ->optimize('webp')
                                 ->resize(100)
                                // ->imageEditorAspectRatios([
