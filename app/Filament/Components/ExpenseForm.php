@@ -43,7 +43,7 @@ class ExpenseForm
                 ->imageResizeMode('cover')
                 ->optimize('webp')
                 ->imageEditor()
-                ->resize(80),
+                ->resize(90),
             ToggleButtons::make('bill_id')->label(__('Type pay'))
                 ->options(Bill::get()->pluck('name', 'id'))
                 ->default(0)
@@ -51,10 +51,25 @@ class ExpenseForm
                 ->inline()
                 ->grouped()
                 ->live(),
+
+            ToggleButtons::make('pay')->label(__('Pay'))
+                ->options(
+                    [
+                        0 => __('No pay'),
+                        1 => __('Paid'),
+                    ]
+                )
+                ->colors([
+                    0 => 'danger',
+                    2 => 'success',
+                ])
+                ->default(0)
+                ->inline()
+                ->grouped()
+                ->reactive(),
+
             Textarea::make('comment')->translateLabel()->rows(2),
-            Toggle::make('pay')->label(__('Paid'))
-                ->default(true)
-                ->inline(),
+
         ];
     }
 }

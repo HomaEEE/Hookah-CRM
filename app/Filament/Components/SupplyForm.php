@@ -133,7 +133,7 @@ class SupplyForm
                                 ->imageResizeMode('contain')
                                 ->imageEditor()
                                 ->optimize('webp')
-                                ->resize(80)
+                                ->resize(90)
                                // ->imageEditorAspectRatios([
                                 //     null,
                                 //     '16:9',
