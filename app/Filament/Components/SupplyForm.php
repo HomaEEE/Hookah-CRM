@@ -129,16 +129,18 @@ class SupplyForm
                                 ->label(__('Invoice'))
                                 ->collection('supplies')
                                 ->multiple()
+                                ->imagePreviewHeight(450)
+                                ->imageResizeMode('contain')
+                                ->imageEditor()
                                 ->optimize('webp')
-                                ->imagePreviewHeight(250)
                                 ->resize(100)
-                               // ->imageEditorAspectRatios([
-                                //     null,
-                                //     '16:9',
-                                //     '4:3',
-                                //     '1:1',
-                                // ])
-                               ->openable(),
+                               ->imageEditorAspectRatios([
+                                    null,
+                                    '16:9',
+                                    '4:3',
+                                    '1:1',
+                                ])
+                                ->openable(),
                         ]),
                     // Tabs\Tab::make(__('Receipt'))
                     //     ->schema([
