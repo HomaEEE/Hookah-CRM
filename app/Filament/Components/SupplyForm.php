@@ -130,6 +130,7 @@ class SupplyForm
                                 ->collection('supplies')
                                 ->multiple()
                                 ->optimize('webp')
+                                ->imagePreviewHeight(250)
                                 ->resize(100)
                                // ->imageEditorAspectRatios([
                                 //     null,
