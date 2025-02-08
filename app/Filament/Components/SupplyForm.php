@@ -136,9 +136,6 @@ class SupplyForm
                                 ->optimize('webp')
                                 ->resize(90)
 
-                                ->imageResizeTargetWidth('2400')
-                                ->imageResizeTargetHeight('1600')
-
                                 ->imageEditorAspectRatios([
                                     null,
                                     '16:9',
