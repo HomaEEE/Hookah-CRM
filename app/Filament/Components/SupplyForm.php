@@ -132,35 +132,36 @@ class SupplyForm
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('contain')
                                 ->imageEditor()
-                                ->optimize('jpg')
-                                ->resize(100)
-                               ->imageEditorAspectRatios([
+                                ->optimize('webp')
+                                ->resize(80)
+                                ->imageEditorAspectRatios([
                                     null,
                                     '16:9',
                                     '4:3',
                                     '1:1',
                                 ])
+                                ->reorderable()
                                 ->openable(),
                         ]),
-                    // Tabs\Tab::make(__('Receipt'))
-                    //     ->schema([
-                    //         SpatieMediaLibraryFileUpload::make('receipt')
-                    //             ->collection('receipts')
-                    //             ->label(__('Receipt'))
-                    //             ->multiple()
-                    //             ->imagePreviewHeight(250)
-                    //             ->imageResizeTargetWidth('2400')
-                    //             ->imageResizeTargetHeight('1600')
-                    //             ->optimize('webp')
-                    //             ->imageEditor()
-                    //             ->imageEditorAspectRatios([
-                    //                 null,
-                    //                 '16:9',
-                    //                 '4:3',
-                    //                 '1:1',
-                    //             ])
-                    //             ->reorderable()
-                    //             ->openable()
+                    Tabs\Tab::make(__('Receipt'))
+                        ->schema([
+                            SpatieMediaLibraryFileUpload::make('receipt')
+                                ->collection('receipts')
+                                ->label(__('Receipt'))
+                                ->multiple()
+                                ->imagePreviewHeight(250)
+                                ->imageResizeTargetWidth('2400')
+                                ->imageResizeTargetHeight('1600')
+                                ->optimize('webp')
+                                ->imageEditor()
+                                ->imageEditorAspectRatios([
+                                    null,
+                                    '16:9',
+                                    '4:3',
+                                    '1:1',
+                                ])
+                                ->reorderable()
+                                ->openable()
 
 
                             // ])->columns(1),
@@ -190,6 +191,8 @@ class SupplyForm
 
                             //             ])
                         ]),
+
+                ]),
         ];
     }
 }
