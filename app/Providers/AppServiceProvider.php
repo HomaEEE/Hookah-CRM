@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Assets\Js;
@@ -33,9 +35,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Model::unguard();
-        Number::useLocale('ru');
+        app(\Spatie\Permission\PermissionRegistrar::class)
+            ->setPermissionClass(Permission::class)
+            ->setRoleClass(Role::class);
 
+
+        Model::unguard();
 
         if (app()->environment('production')) {
             URL::forceScheme('https');

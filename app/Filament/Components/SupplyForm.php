@@ -9,9 +9,12 @@ use Filament\Facades\Filament;
 
 use Filament\Forms\{Get, Set};
 use Filament\Support\RawJs;
+use Filament\Forms\Components\Actions\Action as FormAction;
 
 use Filament\Forms\Components\{Select, TextInput, Hidden, DateTimePicker, KeyValue, Section, SpatieMediaLibraryFileUpload, Tabs, Textarea, Toggle, ToggleButtons};
+use Filament\Support\Enums\ActionSize;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class SupplyForm
 {
@@ -29,7 +32,6 @@ class SupplyForm
                 ->relationship('supplier', 'company')
                 ->searchable()
                 ->native(false)
-                ->preload()
                 ->required()
                 ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
                 ->createOptionForm([
@@ -51,19 +53,71 @@ class SupplyForm
                 ->required()
                 ->inline()
                 ->grouped()
-                ->live(),
+                ->reactive(),
+            ToggleButtons::make('pay')->label(__('Pay'))
+                ->options(
+                    [
+                        0 => __('No pay'),
+                        1 => __('Paid'),
+                    ]
+                )
+                ->colors([
+                    0 => 'danger',
+                    2 => 'success',
+                ])
+                ->default(0)
+                ->inline()
+                ->grouped()
+                ->reactive(),
+
             TextInput::make('sum')->label(__('Sum'))
+                ->numeric()
+                ->prefix('₴')
                 ->autocomplete(false)
                 ->inputMode('decimal')
-                ->required()
-                ->prefix('₴'),
+                ->stripCharacters(',')
+                ->mask(RawJs::make('$money($input)')),
+
             TextInput::make('invoice_number')->label(__('Invoice'))
                 ->visible(fn(Get $get) => $get('bill_id') == '1'),
+
+            TextInput::make('delay')->label(__('Delay'))
+            ->inputMode('none')
+            ->suffixAction(
+                FormAction::make('DelayPlus')
+                    ->size(ActionSize::Large)
+                    ->color('success')
+                    ->icon('heroicon-o-plus')
+                    ->iconButton()
+                    ->disabled(fn (Get $get): bool => empty($get('delay')) || $get('delay') >= 28)
+                    ->action(function (Get $get, Set $set, $state): void {
+                        $set('delay', $get('delay') + 1);
+                    })
+            )
+            ->prefixAction(
+                FormAction::make('DelayMinus')
+                    ->size(ActionSize::Large)
+                    ->icon('heroicon-o-minus')
+                    ->color('danger')
+                    ->iconButton()
+                    ->disabled(fn (Get $get): bool => empty($get('delay')) || $get('delay') <= 1)
+                    ->action(function (Get $get, Set $set, $state): void {
+                        $set('delay', $get('delay') - 1);
+                    })
+            )
+                ->default(
+                    function (callable $get, $set) {
+                        $toggle = $get('pay');
+                        return $toggle === 0 ? $set('delay', 7) : $set('delay', 0); // Or '' for an empty string
+                    })
+                    ->reactive()
+                    ->numeric() // If you want to enforce numeric input
+                    ->required(fn (callable $get) => $get('pay') === 1)
+                    ->visible( fn(Get $get) => $get('pay') == '0'  ),
+
             Textarea::make('comment')->label(__('Comment'))
                 ->rows(3),
-            Toggle::make('pay')->label(__('Paid'))
-                ->default(false)
-                ->inline(),
+
 
             Tabs::make('Tabs')
                 ->contained(false)

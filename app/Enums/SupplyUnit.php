@@ -16,7 +16,7 @@ enum SupplyUnit: string implements HasLabel, HasColor
         return match ($this) {
             self::l => __('Litr'),
             self::kg => __('Kg'),
-            self::p => __('Unit')
+            self::p => __('Unit'),
         };
     }
 

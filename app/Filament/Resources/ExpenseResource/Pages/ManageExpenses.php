@@ -10,30 +10,17 @@ use Illuminate\Support\Str;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ManageExpenses extends ManageRecords
 {
     protected static string $resource = ExpenseResource::class;
 
-    public function created($name)
+
+    protected function paginateTableQuery(Builder $query): Paginator
     {
-        if (Str::of($name)->contains(['mountedTableAction', 'mountedTableBulkAction'])) {
-            $this->emit('updateExpensesDay');
-        }
-    }
-
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data['sum'] = $data['sum'] * 100;
-
-        return $data;
-    }
-
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        $data['sum'] = $data['sum'] / 100;
-
-        return $data;
+        return $query->simplePaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
 
     protected function getActions(): array

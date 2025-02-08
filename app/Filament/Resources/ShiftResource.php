@@ -2,15 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Components\Filters\LastMonthRecords;
 use Auth;
 use Carbon\Carbon;
 
 use App\Filament\Resources\ShiftResource\Pages;
-use App\Filament\Resources\ShiftResource\RelationManagers;
 
-use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Http\Controllers\LocalApiController as LocalApi;
 use App\Models\{Bill, Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
@@ -20,17 +16,17 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Fieldset as InfolistFeildSet;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Filters\Filter;
-use Illuminate\Support\Facades\DB;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class ShiftResource extends Resource
 {
@@ -67,6 +63,7 @@ class ShiftResource extends Resource
     {
         return $table
             ->columns([
+               // Split::make([
                 TextColumn::make('created_at')->dateTime('l')->translateLabel()
                 ->badge()
                 ->size('xs')
@@ -74,9 +71,6 @@ class ShiftResource extends Resource
 
                 TextColumn::make('terminal')->translateLabel()->badge()
                     ->money('UAH')
-                    ->state(function (Shift $record): int {
-                        return $record->terminal * 0.987;
-                    })
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
                 TextColumn::make('cash')->translateLabel()->badge()->color('warning')
@@ -85,18 +79,27 @@ class ShiftResource extends Resource
 
                 TextColumn::make('sum')->translateLabel()->badge()->color('gray')
                     ->state(function (Shift $record): int {
-                        return $record->terminal * 0.987 + $record->cash;
+                        return $record->terminal + $record->cash;
                     })->money('UAH'),
 
                 TextColumn::make('shift')->color('info')
                     ->badge()
                     ->money('UAH')->translateLabel(),
-
-                //   TextColumn::make('shift_users.user_id')->badge(),
+                // ]),
+                //     Panel::make([
+                //         Stack::make([
+                //             TextColumn::make('shift')
+                //                 ->icon('heroicon-m-phone'),
+                //             TextColumn::make('shift')
+                //                 ->icon('heroicon-m-envelope'),
+                //         ]),
+                //     ])->collapsible()
 
             ])->defaultSort('id', 'desc')
-            ->filters(
-                LastMonthRecords::schema()
+            ->filters([
+                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                ->defaultLast30Days()
+            ]
             )
 
             ->actions([

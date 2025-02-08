@@ -3,24 +3,25 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Components\ExpenseForm;
-use App\Filament\Components\Filters\LastMonthRecords;
 use App\Filament\Resources\ExpenseResource\Pages;
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Bill, Expense, ExpenseCategory};
+use App\Models\Bill;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\DatePicker;
-
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Tables\Columns\{IconColumn, Summarizers\Sum};
-use Filament\Tables\Filters\{Filter, SelectFilter, TernaryFilter};
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
@@ -30,6 +31,10 @@ class ExpenseResource extends Resource
     protected static ?string $model = Expense::class;
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    protected static ?string $tentantOwnershipRelationName = 'owner';
+
+    // protected static ?string $tentantRelationName = 'placeLabel';
 
     protected static ?int $navigationSort = 2;
 
@@ -58,7 +63,7 @@ class ExpenseResource extends Resource
         return $form
             ->schema(
                 ExpenseForm::schema()
-        );
+            );
     }
 
     public static function table(Table $table): Table
@@ -74,28 +79,27 @@ class ExpenseResource extends Resource
                     ->badge()
                     ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
-
                 TextColumn::make('supply_id')->badge()->label(__('Supply'))
                     ->wrap(),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
                 IconColumn::make('bill_id')->label(__('Bill'))
-                ->icon(fn (string $state): string => match ($state) {
-                    '0' => 'heroicon-o-banknotes',
-                    '1' => 'heroicon-o-credit-card',
-                })
-                ->color(fn (string $state): string => match ($state) {
-                    '1' => 'warning',
-                    '0' => 'success',
-                    default => 'gray',
-                })
-                ->action(function ($record, $column) {
-                    $name = $column->getName();
-                    $record->update([
-                        $name => ! $record->$name,
-                    ]);
-                }),
+                    ->icon(fn (string $state): string => match ($state) {
+                        '0' => 'heroicon-o-banknotes',
+                        '1' => 'heroicon-o-credit-card',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        '1' => 'warning',
+                        '0' => 'success',
+                        default => 'gray',
+                    })
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
 
                 IconColumn::make('pay')
                     ->translateLabel()
@@ -105,7 +109,7 @@ class ExpenseResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => !$record->$name,
+                            $name => ! $record->$name,
                         ]);
                     }),
                 IconColumn::make('poster')
@@ -116,7 +120,7 @@ class ExpenseResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => !$record->$name,
+                            $name => ! $record->$name,
                         ]);
                     }),
 
@@ -126,12 +130,7 @@ class ExpenseResource extends Resource
             ->striped()
             ->filters([
                 DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
-                ->startDate(Carbon::now()->subMonth())->endDate(Carbon::now())
-                ->modifyQueryUsing(fn(Builder $query, ?Carbon $startDate , ?Carbon $endDate , $dateString) =>
-                    $query->when(!empty($dateString),
-                        fn (Builder $query) : Builder =>
-                            $query->whereBetween('created_at', [$startDate,$endDate]))
-            ),
+                ->defaultLast30Days(),
                 SelectFilter::make('category_id')
                     ->label(__('Category'))
                     ->native(false)
@@ -167,7 +166,6 @@ class ExpenseResource extends Resource
                         false: fn (Builder $query) => $query->where('poster', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
-
 
                 // TernaryFilter::make('pay')->label(__('Pay'))
                 //     ->placeholder((__('All')))
@@ -211,7 +209,7 @@ class ExpenseResource extends Resource
                 TextEntry::make('category.name')->translateLabel()->badge(),
                 TextEntry::make('sum')->translateLabel()->badge(),
                 TextEntry::make('comment')->translateLabel()->badge(),
-                LightboxSpatieMediaLibraryImageEntry::make('invoice')
+                App\Filament\Resources\LightboxSpatieMediaLibraryImageEntry::make('invoice')
                     ->collection('supplies')
                     ->conversion('thumb')
                     ->translateLabel(),
@@ -231,7 +229,7 @@ class ExpenseResource extends Resource
     protected function getHeaderWidgets(): array
     {
         return [
-           // App\Filament\Widgets\ExpenseChart::class
+            // App\Filament\Widgets\ExpenseChart::class
         ];
     }
 
@@ -240,7 +238,7 @@ class ExpenseResource extends Resource
         if (blank($data['place_id'])) {
             $this->notify('danger', __('Please, select place'));
         } else {
-            (new PosterApi())->getTransatcionCategories($data['place_id']);
+            (new PosterApi)->getTransatcionCategories($data['place_id']);
             $this->notify('success', __('Menu updated'));
         }
     }

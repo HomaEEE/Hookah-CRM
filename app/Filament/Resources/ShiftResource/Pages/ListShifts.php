@@ -7,9 +7,11 @@ use App\Models\Shift;
 use Auth;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Filament\Pages\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 
 class ListShifts extends ListRecords
 {
@@ -18,8 +20,13 @@ class ListShifts extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
+    }
+
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
 
     // protected function getTableQuery(): Builder

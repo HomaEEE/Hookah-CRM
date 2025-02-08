@@ -15,7 +15,7 @@ class Purchase extends Model
 
 
     protected $casts = ['ingredients' => 'array'];
-    protected $attributes = ['ingredients' => '[]'];
+//protected $attributes = ['ingredients' => '[]'];
 
     public function place()
     {
@@ -36,8 +36,6 @@ class Purchase extends Model
     {
         return $this->belongsTo(Ingredient::class);
     }
-
-
 
 
 }

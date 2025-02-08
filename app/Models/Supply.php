@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\MoneyCast;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -26,12 +27,12 @@ class Supply extends Model implements HasMedia
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function supplier()
@@ -97,6 +98,12 @@ class Supply extends Model implements HasMedia
     public function scopeType($query)
     {
         return $query->where('type', $query);
+    }
+
+
+    public function getDelayDayAttribute()
+    {
+        return (int) Carbon::now()->diffInDays(Carbon::parse($this->added_at)->addDays($this->delay), false);;
     }
 
 }

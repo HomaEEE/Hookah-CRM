@@ -53,13 +53,10 @@ class SupplyResource extends Resource
         return __('Supplies');
     }
 
-
-
-    protected function getTableQuery(): Builder
-    {
-        return Supply::query()->with('supplier', 'user', 'bill')->fastPaginate();
-    }
-
+    // protected function getTableQuery(): Builder
+    // {
+    //     return Supply::query()->with('supplier','user', 'bill')->fastPaginate();
+    // }
 
     public static function form(Form $form): Form
     {
@@ -77,7 +74,7 @@ class SupplyResource extends Resource
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->badge()
                     ->size('sm')
-                    ->description(fn(Supply $record): string => $record->user->name ?? ''),
+                  ->description(fn(Supply $record): string => $record->user->name ?? ''),
 
                 TextColumn::make('supplier.company')->label(__('Supplier'))->searchable()
                     ->description(fn(Supply $record): string => $record->comment ?? '')->wrap(),
@@ -144,13 +141,9 @@ class SupplyResource extends Resource
             ->striped()
             ->filters([
 
-             DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
-                ->startDate(Carbon::now()->subMonth())->endDate(Carbon::now())
-                ->modifyQueryUsing(fn(Builder $query, ?Carbon $startDate , ?Carbon $endDate , $dateString) =>
-                    $query->when(!empty($dateString),
-                        fn (Builder $query) : Builder =>
-                            $query->whereBetween('created_at', [$startDate,$endDate]))
-            ),
+                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                ->defaultLast30Days(),
+
                 SelectFilter::make('supplier_id')
                     ->multiple()
                     ->label(__('Supplier'))
@@ -158,14 +151,14 @@ class SupplyResource extends Resource
                     ->options(
                         Supplier::where('place_id', Filament::getTenant()->id)->visible(1)->pluck('company', 'id')
                     ),
+
+
                 SelectFilter::make('user')->translateLabel()
-                    ->options(
-                        User::whereHas('place', function ($query) {
-                            $query->where('place_id', Filament::getTenant()->id);
-                        })->get()
-                            ->pluck('name', 'id')
-                    )
-                    ->attribute('user_id'),
+                ->relationship(
+                    name: 'user',
+                    titleAttribute: 'name',
+                  //  modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
+                )->attribute('user_id'),
 
 
 
@@ -281,6 +274,8 @@ class SupplyResource extends Resource
     {
         return [
             'index' => Pages\ManageSupplies::route('/'),
+            // 'view' => Pages\ViewSupply::route('/{record}/view'),
+            // 'edit' => Pages\EditSupply::route('/{record}/edit'),
         ];
     }
 

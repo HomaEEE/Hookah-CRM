@@ -6,11 +6,12 @@ use Auth;
 
 use App\Models\{User, Wage, Workshop};
 use Filament\Facades\Filament;
-use Filament\Forms\Components\{TextInput};
+use Filament\Forms\Components\{Hidden, TextInput};
 use Filament\Forms\{Get, Set};
+use Filament\Forms\Components\Actions\Action as FormAction;
 
 use Filament\Forms\Components\{Placeholder, Repeater, Select};
-use Filament\Forms\Components\Wizard\Step;
+use Filament\Support\Enums\ActionSize;
 
 class WagesWizard
 {
@@ -30,7 +31,13 @@ class WagesWizard
                                 )
                                 ->required()
                                 ->reactive()
-                                ->searchable(),
+                                ->searchable()
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(
+                                    function (callable $set, callable $get) {
+                                        self::WageCalc($set, $get);
+                                     }
+                                ),
 
                             Select::make('wage_id')->translateLabel()
                                 ->options(
@@ -40,45 +47,13 @@ class WagesWizard
                                 )
                                 ->preload()
                                 ->required()
-                                ->live(debounce: 500)
+                                ->live(onBlur: true)
                                 ->searchable()
+                                ->hidden(fn (Get $get) => $get('user_id') == null)
                                 ->afterStateUpdated(
-                                    function (Set $set, Get $get) {
-
-                                        $wage = Wage::where('id', $get('wage_id'))->first();
-                                        $all_procents = 0;
-                                        if (isset($wage)) {
-                                            foreach ($wage->procent as $num) {
-                                                $workshop = Workshop::where('workshop_id', $num['workshop_id'])->first();
-
-                                                if ($workshop->name == 'Бар') {
-                                                    $all_procents += $get('../../bar') * $num['num'] / 100;
-                                                }
-                                                if ($workshop->name == 'Кухня') {
-                                                    $all_procents += $get('../../kitchen') * $num['num'] / 100;
-                                                }
-                                                if ($workshop->name == 'Кальян') {
-                                                    $all_procents += $get('../../hookah') * $num['num'] / 1;
-                                                }
-                                                if ($workshop->name == 'Колбы') {
-                                                    $all_procents += $get('../../bulbs') * $num['num'] / 1;
-                                                }
-                                            }
-
-                                            if ($get('wage_id') != null) {
-                                                $set('wage', $wage->wage * $get('days'));
-                                            } else {
-                                                $set('wage', 0);
-                                                $set('days', 0);
-                                            }
-                                        } else {
-                                            $all_procents = 0;
-                                            $set('days', 0);
-                                        }
-
-                                        $set('procent_day', round($all_procents, 0));
-                                        $set('cashout', $get('procent_day') + $get('wage'));
-                                    }
+                                    function (callable $set, callable $get) {
+                                        self::WageCalc($set, $get);
+                                     }
                                 ),
 
                             Select::make('days')->translateLabel()
@@ -95,58 +70,127 @@ class WagesWizard
                                         '7' => '7',
                                     ]
                                 )->default(0)
-                                ->disabled(fn (Get $get) => $get('wage_id') == null)
+                                ->hidden(fn (Get $get) => $get('user_id') == null)
                                 ->required()
-                                ->live(debounce: 500)
                                 ->afterStateUpdated(
-                                    function (Set $set, Get $get, $state) {
-                                        $wage = Wage::where('id', $get('wage_id'))->first();
-                                        if ($get('days') != 0 || $get('wage_id') != null) {
-                                            $set('wage', $state * $wage->wage);
-                                            $set('cashout', $get('procent_day') + $get('wage'));
-                                        }
-                                    }
+                                    function (callable $set, callable $get) {
+                                        self::WageCalc($set, $get);
+                                     }
                                 )
                                 ->reactive(),
                             TextInput::make('wage')->translateLabel()->numeric()
                                 ->hidden(fn (Get $get) => $get('wage_id') == null)
-                                ->afterStateUpdated(
-                                    function (Set $set, Get $get) {
-                                        if ($get('wage') != null) {
-                                            $set('cashout', $get('procent_day') + $get('wage'));
-                                        } else {
-                                            $set('cashout', 0);
-                                        }
-                                    }
-                                )->columns(2)
-                                ->live(debounce: 500),
+                                ->columns(2),
+
                             TextInput::make('procent_day')->translateLabel()->numeric()
+                                ->prefix('%')
+                                ->default(0)
+                                ->suffixAction(
+                                    FormAction::make('Reset')
+                                        ->size(ActionSize::Large)
+                                        ->icon('heroicon-o-x-mark')
+                                        ->iconButton()
+                                        ->color('danger')
+                                        ->disabled(fn (Get $get): bool => empty($get('procent_day')) || $get('procent_day') == 0)
+                                        ->action(function (Get $get, Set $set, $state): void {
+                                            $set('procent_day', 0);
+                                            self::WageCalc($set, $get);
+                                        })
+                                )
                                 ->hidden(fn (Get $get) => $get('wage_id') == null)
                                 ->afterStateUpdated(
-                                    function (Set $set, Get $get) {
-                                        if ($get('procent_day') != null) {
-                                            $set('cashout', $get('procent_day') + $get('wage'));
-                                        }
-                                    }
+                                    function (callable $set, callable $get) {
+                                        self::WageCalc($set, $get);
+                                     }
                                 )
-                                ->live(debounce: 500),
+                                ->reactive(),
                             TextInput::make('cashout')->translateLabel()
-                                ->live(debounce: 500)
                                 ->readOnly()
+                                ->reactive()
+                                ->afterStateUpdated(function (Get $get, Set $set) {
+                                    self::updateTotals($get, $set);
+                            })
                                 ->hidden(fn (Get $get) => $get('wage_id') == null),
                         ])->columns(3)
-                        ->itemLabel(fn (array $state): ?string => $state['user.name'] ?? null),
+                        ->collapsible()
 
-                    Placeholder::make('wages')->translateLabel()
-                        ->content(function (Set $set, $get) {
+                        ->itemLabel(fn (array $state): ?string =>
+                                 User::find($state['user_id'])?->name . ' ' . $state['cashout'] ?? null),
+
+                                 Placeholder::make('wages')->translateLabel()
+                                 ->content(function (Set $set, $get) {
+                                     $totalWage = collect($get('users'))
+                                         ->pluck('cashout')
+                                         ->sum();
+                                     $set('wages', $totalWage);
+
+                                     return $totalWage;
+                                 })
+                                 ->reactive(),
+
+                    TextInput::make('wages')
+                    ->inlineLabel()
+                    ->reactive()
+                    ->translateLabel()->default(
+                        function (Set $set, $get) {
                             $totalWage = collect($get('users'))
                                 ->pluck('cashout')
                                 ->sum();
                             $set('wages', $totalWage);
 
                             return $totalWage;
-                        })
-                        ->live(debounce: 500)
+                        })->readOnly(),
+
         ];
+    }
+
+
+    private static function WageCalc( Set $set, Get $get) {
+       if ( $get('user_id') !== null ){
+            $user = User::where('id', $get('user_id'))->first();
+            $set('wage_id', $user->wage_id );
+            $set('wage', $user->wage->wage );
+
+            if ( $get('days') == null ){
+                $set('days', $user->shift_day);
+           } else {
+                $get('days');
+           };
+
+           if (isset ( $user->wage )) {
+
+            if ( $get('procent_day') == 0 ) {
+            $all_procent = 0;
+              foreach ($user->wage->procent as $workshop) {
+                $field = Workshop::where('workshop_id', $workshop['workshop_id'])->first()->toArray();
+                $all_procent += $get('../../'.$field['field']) * $workshop['num'] / 1;
+            };
+
+            $round_procent = $all_procent % 1;
+
+            if ($round_procent < 5 || $round_procent > 8) {
+                $roundedToTen = round($all_procent, -1);
+                $set('procent_day', $roundedToTen % 2 == 0 ? $roundedToTen : $roundedToTen + ($roundedToTen > 0 ? -10 : 10) );
+            }
+           }
+           else $set('procent_day', $get('procent_day'));
+        };
+           $set('cashout', ($get('wage') *$get('days')) + $get('procent_day'));
+       }
+        else {
+            $set('wage',0 );
+            $set('procent_day', 0 );
+            $set('cashout', 0 );
+        }
+    }
+
+    private static function updateTotals(Get $get, Set $set)
+    {
+        $totalWage = collect($get('users'))
+        ->pluck('cashout')
+        ->sum();
+        $set('wages', $totalWage);
+
+        return $totalWage;
     }
 }

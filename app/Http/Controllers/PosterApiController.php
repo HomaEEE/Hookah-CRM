@@ -237,9 +237,10 @@ class PosterApiController extends Controller
             . $place_api['api']
             . '&interpolate=day&type=workshops'
             . '&dateFrom=' . Carbon::today()->format('Ymd')
-            . '&dateTo=' . Carbon::today()->format('Ymd'))
-            ->json('response');
+            . '&dateTo=' . Carbon::today()->format('Ymd')
+        )->json('response');
 
+       // dd($posterWorkshops);
         return $posterWorkshops;
     }
 
@@ -350,7 +351,7 @@ class PosterApiController extends Controller
             'dateFrom' => Carbon::today()->format('Ymd')
         ])->json('response');
 
-        $response = Http::post($this->urlApi . 'finance.closeCashShift?token=' . $place_api['api'], [
+        Http::post($this->urlApi . 'finance.closeCashShift?token=' . $place_api['api'], [
             'cash_shift_id' => $getShift[0]['cash_shift_id'],
             'user_id'       => $getShift[0]['user_id_start'],
             'amount'        => $data['shift'],

@@ -42,13 +42,19 @@ class ProductResource extends Resource
 
     public static function getPluralModelLabel(): string
     {
-        return __('Product');
+        return __('Position');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Products');
+        return __('Positions');
     }
+
+    protected function getTableQuery(): Builder
+    {
+        return Product::query()->with('childs','parent')->fastPaginate();
+    }
+
 
     public static function form(Form $form): Form
     {
@@ -93,6 +99,10 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->recordClasses(fn (Product $record) => match ($record->visibleMenu) {
+            0 => 'border-1-4 |border-l-danger-500 bg-danger-50 dark:bg-gray-800',
+            default => null,
+            } )
         ->recordTitleAttribute('product__name')
         ->columns([
             SpatieMediaLibraryImageColumn::make('media')

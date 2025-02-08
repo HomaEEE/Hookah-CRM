@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\ShiftUser;
 use App\Models\Task;
+use App\Models\User;
 use Carbon\Carbon;
 use Auth;
 use Filament\Actions\Action;
@@ -27,11 +28,12 @@ class ShiftUsers extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-        ->query(ShiftUser::query()->whereDate('created_at', Carbon::today()))
+        ->query(User::query()->whereDate('updated_at', Carbon::today()))
 
             ->columns([
-                TextColumn::make('user.name')->translateLabel(),
-                TextColumn::make('wage.name')->translateLabel()
+                TextColumn::make('name')->translateLabel(),
+                TextColumn::make('wage.name')->translateLabel(),
+                TextColumn::make('shift_day')->translateLabel()
                 ->badge()
             ]);
     }

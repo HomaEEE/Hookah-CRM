@@ -9,6 +9,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
@@ -32,8 +33,18 @@ class ExpensesDay extends BaseWidget
 
     public function table(Table $table): Table
     {
+
         return $table
-        ->deferLoading()
+
+        ->defaultGroup('bill.name')
+        ->groups([
+            Group::make('bill.name')->label(__('Bill'))
+                ->titlePrefixedWithLabel(false),
+            Group::make('category.name')->label(__('Category'))
+                ->titlePrefixedWithLabel(false)
+        ])
+        ->groupingSettingsInDropdownOnDesktop()
+
         ->query(Expense::query()->where('place_id', Filament::getTenant()->id)
         ->whereDate('added_at', Carbon::today())->with('user', 'supply')->wherePay('1'))
 
@@ -42,7 +53,7 @@ class ExpensesDay extends BaseWidget
                     ->size('sm')
                     ->description(fn (Expense $record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->label(__('Category'))->badge()
-                ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
+                ->description(fn (Expense $record): string => $record->supply->supplier->company ?? $record->comment  ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {

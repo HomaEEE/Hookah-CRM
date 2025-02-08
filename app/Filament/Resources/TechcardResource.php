@@ -7,7 +7,7 @@ use App\Filament\Resources\TechcardResource\RelationManagers;
 use App\Models\{Ingredient, Product, Techcard, Workshop};
 
 use Auth;
-use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
+use Awcodes\TableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
@@ -80,35 +80,36 @@ class TechcardResource extends Resource
 
                 Textarea::make('process')->label(__('Process')),
 
-                TableRepeater::make('ingredients')
-                ->relationship('ingredients')
-                ->schema([
-                    Select::make('ingredient_id')->label(__('Ingredient'))
-                            ->hiddenLabel()
-                            ->native(false)
-                            ->searchable()
-                            ->options(
-                                Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                            ),
-                    TextInputSelectAffix::make('heft')
-                    ->hiddenLabel()
-                            ->numeric()
-                            ->select(
-                                fn () => Select::make('weight_unit')
-                                    ->extraAttributes([
-                                        'class' => 'w-[72px]' // if you want to constrain the selects size, depending on your usecase
-                                    ])
-                                    ->options([
-                                        'ml' => __('ml'),
-                                        'gr' => __('gr')
-                                    ])
-                            )
-                ])
-                ->reorderable()
-                ->cloneable()
-                ->collapsible()
-                ->defaultItems(3)
-                ->columnSpan('full'),
+                // TableRepeater::make('ingredients')
+                // ->schema([
+                //     Select::make('ingredient_id')->label(__('Ingredient'))
+                //             ->hiddenLabel()
+                //             ->native(false)
+                //             ->searchable()
+                //             ->options(
+                //                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
+                //             ),
+                //     TextInputSelectAffix::make('ingredient_heft')
+                //     ->hiddenLabel()
+                //             ->numeric()
+                //             ->select(
+                //                 fn () => Select::make('ingredient_unit')
+                //                     ->extraAttributes([
+                //                         'class' => 'w-[72px]' // if you want to constrain the selects size, depending on your usecase
+                //                     ])
+                //                     ->options([
+                //                         'ml' => __('ml'),
+                //                         'gr' => __('gr'),
+                //                         'p' => __('unit')
+
+                //                     ])
+                //             )
+                // ])
+                // ->reorderable()
+                // ->cloneable()
+                // ->collapsible()
+                // ->defaultItems(3)
+                // ->columnSpan('full'),
 
 
             ]);

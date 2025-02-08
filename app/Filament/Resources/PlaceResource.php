@@ -65,31 +65,7 @@ class PlaceResource extends Resource
     }
 
 
-    public static function form(Form $form): Form
-    {
-        return $form
-        ->schema([
-            Section::make()
-                ->schema([
-                    TextInput::make('name')->label(__('Place')),
-                    TextInput::make('city')->label(__('City')),
-                    TextInput::make('address')->label(__('Address')),
-                    TextInput::make('phone')->label(__('Phone')),
-                    TextInput::make('instagram')->label(__('Instagram')),
-                    TextInput::make('slug')->label(__('Sufix for place')),
-                    Toggle::make('opened')->inline(),
-                ]),
-            Section::make()
-                ->schema([
-                    KeyValue::make('time')->label(__('Working time'))
-                        ->keyLabel(__('Day'))
-                        ->valueLabel(__('Time')),
-                    KeyValue::make('settings')->label(__('Settings')),
-                    KeyValue::make('properties')->label(__('Properties')),
-                    KeyValue::make('pays')->label(__('Pays')),
-                ])->columnSpan(['lg' => 3]),
-        ])->columns(3);
-    }
+
 
     public static function table(Table $table): Table
     {

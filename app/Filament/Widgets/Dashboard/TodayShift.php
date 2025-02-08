@@ -8,16 +8,15 @@ use Carbon\Carbon;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Facades\Filament;
 
 class TodayShift extends BaseWidget
 {
-    use HasWidgetShield;
 
-    protected static ?string $pollingInterval = null;
-
-    protected $listeners = ['updateTodayShift' => '$refresh'];
+    protected function getHeading(): ?string
+    {
+        return __('Shift');
+    }
 
     protected function getStats(): array
     {

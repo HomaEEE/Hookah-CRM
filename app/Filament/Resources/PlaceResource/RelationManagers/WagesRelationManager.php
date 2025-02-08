@@ -10,8 +10,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Forms;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Livewire\Component as Livewire;
 
@@ -31,7 +34,6 @@ class WagesRelationManager extends RelationManager
         return __('Wages');
     }
 
-
     public function form(Form $form): Form
     {
 
@@ -39,22 +41,29 @@ class WagesRelationManager extends RelationManager
             ->schema([
                 Hidden::make('place_id')->label(__('Place'))
                     ->default(Filament::getTenant()->id),
+
                 TextInput::make('name')->translateLabel()
                     ->required()
                     ->maxLength(255),
+
                 TextInput::make('wage')->translateLabel()
                     ->required()
                     ->numeric()
                     ->maxLength(5),
 
                 Repeater::make('procent')
+                    ->translateLabel()
                     ->schema([
-                        Select::make('workshop_id')->translateLabel()
+                        Select::make('workshop_id')->label(__('Workshop'))
                             ->native(false)
                             ->options(Workshop::where('place_id', $this->ownerRecord->id)->get()->pluck('name', 'workshop_id')),
                         TextInput::make('num')->translateLabel()->numeric()
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
                     ]),
+
+                TextInput::make('procent')
+                ->visible(fn(Get $get) => $get('type') == '2')
+                ->translateLabel()
             ])->columns(1);
 
     }
@@ -63,8 +72,8 @@ class WagesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->translateLabel(),
-                Tables\Columns\TextColumn::make('wage')->translateLabel()->badge()
+                TextColumn::make('name')->translateLabel(),
+                TextColumn::make('wage')->translateLabel()->badge(),
             ])
             ->filters([
                 //

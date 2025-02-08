@@ -9,6 +9,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -40,10 +41,14 @@ class WorkshopsRelationManager extends RelationManager
                 TextInput::make('name')->label(__('Workshop'))
                     ->required()
                     ->maxLength(255),
-                TextInput::make('procent')->translateLabel()
+                TextInput::make('field')->translateLabel()
                     ->required()
-                    ->maxLength(5)
-                    ->numeric(),
+                    ->maxLength(20),
+                Select::make('type')->translateLabel()
+                    ->options([
+                        'count' => __('Count'),
+                        'revenue' => __('Revenue')
+                    ]),
             ]);
     }
 

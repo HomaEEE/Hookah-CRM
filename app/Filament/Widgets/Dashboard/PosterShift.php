@@ -8,13 +8,15 @@ use Auth;
 use Filament\Facades\Filament;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class PosterShift extends BaseWidget
 {
     protected static ?string $pollingInterval = '600s';
 
-    use HasWidgetShield;
+    protected function getHeading(): ?string
+    {
+        return __('Poster');
+    }
 
     protected function getCards(): array
     {

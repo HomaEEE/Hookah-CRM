@@ -4,13 +4,10 @@ namespace App\Filament\Pages;
 
 use App\Filament\Pages\Widgets\Statistic\GraphExpenses;
 use Filament\Pages\Page;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Statistic extends Page
 {
-
-    use HasPageShield;
 
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
 
@@ -37,6 +34,7 @@ class Statistic extends Page
     {
         return [
             \App\Filament\Widgets\Statistic\Bills::make(),
+            \App\Filament\Widgets\Test\UserShift::make(),
             //\App\Filament\Widgets\Statistic\GraphProfit::make(),
             \App\Filament\Widgets\Statistic\UserWage::make()
         ];

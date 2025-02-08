@@ -5,16 +5,17 @@ namespace App\Filament\Widgets\Statistic;
 use Auth;
 
 use App\Models\ShiftUser;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserWage extends BaseWidget
 {
-    use HasWidgetShield;
 
     protected int | string | array $columnSpan = 'full';
 
@@ -50,7 +51,8 @@ class UserWage extends BaseWidget
                 ->summarize(Sum::make()->money('uah', 100)->label(__('Total')))
             ])
             ->filters([
-                // ...
+                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                ->defaultLast30Days()
             ]);
     }
 }

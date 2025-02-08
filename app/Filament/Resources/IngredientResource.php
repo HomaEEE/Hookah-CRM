@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\IngredientResource\Pages;
 use App\Filament\Resources\IngredientResource\RelationManagers;
 use App\Models\Ingredient;
+use DesignTheBox\BarcodeField\Forms\Components\BarcodeInput;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -47,7 +48,8 @@ class IngredientResource extends Resource
                     'p' => __('Unit'),
 
                 ]),
-                TextInput::make('barcode')->translateLabel(),
+                BarcodeInput::make('barcode')
+                ->icon('heroicon-o-arrow-right')->translateLabel(),
                 TextInput::make('price')->translateLabel()
                 ->mask(RawJs::make('$money($input)'))
                 ->stripCharacters(',')

@@ -7,7 +7,9 @@ use App\Models\Ingredient;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Auth;
-use Awcodes\FilamentTableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
+
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 
@@ -21,7 +23,7 @@ use Filament\Tables\Table;
 
 use Filament\Infolists\Components;
 use Filament\Infolists\Infolist;
-
+use Marvinosswald\FilamentInputSelectAffix\TextInputSelectAffix;
 
 class PurchaseResource extends Resource
 {
@@ -61,25 +63,43 @@ class PurchaseResource extends Resource
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Select::make('supplier_id')->label(__('Supplier'))
+                    ->columnSpan(12)
                     ->native(false)
+                    ->searchable()
                     ->options(
                          Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')
                         )
                     ->required(),
-
-                TableRepeater::make('ingredients')
-                    ->headers([__('Ingredient'), __('Count')])
+                //Select::make('buyer')->translateLabel(), Покупатель если не Noire
+                TableRepeater::make('ingredients')->hiddenLabel()
+                ->columnSpanFull()
+                ->headers([
+                    Header::make('Ingredient'),
+                    Header::make('Count'),
+                    Header::make('Unit'),
+                ])
                     ->schema([
-                        Select::make('ingredient')->label(__('Ingredient'))
-                        ->hiddenLabel()
-                        ->native(false)
-                        ->searchable()
+                        Select::make('ingredient_id')
+                            ->preload()
+                            ->columnSpan(8)
+                            ->native(false)
+                            ->searchable()
                             ->options(
                                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                            ),
+                               ),
+
                         TextInput::make('qty')->translateLabel()
-                        ->hiddenLabel()
-                    ])->columnSpan('full')
+                            ->numeric()
+                            ->default(1),
+                        Select::make('qty_unit')
+                            ->native(false)
+                            ->options([
+                                'p' => __('Unit'),
+                                'l' => __('Litr'),
+                                'kg' => __('Kg')
+                            ])
+                            ->default('p')
+                    ])
             ]);
     }
 
@@ -132,11 +152,11 @@ class PurchaseResource extends Resource
                     ->schema([
                     Components\RepeatableEntry::make('ingredients')->hiddenLabel()
                     ->schema([
-                        Components\TextEntry::make('ingredient.ingredient')->hiddenLabel(),
+                        Components\TextEntry::make('ingredient')->hiddenLabel(),
                         Components\TextEntry::make('qty')->hiddenLabel(),
-                        Components\TextEntry::make('ingredient.unit')->hiddenLabel()
+                        Components\TextEntry::make('qty_unit')->hiddenLabel()
                     ])
-                    ->grid(2)
+                    ->grid(3)
                     ->contained(false)
                     ])
                     ->collapsible(),

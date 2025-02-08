@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SupplierType;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,14 +16,10 @@ class Supplier extends Model
     protected $casts = ['data' => 'array','type' => SupplierType::class];
     public $timestamps = false;
 
+
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
-    }
-
-    public function places()
-    {
-        return $this->BelongsToMany(Place::class, 'place_supplier', 'supplier_id', 'place_id');
+        return $this->BelongsTo(Place::class);
     }
 
     public function supply()

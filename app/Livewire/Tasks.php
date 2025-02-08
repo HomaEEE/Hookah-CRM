@@ -26,7 +26,7 @@ class Tasks extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-        ->query(Task::query()->whereIn('place_id', Auth::user()->place->pluck('id')))
+        ->query(Task::query()->whereIn('place_id', Auth::user()->places()->pluck('place_id')))
 
             ->columns([
                 TextColumn::make('priority')->translateLabel()->badge(),

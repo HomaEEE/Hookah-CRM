@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 
-enum CURRENCY: string implements HasLabel  /// Счета
+enum Currency: string implements HasLabel  /// Счета
 {
     case UAH = 'UAH';
     case USD = 'USD';

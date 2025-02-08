@@ -31,9 +31,7 @@ class Ingredient extends Model
 
     public function techcard()
     {
-      //  return $this->hasManyJson(Techcard::class, 'ingedients->ingedient_id');
-        return $this->belongsToManyJson(Techcard::class, 'ingedients->ingedient_id');
-
+        return $this->belongsTo(Purchase::class);
     }
 
     public function purchase()

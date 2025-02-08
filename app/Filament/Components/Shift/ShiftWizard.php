@@ -3,18 +3,20 @@
 namespace App\Filament\Components\Shift;
 
 use App\Filament\Components\{ExpenseForm, IncomeForm, WithdrawalForm};
-use Auth;
 
-use App\Http\Controllers\{LocalApiController, PosterApiController};
-use App\Models\{Expense, Income, Place, Shift, Withdrawal};
+use App\Http\Controllers\LocalApiController;
+use App\Models\{Expense, Income, Place, Withdrawal};
+
+use Auth;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\{Fieldset, Hidden, Section, TextInput};
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\{CheckboxList, DateTimePicker, Fieldset, Hidden, Placeholder, TextInput};
+
 use Filament\Forms\{Get, Set};
+
 use Filament\Notifications\Notification;
 
-use Filament\Forms\Components\{Actions, Wizard\Step, CheckboxList, DateTimePicker, Placeholder};
-
-use Filament\Forms\Components\Actions\Action;
 class ShiftWizard
 {
     public static function schema(): array
@@ -104,6 +106,7 @@ class ShiftWizard
             FieldSet::make(__('Expenses & Income'))->schema([
                 TextInput::make('income')->translateLabel()
                     ->numeric()
+                    ->readOnly()
                     ->reactive()
                     ->default(0)
                     ->suffixAction(
@@ -111,7 +114,7 @@ class ShiftWizard
                             ->translateLabel()
                             ->icon('heroicon-o-arrow-path')
                             ->action(function (Set $set) {
-                                $posterLocalIncomes = (new LocalApiController())->getLocalIncomes(Filament::getTenant()->id);
+                                $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
                                 $set('income', (int) $posterLocalIncomes);
 
                                 Notification::make()
@@ -122,14 +125,14 @@ class ShiftWizard
 
                 TextInput::make('expense')->translateLabel()
                     ->numeric()
+                    ->readOnly()
                     ->default(0)
-                    ->hidden(fn (Get $get) => $get('expense') == 0)
                     ->suffixAction(
                         Action::make('update_expenses')
                             ->translateLabel()
                             ->icon('heroicon-o-arrow-path')
                             ->action(function (Set $set) {
-                                $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
+                                $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
                                 $set('expense', (int) $posterLocalExpense / 100);
 
                                 Notification::make()
@@ -145,7 +148,7 @@ class ShiftWizard
                             ->translateLabel()
                             ->icon('heroicon-o-arrow-path')
                             ->action(function (Set $set) {
-                                $localTips = (new LocalApiController())->getLocalTips(Filament::getTenant()->id);
+                                $localTips = (new LocalApiController)->getLocalTips(Filament::getTenant()->id);
                                 $set('tips', (int) $localTips / 100);
 
                                 Notification::make()
@@ -160,43 +163,44 @@ class ShiftWizard
                     ->hidden(fn (Get $get) => $get('withdrawal') == 0),
             ])->columns(3),
 
-
             FieldSet::make('Shift')->translateLabel()->schema([
-                Hidden::make('wages')->default(0),
-               // DateTimePicker::make('')
+
                 Placeholder::make('total_shift')->translateLabel()
-                    ->content(function (Set $set, Get $get) {
-                        $totalCash =
-                            (float)$get('old_shift') + $get('cash') + $get('income') -
-                            (float) $get('wages') - (float) $get('expense') - (float) $get('withdrawal');
+                ->content(function (Get $get, Set $set): string {
+                    return self::CalcShift($get, $set);
+                }),
 
-                        $set('calc', $totalCash);
-                        return  (int) $totalCash;
-                    }),
-
-                Hidden::make('calc_shift')->default(0),
                 Placeholder::make('different')->translateLabel()
-                    ->content(function (Get $get) {
+                    ->content(function (Get $get, Set $set) {
                         if ($get('shift') != null) {
-                            $different = (float) $get('shift') - (float) $get('calc');
+                            $different = (float) $get('shift') - (float) $get('calc_shift');
+                            $set('different', $different);
                             return $different;
+
                         } else {
-                            return (float) $get('calc');
+                            return (float) $get('calc_shift');
                         }
                     }),
+
+                Hidden::make('calc_shift')->translateLabel(),
+
                 TextInput::make('shift')->translateLabel()
-                    ->inputMode('decimal')
                     ->numeric()
                     ->required()
                     ->reactive()
-                    ->hintAction(
-                        Action::make('copy')
-                            ->translateLabel()
+                    ->live(onBlur: true)
+                    ->suffixAction(
+                        Action::make('aproove')
+                            ->label(__('Approve'))
                             ->icon('heroicon-o-check-circle')
                             ->action(function (Set $set, get $get) {
-                                $set('shift', $get('calc'));
+                                $set('shift', $get('calc_shift'));
                             })
-                    ),
+                    )
+
+
+
+
             ])->columns(['md' => 2, 'xl' => 3]),
 
             Fieldset::make(__('Reports'))->schema([
@@ -210,8 +214,19 @@ class ShiftWizard
                         'x-report' => __('X-report of the terminal and poster are reconciled'),
                         'z-report' => __('General reports taken from terminal and poster'),
                     ])
-                    ->gridDirection('row')
-            ])
-    ];
+                    ->gridDirection('row'),
+            ]),
+        ];
+    }
+
+    private static function CalcShift(Get $get, Set $set)
+    {
+        $totalCash =
+            (float) $get('old_shift') + (float) $get('cash') + (float) $get('income') -
+            (float) $get('wages') - (float) $get('expense') - (float) $get('withdrawal');
+
+        $set('calc_shift', $totalCash);
+
+        return $totalCash;
     }
 }

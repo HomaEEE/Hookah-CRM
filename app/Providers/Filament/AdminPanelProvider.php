@@ -2,6 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Tenancy\EditPlaceProfile;
+use App\Filament\Pages\Tenancy\RegisterPlace;
+use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Models\Place;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -10,11 +15,8 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets;
 
-use App\Livewire\PersonalInfo;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
-use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -23,12 +25,10 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Filament\SpatieLaravelTranslatablePlugin;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 
 use Filament\Support\Colors\Color;
-use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 
@@ -46,25 +46,23 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Emerald
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->tenant(Place::class, slugAttribute: 'slug', ownershipRelationship: 'place' )
-        //    // ->tenantProfile(EditPlaceProfile::class)
+            ->tenant(model: Place::class,  slugAttribute: 'slug')
+            ->tenantRegistration(RegisterPlace::class)
+            ->tenantProfile(EditPlaceProfile::class)
             ->login()
             ->registration()
             ->passwordReset()
-            ->profile()
+            ->profile(EditProfile::class)
             ->databaseNotifications()
-            ->databaseNotificationsPolling('10s')
+            ->databaseNotificationsPolling('120s')
             ->unsavedChangesAlerts()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
-            ->pages([
-                ])
+            ->pages([])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
+            ->widgets([])
+
             ->navigationGroups([
 
                 NavigationGroup::make()
@@ -82,7 +80,6 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                 ->label(__('Finance'))
                 ->icon('heroicon-o-banknotes'),
-
 
                 NavigationGroup::make()
                 ->label('Data')
@@ -103,29 +100,19 @@ class AdminPanelProvider extends PanelProvider
                     ->group(__('Links'))
             ])
             ->plugins([
-                    SpatieLaravelTranslatablePlugin::make()
+                FilamentShieldPlugin::make()
+                    ->centralApp(Place::class)
+                    ->simpleResourcePermissionView(),
+                SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['ru', 'uk', 'en']),
-                    FilamentTranslateFieldPlugin::make()
+                FilamentTranslateFieldPlugin::make()
                     ->defaultLocales(['ru', 'uk', 'en']),
-                    BreezyCore::make()
-                    ->myProfile(
-                        shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)
-                        shouldRegisterNavigation: false, // Adds a main navigation item for the My Profile page (default = false)
-                        hasAvatars: false, // Enables the avatar upload form component (default = false)
-                        slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
-                    )
-                    ->myProfileComponents([
-                        'personal_info' => PersonalInfo::class,
-                    ])
-                    ->passwordUpdateRules(
-                        rules: [Password::default()->mixedCase()->uncompromised(3)], // you may pass an array of validation rules as well. (default = ['min:8'])
-                        requiresCurrentPassword: false, // when false, the user can update their password without entering their current password. (default = true)
-                        ),
-                    EnvironmentIndicatorPlugin::make(),
-                    SimpleLightBoxPlugin::make(),
-                    FilamentShieldPlugin::make(),
-                    FilamentApexChartsPlugin::make(),
-                ])
+                EnvironmentIndicatorPlugin::make(),
+                SimpleLightBoxPlugin::make(),
+            ])
+            ->tenantMiddleware([
+                SyncShieldTenant::class,
+            ], isPersistent: true)
             ->authGuard('web')
             ->middleware([
                 EncryptCookies::class,

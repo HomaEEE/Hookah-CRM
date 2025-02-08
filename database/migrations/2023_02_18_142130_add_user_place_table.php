@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('place_user', function (Blueprint $table) {
-            $table->primary(['user_id', 'place_id']);
+            $table->integer('id');
             $table->foreignId('user_id')->nullable();
             $table->foreignId('place_id')->nullable();
         });

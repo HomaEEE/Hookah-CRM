@@ -9,15 +9,13 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
-use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class Paying extends BaseWidget
 {
-
-    use HasWidgetShield;
 
     protected function getTableHeading(): string | Htmlable
     {
@@ -27,7 +25,15 @@ class Paying extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-        ->deferLoading()
+        ->defaultGroup('supplier.company')
+        ->groups([
+            Group::make('bill.name')->label(__('Bill'))
+                ->titlePrefixedWithLabel(false),
+            Group::make('supplier.company')->label(__('Supplier'))
+                ->titlePrefixedWithLabel(false)
+        ])
+        ->groupingSettingsInDropdownOnDesktop()
+
         ->query(Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
         ->where('pay', 0))
             ->columns([
@@ -35,7 +41,16 @@ class Paying extends BaseWidget
                 ->size('sm')
                 ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
+
+                TextColumn::make('delay_day')->label(__('Delay'))
+                ->badge()
+                ->color(fn (int $state): string => match (true) {
+                    default => 'info',
+                    $state < 1 => 'danger',
+                    $state < 3 => 'warning',
+                    $state < 7 => 'success',
+                }),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah')->summarize(Sum::make()->money('UAH')->label(__('Total'))),
 
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {

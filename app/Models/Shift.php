@@ -54,7 +54,6 @@ class Shift extends Model
         return $this->hasMany(ShiftUser::class, 'shift_id');
     }
 
-
     public function wage()
     {
         return $this->belongsTo(Wage::class);
@@ -75,6 +74,10 @@ class Shift extends Model
         return $this->shift;
     }
 
+    public function getShiftSum()
+    {
+        return $this->terminal + $this->cash;
+    }
 
     protected function getMonthsAndYearsForSelect()
     {

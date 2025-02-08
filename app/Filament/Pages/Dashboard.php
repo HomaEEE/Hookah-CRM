@@ -13,6 +13,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use App\Models\{Bill, Expense, ExpenseCategory, Shift, ShiftUser, Supplier, Supply, Tip, Wage};
 
 use Auth;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
@@ -24,6 +25,9 @@ use Illuminate\Support\Str;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
+
+  //  use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
     protected static string $view = 'filament.pages.dashboard';
@@ -93,7 +97,8 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->createAnother(false)
                     ->icon('heroicon-o-document-minus')
                     ->modalHeading(__('Add Expense'))
-                    ->modalWidth('sm')
+                    ->modalWidth('md')
+                    ->slideOver()
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->form(
@@ -111,7 +116,7 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
                     ->createAnother(false)
-                    ->modalWidth('xl')
+                    ->modalWidth('md')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->slideOver()
@@ -135,11 +140,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->form(
                             IncomeForm::schema()
                         )
-                        // ->action(function (array $data): void {
-                        //     Shift::latest('id')->where('place_id', Filament::getTenant()->id)
-                        //     ->first()
-                        //     ->update(['income'=>$data['sum']]);
-                        // })
                         ->successNotification(
                             Notification::make()
                                  ->success()
@@ -188,7 +188,6 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ])
                 ->action(function (array $data): void {
                     (new PosterApiController())->openShift($data);
-                   // (new LocalApiController())->openShift($data);
 
                     Notification::make()
                     ->title(__('Shift opened'))

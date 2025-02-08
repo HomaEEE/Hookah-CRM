@@ -102,7 +102,7 @@ class EventResource extends Resource
     public static function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\CalendarWidget::make()
+           // \App\Filament\Widgets\CalendarWidget::make()
         ];
     }
 

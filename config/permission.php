@@ -13,9 +13,7 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        //  'permission' => Spatie\Permission\Models\Permission::class,
-
-         'permission' => App\Models\Permission::class,
+        'permission' => App\Models\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -26,9 +24,7 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        //  'role' => Spatie\Permission\Models\Role::class,
-
-         'role' => App\Models\Role::class,
+        'role' => App\Models\Role::class,
 
     ],
 
@@ -97,7 +93,7 @@ return [
          * foreign key is other than `team_id`.
          */
 
-        'team_foreign_key' => 'team_id',
+        'team_foreign_key' => 'place_id',
     ],
 
     /*
@@ -124,7 +120,7 @@ return [
      * (view the latest version of this package's migration file)
      */
 
-    'teams' => false,
+    'teams' => true,
 
     /*
      * Passport Client Credentials Grant
@@ -171,7 +167,7 @@ return [
          * When permissions or roles are updated the cache is flushed automatically.
          */
 
-        'expiration_time' => \DateInterval::createFromDateString('360 hours'),
+        'expiration_time' => \DateInterval::createFromDateString('24 hours'),
 
         /*
          * The cache key used to store all permissions.

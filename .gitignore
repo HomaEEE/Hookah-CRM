@@ -20,3 +20,4 @@ public/manifest-site.json
 /.DS_Store
 /*/.DS_Store
 phpstan.neon
+database/migrations/2025_01_28_195713_create_suppliers_has_reqizites_table.php

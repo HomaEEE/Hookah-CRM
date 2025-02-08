@@ -20,7 +20,7 @@
                 {{ __('Paying')}}
             </x-filament::tabs.item>
 
-            <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''"
+            {{-- <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''"
             icon="heroicon-o-briefcase">
                 {{ __('Tasks')}}
             </x-filament::tabs.item>
@@ -28,12 +28,12 @@
             <x-filament::tabs.item @click="tab = 'tab5'" :alpine-active="'tab === \'tab5\''"
             icon="heroicon-o-calendar-days">
                 {{ __('Events')}}
-            </x-filament::tabs.item>
-{{--
-    <x-filament::tabs.item @click="tab = 'tab6'" :alpine-active="'tab === \'tab6\''"
-                icon="heroicon-o-calendar-days">
-                    {{ __('Shift Users')}}
             </x-filament::tabs.item> --}}
+
+    <x-filament::tabs.item @click="tab = 'tab6'" :alpine-active="'tab === \'tab6\''"
+                icon="heroicon-o-users">
+                    {{ __('Shift Users')}}
+            </x-filament::tabs.item>
 
         </x-filament::tabs>
 
@@ -47,16 +47,16 @@
              <div x-show="tab === 'tab3'">
                 @livewire(\App\Livewire\Paying::class)
             </div>
-             <div x-show="tab === 'tab4'">
+             {{-- <div x-show="tab === 'tab4'">
                 @livewire(\App\Livewire\Tasks::class)
             </div>
             <div x-show="tab === 'tab5'">
                 @livewire(\App\Livewire\EventTable::class)
-            </div>
-
-            {{-- <div x-show="tab === 'tab6'">
-                @livewire(\App\Livewire\ShiftUsers::class)
             </div> --}}
+
+            <div x-show="tab === 'tab6'">
+                @livewire(\App\Livewire\ShiftUsers::class)
+            </div>
 
         </div>
     </div>

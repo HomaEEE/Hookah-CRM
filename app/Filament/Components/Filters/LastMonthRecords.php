@@ -21,12 +21,7 @@ class LastMonthRecords
     {
         return [
             DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
-            ->startDate(Carbon::now()->subMonth())->endDate(Carbon::now())
-            ->modifyQueryUsing(fn(Builder $query, ?Carbon $startDate , ?Carbon $endDate , $dateString) =>
-                $query->when(!empty($dateString),
-                    fn (Builder $query) : Builder =>
-                        $query->whereBetween('created_at', [$startDate,$endDate]))
-            )
+            ->defaultThisMonth()
                 ];
             }
         }

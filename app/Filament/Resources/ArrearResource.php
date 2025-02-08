@@ -6,7 +6,6 @@ use App\Filament\Resources\ArrearResource\Pages;
 use App\Models\{Arrear, Ingredient, User};
 
 use Auth;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Get;
 use Filament\Forms\Components\Hidden;

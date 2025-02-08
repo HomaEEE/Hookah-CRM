@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasCurrentTenantLabel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
-class Place extends Model implements HasAvatar
+class Place extends Model implements HasAvatar, HasCurrentTenantLabel
 {
     use HasFactory,  HasTranslations;
 
@@ -20,6 +22,11 @@ class Place extends Model implements HasAvatar
 
     public $timestamps = false;
 
+    public function getCurrentTenantLabel(): string
+    {
+        return 'Current team';
+    }
+
     public function meters()
     {
         return $this->hasMany(Meter::class);
@@ -27,9 +34,8 @@ class Place extends Model implements HasAvatar
 
     public function bill()
     {
-        return $this->HasMany(Bill::class, 'place_id');
+        return $this->HasMany(Bill::class);
     }
-
 
     public function arrears()
     {
@@ -38,7 +44,7 @@ class Place extends Model implements HasAvatar
 
     public function supplier()
     {
-        return $this->hasMany(Supplier::class, 'place_id');
+        return $this->hasMany(Supplier::class);
     }
 
     public function suppliers()
@@ -107,7 +113,6 @@ class Place extends Model implements HasAvatar
         return $this->hasMany(Wage::class, 'place_id');
     }
 
-
     public function expenses()
     {
         return $this->hasMany(Expense::class);
@@ -145,10 +150,10 @@ class Place extends Model implements HasAvatar
 
     public function menu()
     {
-        return $this->hasOne(Menu::class, 'place_id');
+        return $this->hasOne(Menu::class);
     }
 
-    public function users(): BelongsToMany
+    public function users()
     {
         return $this->belongsToMany(User::class);
     }
@@ -162,6 +167,7 @@ class Place extends Model implements HasAvatar
     {
         return $this->hasMany(Supply::class);
     }
+
     public function leftovers()
     {
         return $this->hasMany(Leftover::class);
@@ -189,7 +195,7 @@ class Place extends Model implements HasAvatar
 
     public function roles()
     {
-        return $this->hasMany(Role::class, 'place_id');
+        return $this->hasMany(Role::class);
     }
 
     public function permissions()
@@ -199,7 +205,7 @@ class Place extends Model implements HasAvatar
 
     public function categories()
     {
-        return $this->belongsTo(Category::class, ['category_id', 'palce_id']);
+        return $this->hasMany(Category::class, ['category_id', 'palce_id']);
     }
 
     public function scopeVisibleMenu($query, $value)
@@ -215,5 +221,25 @@ class Place extends Model implements HasAvatar
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar_url;
+    }
+
+    /** @return HasMany<\App\Models\Feedback, self> */
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(\App\Models\Feedback::class);
+    }
+
+
+    /** @return HasMany<\App\Models\Ingredient, self> */
+    public function ingredients(): HasMany
+    {
+        return $this->hasMany(\App\Models\Ingredient::class);
+    }
+
+
+    /** @return HasMany<\App\Models\Product, self> */
+    public function products(): HasMany
+    {
+        return $this->hasMany(\App\Models\Product::class);
     }
 }
