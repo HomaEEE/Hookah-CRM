@@ -8,6 +8,11 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class Bills extends BaseWidget
 {
+    protected function getHeading(): ?string
+    {
+        return __('Biils');
+    }
+
     protected function getStats(): array
     {
         return collect(Bill::all())->map(function ($bill) {

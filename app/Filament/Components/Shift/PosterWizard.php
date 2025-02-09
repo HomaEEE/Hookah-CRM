@@ -58,11 +58,10 @@ class PosterWizard
                             $set('tips', $localTips / 100);
 
                             $posterTodayWorkshops = (new PosterApiController)->getTodayWorkshops($place->id);
-
+                            dd($posterTodayWorkshops);
                             foreach ($posterTodayWorkshops as $ws) {
 
                                 $field = Workshop::where('workshop_id', $ws['workshop_id'])->first()->toArray();
-
                                 if ($ws[$field['type']] >= 1) {
                                     $set($field['field'], $ws[$field['type']] / 1);
                                 }  else {

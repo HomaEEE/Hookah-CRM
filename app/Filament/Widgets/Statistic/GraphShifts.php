@@ -15,7 +15,7 @@ class GraphShifts extends ChartWidget
 
     public function getHeading(): string
     {
-        return __('Shifts');
+        return __('Graphic Shifts');
     }
 
     protected function getFilters(): ?array

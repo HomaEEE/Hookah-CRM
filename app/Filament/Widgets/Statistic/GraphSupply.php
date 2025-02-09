@@ -16,7 +16,7 @@ class GraphSupply extends ChartWidget
 
     public function getHeading(): string
     {
-        return __('Supplies');
+        return __('Graphic Supplies');
     }
 
     // protected function getFilters(): ?array

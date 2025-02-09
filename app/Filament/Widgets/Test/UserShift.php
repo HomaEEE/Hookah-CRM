@@ -9,6 +9,12 @@ use Auth;
 
 class UserShift extends BaseWidget
 {
+
+    protected function getHeading(): ?string
+    {
+        return __('User Shift');
+    }
+
     protected function getStats(): array
     {
         return [
