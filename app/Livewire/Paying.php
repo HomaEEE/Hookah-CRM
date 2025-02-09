@@ -50,7 +50,7 @@ class Paying extends BaseWidget
                     $state < 3 => 'warning',
                     $state < 7 => 'success',
                 }),
-                TextColumn::make('sum')->label(__('Sum'))->money('uah')->summarize(Sum::make()->money('UAH')->label(__('Total'))),
+                TextColumn::make('sum')->label(__('Sum'))->money('uah')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
 
                 IconColumn::make('bill_id')->label(__('Bill'))
                 ->icon(fn (string $state): string => match ($state) {
