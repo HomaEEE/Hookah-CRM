@@ -21,7 +21,7 @@ class UserWage extends BaseWidget
 
     protected function getTableHeading(): string | Htmlable
     {
-        return __('Wage');
+        return __('User Wage');
     }
 
     protected function getDefaultTableSortColumn(): ?string

@@ -15,7 +15,7 @@ class GraphProfit extends ChartWidget
 
     public function getHeading(): string
     {
-        return __('Profit Statistic');
+        return __('Graphs Profit');
     }
 
     protected function getData(): array
