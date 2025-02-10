@@ -115,28 +115,26 @@ class SupplyForm
                     ->required(fn (callable $get) => $get('pay') === 1)
                     ->visible( fn(Get $get) => $get('pay') == '0'  ),
 
-            Textarea::make('comment')->label(__('Comment'))
-                ->rows(3),
-
-
             Tabs::make('Tabs')
                 ->contained(false)
                 ->tabs([
+                    Tabs\Tab::make(__('Comment'))
+                    ->schema([
 
+                        Textarea::make('comment')->label(__('Comment'))
+                        ->rows(3),
+
+                    ]),
                     Tabs\Tab::make(__('Photo'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('invoice')
-                                ->label(__('Invoice'))
+                                ->label(__('Photo'))
                                 ->collection('supplies')
                                 ->multiple()
                                 ->imagePreviewHeight(450)
-                                ->imageResizeMode('contain')
-
+                                ->imageResizeMode('cover')
                                 ->optimize('webp')
-                                ->resize(90)
-
-                                ->reorderable()
-                                ->openable(),
+                                ->resize(50),
                         ]),
                     Tabs\Tab::make(__('Receipt'))
                         ->schema([
@@ -185,7 +183,9 @@ class SupplyForm
                             //                     ->prefix('₴'),
 
                             //             ])
+
                         ]),
+
 
                 ]),
         ];
