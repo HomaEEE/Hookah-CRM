@@ -42,7 +42,7 @@ class ExpenseForm
                 ->imagePreviewHeight(450)
                 ->imageResizeMode('cover')
                 ->optimize('webp')
-                ->resize(50),
+                ->resize(65),
             ToggleButtons::make('bill_id')->label(__('Type pay'))
                 ->options(Bill::get()->pluck('name', 'id'))
                 ->default(0)

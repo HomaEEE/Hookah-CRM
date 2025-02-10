@@ -134,8 +134,8 @@ class SupplyForm
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
                                 ->optimize('webp')
-                                ->resize(50),
-                        ]),
+                                ->resize(65),
+                            ]),
                     Tabs\Tab::make(__('Receipt'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('receipt')
