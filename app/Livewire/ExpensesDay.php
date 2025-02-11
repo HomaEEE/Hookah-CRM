@@ -13,13 +13,13 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
+use Filament\Tables\Actions\Action;
 
 class ExpensesDay extends BaseWidget
 {
+   // protected static ?string $pollingInterval = null;
 
-    protected static ?string $pollingInterval = null;
-
-    protected $listeners = ['updateTodayShift' => '$refresh'];
+   // protected $listeners = ['refreshExpensesList' => 'loadExpenses'];
 
     public static function badge(): ?string
     {
@@ -65,7 +65,10 @@ class ExpensesDay extends BaseWidget
                     '0' => 'success',
                     default => 'gray',
                 }),
-                SpatieMediaLibraryImageColumn::make('supply')->label(__('Invoice'))
+                SpatieMediaLibraryImageColumn::make('supply.media')->label(__('Invoice'))
+                ->state(function (Expense $record) {
+                    return $record->supply_id ? $record->supply->getFirstMediaUrl('images') : 'invoice'; // Или путь к заглушке
+               })
                 ->collection('supplies')
                 ->simpleLightbox()
                 ->circular()
@@ -74,7 +77,6 @@ class ExpensesDay extends BaseWidget
                 ->height(40)
                 ->toggleable()
                 ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                ->placeholder('No description.')
                 ->visibleFrom('sm'),
 
                 IconColumn::make('pay')
@@ -88,6 +90,6 @@ class ExpensesDay extends BaseWidget
                             $name => ! $record->$name,
                         ]);
                     }),
-            ]);
+                ]);
     }
 }

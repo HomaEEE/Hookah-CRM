@@ -74,10 +74,7 @@ class SupplyForm
                 ->numeric()
                 ->prefix('₴')
                 ->autocomplete(false)
-                ->inputMode('decimal')
-                ->stripCharacters(',')
-                ->mask(RawJs::make('$money($input)')),
-
+                ->inputMode('decimal'),
             TextInput::make('invoice_number')->label(__('Invoice'))
                 ->visible(fn(Get $get) => $get('bill_id') == '1'),
 
@@ -134,7 +131,8 @@ class SupplyForm
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
                                 ->optimize('webp')
-                                ->resize(65),
+                                ->openable()
+                                ->resize(75),
                             ]),
                     Tabs\Tab::make(__('Receipt'))
                         ->schema([
@@ -142,10 +140,10 @@ class SupplyForm
                                 ->collection('receipts')
                                 ->label(__('Receipt'))
                                 ->multiple()
-                                ->imagePreviewHeight(250)
-                                ->imageResizeTargetWidth('2400')
-                                ->imageResizeTargetHeight('1600')
+                                ->imagePreviewHeight(450)
+                                ->imageResizeMode('cover')
                                 ->optimize('webp')
+                                ->resize(75)
                                 ->imageEditor()
                                 ->imageEditorAspectRatios([
                                     null,
@@ -153,7 +151,6 @@ class SupplyForm
                                     '4:3',
                                     '1:1',
                                 ])
-                                ->reorderable()
                                 ->openable()
 
 

@@ -24,6 +24,12 @@ class MoneyCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return round(floatval($value) * 100);
+        if (strpos($value, ',') !== false) {
+            // Убираем запятую и сохраняем число
+            return str_replace(',', '', $value);
+        } else {
+            // Умножаем число на 100 и сохраняем
+            return  $value * 100;
+        }
     }
 }

@@ -31,10 +31,7 @@ class ExpenseForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
-                ->autocomplete(false)
-                ->inputMode('decimal')
-                ->stripCharacters(',')
-                ->mask(RawJs::make('$money($input)')),
+                ->inputMode('decimal'),
             SpatieMediaLibraryFileUpload::make('invoice')
                 ->label(__('Invoice'))
                 ->collection('supplies')
@@ -42,7 +39,7 @@ class ExpenseForm
                 ->imagePreviewHeight(450)
                 ->imageResizeMode('cover')
                 ->optimize('webp')
-                ->resize(65),
+                ->resize(70),
             ToggleButtons::make('bill_id')->label(__('Type pay'))
                 ->options(Bill::get()->pluck('name', 'id'))
                 ->default(0)

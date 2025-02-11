@@ -57,4 +57,11 @@ class Expense extends Model implements HasMedia
         return $this->belongsTo(Bill::class, 'bill_id');
     }
 
+    public function getInvoiceAttribute() {
+        return $this->supply_id ?
+               $this->supply->getFirstMediaUrl('invoce') : $this->getFirstMediaUrl('invoce');
+
+    }
+
+
 }
