@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Components\Bulks\CheckAsPaidAction;
+use App\Filament\Components\Bulks\CheckPosterAction;
 use App\Filament\Components\SupplyForm;
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
@@ -213,6 +215,8 @@ class SupplyResource extends Resource
                 // BulkAction::make('pay')->icon('heroicon-s-inbox-in')->translateLabel()
                 // ->action(fn (Collection $records) => $records->each->pay())
                 // ->deselectRecordsAfterCompletion(),
+                CheckAsPaidAction::make('check'),
+                CheckPosterAction::make('poster'),
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
