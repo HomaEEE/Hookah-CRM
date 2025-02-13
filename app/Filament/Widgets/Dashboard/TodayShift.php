@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Dashboard;
 
 use App\Models\{Place, Shift, Tip, Expense};
 use Auth;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -12,6 +13,7 @@ use Filament\Facades\Filament;
 
 class TodayShift extends BaseWidget
 {
+    use HasWidgetShield;
 
     protected function getHeading(): ?string
     {

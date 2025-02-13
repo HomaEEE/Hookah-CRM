@@ -5,12 +5,16 @@ namespace App\Filament\Widgets\Dashboard;
 use App\Http\Controllers\PosterApiController as PosterApi;
 use App\Models\Place;
 use Auth;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Facades\Filament;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class PosterShift extends BaseWidget
 {
+
+    use HasWidgetShield;
+
     protected static ?string $pollingInterval = '600s';
 
     protected function getHeading(): ?string
