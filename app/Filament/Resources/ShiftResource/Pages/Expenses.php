@@ -48,6 +48,7 @@ class Expenses extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
+            ->defaultGroup('bill.name')
             ->recordTitleAttribute('Expenses')
             ->modifyQueryUsing(fn (Builder $query) =>
             $query->where(

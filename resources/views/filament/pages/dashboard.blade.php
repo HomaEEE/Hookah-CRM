@@ -30,7 +30,7 @@
                 {{ __('Events')}}
             </x-filament::tabs.item> --}}
 
-    <x-filament::tabs.item @click="tab = 'tab6'" :alpine-active="'tab === \'tab6\''"
+            <x-filament::tabs.item @click="tab = 'tab6'" :alpine-active="'tab === \'tab6\''"
                 icon="heroicon-o-users">
                     {{ __('Shift Users')}}
             </x-filament::tabs.item>

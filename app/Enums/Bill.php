@@ -35,8 +35,8 @@ enum Bill: string implements HasLabel, HasIcon, HasColor
     {
         return match ($this) {
             // self::BANK => 'info',
-            self::CASH => 'warning',
-            self::CARD => 'success'
+            self::CASH => 'success',
+            self::CARD => 'info'
         };
     }
 }

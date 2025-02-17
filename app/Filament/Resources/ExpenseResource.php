@@ -84,20 +84,10 @@ class ExpenseResource extends Resource
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
-                IconColumn::make('bill_id')->label(__('Bill'))
-                    ->icon(fn (string $state): string => match ($state) {
-                        '0' => 'heroicon-o-banknotes',
-                        '1' => 'heroicon-o-credit-card',
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        '1' => 'warning',
-                        '0' => 'success',
-                        default => 'gray',
-                    })
-                    ->action(function ($record, $column) {
-                        $name = $column->getName();
+                IconColumn::make('bill.type')->label(__('Bill'))
+                    ->action(function ($record) {
                         $record->update([
-                            $name => ! $record->$name,
+                            'bill_id' => ! $record->bill_id,
                         ]);
                     }),
 

@@ -34,10 +34,8 @@ return [
     'permission_prefixes' => [
         'resource' => [
             'view',
-            'view_any',
             'create',
             'update',
-            'restore',
             'delete',
         ],
 

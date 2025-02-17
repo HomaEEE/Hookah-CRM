@@ -100,8 +100,18 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make()
-                    ->centralApp(Place::class)
-                    ->simpleResourcePermissionView(),
+                ->sectionColumnSpan(1)
+                ->checkboxListColumns([
+                    'default' => 1,
+                    'sm' => 2,
+                    'lg' => 4,
+                ])
+                ->resourceCheckboxListColumns([
+                    'default' => 2,
+                    'sm' => 2,
+                ])
+                    ->centralApp(Place::class),
+
                 SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['ru', 'uk', 'en']),
                 FilamentTranslateFieldPlugin::make()

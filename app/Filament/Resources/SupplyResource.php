@@ -96,22 +96,13 @@ class SupplyResource extends Resource
                     ->placeholder('No description.')
                     ->visibleFrom('sm'),
 
-                IconColumn::make('bill_id')->label(__('Bill'))
-                    ->icon(fn(string $state): string => match ($state) {
-                        '0' => 'heroicon-o-banknotes',
-                        '1' => 'heroicon-o-credit-card',
-                    })
-                    ->color(fn(string $state): string => match ($state) {
-                        '1' => 'warning',
-                        '0' => 'success',
-                        default => 'gray',
-                    })
-                    ->action(function ($record, $column) {
-                        $name = $column->getName();
+                IconColumn::make('bill.type')->label(__('Bill'))
+                    ->action(function ($record) {
                         $record->update([
-                            $name => ! $record->$name,
+                            'bill_id' => ! $record->bill_id,
                         ]);
                     }),
+
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
