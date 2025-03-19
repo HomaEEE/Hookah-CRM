@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\DatePicker;
@@ -10,10 +11,9 @@ use Illuminate\Support\Collection;
 
 class EditProfile extends BaseEditProfile
 {
-
     public Collection $wage;
 
-   // protected static string $view = 'filament.pages.profile';
+    // protected static string $view = 'filament.pages.profile';
 
     public function form(Form $form): Form
     {
@@ -24,9 +24,9 @@ class EditProfile extends BaseEditProfile
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
                 TextInput::make('phone')
-                ->tel()
-                ->translateLabel()
-                ->mask(RawJs::make(<<<'JS'
+                    ->tel()
+                    ->translateLabel()
+                    ->mask(RawJs::make(<<<'JS'
                                 $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
                             JS)),
                 TextInput::make('creditcard')
@@ -35,7 +35,7 @@ class EditProfile extends BaseEditProfile
                     $input.length >= 16 ? '9999-9999-9999-9999' : '9999-9999-9999-9999'
                 JS)),
                 DatePicker::make('birth')->translateLabel()
-                ->native(false),
+                    ->native(false),
             ]);
     }
 }

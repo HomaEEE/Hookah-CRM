@@ -2,19 +2,26 @@
 
 namespace App\Filament\Components;
 
+use App\Models\Bill;
+use App\Models\Ingredient;
+use App\Models\Supplier;
 use Auth;
-use App\Models\{Supply, Supplier, Bill, Ingredient};
-
 use Filament\Facades\Filament;
-
-use Filament\Forms\{Get, Set};
-use Filament\Support\RawJs;
 use Filament\Forms\Components\Actions\Action as FormAction;
-
-use Filament\Forms\Components\{Select, TextInput, Hidden, DateTimePicker, KeyValue, Section, SpatieMediaLibraryFileUpload, Tabs, Textarea, Toggle, ToggleButtons};
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Support\Enums\ActionSize;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
-use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class SupplyForm
 {
@@ -73,55 +80,56 @@ class SupplyForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
-                ->autocomplete(false)
                 ->inputMode('decimal'),
+
             TextInput::make('invoice_number')->label(__('Invoice'))
-                ->visible(fn(Get $get) => $get('bill_id') == '1'),
+                ->visible(fn (Get $get) => $get('bill_id') == '1'),
 
             TextInput::make('delay')->label(__('Delay'))
-            ->inputMode('none')
-            ->suffixAction(
-                FormAction::make('DelayPlus')
-                    ->size(ActionSize::Large)
-                    ->color('success')
-                    ->icon('heroicon-o-plus')
-                    ->iconButton()
-                    ->disabled(fn (Get $get): bool => empty($get('delay')) || $get('delay') >= 28)
-                    ->action(function (Get $get, Set $set, $state): void {
-                        $set('delay', $get('delay') + 1);
-                    })
-            )
-            ->prefixAction(
-                FormAction::make('DelayMinus')
-                    ->size(ActionSize::Large)
-                    ->icon('heroicon-o-minus')
-                    ->color('danger')
-                    ->iconButton()
-                    ->disabled(fn (Get $get): bool => empty($get('delay')) || $get('delay') <= 1)
-                    ->action(function (Get $get, Set $set, $state): void {
-                        $set('delay', $get('delay') - 1);
-                    })
-            )
+                ->inputMode('none')
+                ->suffixAction(
+                    FormAction::make('DelayPlus')
+                        ->size(ActionSize::Large)
+                        ->color('success')
+                        ->icon('heroicon-o-plus')
+                        ->iconButton()
+                        ->disabled(fn (Get $get): bool => empty($get('delay')) || $get('delay') >= 28)
+                        ->action(function (Get $get, Set $set, $state): void {
+                            $set('delay', $get('delay') + 1);
+                        })
+                )
+                ->prefixAction(
+                    FormAction::make('DelayMinus')
+                        ->size(ActionSize::Large)
+                        ->icon('heroicon-o-minus')
+                        ->color('danger')
+                        ->iconButton()
+                        ->disabled(fn (Get $get): bool => empty($get('delay')) || $get('delay') <= 1)
+                        ->action(function (Get $get, Set $set, $state): void {
+                            $set('delay', $get('delay') - 1);
+                        })
+                )
                 ->default(
                     function (callable $get, $set) {
                         $toggle = $get('pay');
+
                         return $toggle === 0 ? $set('delay', 7) : $set('delay', 0); // Or '' for an empty string
                     })
-                    ->reactive()
-                    ->numeric() // If you want to enforce numeric input
-                    ->required(fn (callable $get) => $get('pay') === 1)
-                    ->visible( fn(Get $get) => $get('pay') == '0'  ),
+                ->reactive()
+                ->numeric() // If you want to enforce numeric input
+                ->required(fn (callable $get) => $get('pay') === 1)
+                ->visible(fn (Get $get) => $get('pay') == '0'),
 
             Tabs::make('Tabs')
                 ->contained(false)
                 ->tabs([
                     Tabs\Tab::make(__('Comment'))
-                    ->schema([
+                        ->schema([
 
-                        Textarea::make('comment')->label(__('Comment'))
-                        ->rows(3),
+                            Textarea::make('comment')->label(__('Comment'))
+                                ->rows(3),
 
-                    ]),
+                        ]),
                     Tabs\Tab::make(__('Photo'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('invoice')
@@ -133,7 +141,7 @@ class SupplyForm
                                 ->optimize('webp')
                                 ->openable()
                                 ->resize(75),
-                            ]),
+                        ]),
                     Tabs\Tab::make(__('Receipt'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('receipt')
@@ -151,8 +159,7 @@ class SupplyForm
                                     '4:3',
                                     '1:1',
                                 ])
-                                ->openable()
-
+                                ->openable(),
 
                             // ])->columns(1),
                             // Tabs\Tab::make(__('List'))
@@ -182,7 +189,6 @@ class SupplyForm
                             //             ])
 
                         ]),
-
 
                 ]),
         ];

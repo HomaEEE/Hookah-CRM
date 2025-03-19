@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Dashboard;
 
 use App\Models\Supply;
-use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -16,8 +15,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Paying extends BaseWidget
 {
-
-    protected function getTableHeading(): string | Htmlable
+    protected function getTableHeading(): string|Htmlable
     {
         return __('Supplies to pay');
     }
@@ -25,39 +23,38 @@ class Paying extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-        ->defaultGroup('supplier.company')
-        ->groups([
-            Group::make('bill.name')->label(__('Bill'))
-                ->titlePrefixedWithLabel(false),
-            Group::make('supplier.company')->label(__('Supplier'))
-                ->titlePrefixedWithLabel(false)
-        ])
-        ->groupingSettingsInDropdownOnDesktop()
-
-        ->query(Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
-        ->where('pay', 0))
+            ->defaultGroup('supplier.company')
+            ->groups([
+                Group::make('bill.name')->label(__('Bill'))
+                    ->titlePrefixedWithLabel(false),
+                Group::make('supplier.company')->label(__('Supplier'))
+                    ->titlePrefixedWithLabel(false),
+            ])
+            ->groupingSettingsInDropdownOnDesktop()
+            ->query(Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
+                ->where('pay', 0))
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-                ->size('sm')
-                ->description(fn (Supply $record): string => $record->user->name ?? ''),
+                    ->size('sm')
+                    ->description(fn (Supply $record): string => $record->user->name ?? ''),
                 TextColumn::make('supplier.company')->label(__('Supplier'))->badge(),
 
                 TextColumn::make('delay_day')->label(__('Delay'))
-                ->badge()
-                ->color(fn (int $state): string => match (true) {
-                    default => 'info',
-                    $state < 1 => 'danger',
-                    $state < 3 => 'warning',
-                    $state < 7 => 'success',
-                }),
+                    ->badge()
+                    ->color(fn (int $state): string => match (true) {
+                        default => 'info',
+                        $state < 1 => 'danger',
+                        $state < 3 => 'warning',
+                        $state < 7 => 'success',
+                    }),
                 TextColumn::make('sum')->label(__('Sum'))->money('uah')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
 
                 IconColumn::make('bill.type')->label(__('Bill'))
-                ->action(function ($record) {
-                    $record->update([
-                        'bill_id' => ! $record->bill_id,
-                    ]);
-                }),
+                    ->action(function ($record) {
+                        $record->update([
+                            'bill_id' => ! $record->bill_id,
+                        ]);
+                    }),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')

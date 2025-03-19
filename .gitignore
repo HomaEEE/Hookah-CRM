@@ -13,11 +13,11 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 storage/framework/*
-app/Policies
-public/storage
-public/manifest-admin.json
-public/manifest-site.json
+/app/Policies
+/public/storage
 /.DS_Store
 /*/.DS_Store
+/*/*/.DS_Store
+
 phpstan.neon
-database/migrations/2025_01_28_195713_create_suppliers_has_reqizites_table.php
+.DS_Store

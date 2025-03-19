@@ -13,7 +13,7 @@ class Bills extends BaseWidget
 
     protected function getHeading(): ?string
     {
-        return __('Biils');
+        return __('Bills');
     }
 
     protected function getStats(): array

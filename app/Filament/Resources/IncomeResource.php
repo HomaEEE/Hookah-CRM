@@ -4,27 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Filament\Components\IncomeForm;
 use App\Filament\Resources\IncomeResource\Pages;
-use App\Filament\Resources\IncomeResource\RelationManagers;
 use App\Models\Income;
-use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 
 class IncomeResource extends Resource
 {
     protected static ?string $model = Income::class;
-    protected static ?int $navigationSort = 2;
 
+    protected static ?int $navigationSort = 2;
 
     public static function getPluralModelLabel(): string
     {
@@ -55,11 +46,16 @@ class IncomeResource extends Resource
             ->columns([
                 TextColumn::make('created_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('md')
-                    ->badge()
-                    ->description(fn (Income $record): string => $record->user->name ?? ''),
-                TextColumn::make('sum')->label(__('Sum'))->money('UAH'),
-                TextColumn::make('comment')->translateLabel()
+                    ->badge(),
+                //     ->description(fn (Income $record): string => $record->user->name ?? ''),
+
+                TextColumn::make('sum')->label(__('Sum'))->money('UAH')->badge(),
+                TextColumn::make('comment')->translateLabel(),
             ])
+            ->defaultSort('created_at', 'desc')
+            ->deferLoading()
+            ->defaultPaginationPageOption(25)
+            ->striped()
             ->filters([
                 //
             ])
@@ -73,18 +69,10 @@ class IncomeResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ManageIncomes::route('/'),
-
         ];
     }
 }

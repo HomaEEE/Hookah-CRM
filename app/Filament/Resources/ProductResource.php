@@ -3,21 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Product;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms;
-use Filament\Forms\Components\Actions\Action as ActionsAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -26,7 +21,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class ProductResource extends Resource
@@ -52,9 +46,8 @@ class ProductResource extends Resource
 
     protected function getTableQuery(): Builder
     {
-        return Product::query()->with('childs','parent')->fastPaginate();
+        return Product::query()->with('childs', 'parent')->fastPaginate();
     }
-
 
     public static function form(Form $form): Form
     {
@@ -66,9 +59,10 @@ class ProductResource extends Resource
                     ->translateLabel()
                     ->required()
                     ->maxLength(255),
+
                 Select::make('menu_category_id')
                     ->label(__('Category'))
-                    ->options( Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id'))
+                    ->options(Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id'))
                     ->searchable(),
                 Translate::make()
                     ->schema([
@@ -86,69 +80,68 @@ class ProductResource extends Resource
                 Textarea::make('ingredients')->label(__('Ingredients'))
                     ->visible(fn ($record) => ! empty($record['ingredients']) ? '1' : '0'),
 
-                    SpatieMediaLibraryFileUpload::make('media')
+                SpatieMediaLibraryFileUpload::make('media')
                     ->collection('products')
                     ->image()
                     ->imagePreviewHeight('400')
                     ->imageResizeTargetWidth('400')
-                    ->imageResizeMode('contain')
-                ])->columns(1);
+                    ->imageResizeMode('contain'),
+            ])->columns(1);
 
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->recordClasses(fn (Product $record) => match ($record->visibleMenu) {
-            0 => 'border-1-4 |border-l-danger-500 bg-danger-50 dark:bg-gray-800',
-            default => null,
-            } )
-        ->recordTitleAttribute('product__name')
-        ->columns([
-            SpatieMediaLibraryImageColumn::make('media')
-                ->collection('products')
-                ->circular()->size(50),
+            ->recordClasses(fn (Product $record) => match ($record->visibleMenu) {
+                0 => 'border-1-4 |border-l-danger-500 bg-danger-50 dark:bg-gray-800',
+                default => null,
+            })
+            ->recordTitleAttribute('product__name')
+            ->columns([
+                SpatieMediaLibraryImageColumn::make('media')
+                    ->collection('products')
+                    ->circular()->size(50),
 
-            TextColumn::make('product_name')->searchable()->wrap()
-                ->description(fn (Product $record): string => $record->frontend_name ?? '', position: 'before')
-                ->description(fn (Product $record): string => $record->category['category_name'] ?? '', position: 'above'),
+                TextColumn::make('product_name')->searchable()->wrap()
+                    ->description(fn (Product $record): string => $record->frontend_name ?? '', position: 'before')
+                    ->description(fn (Product $record): string => $record->category['category_name'] ?? '', position: 'above'),
 
-            TextColumn::make('cost')->money('uah')->translateLabel()
-                ->searchable()
-                ->visibleFrom('md')
-                ->sortable(),
-            TextColumn::make('price')->money('uah')->translateLabel()
-                ->searchable()
-                ->sortable(),
-            // IconColumn::make('visible')
-            //    ->label(__('Visible'))
-            //    ->size(IconColumn\IconColumnSize::Medium)
-            //    ->boolean()
-            //    ->trueIcon('heroicon-o-eye')
-            //    ->falseIcon('heroicon-o-eye-slash')
-            //     ->action(function ($record, $column) {
-            //         $name = $column->getName();
-            //         $record->update([
-            //             $name => ! $record->$name,
-            //         ]);
-            //     }),
+                TextColumn::make('cost')->money('uah')->translateLabel()
+                    ->searchable()
+                    ->visibleFrom('md')
+                    ->sortable(),
+                TextColumn::make('price')->money('uah')->translateLabel()
+                    ->searchable()
+                    ->sortable(),
+                // IconColumn::make('visible')
+                //    ->label(__('Visible'))
+                //    ->size(IconColumn\IconColumnSize::Medium)
+                //    ->boolean()
+                //    ->trueIcon('heroicon-o-eye')
+                //    ->falseIcon('heroicon-o-eye-slash')
+                //     ->action(function ($record, $column) {
+                //         $name = $column->getName();
+                //         $record->update([
+                //             $name => ! $record->$name,
+                //         ]);
+                //     }),
 
-
-            IconColumn::make('visible_menu')
-                ->label(__('Visible menu'))
-                ->size(IconColumn\IconColumnSize::Medium)
-                ->boolean()
-                ->trueIcon('heroicon-o-eye')
-                ->falseIcon('heroicon-o-eye-slash')
-                 ->action(function ($record, $column) {
-                     $name = $column->getName();
-                     $record->update([
-                         $name => ! $record->$name,
-                     ]);
-                 })
-        ])
-        ->defaultPaginationPageOption(25)
-        ->striped()
+                IconColumn::make('visible_menu')
+                    ->label(__('Visible menu'))
+                    ->size(IconColumn\IconColumnSize::Medium)
+                    ->boolean()
+                    ->trueIcon('heroicon-o-eye')
+                    ->falseIcon('heroicon-o-eye-slash')
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
+            ])
+            ->defaultPaginationPageOption(25)
+            ->striped()
             ->filters([
                 SelectFilter::make('menu_category_id')
                     ->label(__('Category'))

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Category, Place, Feedback, Booking};
+use App\Models\Booking;
+use App\Models\Category;
+use App\Models\Feedback;
+use App\Models\Place;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-
-use Carbon\Carbon;
 
 class SiteController extends Controller
 {
@@ -21,39 +23,39 @@ class SiteController extends Controller
         return Redirect::back();
     }
 
-    public function index($slug = "od")
+    public function index($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
 
         return view('site.home', compact('place'));
     }
 
-    public function menu($slug = "od")
+    public function menu($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
 
         $categories = Category::where('place_id', $place->id)
-            ->where('parent_category', 0)
+            ->where('parent_category', 0)->orderBy('sort_order', 'asc')
             ->with('childs', 'products')->orderBy('sort_order', 'asc')->VisibleMenu(true)->get();
 
         return view('site.menu', compact('place', 'categories'));
     }
 
-    public function booking($slug = "od")
+    public function booking($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
 
         return view('site.booking', compact('place'));
     }
 
-     public function pays($slug = "od")
-     {
-         $place = Place::where('slug', $slug)->first();
+    public function pays($slug = 'od')
+    {
+        $place = Place::where('slug', $slug)->first();
 
-         return view('site.pays', compact('place'));
-     }
+        return view('site.pays', compact('place'));
+    }
 
-    public function feedbacks($slug = "od")
+    public function feedbacks($slug = 'od')
     {
 
         $place = Place::where('slug', $slug)->first();
@@ -62,7 +64,7 @@ class SiteController extends Controller
         return view('site.feedbacks', compact('place', 'feedbacks'));
     }
 
-    public function vacancy($slug = "od")
+    public function vacancy($slug = 'od')
     {
 
         $place = Place::where('slug', $slug)->first();
@@ -71,20 +73,22 @@ class SiteController extends Controller
         return view('site.vacancy', compact('place', 'vacancies'));
     }
 
-    public function rules($slug = "od")
+    public function rules($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
+
         return view('site.rules', compact('place'));
     }
 
-    public function contacts($slug = "od")
+    public function contacts($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
 
         return view('site.contacts', compact('place'));
     }
 
-    public function sendFeedback( Request $request) {
+    public function sendFeedback(Request $request)
+    {
 
         Feedback::create([
             'place_id' => $request->place_id,
@@ -92,10 +96,12 @@ class SiteController extends Controller
             'contact' => $request->contact,
             'text' => $request->text,
         ]);
-        return response()->json(['success'=>'Send Feedback']);
+
+        return response()->json(['success' => 'Send Feedback']);
     }
 
-    public function sendReserve(Request $request) {
+    public function sendReserve(Request $request)
+    {
 
         echo $request;
 
@@ -104,9 +110,10 @@ class SiteController extends Controller
             'place_id' => $request->place_id,
             'name' => $request->name,
             'phone' => $request->phone,
-            'time' =>  Carbon::createFromFormat('d-m-Y H:i', $request->date . ' ' . $request->time),
+            'time' => Carbon::createFromFormat('d-m-Y H:i', $request->date.' '.$request->time),
             'person' => $request->person,
         ]);
-        return response()->json(['success'=>'Send Booking']);
+
+        return response()->json(['success' => 'Send Booking']);
     }
 }

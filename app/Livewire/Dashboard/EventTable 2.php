@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Dashboard;
 
 use App\Models\Event;
 use Carbon\Carbon;
@@ -12,8 +12,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class EventTable extends BaseWidget
 {
-
-    protected function getTableHeading(): string | Htmlable
+    protected function getTableHeading(): string|Htmlable
     {
         return __('Events');
     }

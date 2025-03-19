@@ -3,21 +3,24 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Models\{User, Wage};
-use Filament\Forms;
-use Filament\Forms\Components\{DatePicker, Section, Select, TextInput};
+use App\Models\User;
+use App\Models\Wage;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Resources\Concerns\Translatable;
-use Filament\Support\RawJs;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
-use Closure;
-use Filament\Facades\Filament;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class UserResource extends Resource
 {
@@ -54,9 +57,9 @@ class UserResource extends Resource
                         TextInput::make('password')
                             ->translateLabel()
                             ->password()
-                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                            ->dehydrated(fn($state) => filled($state))
-                            ->required(fn(string $context): bool => $context === 'create'),
+                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create'),
                         TextInput::make('phone')
                             ->tel()
                             ->translateLabel()
@@ -76,13 +79,13 @@ class UserResource extends Resource
                                 Wage::where('place_id', Filament::getTenant()->id)
                                     ->get()->pluck('name', 'id')
                             )
-                            ->native(false)
+                            ->native(false),
 
                     ])->columns(2),
 
                 Select::make('place_id')
                     ->relationship('place', 'name')
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->getTranslation('name', App::getLocale()))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', App::getLocale()))
                     ->label(__('Places'))
                     ->native(false)
                     ->multiple()
@@ -113,16 +116,17 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->translateLabel()
-                    ->description(fn(User $record): string => $record->birth ?? '', position: 'below'),
+                    ->description(fn (User $record): string => $record->birth ?? '', position: 'below'),
                 TextColumn::make('phone')->translateLabel()->copyable(),
                 //   TextColumn::make('places.name')->badge()->translateLabel(),
                 TextColumn::make('wage.name')->label('Wage'),
-                TextColumn::make('shift_day')->label(__('Shift'))
+                TextColumn::make('shift_day')->label(__('Shift')),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Impersonate::make(),
                 Tables\Actions\EditAction::make()->label('')->button(),
                 Tables\Actions\DeleteAction::make()->label('')->button(),
             ])

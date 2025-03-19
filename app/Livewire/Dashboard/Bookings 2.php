@@ -1,17 +1,22 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Dashboard;
 
 use App\Models\Booking;
 use App\Models\Guest;
 use App\Models\Seet;
+use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Support\Enums\ActionSize;
 use Filament\Support\RawJs;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\CreateAction;
@@ -19,16 +24,10 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
-use Auth;
-use Filament\Forms\{Get, Set};
-use Filament\Support\Enums\ActionSize;
-use Filament\Forms\Components\Actions\Action as FormAction;
-
 
 class Bookings extends BaseWidget
 {
-
-    protected function getTableHeading(): string | Htmlable
+    protected function getTableHeading(): string|Htmlable
     {
         return __('Bookings');
     }
@@ -64,7 +63,7 @@ class Bookings extends BaseWidget
                             ]
                         );
                         $record->save();
-                    })
+                    }),
             ])
             ->headerActions([
                 CreateAction::make()
@@ -75,8 +74,8 @@ class Bookings extends BaseWidget
                         Hidden::make('user_id')->default(Auth::user()->id),
                         Hidden::make('place_id')->default(Filament::getTenant()->id),
                         Select::make('guest_id')->label(__('Guest'))
-                        ->relationship('guest', 'name')
-                        ->options(Guest::where('place_id', Filament::getTenant()->id)->get()->pluck('FullName', 'id'))
+                            ->relationship('guest', 'name')
+                            ->options(Guest::where('place_id', Filament::getTenant()->id)->get()->pluck('FullName', 'id'))
                             ->searchable(['name', 'comment', 'phone'])
                             ->native(false)
                             ->preload()
@@ -136,7 +135,7 @@ class Bookings extends BaseWidget
                             ),
 
                         Textarea::make('comment')->label(__('Comment')),
-                    ])
+                    ]),
 
             ]);
     }

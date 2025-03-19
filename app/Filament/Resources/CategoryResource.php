@@ -7,6 +7,7 @@ use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -47,6 +48,8 @@ class CategoryResource extends Resource
     {
         return $form
         ->schema([
+            Hidden::make('place_id')->default(Filament::getTenant()->id),
+
             TextInput::make('category_name')
                 ->required()
                 ->maxLength(255),

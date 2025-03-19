@@ -2,19 +2,25 @@
 
 namespace App\Filament\Components\Shift;
 
-use App\Filament\Components\{ExpenseForm, IncomeForm, WithdrawalForm};
-
+use App\Filament\Components\ExpenseForm;
+use App\Filament\Components\IncomeForm;
+use App\Filament\Components\WithdrawalForm;
 use App\Http\Controllers\LocalApiController;
-use App\Models\{Expense, Income, Place, Withdrawal};
-
+use App\Models\Expense;
+use App\Models\Income;
+use App\Models\Place;
+use App\Models\Withdrawal;
 use Auth;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\{CheckboxList, DateTimePicker, Fieldset, Hidden, Placeholder, TextInput};
-
-use Filament\Forms\{Get, Set};
-
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 
 class ShiftWizard
@@ -166,19 +172,20 @@ class ShiftWizard
             FieldSet::make('Shift')->translateLabel()->schema([
 
                 Placeholder::make('total_shift')->translateLabel()
-                ->content(function (Get $get, Set $set): string {
-                    return self::CalcShift($get, $set);
-                }),
+                    ->content(function (Get $get, Set $set): string {
+                        return self::CalcShift($get, $set);
+                    }),
 
                 Placeholder::make('different')->translateLabel()
                     ->content(function (Get $get, Set $set) {
                         if ($get('shift') != null) {
                             $different = (float) $get('shift') - (float) $get('calc_shift');
                             $set('different', $different);
-                            return $different;
+
+                            return number_format($different, 2);
 
                         } else {
-                            return (float) $get('calc_shift');
+                            return $get('calc_shift');
                         }
                     }),
 
@@ -196,10 +203,7 @@ class ShiftWizard
                             ->action(function (Set $set, get $get) {
                                 $set('shift', $get('calc_shift'));
                             })
-                    )
-
-
-
+                    ),
 
             ])->columns(['md' => 2, 'xl' => 3]),
 

@@ -5,28 +5,29 @@ namespace App\Filament\Pages;
 use App\Filament\Components\ExpenseForm;
 use App\Filament\Components\IncomeForm;
 use App\Filament\Components\SupplyForm;
-
 use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
-use Illuminate\Contracts\Support\Htmlable;
-
-use App\Models\{Bill, Expense, ExpenseCategory, Shift, ShiftUser, Supplier, Supply, Tip, Wage};
-
-use Auth;
+use App\Models\Expense;
+use App\Models\Income;
+use App\Models\Shift;
+use App\Models\ShiftUser;
+use App\Models\Supply;
+use App\Models\Tip;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Actions\{Action, ActionGroup, CreateAction};
-use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Support\RawJs;
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Support\Htmlable;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
-
-  //  use HasPageShield;
+    //  use HasPageShield;
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
@@ -36,7 +37,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     protected static ?int $navigationSort = 1;
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return __('Dashboard');
     }
@@ -48,7 +49,6 @@ class Dashboard extends \Filament\Pages\Dashboard
             \App\Filament\Widgets\Dashboard\PosterShift::class,
         ];
     }
-
 
     protected function getActions(): array
     {
@@ -106,9 +106,9 @@ class Dashboard extends \Filament\Pages\Dashboard
                     )
                     ->successNotification(
                         Notification::make()
-                             ->success()
-                             ->title(__('Expense added'))
-                             ->icon('heroicon-o-document-minus')
+                            ->success()
+                            ->title(__('Expense added'))
+                            ->icon('heroicon-o-document-minus')
                     ),
 
                 CreateAction::make('add_supply')->label(__('Supply'))
@@ -125,27 +125,28 @@ class Dashboard extends \Filament\Pages\Dashboard
                     )
                     ->successNotification(
                         Notification::make()
-                             ->success()
-                             ->icon('heroicon-o-inbox-arrow-down')
-                             ->title(__('Supply added'))
-                     ),
+                            ->success()
+                            ->icon('heroicon-o-inbox-arrow-down')
+                            ->title(__('Supply added'))
+                    ),
 
-                    CreateAction::make('addIncome')->label(__('Income'))
-                        ->icon('heroicon-o-inbox-arrow-down')
-                        ->modalHeading(__('Add Income'))
-                        ->createAnother(false)
-                        ->modalWidth('sm')
-                        ->keyBindings(['command+s', 'ctrl+s'])
-                        ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->form(
-                            IncomeForm::schema()
-                        )
-                        ->successNotification(
-                            Notification::make()
-                                 ->success()
-                                 ->icon('heroicon-o-plus-circle')
-                                 ->title(__('Income added'))
-                         ),
+                CreateAction::make('addIncome')->label(__('Income'))
+                    ->model(Income::class)
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->modalHeading(__('Add Income'))
+                    ->createAnother(false)
+                    ->modalWidth('sm')
+                    ->keyBindings(['command+s', 'ctrl+s'])
+                    ->modalIcon('heroicon-o-inbox-arrow-down')
+                    ->form(
+                        IncomeForm::schema()
+                    )
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->icon('heroicon-o-plus-circle')
+                            ->title(__('Income added'))
+                    ),
 
             ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
 
@@ -158,17 +159,17 @@ class Dashboard extends \Filament\Pages\Dashboard
                 ->keyBindings(['command+s', 'ctrl+s'])
                 ->requiresConfirmation()
                 ->form([
-                   Hidden::make('place_id')->default(Filament::getTenant()->id),
+                    Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')->label('')
                         ->numeric()
                         ->mask(RawJs::make('$money($input)'))
                         ->stripCharacters(',')
-                        ->required()
+                        ->required(),
                 ])
                 ->action(function (array $data): void {
                     Tip::updateOrCreate(
                         ['created_at' => Carbon::today(), 'place_id' => $data['place_id']],
-                    )->increment('tips', $data['tips']*100);
+                    )->increment('tips', $data['tips'] * 100);
 
                     Notification::make()
                         ->title(__('Tips added'))
@@ -178,61 +179,61 @@ class Dashboard extends \Filament\Pages\Dashboard
                 }),
             ActionGroup::make([
 
-            Action::make('openShift')
-                ->label(__('Open Shift'))
-                ->icon('heroicon-o-lock-open')
-                ->modalHeading(__('Open Shift'))
-                ->requiresConfirmation()
-                ->form([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id),
-                ])
-                ->action(function (array $data): void {
-                    (new PosterApiController())->openShift($data);
+                Action::make('openShift')
+                    ->label(__('Open Shift'))
+                    ->icon('heroicon-o-lock-open')
+                    ->modalHeading(__('Open Shift'))
+                    ->requiresConfirmation()
+                    ->form([
+                        Hidden::make('place_id')->default(Filament::getTenant()->id),
+                    ])
+                    ->action(function (array $data): void {
+                        (new PosterApiController)->openShift($data);
 
-                    Notification::make()
-                    ->title(__('Shift opened'))
-                    ->icon('heroicon-o-banknotes')
-                    ->iconColor('success')
-                    ->send();
-                }),
+                        Notification::make()
+                            ->title(__('Shift opened'))
+                            ->icon('heroicon-o-banknotes')
+                            ->iconColor('success')
+                            ->send();
+                    }),
 
-            Action::make('deleteReceipt')
-                ->label(__('Delete Receipt'))
-                ->icon('heroicon-o-backspace')
-                ->modalHeading(__('Delete Receipt'))
-                ->requiresConfirmation()
-                ->form([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id)
-                        ->required()
-                        ->reactive(),
-                    TextInput::make('receipt_id')->numeric()->label(__('#'))->required()
-                ])
-                ->action(function (array $data): void {
-                    (new PosterApiController())->deleteReceipt($data);
-                    Notification::make()
-                    ->title(__('Delete Receipt'))
+                Action::make('deleteReceipt')
+                    ->label(__('Delete Receipt'))
                     ->icon('heroicon-o-backspace')
-                    ->send();
-                }),
-            // Action::make('onShift')
-            //     ->label(__('On Shift'))
-            //     ->color('info')
-            //     ->icon('heroicon-o-user-plus')
-            //     ->modalHeading(__('On Shift'))
-            //     ->modalWidth('sm')
-            //     ->requiresConfirmation()
-            //     ->form([
-            //         Hidden::make('place_id')->default(Filament::getTenant()->id)
-            //             ->required()
-            //             ->reactive(),
-            //         Select::make(;)
-            //     ])
-            //     ->action(function (array $data): void {
-            //         (new PosterApiController())->openShift($data);
-            //     }),
+                    ->modalHeading(__('Delete Receipt'))
+                    ->requiresConfirmation()
+                    ->form([
+                        Hidden::make('place_id')->default(Filament::getTenant()->id)
+                            ->required()
+                            ->reactive(),
+                        TextInput::make('receipt_id')->numeric()->label(__('#'))->required(),
+                    ])
+                    ->action(function (array $data): void {
+                        (new PosterApiController)->deleteReceipt($data);
+                        Notification::make()
+                            ->title(__('Delete Receipt'))
+                            ->icon('heroicon-o-backspace')
+                            ->send();
+                    }),
+                // Action::make('onShift')
+                //     ->label(__('On Shift'))
+                //     ->color('info')
+                //     ->icon('heroicon-o-user-plus')
+                //     ->modalHeading(__('On Shift'))
+                //     ->modalWidth('sm')
+                //     ->requiresConfirmation()
+                //     ->form([
+                //         Hidden::make('place_id')->default(Filament::getTenant()->id)
+                //             ->required()
+                //             ->reactive(),
+                //         Select::make(;)
+                //     ])
+                //     ->action(function (array $data): void {
+                //         (new PosterApiController())->openShift($data);
+                //     }),
 
             ])
-            ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info')
+                ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info'),
         ];
     }
 }
