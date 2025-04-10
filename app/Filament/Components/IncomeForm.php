@@ -3,13 +3,10 @@
 namespace App\Filament\Components;
 
 use Auth;
-use App\Models\{Income, Bill};
 use Filament\Facades\Filament;
-
-use Filament\Forms\{Get, Set};
-use Filament\Support\RawJs;
-
-use Filament\Forms\Components\{TextInput, Hidden, Textarea};
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 
 class IncomeForm
 {
@@ -21,9 +18,7 @@ class IncomeForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
-                ->autocomplete(false)
-                ->mask(RawJs::make('$money($input)'))
-                ->stripCharacters(','),
+                ->autocomplete(false),
             Textarea::make('comment')->translateLabel()->rows(2),
         ];
     }

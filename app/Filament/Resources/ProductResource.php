@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Category;
 use App\Models\Product;
@@ -21,7 +22,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class ProductResource extends Resource
 {
@@ -64,7 +64,7 @@ class ProductResource extends Resource
                     ->label(__('Category'))
                     ->options(Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id'))
                     ->searchable(),
-                Translate::make()
+                TranslatableTabs::make()
                     ->schema([
                         TextInput::make('frontend_name')->label(__('Front product name'))->translatable(),
                         Textarea::make('frontend_desc')->label(__('Description'))->translatable(),

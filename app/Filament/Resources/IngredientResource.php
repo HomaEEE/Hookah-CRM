@@ -3,10 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IngredientResource\Pages;
-use App\Filament\Resources\IngredientResource\RelationManagers;
 use App\Models\Ingredient;
-use DesignTheBox\BarcodeField\Forms\Components\BarcodeInput;
-use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -15,8 +12,6 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class IngredientResource extends Resource
 {
@@ -48,12 +43,11 @@ class IngredientResource extends Resource
                     'p' => __('Unit'),
 
                 ]),
-                BarcodeInput::make('barcode')
-                ->icon('heroicon-o-arrow-right')->translateLabel(),
+                TextInput::make('barcode'),
                 TextInput::make('price')->translateLabel()
-                ->mask(RawJs::make('$money($input)'))
-                ->stripCharacters(',')
-                ->numeric()
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric(),
             ]);
     }
 
@@ -62,11 +56,11 @@ class IngredientResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('ingredient')->translateLabel()
-                ->searchable(['ingredient', 'barcode'])
-                ->size('sm')
-                ->description(fn (Ingredient $record): string => $record->barcode ?? ''),
+                    ->searchable(['ingredient', 'barcode'])
+                    ->size('sm')
+                    ->description(fn (Ingredient $record): string => $record->barcode ?? ''),
                 TextColumn::make('unit')->translateLabel()->badge(),
-                TextColumn::make('price')->translateLabel()->money('UAH')
+                TextColumn::make('price')->translateLabel()->money('UAH'),
             ])
             ->filters([
                 //

@@ -2,30 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use Auth;
-use Carbon\Carbon;
-
 use App\Filament\Resources\ShiftResource\Pages;
-
-use App\Models\{Bill, Expense, ExpenseCategory, Place, Workshop, Shift, Supplier, User, Wage, Withdrawal};
-use Filament\Facades\Filament;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Pages\SubNavigationPosition;
-use Filament\Resources\Pages\Page;
-
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Infolists\Infolist;
-
-use Filament\Infolists\Components\TextEntry;
+use App\Models\Shift;
 use Filament\Infolists\Components\Fieldset as InfolistFeildSet;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
+use Filament\Pages\SubNavigationPosition;
+use Filament\Resources\Pages\Page;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class ShiftResource extends Resource
@@ -58,16 +51,15 @@ class ShiftResource extends Resource
         return Shift::query()->fastPaginate();
     }
 
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-               // Split::make([
+                // Split::make([
                 TextColumn::make('created_at')->dateTime('l')->translateLabel()
-                ->badge()
-                ->size('xs')
-                ->description(fn (Shift $record): string => $record->created_at->format('d-m-Y') ?? ''),
+                    ->badge()
+                    ->size('xs')
+                    ->description(fn (Shift $record): string => $record->created_at->format('d-m-Y') ?? ''),
 
                 TextColumn::make('terminal')->translateLabel()->badge()
                     ->money('UAH')
@@ -98,7 +90,7 @@ class ShiftResource extends Resource
             ])->defaultSort('id', 'desc')
             ->filters([
                 DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
-                ->defaultLast30Days()
+                    ->defaultLast30Days(),
             ]
             )
 
@@ -149,14 +141,14 @@ class ShiftResource extends Resource
                         TextEntry::make('hookahs')->translateLabel()
                             ->getStateUsing(fn (Shift $record): int => $record->bulbs + $record->hookah ?? ''),
                         TextEntry::make('bar')->translateLabel(),
-                        TextEntry::make('kitchen')->translateLabel()
+                        TextEntry::make('kitchen')->translateLabel(),
                     ])->columns(3),
 
                 InfolistFeildSet::make('Expenses')->translateLabel()
                     ->schema([
                         TextEntry::make('wages')->translateLabel(),
                         TextEntry::make('expense')->translateLabel(),
-                        TextEntry::make('tips')->translateLabel()
+                        TextEntry::make('tips')->translateLabel(),
                     ])->columns(3)->columnSpanFull(),
 
                 InfolistFeildSet::make('Reports')->translateLabel()
@@ -170,13 +162,9 @@ class ShiftResource extends Resource
                             ->trueIcon('heroicon-o-check')
                             ->falseIcon('heroicon-o-x-mark'),
 
-
-                    ])->columns(3)
+                    ])->columns(3),
             ]);
     }
-
-
-
 
     public static function getRecordSubNavigation(Page $page): array
     {

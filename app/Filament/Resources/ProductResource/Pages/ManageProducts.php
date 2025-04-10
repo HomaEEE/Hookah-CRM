@@ -9,8 +9,8 @@ use App\Models\Category;
 use App\Models\Product;
 use Filament\Actions;
 use Filament\Facades\Filament;
-use Filament\Resources\Components\Tab;
 use Filament\Notifications\Notification;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageProducts extends ManageRecords
@@ -21,19 +21,19 @@ class ManageProducts extends ManageRecords
     {
         return [
             Actions\Action::make('update')
-            ->label(__('Update menu'))
-            ->icon('heroicon-o-arrow-path')
-            ->action(function (): void {
-                    (new PosterApiController())->getCategories(Filament::getTenant()->id);
-                    (new PosterApiController())->getProducts(Filament::getTenant()->id);
+                ->label(__('Update menu'))
+                ->icon('heroicon-o-arrow-path')
+                ->action(function (): void {
+                    (new PosterApiController)->getCategories(Filament::getTenant()->id);
+                    (new PosterApiController)->getProducts(Filament::getTenant()->id);
                     Notification::make()
                         ->title(__('Updated successfully'))
                         ->icon('heroicon-o-qr-code')
                         ->iconColor('success')
                         ->send();
-            }),
+                }),
             Actions\ExportAction::make()
-            ->exporter(ProductExporter::class),
+                ->exporter(ProductExporter::class),
             Actions\CreateAction::make(),
         ];
     }

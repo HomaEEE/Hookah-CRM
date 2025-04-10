@@ -13,6 +13,7 @@ use App\Models\Shift;
 use App\Models\ShiftUser;
 use App\Models\Supply;
 use App\Models\Tip;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Actions\Action;
@@ -25,9 +26,17 @@ use Filament\Notifications\Notification;
 use Filament\Support\RawJs;
 use Illuminate\Contracts\Support\Htmlable;
 
-class Dashboard extends \Filament\Pages\Dashboard
+class Dashboard extends \Filament\Pages\Dashboard implements HasShieldPermissions
 {
     //  use HasPageShield;
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            '{{canDeleteBill}}',
+            '{{canOpenShift}}',
+        ];
+    }
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 

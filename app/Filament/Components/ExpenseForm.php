@@ -2,15 +2,17 @@
 
 namespace App\Filament\Components;
 
+use App\Models\Bill;
+use App\Models\ExpenseCategory;
 use Auth;
-use Carbon\Carbon;
-use App\Models\{Expense, Supplier, Bill, ExpenseCategory};
 use Filament\Facades\Filament;
-
-use Filament\Forms\{Get, Set};
-use Filament\Support\RawJs;
-
-use Filament\Forms\Components\{Select, TextInput, Hidden, DateTimePicker, SpatieMediaLibraryFileUpload, Textarea, Toggle, ToggleButtons};
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 
 class ExpenseForm
 {
@@ -24,11 +26,13 @@ class ExpenseForm
                 ->native(false)
                 ->seconds(false)
                 ->maxDate(now())->default(now()),
-            Select::make('category_id')->label(__('Category'))
+            Select::make('category_id')
+                ->label(__('Category'))
                 ->searchable()
                 ->required()
                 ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
-            TextInput::make('sum')->label(__('Sum'))
+            TextInput::make('sum')
+                ->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
                 ->inputMode('decimal'),

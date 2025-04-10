@@ -14,7 +14,6 @@ class Ingredient extends Model
 
     protected $fillable = ['ingredient', 'unit', 'workshop_id', 'place_id', 'price'];
 
-
     protected $casts = [
         'price' => MoneyCast::class,
     ];
@@ -43,5 +42,4 @@ class Ingredient extends Model
     {
         return $this->ingredient;
     }
-
 }

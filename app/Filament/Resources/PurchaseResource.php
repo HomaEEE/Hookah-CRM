@@ -7,23 +7,20 @@ use App\Models\Ingredient;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Auth;
-use Awcodes\TableRepeater\Components\TableRepeater;
-use Awcodes\TableRepeater\Header;
-
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Select;
-
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Infolists\Components;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-
-use Filament\Infolists\Components;
-use Filament\Infolists\Infolist;
-use Marvinosswald\FilamentInputSelectAffix\TextInputSelectAffix;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
+use Illuminate\Database\Eloquent\Builder;
 
 class PurchaseResource extends Resource
 {
@@ -34,7 +31,6 @@ class PurchaseResource extends Resource
     protected static ?string $navigationGroup = 'Stocks';
 
     protected static ?int $navigationSort = 4;
-
 
     public static function getPluralModelLabel(): string
     {
@@ -67,39 +63,57 @@ class PurchaseResource extends Resource
                     ->native(false)
                     ->searchable()
                     ->options(
-                         Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')
-                        )
+                        Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')
+                    )
+                    ->reactive()
                     ->required(),
-                //Select::make('buyer')->translateLabel(), Покупатель если не Noire
-                TableRepeater::make('ingredients')->hiddenLabel()
-                ->columnSpanFull()
-                ->headers([
-                    Header::make('Ingredient'),
-                    Header::make('Count'),
-                    Header::make('Unit'),
-                ])
+                // Select::make('buyer')->translateLabel()->default(1), // Покупатель если не Noire
+                TableRepeater::make('ingredients')
+                    ->hiddenLabel()
+                    ->reactive()
+                    ->hidden(fn (Get $get): bool => ! $get('supplier_id'))
+                    ->minItems(1)
                     ->schema([
                         Select::make('ingredient_id')
                             ->preload()
+                            ->label(__('Ingredient'))
                             ->columnSpan(8)
                             ->native(false)
                             ->searchable()
-                            ->options(
-                                Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                               ),
-
+                            ->getSearchResultsUsing(function (string $search): array {
+                                return Ingredient::query()
+                                    ->where(function (Builder $builder) use ($search) {
+                                        $searchString = "%$search%";
+                                        $builder->where('ingredient', 'like', $searchString);
+                                    })
+                                    ->limit(50)
+                                    ->get()
+                                    ->mapWithKeys(function (Ingredient $ingredient) {
+                                        return [$ingredient->id => $ingredient->ingredient];
+                                    })
+                                    ->toArray();
+                            }),
                         TextInput::make('qty')->translateLabel()
                             ->numeric()
-                            ->default(1),
+                            ->label(__('Quantity'))
+                            ->default(1)
+                            ->columnSpan(2),
                         Select::make('qty_unit')
                             ->native(false)
+                            ->columnSpan(2)
+                            ->label(__('Unit'))
                             ->options([
                                 'p' => __('Unit'),
                                 'l' => __('Litr'),
-                                'kg' => __('Kg')
+                                'kg' => __('Kg'),
                             ])
-                            ->default('p')
+                            ->default('p'),
                     ])
+                    ->colStyles([
+                        'ingredient_id' => 'width: 45%;',
+                        'qty' => 'width: 25%;',
+                        'qty_unit' => 'width: 20%;',
+                    ]),
             ]);
     }
 
@@ -119,14 +133,13 @@ class PurchaseResource extends Resource
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
-                ])
+                ]),
 
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-
 
     public static function infolist(Infolist $infolist): Infolist
     {
@@ -148,16 +161,16 @@ class PurchaseResource extends Resource
                                 ]),
                         ]),
                     ]),
-                    Components\Section::make('Content')->hiddenLabel()
+                Components\Section::make('Content')->hiddenLabel()
                     ->schema([
-                    Components\RepeatableEntry::make('ingredients')->hiddenLabel()
-                    ->schema([
-                        Components\TextEntry::make('ingredient')->hiddenLabel(),
-                        Components\TextEntry::make('qty')->hiddenLabel(),
-                        Components\TextEntry::make('qty_unit')->hiddenLabel()
-                    ])
-                    ->grid(3)
-                    ->contained(false)
+                        Components\RepeatableEntry::make('ingredients')->hiddenLabel()
+                            ->schema([
+                                Components\TextEntry::make('ingredient')->hiddenLabel(),
+                                Components\TextEntry::make('qty')->hiddenLabel(),
+                                Components\TextEntry::make('qty_unit')->hiddenLabel(),
+                            ])
+                            ->grid(3)
+                            ->contained(false),
                     ])
                     ->collapsible(),
             ]);

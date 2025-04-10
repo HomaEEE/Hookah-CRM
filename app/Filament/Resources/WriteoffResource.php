@@ -66,6 +66,7 @@ class WriteoffResource extends Resource
                             ->preload()
                             ->native(false)
                             ->searchable()
+                            ->reactive()
                             ->options(
                                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
                             ),
@@ -73,7 +74,9 @@ class WriteoffResource extends Resource
                             ->reactive()
                             ->integer()
                             ->suffix(static function (Get $get) {
-                                return Ingredient::where('id', $get('ingredient_id'))->unit ?? 'ед.';
+                                if ($get('ingredient_id') != null) {
+                                    return Ingredient::where('id', $get('ingredient_id'))['unit'] ?? '';
+                                }
                             }),
                     ]),
                 Hidden::make('approve')->default(0),
