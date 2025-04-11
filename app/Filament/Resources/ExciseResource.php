@@ -6,27 +6,26 @@ use App\Filament\Resources\ExciseResource\Pages;
 use App\Models\Excise;
 use Auth;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms;
-use Filament\Forms\{Form, Set, Get};
+use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\Actions\Action as FormAction;
-
+use Filament\Tables\Table;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExciseResource extends Resource
@@ -66,13 +65,13 @@ class ExciseResource extends Resource
                                 TextInput::make('title')->translateLabel(),
                                 TextInput::make('excise')->translateLabel(),
                                 Select::make('volume')->translateLabel()
-                                ->native(false)
-                                ->options([
-                                    '0.5' => '0.5L',
-                                    '0.7' => '0.7L',
-                                    '0.75' => '0.75L',
-                                    '1' => '1L'
-                                ])
+                                    ->native(false)
+                                    ->options([
+                                        '0.5' => '0.5L',
+                                        '0.7' => '0.7L',
+                                        '0.75' => '0.75L',
+                                        '1' => '1L',
+                                    ]),
                             ]),
                     ]),
                 Group::make()
@@ -93,7 +92,7 @@ class ExciseResource extends Resource
                                         '1:1',
                                     ])
                                     ->reorderable()
-                                    ->openable()
+                                    ->openable(),
                             ])
                             ->columnSpan(['lg' => 2, 'md' => 2, 'xs' => 1]),
                     ])->columns(2),
@@ -104,10 +103,10 @@ class ExciseResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->badge(),
                 TextColumn::make('added_at')->dateTime('d/m/Y')->badge()->translateLabel(),
-                TextColumn::make('title')->translateLabel(),
-                TextColumn::make('excise')->translateLabel(),
+                TextColumn::make('excise')->translateLabel()->badge()
+                    ->description(fn (Excise $record): string => $record->title ? $record->title : '', position: 'below')->copyable(),
+
                 TextColumn::make('volume')->translateLabel(),
                 TextColumn::make('portions')->translateLabel(),
                 TextColumn::make('left')->translateLabel()
@@ -120,6 +119,17 @@ class ExciseResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('approve')->button()->label('')
+                    ->icon('heroicon-o-arrow-uturn-up')
+                    ->color('success')
+                    ->action(function (Excise $record): void {
+                        $record->update(
+                            [
+                                'open' => 1,
+                            ]
+                        );
+                        $record->save();
+                    })->visible(fn (Excise $record) => $record->open == '0'),
                 Action::make('add_portion')->hiddenLabel()
                     ->icon('heroicon-o-plus')
                     ->button()
@@ -169,27 +179,28 @@ class ExciseResource extends Resource
             ]);
     }
 
-
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            TextEntry::make('added_at')->translateLabel(),
-            TextEntry::make('title')->translateLabel(),
-            TextEntry::make('excise')->translateLabel(),
-            TextEntry::make('volume')->translateLabel(),
-            TextEntry::make('portions')->translateLabel(),
-            TextEntry::make('left')->translateLabel()
-            ->getStateUsing(function (Excise $record) {
-                // return whatever you need to show
-                return $record->volume * 1000 / 40 - $record->portions;
-            })
-            ->html(),
+            ->schema([
+                TextEntry::make('added_at')->translateLabel(),
+                TextEntry::make('title')->translateLabel(),
+                TextEntry::make('excise')->translateLabel(),
+                TextEntry::make('volume')->translateLabel(),
+                TextEntry::make('portions')->translateLabel(),
+                TextEntry::make('left')->translateLabel()
+                    ->getStateUsing(function (Excise $record) {
+                        // return whatever you need to show
+                        return $record->volume * 1000 / 40 - $record->portions;
+                    })
+                    ->html(),
+                ImageEntry::make('image')
+                    ->simpleLightbox(fn ($record) => $record?->image ?? 'Your Image Url address', defaultDisplayUrl: true),
 
-            LightboxSpatieMediaLibraryImageEntry::make('excise')->translateLabel()
-            ->collection('excise')
-            ->conversion('thumb')
-        ]);
+                // LightboxSpatieMediaLibraryImageEntry::make('excise')->translateLabel()
+                //     ->collection('excise')
+                //     ->conversion('thumb'),
+            ]);
     }
 
     public static function getPages(): array
