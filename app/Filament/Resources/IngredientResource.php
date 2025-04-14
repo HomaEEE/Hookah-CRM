@@ -60,7 +60,7 @@ class IngredientResource extends Resource
                     ->size('sm')
                     ->description(fn (Ingredient $record): string => $record->barcode ?? ''),
                 TextColumn::make('unit')->translateLabel()->badge(),
-                TextColumn::make('price')->translateLabel()->money('UAH'),
+                TextColumn::make('price')->translateLabel()->money('UAH', 100),
             ])
             ->filters([
                 //

@@ -87,17 +87,15 @@ class SupplyResource extends Resource
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->searchable()
                     ->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
 
-                // SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
-                //     ->collection('supplies')
-                //     ->simpleLightbox()
-                //     ->circular()
-                //     ->stacked()
-                //     ->limit(3)
-                //     ->height(40)
-                //     ->toggleable()
-                //     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                //     ->placeholder('No description.')
-                //     ->visibleFrom('sm'),
+                SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
+                    ->collection('supplies')
+                    ->simpleLightbox()
+                    ->circular()
+                    ->stacked()
+                    ->limit(3)
+                    ->height(40)
+                    ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
+                    ->placeholder('No description.'),
 
                 IconColumn::make('bill.type')->label(__('Bill'))
                     ->action(function ($record) {
@@ -224,16 +222,16 @@ class SupplyResource extends Resource
                 TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH')->copyable(),
                 TextEntry::make('bill.name')->translateLabel()
                     ->badge(),
-                TextEntry::make('comment')->label(__('Comment'))->badge(),
+                TextEntry::make('invoice_number')->translateLabel()->badge()->copyable(),
+                KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
+                    ->keyLabel(' ')
+                    ->valueLabel('Реквизиты'),
 
                 Tabs::make('Tabs')
                     ->tabs([
-                        Tabs\Tab::make(__('Reqizities'))
+                        Tabs\Tab::make(__('Comment'))
                             ->schema([
-                                TextEntry::make('invoice_number')->translateLabel()->badge()->copyable(),
-                                KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
-                                    ->keyLabel(' ')
-                                    ->valueLabel('Реквизиты'),
+                                TextEntry::make('comment')->label(__('Comment'))->badge(),
                             ]),
                         Tabs\Tab::make(__('Photo'))
                             ->schema([

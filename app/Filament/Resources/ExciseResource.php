@@ -18,6 +18,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -26,13 +27,14 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExciseResource extends Resource
 {
     protected static ?string $model = Excise::class;
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'excise';
 
     protected static ?int $navigationSort = 4;
 
@@ -61,7 +63,7 @@ class ExciseResource extends Resource
                             ->schema([
                                 Hidden::make('user_id')->default(Auth::user()->id),
                                 Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                DateTimePicker::make('added_at')->label(__('Date Added'))->default(now()),
+                                DateTimePicker::make('added_at')->label(__('Date Added'))->default(now())->native(false),
                                 TextInput::make('title')->translateLabel(),
                                 TextInput::make('excise')->translateLabel(),
                                 Select::make('volume')->translateLabel()
@@ -78,8 +80,9 @@ class ExciseResource extends Resource
                     ->schema([
                         Section::make()
                             ->schema([
-                                SpatieMediaLibraryFileUpload::make('excise_photos')
+                                SpatieMediaLibraryFileUpload::make('excises')
                                     ->collection('excises')
+                                    ->label(__('Photo'))
                                     ->imagePreviewHeight('350')
                                     ->imageResizeMode('cover')
                                     ->imageEditor()
@@ -104,7 +107,9 @@ class ExciseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('added_at')->dateTime('d/m/Y')->badge()->translateLabel(),
-                TextColumn::make('excise')->translateLabel()->badge()
+                TextColumn::make('excise')->translateLabel()
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => Str::upper($state))
                     ->description(fn (Excise $record): string => $record->title ? $record->title : '', position: 'below')->copyable(),
 
                 TextColumn::make('volume')->translateLabel(),
@@ -167,7 +172,8 @@ class ExciseResource extends Resource
                     ])
                     ->action(function (Excise $record, array $data): void {
                         $record->increment('portions', $data['portions']);
-                    }),
+                    })
+                    ->visible(fn (Excise $record) => $record->volume * 1000 / 40 - $record->portions != 0),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()->slideOver(),
@@ -181,6 +187,9 @@ class ExciseResource extends Resource
 
     public static function infolist(Infolist $infolist): Infolist
     {
+
+        //   dd($this->record);
+
         return $infolist
             ->schema([
                 TextEntry::make('added_at')->translateLabel(),
@@ -190,12 +199,15 @@ class ExciseResource extends Resource
                 TextEntry::make('portions')->translateLabel(),
                 TextEntry::make('left')->translateLabel()
                     ->getStateUsing(function (Excise $record) {
-                        // return whatever you need to show
                         return $record->volume * 1000 / 40 - $record->portions;
                     })
                     ->html(),
-                ImageEntry::make('image')
-                    ->simpleLightbox(fn ($record) => $record?->image ?? 'Your Image Url address', defaultDisplayUrl: true),
+
+                SpatieMediaLibraryImageEntry::make('excises')
+                    ->collection('excises')
+                    ->simpleLightbox(),
+                ImageEntry::make('excises'),
+                //  ->simpleLightbox(fn ($record) => $record->getMedia()->first()->getUrl() ?? $record->getMedia('excises')->first()->getUrl()),
 
                 // LightboxSpatieMediaLibraryImageEntry::make('excise')->translateLabel()
                 //     ->collection('excise')

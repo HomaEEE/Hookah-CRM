@@ -2,39 +2,34 @@
 
 namespace App\Enums;
 
-
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum Bill: string implements HasLabel, HasIcon, HasColor
+enum Bill: string implements HasColor, HasIcon, HasLabel
 {
-   // case BANK = '1';
     case CASH = '1';
     case CARD = '2';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-         //   self::BANK => __('BANK'),
             self::CASH => __('Cash'),
-            self::CARD => __('Card'),
+            self::CARD => __('Bank'),
         };
     }
 
     public function getIcon(): ?string
     {
         return match ($this) {
-          //  self::BANK => 'heroicon-m-building-library',
             self::CASH => 'heroicon-m-banknotes',
             self::CARD => 'heroicon-m-credit-card'
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
-            // self::BANK => 'info',
             self::CASH => 'success',
             self::CARD => 'info'
         };

@@ -29,7 +29,7 @@ class MoneyCast implements CastsAttributes
             return str_replace(',', '', $value);
         } else {
             // Умножаем число на 100 и сохраняем
-            return  $value * 100;
+            return $value * 100;
         }
     }
 }

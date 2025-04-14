@@ -50,8 +50,12 @@ class ExpenseForm
                 ->required()
                 ->inline()
                 ->grouped()
-                ->live(),
-
+                ->extraAttributes(['style' => 'width: 100%'])
+                ->colors([
+                    0 => 'info',
+                    1 => 'success',
+                ])
+                ->reactive(),
             ToggleButtons::make('pay')->label(__('Pay'))
                 ->options(
                     [
@@ -61,11 +65,12 @@ class ExpenseForm
                 )
                 ->colors([
                     0 => 'danger',
-                    2 => 'success',
+                    1 => 'success',
                 ])
                 ->default(0)
                 ->inline()
                 ->grouped()
+                ->extraAttributes(['style' => 'width: 100%'])
                 ->reactive(),
 
             Textarea::make('comment')->translateLabel()->rows(2),

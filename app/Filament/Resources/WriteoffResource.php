@@ -52,6 +52,7 @@ class WriteoffResource extends Resource
 
                 Select::make('workshop_id')->label(__('Workshop'))
                     ->reactive()
+                    ->required()
                     ->native(false)
                     ->options(function (callable $get) {
                         if (null == ($get('place_id'))) {
@@ -61,22 +62,33 @@ class WriteoffResource extends Resource
                         }
                     }),
                 Repeater::make('whiteoff')->label(__('White_off'))
+                    ->columns(12)
+                    ->addActionLabel(__('Add'))
                     ->schema([
                         Select::make('ingredient_id')
                             ->preload()
                             ->native(false)
                             ->searchable()
+                            ->columnSpan(6)
                             ->reactive()
+                            ->live()
                             ->options(
                                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
                             ),
                         TextInput::make('quantity')->label(__('Quantity'))
                             ->reactive()
-                            ->integer()
+                            ->columnSpan(6)
                             ->suffix(static function (Get $get) {
+
                                 if ($get('ingredient_id') != null) {
-                                    return Ingredient::where('id', $get('ingredient_id'))['unit'] ?? '';
+                                    $ingredient = Ingredient::find($get('ingredient_id'));
+                                    if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
+                                        return $ingredient->unit->getLabel();
+                                    }
                                 }
+
+                                return null;
+
                             }),
                     ]),
                 Hidden::make('approve')->default(0),
@@ -90,8 +102,7 @@ class WriteoffResource extends Resource
             ->columns([
                 TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('user.name')->translateLabel(),
-                TextColumn::make('workshop.name')->translateLabel()
-                    ->description(fn (Writeoff $record): string => $record->whiteoff ?? '', position: 'before'),
+                TextColumn::make('workshop.name')->translateLabel(),
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 //

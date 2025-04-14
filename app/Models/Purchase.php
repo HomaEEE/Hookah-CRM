@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Purchase extends Model
 {
@@ -13,9 +11,7 @@ class Purchase extends Model
 
     protected $fillable = ['user_id', 'place_id', 'ingredients', 'supplier_id'];
 
-
     protected $casts = ['ingredients' => 'array'];
-//protected $attributes = ['ingredients' => '[]'];
 
     public function place()
     {
@@ -36,6 +32,4 @@ class Purchase extends Model
     {
         return $this->belongsTo(Ingredient::class);
     }
-
-
 }

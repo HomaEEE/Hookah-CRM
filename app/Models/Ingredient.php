@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\MoneyCast;
+use App\Enums\IngredientUnit;
 use App\Enums\SupplyUnit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class Ingredient extends Model
     protected $fillable = ['ingredient', 'unit', 'workshop_id', 'place_id', 'price'];
 
     protected $casts = [
+        'unit' => IngredientUnit::class,
         'price' => MoneyCast::class,
     ];
 
@@ -30,12 +32,17 @@ class Ingredient extends Model
 
     public function techcard()
     {
-        return $this->belongsTo(Purchase::class);
+        return $this->belongsTo(Techcard::class);
     }
 
     public function purchase()
     {
         return $this->belongsTo(Purchase::class);
+    }
+
+    public function whiteoff()
+    {
+        return $this->belongsTo(Writeoff::class);
     }
 
     public function getNameAttribute()

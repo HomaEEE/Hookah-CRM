@@ -3,21 +3,20 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
-use App\Filament\Pages\Tenancy\EditPlaceProfile;
+use App\Filament\Pages\Tenancy\EditPlace;
 use App\Filament\Pages\Tenancy\RegisterPlace;
-use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Models\Place;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Widgets;
-
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
-
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\SpatieLaravelTranslatablePlugin;
+use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -25,10 +24,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Filament\SpatieLaravelTranslatablePlugin;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
-
-use Filament\Support\Colors\Color;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 
@@ -42,19 +38,19 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->authGuard('web')
             ->colors([
-                'primary' => Color::Emerald
+                'primary' => Color::Emerald,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->tenant(model: Place::class,  slugAttribute: 'slug')
+            ->tenant(model: Place::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterPlace::class)
-            ->tenantProfile(EditPlaceProfile::class)
+            ->tenantProfile(EditPlace::class)
             ->login()
-            ->registration()
+            // ->registration()
             ->passwordReset()
             ->profile(EditProfile::class)
             ->databaseNotifications()
             ->databaseNotificationsPolling('120s')
-            ->unsavedChangesAlerts()
+         //   ->unsavedChangesAlerts()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
@@ -65,51 +61,51 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
 
                 NavigationGroup::make()
-                ->label(__('Place'))
-                ->icon('heroicon-o-home-modern'),
+                    ->label(__('Place'))
+                    ->icon('heroicon-o-home-modern'),
 
                 NavigationGroup::make()
-                ->label(__('Menu'))
-                ->icon('heroicon-o-qr-code'),
+                    ->label(__('Menu'))
+                    ->icon('heroicon-o-qr-code'),
 
                 NavigationGroup::make()
-                ->label(__('Manage'))
-                ->icon('heroicon-o-arrow-down-on-square-stack'),
+                    ->label(__('Manage'))
+                    ->icon('heroicon-o-arrow-down-on-square-stack'),
 
                 NavigationGroup::make()
-                ->label(__('Finance'))
-                ->icon('heroicon-o-banknotes'),
+                    ->label(__('Finance'))
+                    ->icon('heroicon-o-banknotes'),
 
                 NavigationGroup::make()
-                ->label('Data')
-                ->icon('heroicon-o-arrow-down-on-square-stack'),
+                    ->label('Data')
+                    ->icon('heroicon-o-arrow-down-on-square-stack'),
 
                 NavigationGroup::make()
-                ->label(__('Links'))
-                ->icon('heroicon-o-link'),
+                    ->label(__('Links'))
+                    ->icon('heroicon-o-link'),
 
                 NavigationGroup::make()
-                ->label(__('Settings'))
-                ->icon('heroicon-o-home-modern'),
+                    ->label(__('Settings'))
+                    ->icon('heroicon-o-home-modern'),
             ])
 
             ->navigationItems([
                 NavigationItem::make('Poster')
                     ->url('https://noireod.joinposter.com', shouldOpenInNewTab: true)
-                    ->group(__('Links'))
+                    ->group(__('Links')),
             ])
             ->plugins([
                 FilamentShieldPlugin::make()
-                ->sectionColumnSpan(1)
-                ->checkboxListColumns([
-                    'default' => 1,
-                    'sm' => 2,
-                    'lg' => 4,
-                ])
-                ->resourceCheckboxListColumns([
-                    'default' => 2,
-                    'sm' => 2,
-                ])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 4,
+                    ])
+                    ->resourceCheckboxListColumns([
+                        'default' => 2,
+                        'sm' => 2,
+                    ])
                     ->centralApp(Place::class),
 
                 SpatieLaravelTranslatablePlugin::make()

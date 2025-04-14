@@ -38,6 +38,8 @@ class SupplyForm
             Select::make('supplier_id')->label(__('Supplier'))
                 ->relationship('supplier', 'company')
                 ->searchable()
+                ->searchingMessage('Searching supplier...')
+                ->searchDebounce(500)
                 ->native(false)
                 ->required()
                 ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
@@ -60,6 +62,11 @@ class SupplyForm
                 ->required()
                 ->inline()
                 ->grouped()
+                ->extraAttributes(['style' => 'width: 100%'])
+                ->colors([
+                    0 => 'info',
+                    1 => 'success',
+                ])
                 ->reactive(),
             ToggleButtons::make('pay')->label(__('Pay'))
                 ->options(
@@ -70,11 +77,12 @@ class SupplyForm
                 )
                 ->colors([
                     0 => 'danger',
-                    2 => 'success',
+                    1 => 'success',
                 ])
                 ->default(0)
                 ->inline()
                 ->grouped()
+                ->extraAttributes(['style' => 'width: 100%'])
                 ->reactive(),
 
             TextInput::make('sum')->label(__('Sum'))

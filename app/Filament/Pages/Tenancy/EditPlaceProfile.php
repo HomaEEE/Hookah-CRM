@@ -6,16 +6,12 @@ use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
-use Filament\Resources\Concerns\Translatable;
 
-class EditPlaceProfile extends EditTenantProfile
+class EditPlace extends EditTenantProfile
 {
-
     public static function getLabel(): string
     {
         return __('Place profile');
@@ -31,7 +27,7 @@ class EditPlaceProfile extends EditTenantProfile
                         TextInput::make('city')->translateLabel(),
                         TextInput::make('address')->label(__('Address')),
                     ])->columnSpan(['md' => 1]),
-                    Section::make()
+                Section::make()
                     ->schema([
                         TextInput::make('phone')->label(__('Phone')),
                         TextInput::make('instagram')->label(__('Instagram')),

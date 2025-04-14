@@ -3,7 +3,6 @@
 namespace App\Filament\Pages\Tenancy;
 
 use App\Models\Place;
-use App\Models\Team;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
@@ -20,7 +19,10 @@ class RegisterPlace extends RegisterTenant
         return $form
             ->schema([
                 TextInput::make('name'),
-
+                TextInput::make('city'),
+                TextInput::make('address'),
+                TextInput::make('phone'),
+                TextInput::make('instagram'),
             ]);
     }
 
@@ -28,6 +30,7 @@ class RegisterPlace extends RegisterTenant
     {
         $place = Place::create($data);
         $place->users()->attach(auth()->user());
+
         return $place;
     }
 }
