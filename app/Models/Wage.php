@@ -15,14 +15,14 @@ class Wage extends Model
 
     protected $casts = ['procent' => 'array'];
 
-    public function place()
+    public function places()
     {
         return $this->belongsTo(Place::class, 'place_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class);
     }
 
     public function workshops()

@@ -19,10 +19,12 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Place::class);
+            $table->timestamp('date')->useCurrent();
             $table->integer('for_user_id')->nullable();
-            $table->string('name');
+            $table->string('title');
             $table->text('text');
-            $table->integer('approve')->default(0);
+            $table->integer('status')->default(0);
+            $table->integer('sort_order')->nullable();
             $table->timestamps();
         });
     }

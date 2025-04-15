@@ -863,7 +863,7 @@ main .feedbacks .feedback {
 }
 .list .positions .menu-item {
   box-sizing: border-box;
-  padding: 20px;
+  padding: 15px;
   margin-bottom: 20px;
   border-radius: 16px;
   background-color: #151515;
@@ -881,15 +881,12 @@ main .feedbacks .feedback {
   padding: 0;
   margin: 0;
 }
-.list .positions .menu-item .item .title .sup {
-  float: right;
-}
 .list .positions .menu-item .img {
   box-sizing: content-box;
+  width: 100%;
 }
 .list .positions .menu-item .img img {
-  width: 120px;
-  height: 120px;
+  width: 100%;
   overflow: hidden;
   border-radius: 13px;
 }
@@ -898,26 +895,14 @@ main .feedbacks .feedback {
   transition: all 1s linear;
   position: relative;
 }
-.list .positions .menu-item .description .price {
-  position: absolute;
-  bottom: 10px;
-  left: 0px;
-  font-size: 1rem;
-}
 .list .positions .menu-item .description a {
   z-index: 10;
 }
-@media screen and (max-width: 575px) {
-  .list .positions .menu-item .property p {
-    padding: 0 10px;
-  }
-  .list .positions .menu-item .property p.gram, .list .positions .menu-item .property p.sup {
-    font-size: 0.7rem;
-    padding: 2px 0;
-  }
-  .list .positions .menu-item .description {
-    font-size: 0.8rem;
-  }
+.list .positions .menu-item .description .price {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 0.8rem;
 }
 
 .properties {
@@ -1368,6 +1353,23 @@ main .feedbacks .feedback {
 }
 .gram-hidden small {
   visibility: hidden;
+}
+
+.page {
+  padding: 20px;
+}
+.page h2 {
+  margin: 20px auto;
+}
+.page h4 {
+  margin: 15px auto;
+}
+.page ul {
+  font-size: 1rem;
+  padding: 15px;
+}
+.page ul li {
+  margin-bottom: 5px;
 }
 
 footer {

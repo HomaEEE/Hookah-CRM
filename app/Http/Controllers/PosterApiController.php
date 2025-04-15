@@ -62,7 +62,7 @@ class PosterApiController extends Controller
                     'menu_category_id' => $product['menu_category_id'],
                     'product_id' => $product['product_id'],
                     'cost' => $product['cost'],
-                    'price' => $product['spots'][0]['price'] / 100,
+                    'price' => $product['spots'][0]['price'],
                     'out' => $product['out'],
                     'ingredients' => empty($ingredient_array) ? '' : implode(', ', $ingredient_array),
                 ]
@@ -124,29 +124,30 @@ class PosterApiController extends Controller
                 ],
                 [
                     'unit' => $ingredient['ingredient_unit'],
+                     'barcode' => $ingredient['ingredient_barcode'],
+
                 ]);
 
+            }
             $responseMenu = Http::get($this->urlApi . 'menu.getProducts?type=products&token=' . $place_api['api'])
                 ->throw()->json();
             $products = $responseMenu['response'];
-
-            dd($products);
 
             foreach ($products as $product) {
 
                 Ingredient::updateOrCreate(
                     [
-                        'product_id' => $product['product_id'],
+                        'ingredient' => $product['product_id'],
                         'place_id' => $place_id
                     ],
                     [
-                        'ingredient' => $ingredient['product_name'],
+                        'ingredient' => $product['product_name'],
                         'unit' => 'p',
-                        'price' => $ingredient['cost']
+                        'barcode' => $ingredient['ingredient_barcode'],
+                        'price' => $product['cost']
                     ]
                 );
             }
-        }
     }
 
     public function getTechcards($place_id) {
@@ -156,6 +157,14 @@ class PosterApiController extends Controller
 
             dd($techcards);
     }
+
+    public function getSuppliers($place_id) {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $suppliers = Http::get($this->urlApi . 'storage.getSuppliers?token=' . $place_api['api'] . '&type=batchtickets')
+            ->throw()->json();
+            dd($suppliers);
+    }
+
 
 
     //Получение Кассы и терминала за день
@@ -170,6 +179,19 @@ class PosterApiController extends Controller
         return $posterShift['total'];
     }
 
+    //Получить все чеки
+    public function getAllBills($place_id)
+    {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $getAllBills = Http::get($this->urlApi . 'dash.getTransactions?token='
+            . $place_api['api']
+            . '&dateFrom=' . Carbon::today()->format('Ymd')
+            . '&dateTo=' . Carbon::today()->format('Ymd'))
+            ->json('response');
+
+    //   -->>> EDIT RETURN
+    //         return $getAllBills['total'];
+    }
 
     //Получение прошлой смены
     public function getShift($place_id)
@@ -215,9 +237,10 @@ class PosterApiController extends Controller
             . $place_api['api']
             . '&interpolate=day&type=workshops'
             . '&dateFrom=' . Carbon::today()->format('Ymd')
-            . '&dateTo=' . Carbon::today()->format('Ymd'))
-            ->json('response');
+            . '&dateTo=' . Carbon::today()->format('Ymd')
+        )->json('response');
 
+       // dd($posterWorkshops);
         return $posterWorkshops;
     }
 
@@ -332,11 +355,10 @@ class PosterApiController extends Controller
             'cash_shift_id' => $getShift[0]['cash_shift_id'],
             'user_id'       => $getShift[0]['user_id_start'],
             'amount'        => $data['shift'],
-            'time'          => Carbon::now()->subMinute(2)->format('Y-m-d H:i'),
+            'time'          => Carbon::now()->subMinute(1)->format('Y-m-d H:i'),
             'is_fiscal'     => 0,
-            'comment'       => $data['comment']
+            'comment'       => 'CRM'
         ]);
-
     }
 
     public function deleteReceipt($data) {

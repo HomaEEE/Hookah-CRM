@@ -4,33 +4,24 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SupplierResource\Pages;
 use App\Models\Supplier;
-use Auth;
-use Awcodes\TableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-
-use Filament\Forms;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\KeyValueEntry;
-use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
-use Filament\Tables;
-use Filament\Tables\Table;
-
 use Filament\Support\RawJs;
-
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class SupplierResource extends Resource
 {
@@ -70,11 +61,11 @@ class SupplierResource extends Resource
                 TextInput::make('comment')->translateLabel(),
                 Toggle::make('visible')->translateLabel()->default(1),
                 Select::make('type')->label(__('Type'))
-                ->options([
-                    0 => __('Products'),
-                    1 => __('Alcohol'),
-                    2 => __('Tabacco')
-                ]),
+                    ->options([
+                        0 => __('Products'),
+                        1 => __('Alcohol'),
+                        2 => __('Tabacco'),
+                    ]),
                 KeyValue::make('data')
                     ->keyLabel(__('Rekvizites'))
                     ->valueLabel(__('Value')),
@@ -104,12 +95,12 @@ class SupplierResource extends Resource
                     ->boolean()
                     ->trueIcon('heroicon-o-eye')
                     ->falseIcon('heroicon-o-eye-slash')
-                     ->action(function ($record, $column) {
-                         $name = $column->getName();
-                         $record->update([
-                             $name => ! $record->$name,
-                         ]);
-                     }),
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
                 TextColumn::make('data'),
             ])
             ->filters([
@@ -130,25 +121,23 @@ class SupplierResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-        ->schema([
-            Section::make('Contacts')
             ->schema([
-            TextEntry::make('company')->translateLabel(),
-            TextEntry::make('name')->translateLabel(),
+                Section::make('Contacts')
+                    ->schema([
+                        TextEntry::make('company')->translateLabel(),
+                        TextEntry::make('name')->translateLabel(),
 
-            TextEntry::make('phone')->translateLabel()
-            ->icon('heroicon-m-phone')
-            ->iconPosition(IconPosition::Before),
-            TextEntry::make('email')
-            ->icon('heroicon-m-mail')
-            ->iconPosition(IconPosition::Before),
-            ]) ->columns(2)   ->collapsible()
-
-            ,
-            KeyValueEntry::make('data')->label(__('Rekvizites'))
-            ->keyLabel(' ')
-            ->valueLabel('Реквизиты')
-        ])->columns(1);
+                        TextEntry::make('phone')->translateLabel()
+                            ->icon('heroicon-m-phone')
+                            ->iconPosition(IconPosition::Before),
+                        TextEntry::make('email')
+                            ->icon('heroicon-m-mail')
+                            ->iconPosition(IconPosition::Before),
+                    ])->columns(2)->collapsible(),
+                KeyValueEntry::make('data')->label(__('Rekvizites'))
+                    ->keyLabel(' ')
+                    ->valueLabel('Реквизиты'),
+            ])->columns(1);
 
     }
 
@@ -156,6 +145,8 @@ class SupplierResource extends Resource
     {
         return [
             'index' => Pages\ManageSuppliers::route('/'),
+            'reqs' => Pages\ManageSupplierReqizites::route('/{record}/reqs'),
+
         ];
     }
 }

@@ -4,16 +4,16 @@ return [
     'shield_resource' => [
         'should_register_navigation' => true,
         'slug' => 'shield/roles',
-        'navigation_sort' => 100,
-        'navigation_badge' => false,
+        'navigation_sort' => 5,
+        'navigation_badge' => true,
         'navigation_group' => false,
         'is_globally_searchable' => false,
         'show_model_path' => true,
         'is_scoped_to_tenant' => true,
-
+        'cluster' => null,
     ],
 
-
+    'tenant_model' => 'App\\Models\\Place',
 
     'auth_provider_model' => [
         'fqcn' => 'App\\Models\\User',
@@ -22,7 +22,7 @@ return [
     'super_admin' => [
         'enabled' => true,
         'name' => 'super_admin',
-        'define_via_gate' => false,
+        'define_via_gate' => true,
         'intercept_gate' => 'before', // after
     ],
 
@@ -34,17 +34,9 @@ return [
     'permission_prefixes' => [
         'resource' => [
             'view',
-            'view_any',
             'create',
             'update',
-            'restore',
-            'restore_any',
-            'replicate',
-            'reorder',
             'delete',
-            'delete_any',
-            'force_delete',
-            'force_delete_any',
         ],
 
         'page' => 'page',
@@ -55,11 +47,13 @@ return [
         'pages' => true,
         'widgets' => true,
         'resources' => true,
-        'custom_permissions' => false,
+        'custom_permissions' => true,
     ],
 
     'generator' => [
         'option' => 'policies_and_permissions',
+        'policy_directory' => 'Policies',
+        'policy_namespace' => 'Policies',
     ],
 
     'exclude' => [
@@ -69,17 +63,15 @@ return [
             'Dashboard',
         ],
 
-        'widgets' => [
-            'AccountWidget', 'FilamentInfoWidget',
-        ],
+        'widgets' => [],
 
         'resources' => [],
     ],
 
     'discovery' => [
-        'discover_all_resources' => false,
-        'discover_all_widgets' => false,
-        'discover_all_pages' => false,
+        'discover_all_resources' => true,
+        'discover_all_widgets' => true,
+        'discover_all_pages' => true,
     ],
 
     'register_role_policy' => [

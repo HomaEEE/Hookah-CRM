@@ -2,38 +2,28 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Components\Bulks\CheckAsPaidAction;
+use App\Filament\Components\Bulks\CheckPosterAction;
+use App\Filament\Components\SupplyForm;
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
 use App\Models\Ingredient;
 use App\Models\Supplier;
 use App\Models\Supply;
-use App\Models\User;
-use Auth;
-use Carbon\Carbon;
 use Filament\Facades\Filament;
-
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Infolists\Components\KeyValueEntry;
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section as ComponentsSection;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
+use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -41,8 +31,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class SupplyResource extends Resource
 {
@@ -67,125 +58,17 @@ class SupplyResource extends Resource
         return __('Supplies');
     }
 
-    public static function getEloquentQuery(): Builder
+    protected function getTableQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('supplier', 'user');
+        return Supply::query()->with(['supplier', 'user', 'bill'])->fastPaginate();
     }
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Hidden::make('user_id')->default(Auth::user()->id),
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                DateTimePicker::make('added_at')
-                    ->label(__('Date Added'))
-                    ->native(false)
-                    ->seconds(false)
-                    ->maxDate(now())->default(now()),
-                Select::make('supplier_id')->label(__('Supplier'))
-                    ->relationship('supplier', 'company')
-                    ->searchable()
-                    ->native(false)
-                    ->preload()
-                    ->required()
-                    ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
-                    ->createOptionForm([
-                        Section::make()
-                            ->schema([
-                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                TextInput::make('name')->label(__('Name')),
-                                TextInput::make('phone')->label(__('Phone')),
-                                TextInput::make('company')->label(__('Company')),
-                                TextInput::make('email')->label(__('Email'))->email(),
-                                KeyValue::make('data')
-                                    ->keyLabel(__('Rekvizites'))
-                                    ->valueLabel(__('Value')),
-                            ])->columns(2),
-                    ]),
-                TextInput::make('sum')->label(__('Sum'))
-                    ->numeric()
-                    ->required()
-                    ->prefix('₴')
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                Textarea::make('comment')->label(__('Comment'))
-                    ->rows(3),
-                ToggleButtons::make('bill_id')->label(__('Type pay'))
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->default(0)
-                    ->required()
-                    ->inline()
-                    ->grouped()
-                    ->live(),
-                Toggle::make('pay')->label(__('Paid'))
-                    ->default(false)
-                    ->inline(),
-
-                Section::make(__('Photo'))
-                    ->schema([
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->label(__('Invoice'))
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imagePreviewHeight(450)
-                            ->imageResizeMode('contain')
-                            ->imageEditor()
-                            ->optimize('webp')
-                            ->resize(70)
-                            ->imageEditorAspectRatios([
-                                null,
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->reorderable()
-                            ->openable(),
-
-                        SpatieMediaLibraryFileUpload::make('receipt')
-                            ->collection('receipts')
-                            ->label(__('Receipt'))
-                            ->multiple()
-                            ->imagePreviewHeight(350)
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('2100')
-                            ->imageEditor()
-                            ->optimize('webp')
-                            ->resize(90)
-                            ->imageEditorAspectRatios([
-                                null,
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->reorderable()
-                            ->openable()
-                    ])
-                    ->columns(2)
-                    ->collapsible()
-                    ->persistCollapsed(),
-
-                // Section::make(__('List'))
-                //     ->schema([
-                //         Repeater::make('supplyItems')->relationship()
-                //             ->schema([
-                //                 Select::make('ingredient_id')
-                //                     ->native(false)
-                //                     ->searchable()
-                //                     ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
-                //                     ->required(),
-                //                 TextInput::make('qty')->translateLabel(),
-                //                 TextInput::make('sum')->translateLabel()
-                //                     ->prefix('₴')
-                //                     ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                //             ])
-                //             ->columns(3)
-                //             ->collapsed()
-
-                //     ])
-
-            ])
-
-            ->columns(['lg' => 2, 'md' => 2, 'xs' => 1]);
+            ->schema(
+                SupplyForm::schema(),
+            );
     }
 
     public static function table(Table $table): Table
@@ -202,7 +85,7 @@ class SupplyResource extends Resource
                     ->description(fn (Supply $record): string => $record->comment ?? '')->wrap(),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->searchable()
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
@@ -210,14 +93,17 @@ class SupplyResource extends Resource
                     ->circular()
                     ->stacked()
                     ->limit(3)
-                    ->limitedRemainingText()
-                    ->height(30)
-                    ->toggleable()
+                    ->height(40)
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                    ->placeholder('No description.')
-                    ->visibleFrom('md'),
+                    ->placeholder('No description.'),
 
-                TextColumn::make('bill.type')->label(__('Bill'))->badge(),
+                IconColumn::make('bill.type')->label(__('Bill'))
+                    ->action(function ($record) {
+                        $record->update([
+                            'bill_id' => ! $record->bill_id,
+                        ]);
+                    }),
+
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
@@ -226,7 +112,7 @@ class SupplyResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => !$record->$name,
+                            $name => ! $record->$name,
                         ]);
                     })
                     ->visibleFrom('md'),
@@ -238,16 +124,20 @@ class SupplyResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => !$record->$name,
+                            $name => ! $record->$name,
                         ]);
                     })
                     ->visibleFrom('md'),
 
             ])->defaultSort('added_at', 'desc')
-            ->deferLoading()
+           // ->deferLoading()
             ->defaultPaginationPageOption(25)
             ->striped()
             ->filters([
+
+                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                    ->defaultLast30Days(),
+
                 SelectFilter::make('supplier_id')
                     ->multiple()
                     ->label(__('Supplier'))
@@ -255,50 +145,18 @@ class SupplyResource extends Resource
                     ->options(
                         Supplier::where('place_id', Filament::getTenant()->id)->visible(1)->pluck('company', 'id')
                     ),
+
                 SelectFilter::make('user')->translateLabel()
-                    ->options(
-                        User::whereHas('place', function ($query) {
-                            $query->where('place_id', Filament::getTenant()->id);
-                        })->get()
-                            ->pluck('name', 'id')
-                    )
-                    ->attribute('user_id'),
-
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->translateLabel()->native(false)
-                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                        DatePicker::make('created_until')->translateLabel()->native(false)
-                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '<=', $date),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Поставки с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                        }
-                        if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'Поставки до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
+                    ->relationship(
+                        name: 'user',
+                        titleAttribute: 'name',
+                        //  modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
+                    )->attribute('user_id'),
 
                 SelectFilter::make('bill')->translateLabel()
+                    ->native(false)
                     ->options(Bill::get()->pluck('name', 'id'))
                     ->attribute('bill_id'),
-
 
                 TernaryFilter::make('pay')
                     ->translateLabel()
@@ -315,6 +173,7 @@ class SupplyResource extends Resource
                 TernaryFilter::make('poster')
                     ->translateLabel()
                     ->nullable()
+                    ->native(false)
                     ->placeholder(__('All'))
                     ->trueLabel(__('In Poster'))
                     ->falseLabel(__('Not in Poster'))
@@ -322,13 +181,23 @@ class SupplyResource extends Resource
                         true: fn (Builder $query) => $query->where('poster', 1),
                         false: fn (Builder $query) => $query->where('poster', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
-                    )
+                    ),
             ])
 
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->slideOver(),
-                    Tables\Actions\EditAction::make()->slideOver(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->mutateRecordDataUsing(function (array $data): array {
+                            $data['sum'] = $data['sum'] / 100;
+
+                            return $data;
+                        })
+                        ->mutateFormDataUsing(function (array $data): array {
+                            $data['sum'] = $data['sum'] * 100;
+
+                            return $data;
+                        }),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -336,6 +205,8 @@ class SupplyResource extends Resource
                 // BulkAction::make('pay')->icon('heroicon-s-inbox-in')->translateLabel()
                 // ->action(fn (Collection $records) => $records->each->pay())
                 // ->deselectRecordsAfterCompletion(),
+                CheckAsPaidAction::make('check'),
+                CheckPosterAction::make('poster'),
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
@@ -344,25 +215,40 @@ class SupplyResource extends Resource
     {
         return $infolist
             ->schema([
-                ComponentsSection::make()->schema([
-                    TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
-                        ->badge(),
-                    TextEntry::make('user.name')->translateLabel(),
-                    TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
-                    TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH', true),
-                    TextEntry::make('bill.name')->translateLabel()
-                        ->badge(),
-                    TextEntry::make('comment')->label(__('Comment'))->badge(),
-                ])->columns(2)->collapsible(),
-                ComponentsSection::make(__('Invoice'))->schema([
-                    LightboxSpatieMediaLibraryImageEntry::make('invoice')
-                        ->collection('supplies')
-                        ->conversion('thumb')
-                        ->translateLabel(),
-                    KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
-                        ->keyLabel(' ')
-                        ->valueLabel('Реквизиты')
-                ])->columns(2)->collapsed(),
+                TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
+                    ->badge(),
+                TextEntry::make('user.name')->translateLabel(),
+                TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
+                TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH')->copyable(),
+                TextEntry::make('bill.name')->translateLabel()
+                    ->badge(),
+                TextEntry::make('invoice_number')->translateLabel()->badge()->copyable(),
+                KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
+                    ->keyLabel(' ')
+                    ->valueLabel('Реквизиты'),
+
+                Tabs::make('Tabs')
+                    ->tabs([
+                        Tabs\Tab::make(__('Comment'))
+                            ->schema([
+                                TextEntry::make('comment')->label(__('Comment'))->badge(),
+                            ]),
+                        Tabs\Tab::make(__('Photo'))
+                            ->schema([
+                                SpatieMediaLibraryImageEntry::make('invoice')
+                                    ->collection('supplies')
+                                    ->simpleLightbox()
+                                    ->hiddenLabel(),
+                            ]),
+                        Tabs\Tab::make(__('Supply'))
+                            ->schema([
+                                // SpatieMediaLibraryImageEntry::make('invoice')
+                                // ->collection('supplies')
+                                // ->simpleLightbox()
+                                // ->hiddenLabel(),
+                            ]),
+                    ])->columnSpanFull()
+                    ->contained(false),
 
                 // ComponentsSection::make(__('List'))->schema([
                 //     RepeatableEntry::make('supplyItems')->schema([
@@ -381,6 +267,86 @@ class SupplyResource extends Resource
     {
         return [
             'index' => Pages\ManageSupplies::route('/'),
+            // 'view' => Pages\ViewSupply::route('/{record}/view'),
+            // 'edit' => Pages\EditSupply::route('/{record}/edit'),
         ];
+    }
+
+    public static function getItemsRepeater(): Repeater
+    {
+        return Repeater::make('items')
+            ->relationship()
+            ->schema([
+                Select::make('ingredient_id')
+                    ->label('Product')->translateLabel()
+                    ->relationship('ingredient', 'id')
+                    ->options(Ingredient::where('place_id', Filament::getTenant()->id)->get()->pluck('ingredient', 'id'))
+                    ->searchable(['ingredient', 'barcode'])
+                    ->required()
+                    ->native(false)
+                    ->reactive()
+                    ->afterStateUpdated(fn ($state, Set $set) => $set('unit_price', Ingredient::find($state)?->price / 100 ?? 0))
+                    ->distinct()
+                    ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                    ->columnSpan([
+                        'md' => 6,
+                    ])
+                    ->searchable(),
+
+                TextInput::make('qty')
+                    ->translateLabel()
+                    ->numeric()
+                    ->default(1)
+                    ->columnSpan([
+                        'md' => 2,
+                    ])
+                    ->afterStateUpdated(fn (Set $set, Get $get) => $set('sum', $get('qty') * $get('unit_price')))
+                    ->reactive()
+                    ->required(),
+
+                TextInput::make('unit_price')
+                    ->label('Unit Price')
+                    ->disabled()
+                    ->dehydrated()
+                    ->numeric()
+                    ->required()
+                    ->columnSpan([
+                        'md' => 2,
+                    ]),
+
+                TextInput::make('sum')
+                    ->label('Sum')
+                    ->disabled()
+                    ->dehydrated()
+                    ->numeric()
+                    ->required()
+                    ->columnSpan([
+                        'md' => 2,
+                    ]),
+            ])
+            // ->extraItemActions([
+            //     Action::make('openProduct')
+            //         ->tooltip('Open product')
+            //         ->icon('heroicon-m-arrow-top-right-on-square')
+            //         ->url(function (array $arguments, Repeater $component): ?string {
+            //             $itemData = $component->getRawItemState($arguments['item']);
+
+            //             $ingredient = Ingredient::find($itemData['ingredient_id']);
+
+            //             if (! $ingredient) {
+            //                 return null;
+            //             }
+
+            //             return IngredientResource::getUrl('index', ['record' => $ingredient]);
+            //         }, shouldOpenInNewTab: true)
+            //         ->hidden(fn (array $arguments, Repeater $component): bool => blank($component->getRawItemState($arguments['item'])['ingredient_id'])),
+            // ])
+            // ->orderColumn('ingredient')
+            ->defaultItems(1)
+            ->hiddenLabel()
+            ->columns([
+                'md' => 12,
+            ])
+            ->required();
     }
 }

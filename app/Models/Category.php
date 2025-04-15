@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\{Place};
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use SolutionForest\FilamentTree\Concern\ModelTree;
 use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
-    use HasFactory, HasTranslations, Compoships;
+    use Compoships, HasFactory, HasTranslations, ModelTree;
 
     protected $fillable = ['category_name', 'frontend_name', 'frontend_menu_name', 'place_id', 'parent_category',
         'category_id', 'image', 'class', 'logo', 'sort_order', 'visible', 'visible_menu',
@@ -19,6 +19,7 @@ class Category extends Model
     public $timestamps = false;
 
     protected $casts = [
+        'parent_category' => 'int',
         'visible' => 'boolean',
         'visible_menu' => 'boolean',
         'class' => 'array',

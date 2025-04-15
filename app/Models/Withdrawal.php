@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,10 @@ class Withdrawal extends Model
     use HasFactory;
 
     protected $fillable = ['place_id', 'user_id', 'sum'];
+
+    protected $casts = [
+        'sum' => MoneyCast::class,
+    ];
 
     public function place()
     {

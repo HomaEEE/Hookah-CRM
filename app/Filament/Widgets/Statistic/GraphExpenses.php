@@ -17,7 +17,7 @@ class GraphExpenses extends ChartWidget
 
     public function getHeading(): string
     {
-        return __('Expenses');
+        return __('Graph Expenses');
     }
 
     protected function getData(): array

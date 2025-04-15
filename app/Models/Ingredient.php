@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
+use App\Enums\IngredientUnit;
+use App\Enums\SupplyUnit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +15,14 @@ class Ingredient extends Model
 
     protected $fillable = ['ingredient', 'unit', 'workshop_id', 'place_id', 'price'];
 
+    protected $casts = [
+        'unit' => IngredientUnit::class,
+        'price' => MoneyCast::class,
+    ];
+
+    // protected $casts = [
+    //     'unit' => SupplyUnit::class,
+    // ];
     public $timestamps = false;
 
     public function place()
@@ -21,9 +32,7 @@ class Ingredient extends Model
 
     public function techcard()
     {
-      //  return $this->hasManyJson(Techcard::class, 'ingedients->ingedient_id');
-        return $this->belongsToManyJson(Techcard::class, 'ingedients->ingedient_id');
-
+        return $this->belongsTo(Techcard::class);
     }
 
     public function purchase()
@@ -31,9 +40,13 @@ class Ingredient extends Model
         return $this->belongsTo(Purchase::class);
     }
 
+    public function whiteoff()
+    {
+        return $this->belongsTo(Writeoff::class);
+    }
+
     public function getNameAttribute()
     {
         return $this->ingredient;
     }
-
 }

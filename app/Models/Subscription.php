@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use App\Enums\Subscription as EnumsSubscription;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,7 @@ class Subscription extends Model
 
     protected $casts = [
         'period' => EnumsSubscription::class,
+        'price' => MoneyCast::class,
     ];
 
     public function category()

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
@@ -12,22 +14,25 @@ class Supply extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['place_id', 'supplier_id', 'added_at', 'sum', 'comment', 'bill_id', 'pay', 'poster', 'user_id'];
+    protected $fillable = ['place_id', 'supplier_id', 'added_at', 'sum', 'items', 'comment', 'bill_id', 'pay', 'poster', 'user_id'];
+
 
     protected $casts = [
+        'sum' => MoneyCast::class,
         'pay' => 'boolean',
         'poster' => 'boolean',
+        'items' => 'json',
         'added_at' => 'datetime',
     ];
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function supplier()
@@ -40,14 +45,14 @@ class Supply extends Model implements HasMedia
         return $this->belongsTo(Supplier::class);
     }
 
-    public function supplyItems()
-    {
-        return $this->hasMany(SupplyItem::class);
-    }
-
     public function ingredient()
     {
         return $this->belongsTo(Ingredient::class, 'ingredient_id', 'id');
+    }
+
+    public function items()
+    {
+        return $this->belongsTo(Ingredient::class, 'id', 'ingredient_id');
     }
 
     public function expense()
@@ -59,7 +64,6 @@ class Supply extends Model implements HasMedia
     {
         return $this->belongsTo(Bill::class);
     }
-
 
     public function scopeAllPaid($query)
     {
@@ -94,6 +98,12 @@ class Supply extends Model implements HasMedia
     public function scopeType($query)
     {
         return $query->where('type', $query);
+    }
+
+
+    public function getDelayDayAttribute()
+    {
+        return (int) Carbon::now()->diffInDays(Carbon::parse($this->added_at)->addDays($this->delay), false);;
     }
 
 }

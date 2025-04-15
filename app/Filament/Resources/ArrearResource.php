@@ -3,29 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArrearResource\Pages;
-use App\Models\{Arrear, Ingredient, User};
-
+use App\Models\Arrear;
+use App\Models\User;
 use Auth;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
-use Filament\Forms\Get;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
-
-use Filament\Infolists\Components;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
-use Filament\Infolists\Components\Tabs;
-
-use function Laravel\Prompts\select;
+use Filament\Tables\Table;
 
 class ArrearResource extends Resource
 {
@@ -83,16 +74,16 @@ class ArrearResource extends Resource
             ])
             ->actions([
                 Action::make('approve')->button()->label(__('Refund'))
-                ->icon('heroicon-s-check')
-                ->color('success')
-                ->action(function (Arrear $record): void {
-                    $record->update(
-                        [
-                            'refund' => 1,
-                        ]
-                    );
-                    $record->save();
-                })->visible(fn (Arrear $record) => $record->refund == '0'),
+                    ->icon('heroicon-s-check')
+                    ->color('success')
+                    ->action(function (Arrear $record): void {
+                        $record->update(
+                            [
+                                'refund' => 1,
+                            ]
+                        );
+                        $record->save();
+                    })->visible(fn (Arrear $record) => $record->refund == '0'),
 
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),

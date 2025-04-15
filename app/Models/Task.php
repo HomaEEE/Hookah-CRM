@@ -6,10 +6,7 @@ use App\Enums\Priority;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\EloquentSortable\Sortable;
-use Spatie\EloquentSortable\SortableTrait;
 use Mokhosh\FilamentKanban\Concerns\HasRecentUpdateIndication;
-
 
 class Task extends Model
 {
@@ -19,11 +16,9 @@ class Task extends Model
 
     protected $guarded = [];
 
-
     protected $casts = [
-        'priority' => Priority::class
+        'priority' => Priority::class,
     ];
-
 
     public function place()
     {
@@ -35,7 +30,6 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-
     public function forUser()
     {
         return $this->belongsTo(User::class, 'for_user_id', 'id');
@@ -45,7 +39,6 @@ class Task extends Model
     {
         return $query->where('approve', $value);
     }
-
 
     public function getTimeAttribute()
     {

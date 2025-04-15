@@ -2,30 +2,42 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Components\ExpenseForm;
+use App\Filament\Components\IncomeForm;
+use App\Filament\Components\SupplyForm;
 use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
-use Illuminate\Contracts\Support\Htmlable;
-
-use App\Models\{Bill, Expense, ExpenseCategory, Shift, ShiftUser, Supplier, Supply, Tip, Wage};
-
-use Auth;
+use App\Models\Expense;
+use App\Models\Income;
+use App\Models\Shift;
+use App\Models\ShiftUser;
+use App\Models\Supply;
+use App\Models\Tip;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Support\RawJs;
+use Illuminate\Contracts\Support\Htmlable;
 
-class Dashboard extends \Filament\Pages\Dashboard
+class Dashboard extends \Filament\Pages\Dashboard implements HasShieldPermissions
 {
+    //  use HasPageShield;
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            '{{canDeleteBill}}',
+            '{{canOpenShift}}',
+        ];
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
     protected static string $view = 'filament.pages.dashboard';
@@ -34,7 +46,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     protected static ?int $navigationSort = 1;
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return __('Dashboard');
     }
@@ -46,7 +58,6 @@ class Dashboard extends \Filament\Pages\Dashboard
             \App\Filament\Widgets\Dashboard\PosterShift::class,
         ];
     }
-
 
     protected function getActions(): array
     {
@@ -95,51 +106,18 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->createAnother(false)
                     ->icon('heroicon-o-document-minus')
                     ->modalHeading(__('Add Expense'))
-                    ->modalWidth('sm')
+                    ->modalWidth('md')
+                    ->slideOver()
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
-                    ->form([
-                        Hidden::make('user_id')->default(Auth::user()->id),
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        DateTimePicker::make('added_at')
-                            ->label(__('Date Added'))
-                            ->native(false)
-                            ->seconds(false)
-                            ->maxDate(now())->default(now()),
-                        Select::make('category_id')->label(__('Category'))
-                            ->searchable()
-                            ->required()
-                            ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')),
-                        TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->label(__('Invoice'))
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imagePreviewHeight(450)
-                            ->imageResizeMode('cover')
-                            ->imageEditor()
-                            ->optimize('webp')
-                            ->resize(80),
-                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->live(),
-                        Textarea::make('comment')->translateLabel()->rows(2),
-                        Toggle::make('pay')->label(__('Paid'))
-                        ->default(true)
-                        ->inline(),
-                    ])
+                    ->form(
+                        ExpenseForm::schema(),
+                    )
                     ->successNotification(
                         Notification::make()
-                             ->success()
-                             ->title(__('Expense added'))
-                             ->icon('heroicon-o-document-minus')
+                            ->success()
+                            ->title(__('Expense added'))
+                            ->icon('heroicon-o-document-minus')
                     ),
 
                 CreateAction::make('add_supply')->label(__('Supply'))
@@ -147,91 +125,37 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
                     ->createAnother(false)
+                    ->modalWidth('md')
+                    ->keyBindings(['command+s', 'ctrl+s'])
+                    ->modalIcon('heroicon-o-inbox-arrow-down')
+                    ->slideOver()
+                    ->form(
+                        SupplyForm::schema(),
+                    )
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->icon('heroicon-o-inbox-arrow-down')
+                            ->title(__('Supply added'))
+                    ),
+
+                CreateAction::make('addIncome')->label(__('Income'))
+                    ->model(Income::class)
+                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->modalHeading(__('Add Income'))
+                    ->createAnother(false)
                     ->modalWidth('sm')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->form([
-                        Hidden::make('user_id')->default(Auth::user()->id),
-                        Hidden::make('place_id')->default(Filament::getTenant()->id),
-                        DateTimePicker::make('added_at')
-                            ->label(__('Date Added'))
-                            ->native(false)
-                            ->seconds(false)
-                            ->maxDate(now())->default(now()),
-                        Select::make('supplier_id')->label(__('Supplier'))
-                            ->searchable()
-                            ->native(false)
-                            ->required()
-                            ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
-                        TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->required()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-
-                        SpatieMediaLibraryFileUpload::make('invoice')
-                            ->label(__('Invoice'))
-                            ->collection('supplies')
-                            ->multiple()
-                            ->imageResizeMode('contain')
-                            ->imageEditor()
-                            ->optimize('webp')
-                            ->resize(70)
-                            ->imageEditorAspectRatios([
-                                null,
-                                '16:9',
-                                '4:3',
-                                '1:1',
-                            ])
-                            ->reorderable()
-                            ->openable(),
-                        Textarea::make('comment')->label(__('Comment'))
-                            ->rows(3),
-                            ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->live(),
-                        Toggle::make('pay')->label(__('Paid'))
-                            ->default(false)
-                            ->inline(),
-                    ])
+                    ->form(
+                        IncomeForm::schema()
+                    )
                     ->successNotification(
                         Notification::make()
-                             ->success()
-                             ->icon('heroicon-o-inbox-arrow-down')
-                             ->title(__('Supply added'))
-                     ),
-
-                    CreateAction::make('addIncome')->label(__('Income'))
-                        ->icon('heroicon-o-inbox-arrow-down')
-                        ->modalHeading(__('Add Income'))
-                        ->createAnother(false)
-                        ->modalWidth('sm')
-                        ->keyBindings(['command+s', 'ctrl+s'])
-                        ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->form([
-                            Hidden::make('user_id')->default(Auth::user()->id),
-                            Hidden::make('place_id')->default(Filament::getTenant()->id),
-                            TextInput::make('sum')->label(__('Sum'))
-                            ->numeric()
-                            ->required()
-                            ->prefix('₴')
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                        ])
-                        ->action(function (array $data): void {
-                            Shift::latest('id')->where('place_id', Filament::getTenant()->id)
-                            ->first()
-                            ->update(['income'=>$data['sum']]);
-                        })
-                        ->successNotification(
-                            Notification::make()
-                                 ->success()
-                                 ->icon('heroicon-o-plus-circle')
-                                 ->title(__('Income added'))
-                         ),
+                            ->success()
+                            ->icon('heroicon-o-plus-circle')
+                            ->title(__('Income added'))
+                    ),
 
             ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
 
@@ -247,12 +171,14 @@ class Dashboard extends \Filament\Pages\Dashboard
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')->label('')
                         ->numeric()
-                        ->required()
+                        ->mask(RawJs::make('$money($input)'))
+                        ->stripCharacters(',')
+                        ->required(),
                 ])
                 ->action(function (array $data): void {
                     Tip::updateOrCreate(
                         ['created_at' => Carbon::today(), 'place_id' => $data['place_id']],
-                    )->increment('tips', $data['tips']);
+                    )->increment('tips', $data['tips'] * 100);
 
                     Notification::make()
                         ->title(__('Tips added'))
@@ -260,65 +186,63 @@ class Dashboard extends \Filament\Pages\Dashboard
                         ->iconColor('success')
                         ->send();
                 }),
-
             ActionGroup::make([
 
-            Action::make('openShift')
-                ->label(__('Open Shift'))
-                ->icon('heroicon-o-lock-open')
-                ->modalHeading(__('Open Shift'))
-                ->requiresConfirmation()
-                ->form([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id),
-                ])
-                ->action(function (array $data): void {
-                    (new PosterApiController())->openShift($data);
-                   // (new LocalApiController())->openShift($data);
+                Action::make('openShift')
+                    ->label(__('Open Shift'))
+                    ->icon('heroicon-o-lock-open')
+                    ->modalHeading(__('Open Shift'))
+                    ->requiresConfirmation()
+                    ->form([
+                        Hidden::make('place_id')->default(Filament::getTenant()->id),
+                    ])
+                    ->action(function (array $data): void {
+                        (new PosterApiController)->openShift($data);
 
-                    Notification::make()
-                    ->title(__('Shift opened'))
-                    ->icon('heroicon-o-banknotes')
-                    ->iconColor('success')
-                    ->send();
-                }),
+                        Notification::make()
+                            ->title(__('Shift opened'))
+                            ->icon('heroicon-o-banknotes')
+                            ->iconColor('success')
+                            ->send();
+                    }),
 
-            Action::make('deleteReceipt')
-                ->label(__('Delete Receipt'))
-                ->icon('heroicon-o-backspace')
-                ->modalHeading(__('Delete Receipt'))
-                ->requiresConfirmation()
-                ->form([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id)
-                        ->required()
-                        ->reactive(),
-                    TextInput::make('receipt_id')->numeric()->label(__('#'))->required()
-                ])
-                ->action(function (array $data): void {
-                    (new PosterApiController())->deleteReceipt($data);
-                    Notification::make()
-                    ->title(__('Delete Receipt'))
+                Action::make('deleteReceipt')
+                    ->label(__('Delete Receipt'))
                     ->icon('heroicon-o-backspace')
-                    ->send();
-                }),
-            // Action::make('onShift')
-            //     ->label(__('On Shift'))
-            //     ->color('info')
-            //     ->icon('heroicon-o-user-plus')
-            //     ->modalHeading(__('On Shift'))
-            //     ->modalWidth('sm')
-            //     ->requiresConfirmation()
-            //     ->form([
-            //         Hidden::make('place_id')->default(Filament::getTenant()->id)
-            //             ->required()
-            //             ->reactive(),
-            //         Select::make(;)
-            //     ])
-            //     ->action(function (array $data): void {
-            //         (new PosterApiController())->openShift($data);
-            //     }),
+                    ->modalHeading(__('Delete Receipt'))
+                    ->requiresConfirmation()
+                    ->form([
+                        Hidden::make('place_id')->default(Filament::getTenant()->id)
+                            ->required()
+                            ->reactive(),
+                        TextInput::make('receipt_id')->numeric()->label(__('#'))->required(),
+                    ])
+                    ->action(function (array $data): void {
+                        (new PosterApiController)->deleteReceipt($data);
+                        Notification::make()
+                            ->title(__('Delete Receipt'))
+                            ->icon('heroicon-o-backspace')
+                            ->send();
+                    }),
+                // Action::make('onShift')
+                //     ->label(__('On Shift'))
+                //     ->color('info')
+                //     ->icon('heroicon-o-user-plus')
+                //     ->modalHeading(__('On Shift'))
+                //     ->modalWidth('sm')
+                //     ->requiresConfirmation()
+                //     ->form([
+                //         Hidden::make('place_id')->default(Filament::getTenant()->id)
+                //             ->required()
+                //             ->reactive(),
+                //         Select::make(;)
+                //     ])
+                //     ->action(function (array $data): void {
+                //         (new PosterApiController())->openShift($data);
+                //     }),
 
             ])
-            ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info')
+                ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info'),
         ];
     }
 }

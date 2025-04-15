@@ -1,23 +1,31 @@
 <x-filament-panels::page>
 
-<div x-data="{ tab: 'tab1' }">
+<div x-data="{ tab: 'expenses' }">
         <x-filament::tabs>
-            <x-filament::tabs.item @click="tab = 'tab1'" :alpine-active="'tab === \'tab1\''"
+            <x-filament::tabs.item @click="tab = 'expenses'" :alpine-active="'tab === \'expenses\''"
                     icon="heroicon-o-queue-list">
                 {{ __('Expenses')}}
+{{--
+                <x-slot name="badge">
+                </x-slot> --}}
             </x-filament::tabs.item>
 
-            <x-filament::tabs.item @click="tab = 'tab2'" :alpine-active="'tab === \'tab2\''"
+
+            <x-filament::tabs.item @click="tab = 'paying'" :alpine-active="'tab === \'paying\''"
+                icon="heroicon-o-banknotes">
+                {{ __('Paying')}}
+
+                  {{-- <x-slot name="badge">
+                </x-slot> --}}
+            </x-filament::tabs.item>
+
+
+            <x-filament::tabs.item @click="tab = 'booking'" :alpine-active="'tab === \'booking\''"
                 icon="heroicon-o-bookmark-square">
                 {{ __('Bookings')}}
             </x-filament::tabs.item>
 
-            <x-filament::tabs.item @click="tab = 'tab3'" :alpine-active="'tab === \'tab3\''"
-                icon="heroicon-o-banknotes">
-                {{ __('Paying')}}
-            </x-filament::tabs.item>
-
-            <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''"
+            {{-- <x-filament::tabs.item @click="tab = 'tab4'" :alpine-active="'tab === \'tab4\''"
             icon="heroicon-o-briefcase">
                 {{ __('Tasks')}}
             </x-filament::tabs.item>
@@ -25,34 +33,26 @@
             <x-filament::tabs.item @click="tab = 'tab5'" :alpine-active="'tab === \'tab5\''"
             icon="heroicon-o-calendar-days">
                 {{ __('Events')}}
-            </x-filament::tabs.item>
-{{--
-    <x-filament::tabs.item @click="tab = 'tab6'" :alpine-active="'tab === \'tab6\''"
-                icon="heroicon-o-calendar-days">
-                    {{ __('Shift Users')}}
             </x-filament::tabs.item> --}}
 
         </x-filament::tabs>
 
         <div class="mt-2">
-            <div x-show="tab === 'tab1'">
-                @livewire(\App\Livewire\ExpensesDay::class)
+            <div x-show="tab === 'expenses'">
+                @livewire(\App\Livewire\Dashboard\ExpensesDay::class)
             </div>
-            <div x-show="tab === 'tab2'">
-                @livewire(\App\Livewire\Bookings::class)
+            <div x-show="tab === 'paying'">
+                @livewire(\App\Livewire\Dashboard\Paying::class)
             </div>
-             <div x-show="tab === 'tab3'">
-                @livewire(\App\Livewire\Paying::class)
+            <div x-show="tab === 'booking'">
+                @livewire(\App\Livewire\Dashboard\Bookings::class)
             </div>
-             <div x-show="tab === 'tab4'">
+
+             {{-- <div x-show="tab === 'tab4'">
                 @livewire(\App\Livewire\Tasks::class)
             </div>
             <div x-show="tab === 'tab5'">
                 @livewire(\App\Livewire\EventTable::class)
-            </div>
-
-            {{-- <div x-show="tab === 'tab6'">
-                @livewire(\App\Livewire\ShiftUsers::class)
             </div> --}}
 
         </div>

@@ -68,12 +68,12 @@ class SubscriptionResource extends Resource
                         }
                     })
                     ->createOptionForm([
-                                Select::make('place_id')->translateLabel()
-                                    ->options(
-                                        Auth::user()->place->pluck('nameCity', 'id')
-                                    ),
-                                TextInput::make('name')->translateLabel(),
-                                TextInput::make('category_id')->translateLabel()->default(0),
+                        Select::make('place_id')->translateLabel()
+                            ->options(
+                                Auth::user()->place->pluck('nameCity', 'id')
+                            ),
+                        TextInput::make('name')->translateLabel(),
+                        TextInput::make('category_id')->translateLabel()->default(0),
                     ]),
 
                 TextInput::make('name')->label('Услуга'),
@@ -91,19 +91,19 @@ class SubscriptionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('#')
-                    ->searchable()
-                    ->sortable()
-                    ->visibleFrom('xl')
-                    ->toggleable(),
                 TextColumn::make('name')
                     ->label(__('Destination'))
                     ->searchable()
                     ->sortable()
                     ->visibleFrom('xl')
-                    ->toggleable()
-                    ->description(fn (Subscription $record): string => $record->place->city, position: 'above'),
+                    ->description(fn (Subscription $record): string => $record->category->name ?? '', position: 'above')
+                    ->toggleable(),
+
+                TextColumn::make('next_date')
+                    ->label(__('next date'))
+                    ->date('d M Y')
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('price')
                     ->translateLabel()
@@ -112,18 +112,10 @@ class SubscriptionResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->badge()
-                    ->description(fn (Subscription $record): string => $record->category->name, position: 'above')
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
-                TextColumn::make('period')
-                    ->label(__('Payment period'))
-                    ->toggleable(),
-                TextColumn::make('next_date')
-                    ->label(__('next date'))
-                    ->date('d M Y')
-                    ->sortable()
-                    ->toggleable(),
             ])
+            ->defaultSort('next_date', 'asc')
             ->filters([
                 //
             ])
@@ -140,25 +132,25 @@ class SubscriptionResource extends Resource
                     ->form([
                         Hidden::make('user_id')->default(Auth::user()->id),
                         TextInput::make('sum')->translateLabel()
-                        ->numeric()
-                        ->required()
-                        ->prefix('₴')
-                        ->columnSpan(6)
-                        ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                        ->default(fn (Subscription $record): int => $record->price),
+                            ->numeric()
+                            ->required()
+                            ->prefix('₴')
+                            ->columnSpan(6)
+                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
+                            ->default(fn (Subscription $record): int => $record->price),
                         ToggleButtons::make('bill_id')->label(__('Type pay'))
-                        ->options(Bill::get()->pluck('name', 'id'))
-                        ->default(0)
-                        ->required()
-                        ->inline()
-                        ->grouped()
-                        ->live(),
+                            ->options(Bill::get()->pluck('name', 'id'))
+                            ->default(0)
+                            ->required()
+                            ->inline()
+                            ->grouped()
+                            ->live(),
                     ])
                     ->action(function (Subscription $record, array $data): void {
 
                         $record->update(
                             [
-                                'next_date' => Carbon::parse($record->next_date)->addMonth(),
+                                'next_date' => Carbon::today()->addMonth(),
                                 'price' => $data['sum']
                             ]
                         );

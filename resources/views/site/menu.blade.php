@@ -8,7 +8,7 @@
 @section('content')
 
 <div class="container">
-@include('site.properties')
+    @include('site.properties', ['address' => 1, 'wifi' => 1, 'feedback'=> 1])
 
     <div class="row">
         <div class="col-xs-12 col-md-3">

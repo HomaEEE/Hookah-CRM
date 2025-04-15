@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Attribute;
+use Awobaz\Compoships\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,14 +14,24 @@ class Shift extends Model
 
 
     protected $fillable = ['place_id', 'user_id', 'cash', 'terminal','old_shift', 'bar',
-                            'kitchen', 'hookah', 'bulbs', 'report',
+                            'kitchen', 'hookah', 'bulbs', 'report', 'withdrawal',
                             'wages', 'tips', 'expense', 'income', 'calc_shift', 'shift',
                             ];
 
     protected $casts = [
         'report' => 'json',
-      //  'report.x-report' => 'boolean',
-       // 'report.z-report' => 'boolean',
+        'cash' => MoneyCast::class,
+        'terminal' => MoneyCast::class,
+        'old_shift' => MoneyCast::class,
+        'bar' => MoneyCast::class,
+        'kitchen' => MoneyCast::class,
+        'wages' => MoneyCast::class,
+        'tips' => MoneyCast::class,
+        'expense' => MoneyCast::class,
+        'income' => MoneyCast::class,
+        'withdrawal' => MoneyCast::class,
+        'calc_shift' => MoneyCast::class,
+        'shift' => MoneyCast::class
     ];
 
     public function place()
@@ -42,6 +54,11 @@ class Shift extends Model
         return $this->hasMany(ShiftUser::class, 'shift_id');
     }
 
+    public function wage()
+    {
+        return $this->belongsTo(Wage::class);
+    }
+
     public function expenses()
     {
         return $this->hasMany(Expense::class, 'place_id', 'place_id');
@@ -55,5 +72,18 @@ class Shift extends Model
     protected function getOldShift(): Attribute
     {
         return $this->shift;
+    }
+
+    public function getShiftSum()
+    {
+        return $this->terminal + $this->cash;
+    }
+
+    protected function getMonthsAndYearsForSelect()
+    {
+        return $this->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month')
+                ->groupBy('year', 'month')
+                ->orderBy('year', 'asc')
+                ->orderBy('month', 'asc');
     }
 }

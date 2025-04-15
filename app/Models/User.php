@@ -2,21 +2,24 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
-use Filament\Models\Contracts\HasAvatar;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
 
-use Illuminate\Support\Collection;
-
-class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenants
+class User extends Authenticatable implements FilamentUser, HasTenants
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -30,7 +33,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenant
         'email',
         'password',
         'birth',
-        'places',
         'phone',
     ];
 
@@ -51,23 +53,32 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenant
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'places' => 'array',
+        //'places' => 'array',
     ];
-
-
-    public function getTenants(Panel $panel): Collection
-    {
-        return $this->place;
-    }
-
-    public function canAccessTenant(Model $tenant): bool
-    {
-        return $this->place->contains($tenant);
-    }
 
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
+    }
+
+    public function place(): BelongsToMany
+    {
+        return $this->belongsToMany(Place::class);
+    }
+
+    public function places(): BelongsToMany
+    {
+        return $this->belongsToMany(Place::class);
+    }
+
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->places;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->places()->whereKey($tenant)->exists();
     }
 
     public function getFilamentName(): string
@@ -75,26 +86,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasTenant
         return "{$this->name}";
     }
 
-    public function getFilamentAvatarUrl(): ?string
-    {
-        return $this->avatar_url;
-    }
-
-
-    public function place()
-    {
-        return $this->BelongsToMany(Place::class);
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
-
-
     public function wage()
     {
-        return $this->belongsTo(Wage::class, 'wage_id');
+        return $this->belongsTo(Wage::class);
+    }
+
+    public function wages()
+    {
+        return $this->belongsTo(Wage::class);
     }
 
     public function shift()

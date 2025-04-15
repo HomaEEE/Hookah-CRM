@@ -920,7 +920,7 @@ main {
     }
     .menu-item {
       box-sizing:border-box;
-      padding: 20px;
+      padding: 15px;
       margin-bottom: 20px;
       border-radius: 16px;
       background-color: #151515;
@@ -935,17 +935,14 @@ main {
           text-transform: uppercase;
           padding: 0;
           margin: 0;
-          .sup {
-            float: right;
-          }
         }
       }
 
       .img {
         box-sizing: content-box;
+        width: 100%;
         img {
-          width: 120px;
-          height: 120px;
+          width: 100%;
           overflow: hidden;
           border-radius: 13px;
         }
@@ -954,29 +951,15 @@ main {
         padding: 5px 0px;
         transition: all 1s linear;
         position: relative;
-        .price {
-          position: absolute;
-          bottom: 10px;
-          left: 0px;
-          font-size: 1rem;
-        }
 
         a {
           z-index: 10;
         }
-      }
-      @media screen and (max-width: 575px) {
-        .property {
-          p {
-            padding: 0 10px;
-            &.gram,
-            &.sup {
-              font-size: 0.7rem;
-              padding: 2px 0;
-            }
-          }
-        }
-        .description {
+
+        .price {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
           font-size: 0.8rem;
         }
       }
@@ -1420,6 +1403,23 @@ main {
 .gram-hidden {
   small {
     visibility: hidden;
+  }
+}
+
+.page {
+  padding: 20px;
+  h2 {
+    margin: 20px auto;
+  }
+  h4 {
+    margin: 15px auto;
+  }
+  ul {
+    font-size: 1rem;
+    padding: 15px;
+    li{
+      margin-bottom: 5px;
+    }
   }
 }
 

@@ -9,7 +9,7 @@ class Arrear extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['place_id', 'user_id', 'from_user_id', 'arrear', 'refund'];
+    protected $fillable = ['place_id', 'user_id', 'from_user_id', 'open', 'arrear', 'refund'];
 
     public function place()
     {

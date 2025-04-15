@@ -2,39 +2,28 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Bill as BillEnum;
+use App\Filament\Components\ExpenseForm;
 use App\Filament\Resources\ExpenseResource\Pages;
 use App\Http\Controllers\PosterApiController as PosterApi;
-use App\Models\{Bill, Expense, ExpenseCategory, Supply};
-use Auth;
+use App\Models\Bill;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Get;
-
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Njxqlus\Filament\Components\Infolists\LightboxSpatieMediaLibraryImageEntry;
 
 class ExpenseResource extends Resource
@@ -42,6 +31,10 @@ class ExpenseResource extends Resource
     protected static ?string $model = Expense::class;
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    protected static ?string $tentantOwnershipRelationName = 'owner';
+
+    // protected static ?string $tentantRelationName = 'placeLabel';
 
     protected static ?int $navigationSort = 2;
 
@@ -68,59 +61,9 @@ class ExpenseResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Hidden::make('user_id')->default(Auth::user()->id),
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                DateTimePicker::make('added_at')
-                    ->label(__('Date Added'))
-                    ->native(false)
-                    ->seconds(false)
-                    ->maxDate(now())->default(now()),
-                Select::make('category_id')->label(__('Category'))
-                    ->relationship('categories', 'name')
-                    ->searchable()
-                    ->required()
-                    ->reactive()
-                    ->options(ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
-                    ->createOptionForm([
-                        Section::make()
-                            ->schema([
-                                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                                TextInput::make('name')->translateLabel(),
-                                TextInput::make('category_id')->translateLabel()->default(0),
-                            ]),
-                    ]),
-                TextInput::make('sum')->label(__('Sum'))
-                    ->numeric()
-                    ->prefix('₴')
-                    ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/']),
-                ToggleButtons::make('bill_id')->label(__('Type pay'))
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->default(0)
-                    ->required()
-                    ->inline()
-                    ->grouped()
-                    ->live(),
-                Textarea::make('comment')->translateLabel()->rows(2),
-
-                SpatieMediaLibraryFileUpload::make('invoice')
-                    ->label(__('Invoice'))
-                    ->collection('supplies')
-                    ->multiple()
-                    ->imagePreviewHeight('350')
-                    ->imageResizeMode('cover')
-                    ->imageEditor()
-                    ->optimize('webp')
-                    ->resize(70)
-                    ->imageEditorAspectRatios([
-                        null,
-                        '16:9',
-                        '4:3',
-                        '1:1',
-                    ])
-                    ->reorderable()
-                    ->openable()
-            ]);
+            ->schema(
+                ExpenseForm::schema()
+            );
     }
 
     public static function table(Table $table): Table
@@ -134,15 +77,20 @@ class ExpenseResource extends Resource
 
                 TextColumn::make('category.name')->label(__('Category'))
                     ->badge()
-                    ->description(fn (Expense $record): string => $record->comment ?? ''),
-
-                TextColumn::make('supply_id')->badge()->label(__('Supply'))
-                    ->wrap()
                     ->description(fn (Expense $record): string => $record->supply->supplier->company ?? ''),
 
+                TextColumn::make('supply_id')->badge()->label(__('Supply'))
+                    ->wrap(),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
-                    ->summarize(Sum::make()->money('uah')->label(__('Total'))),
-                TextColumn::make('bill.type')->translateLabel()->badge(),
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
+
+                IconColumn::make('bill.type')->label(__('Bill'))
+                    ->action(function ($record) {
+                        $record->update([
+                            'bill_id' => ! $record->bill_id,
+                        ]);
+                    }),
+
                 IconColumn::make('pay')
                     ->translateLabel()
                     ->boolean()
@@ -151,7 +99,7 @@ class ExpenseResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => !$record->$name,
+                            $name => ! $record->$name,
                         ]);
                     }),
                 IconColumn::make('poster')
@@ -162,54 +110,26 @@ class ExpenseResource extends Resource
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([
-                            $name => !$record->$name,
+                            $name => ! $record->$name,
                         ]);
                     }),
 
             ])->defaultSort('added_at', 'desc')
             ->deferLoading()
-            ->defaultPaginationPageOption(25)
+            ->defaultPaginationPageOption(10)
             ->striped()
             ->filters([
+                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                ->defaultLast30Days(),
                 SelectFilter::make('category_id')
                     ->label(__('Category'))
                     ->native(false)
                     ->options(
                         ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
                     ),
-
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->translateLabel()->native(false)
-                            ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
-                        DatePicker::make('created_until')->translateLabel()->native(false)
-                            ->placeholder(fn ($state): string => now()->format('d/m/Y')),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['created_until'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('added_at', '<=', $date),
-                            );
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Расходы с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
-                        }
-                        if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'Расходы до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
                 SelectFilter::make('bill')->translateLabel()
                     ->options(Bill::get()->pluck('name', 'id'))
+                    ->native(false)
                     ->attribute('bill_id'),
 
                 TernaryFilter::make('pay')
@@ -221,12 +141,13 @@ class ExpenseResource extends Resource
                     ->queries(
                         true: fn (Builder $query) => $query->where('pay', 1),
                         false: fn (Builder $query) => $query->where('pay', 0),
-                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                        blank: fn (Builder $query) => $query
                     ),
 
                 TernaryFilter::make('poster')
                     ->translateLabel()
                     ->nullable()
+                    ->native(false)
                     ->placeholder(__('All'))
                     ->falseLabel(__('In Poster'))
                     ->trueLabel(__('Not in Poster'))
@@ -235,7 +156,6 @@ class ExpenseResource extends Resource
                         false: fn (Builder $query) => $query->where('poster', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
-
 
                 // TernaryFilter::make('pay')->label(__('Pay'))
                 //     ->placeholder((__('All')))
@@ -259,8 +179,8 @@ class ExpenseResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->slideOver(),
-                    Tables\Actions\EditAction::make()->slideOver(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -279,10 +199,13 @@ class ExpenseResource extends Resource
                 TextEntry::make('category.name')->translateLabel()->badge(),
                 TextEntry::make('sum')->translateLabel()->badge(),
                 TextEntry::make('comment')->translateLabel()->badge(),
-                LightboxSpatieMediaLibraryImageEntry::make('invoice')
-                ->collection('supplies')
-                ->conversion('thumb')
-                ->translateLabel(),
+                App\Filament\Resources\LightboxSpatieMediaLibraryImageEntry::make('invoice')
+                    ->collection('supplies')
+                    ->conversion('thumb')
+                    ->translateLabel(),
+                // ImageEntry::make('invoice')
+                // ->simpleLightbox(fn ($record) =>  $record?->image ?? "Your Image Url address", defaultDisplayUrl: true)
+                // ->translateLabel(),
             ]);
     }
 
@@ -296,7 +219,7 @@ class ExpenseResource extends Resource
     protected function getHeaderWidgets(): array
     {
         return [
-            App\Filament\Widgets\ExpenseChart::class
+            // App\Filament\Widgets\ExpenseChart::class
         ];
     }
 
@@ -305,7 +228,7 @@ class ExpenseResource extends Resource
         if (blank($data['place_id'])) {
             $this->notify('danger', __('Please, select place'));
         } else {
-            (new PosterApi())->getTransatcionCategories($data['place_id']);
+            (new PosterApi)->getTransatcionCategories($data['place_id']);
             $this->notify('success', __('Menu updated'));
         }
     }

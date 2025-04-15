@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use App\Enums\Bill as BILLEnum;
 use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,11 @@ class Bill extends Model
     protected $fillable = ['name', 'type', 'currency', 'balance'];
 
     protected $casts = [
+        'balance' => MoneyCast::class,
         'currency' => Currency::class,
         'type' => BILLEnum::class,
     ];
+
 
     public function place()
     {

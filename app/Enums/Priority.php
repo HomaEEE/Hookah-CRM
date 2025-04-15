@@ -7,7 +7,7 @@ use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 use Mokhosh\FilamentKanban\Concerns\IsKanbanStatus;
 
-enum Priority: string implements HasLabel, HasIcon, HasColor
+enum Priority: string implements HasColor, HasIcon, HasLabel
 {
     use IsKanbanStatus;
 
@@ -42,7 +42,7 @@ enum Priority: string implements HasLabel, HasIcon, HasColor
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Low => 'info',
@@ -51,4 +51,3 @@ enum Priority: string implements HasLabel, HasIcon, HasColor
         };
     }
 }
-

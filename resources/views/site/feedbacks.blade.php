@@ -8,7 +8,7 @@
 @section('content')
     <div class="container feedbacks">
         <h2>{{__('Feedbacks')}}</h2>
-        @include('site.properties')
+        @include('site.properties', ['address' => 0, 'wifi' => 0, 'feedback'=> 1])
 
         <div class="row">
         @foreach ($feedbacks as $f)

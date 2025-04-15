@@ -6,32 +6,27 @@ use App\Filament\Resources\ExpenseResource;
 use App\Models\Expense;
 use Auth;
 use Closure;
+use Illuminate\Support\Str;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords\Tab;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ManageExpenses extends ManageRecords
 {
     protected static string $resource = ExpenseResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+
+    protected function paginateTableQuery(Builder $query): Paginator
     {
-        $data['sum'] = $data['sum'] * 100;
-
-        return $data;
-    }
-
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        $data['sum'] = $data['sum'] / 100;
-
-        return $data;
+        return $query->simplePaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
 
     protected function getActions(): array
     {
         return [
-            CreateAction::make()->slideOver()->createAnother(false),
+            CreateAction::make()->createAnother(false),
         ];
     }
 

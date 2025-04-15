@@ -35,10 +35,10 @@ class EventResource extends Resource
         return __('Events');
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return Event::query()->whereDate('datetime', '>=', Carbon::today())->count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return Event::query()->whereDate('datetime', '>=', Carbon::today())->count();
+    // }
 
     public static function form(Form $form): Form
     {
@@ -102,7 +102,7 @@ class EventResource extends Resource
     public static function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\CalendarWidget::make()
+           // \App\Filament\Widgets\CalendarWidget::make()
         ];
     }
 

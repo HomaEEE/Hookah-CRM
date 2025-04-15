@@ -16,7 +16,7 @@ class GraphWages extends ChartWidget
 
     public function getHeading(): string
     {
-        return __('Wages');
+        return __('Graphic Wages');
     }
 
     protected function getFilters(): ?array

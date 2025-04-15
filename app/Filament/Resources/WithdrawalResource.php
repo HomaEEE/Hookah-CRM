@@ -71,7 +71,7 @@ class WithdrawalResource extends Resource
             ->columns([
                 TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('sum')->translateLabel()
-                ->summarize(Sum::make()->money('uah')->label(__('Total'))),
+                ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
                 TextColumn::make('bill.name')->badge()
             ])
             ->defaultSort('created_at', 'desc')
