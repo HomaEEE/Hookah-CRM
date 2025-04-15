@@ -116,7 +116,7 @@ class AdminPanelProvider extends PanelProvider
                 SimpleLightBoxPlugin::make(),
             ])
             ->pages([
-                //   \App\Filament\Pages\TasksBoard::class,
+                \App\Filament\Pages\TasksBoard::class,
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,
