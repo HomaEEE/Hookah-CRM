@@ -31,6 +31,7 @@
         "malzariey/filament-daterangepicker-filter": "^3.0",
         "marvinosswald/filament-input-select-affix": "^0.1.1",
         "mokhosh/filament-kanban": "*",
+        "relaticle/flowforge": "^0.1.6",
         "solution-forest/filament-simplelightbox": "^0.0.4",
         "solution-forest/filament-translate-field": "^0.0.2",
         "solution-forest/filament-tree": "^2.1",
