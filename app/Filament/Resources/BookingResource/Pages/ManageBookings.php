@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Filament\Resources\BookingResource\Pages;
+
+use App\Filament\Resources\BookingResource;
+use App\Models\Booking;
+use Auth;
+use Filament\Pages\Actions;
+use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Database\Eloquent\Builder;
+
+class ManageBookings extends ManageRecords
+{
+    protected static string $resource = BookingResource::class;
+
+    protected function getActions(): array
+    {
+        return [
+            Actions\CreateAction::make()->createAnother(false),
+        ];
+    }
+
+}

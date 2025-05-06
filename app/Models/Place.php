@@ -1,0 +1,247 @@
+<?php
+
+namespace App\Models;
+
+use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasCurrentTenantLabel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
+
+class Place extends Model implements HasAvatar, HasCurrentTenantLabel
+{
+    use HasFactory,  HasTranslations;
+
+    protected $fillable = ['name', 'city', 'address', 'phone', 'opened', 'instagram', 'sufix', 'time', 'settings', 'properties', 'pays'];
+
+    public $translatable = ['name', 'city', 'address'];
+
+    protected $casts = ['opened' => 'boolean', 'time' => 'array', 'properties' => 'array', 'settings' => 'array', 'pays' => 'array'];
+
+    public $timestamps = false;
+
+    public function getCurrentTenantLabel(): string
+    {
+        return 'Current team';
+    }
+
+    public function meters()
+    {
+        return $this->hasMany(Meter::class);
+    }
+
+    public function bill()
+    {
+        return $this->HasMany(Bill::class);
+    }
+
+    public function arrears()
+    {
+        return $this->hasMany(Arrear::class);
+    }
+
+    public function supplier()
+    {
+        return $this->hasMany(Supplier::class);
+    }
+
+    public function reqvizites()
+    {
+        return $this->hasMany(Reqvizite::class);
+    }
+
+    public function suppliers()
+    {
+        return $this->hasMany(Supplier::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function guests()
+    {
+        return $this->hasMany(Guest::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    // Показания счетчиков
+    public function indications()
+    {
+        return $this->hasMany(Indication::class);
+    }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'place_id');
+    }
+
+    public function seets()
+    {
+        return $this->hasMany(Seet::class, 'place_id');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'place_id');
+    }
+
+    public function bills()
+    {
+        return $this->hasMany(Bill::class, 'place_id');
+    }
+
+    public function storages()
+    {
+        return $this->hasMany(Storage::class, 'place_id');
+    }
+
+    public function workshops()
+    {
+        return $this->hasMany(Workshop::class, 'place_id');
+    }
+
+    public function wages()
+    {
+        return $this->hasMany(Wage::class, 'place_id');
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    public function incomes()
+    {
+        return $this->hasMany(Income::class);
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
+    public function excises()
+    {
+        return $this->hasMany(Excise::class);
+    }
+
+    public function docs()
+    {
+        return $this->hasMany(Doc::class);
+    }
+
+    public function generators()
+    {
+        return $this->hasMany(Generator::class);
+    }
+
+    public function expenseCategories()
+    {
+        return $this->hasMany(ExpenseCategory::class);
+    }
+
+    public function menu()
+    {
+        return $this->hasOne(Menu::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function shifts()
+    {
+        return $this->hasMany(Shift::class);
+    }
+
+    public function supplies()
+    {
+        return $this->hasMany(Supply::class);
+    }
+
+    public function leftovers()
+    {
+        return $this->hasMany(Leftover::class);
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function writeoffs()
+    {
+        return $this->hasMany(Writeoff::class);
+    }
+
+    public function techcards()
+    {
+        return $this->hasMany(Techcard::class);
+    }
+
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class);
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class, 'place_id');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class, ['category_id', 'palce_id']);
+    }
+
+    public function scopeVisibleMenu($query, $value)
+    {
+        return $query->where('visible_menu', $value);
+    }
+
+    public function getNameCityAttribute()
+    {
+        return $this->name.' '.$this->city;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
+    }
+
+    /** @return HasMany<\App\Models\Feedback, self> */
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(\App\Models\Feedback::class);
+    }
+
+    /** @return HasMany<\App\Models\Ingredient, self> */
+    public function ingredients(): HasMany
+    {
+        return $this->hasMany(\App\Models\Ingredient::class);
+    }
+
+    /** @return HasMany<\App\Models\Product, self> */
+    public function products(): HasMany
+    {
+        return $this->hasMany(\App\Models\Product::class);
+    }
+}

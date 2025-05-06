@@ -1,0 +1,2 @@
+- Удалить Role_id и Places в таблице Users после деплоя
+- Вернуть timezone в config/app.php
