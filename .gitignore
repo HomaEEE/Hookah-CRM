@@ -2,9 +2,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-app/Filament/Pages/Test.php
-app/Filament/Pages/TasksBoard.php
-app/Filament/Pages/BookingBoard.php
+app/Filament/Clusters/Dev
 app/Liwevire/TestLiwevire
 /storage
 .env
