@@ -1,18 +1,65 @@
-/vendor/
-node_modules/
-npm-debug.log
-yarn-error.log
-app/Filament/Clusters/Dev
-app/Liwevire/TestLiwevire
-/storage
+# Laravel
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
 .env
+.env.*
 Homestead.yaml
 Homestead.json
-/.vagrant
+/.idea
+/.vscode
 .phpunit.result.cache
-/app/Policies
-/.DS_Store
-/*/.DS_Store
-/*/*/.DS_Store
-phpstan.neon
+.phpstorm.meta.php
+
+# Laravel Telescope
+storage/telescope
+
+# Laravel Horizon
+storage/horizon
+
+# Laravel Octane
+storage/octane
+
+
+# Laravel ClockWorks
+storage/clockworks
+# Laravel Valet
+.valet
+
+# Composer & NPM dumps
+composer.lock
+package-lock.json
+yarn.lock
+
+# Ignored system files
 .DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+.env.docker
+
+# Redis dump
+dump.rdb
+
+# PHPUnit coverage
+coverage/
+
+# Build/Assets
+/public/hot
+/public/build
+/public/mix-manifest.json
+
+# Custom storage subfolders
+/storage/debugbar
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/storage/logs
+
+#Filament php
+/app/Policies

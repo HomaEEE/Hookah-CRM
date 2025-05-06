@@ -34,7 +34,6 @@
         "relaticle/flowforge": "^0.1.6",
         "solution-forest/filament-simplelightbox": "^0.0.4",
         "solution-forest/filament-translate-field": "^0.0.2",
-        "solution-forest/filament-tree": "^2.1",
         "staudenmeir/eloquent-json-relations": "^1.1"
     },
     "require-dev": {

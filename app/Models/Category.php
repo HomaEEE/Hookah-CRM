@@ -5,12 +5,11 @@ namespace App\Models;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use SolutionForest\FilamentTree\Concern\ModelTree;
 use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
-    use Compoships, HasFactory, HasTranslations, ModelTree;
+    use Compoships, HasFactory, HasTranslations;
 
     protected $fillable = ['category_name', 'frontend_name', 'frontend_menu_name', 'place_id', 'parent_category',
         'category_id', 'image', 'class', 'logo', 'sort_order', 'visible', 'visible_menu',
