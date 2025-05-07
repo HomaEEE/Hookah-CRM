@@ -106,8 +106,8 @@ class SupplyForm
                 ->createOptionForm(fn ($get) => [
                     Section::make()
                         ->schema([
-                            TextInput::make('supplier_id')->default(fn (Get $get) => $get('../supplier_id'))
-                                ->live(),
+                            Select::make('supplier_id')->label(__('Supplier'))->relationship('supplier', 'company')
+                                ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
                             TextInput::make('IBAN')->prefix('UA'),
                             TextInput::make('INN')->numeric(),
                             TextInput::make('own')->label(__('FOP')),
@@ -116,7 +116,6 @@ class SupplyForm
 
                 ->searchable()
                 ->reactive()
-                ->default('0')
                 ->disabled(fn (Get $get) => $get('place_id') === null)
                 ->required(fn (Get $get) => $get('bill_id') === '1' && $get('pay') == '0')
                 ->visible(fn (Get $get) => $get('pay') == '0' && $get('bill_id') === '1'),
@@ -124,7 +123,8 @@ class SupplyForm
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
                 ->prefix('₴')
-                ->inputMode('decimal'),
+                ->inputMode('decimal')
+                ->required(),
 
             TextInput::make('delay')->label(__('Delay'))
                 ->inputMode('none')
