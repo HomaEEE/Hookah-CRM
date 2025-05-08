@@ -114,9 +114,8 @@ class Cashflow extends Page implements HasActions, HasForms
     protected function getHeaderWidgets(): array
     {
         return [
-            // \App\Filament\Widgets\Statistic\Bills::make(),
-            //  \App\Filament\Widgets\Test\UserShift::make(),
-            //  \App\Filament\Widgets\Statistic\GraphProfit::make(),
+            \App\Filament\Widgets\Statistic\ExpensesGraph::make(),
+            // \App\Filament\Widgets\Statistic\NetCashflowChart::make(),
         ];
     }
 }

@@ -66,7 +66,6 @@ class ProductResource extends Resource
                     ->searchable(),
                 TranslatableTabs::make()
                     ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))
-                    ->addSetActiveTabThatHasValue()
                     ->schema([
                         TextInput::make('frontend_name')->label(__('Front product name'))->translatable(),
                         Textarea::make('frontend_desc')->label(__('Description'))->translatable(),
