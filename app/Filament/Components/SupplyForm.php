@@ -107,9 +107,11 @@ class SupplyForm
                     Section::make()
                         ->schema([
                             Select::make('supplier_id')->label(__('Supplier'))->relationship('supplier', 'company')
+                                ->native(false)
+                                ->searchable()
                                 ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
-                            TextInput::make('IBAN')->prefix('UA'),
-                            TextInput::make('INN')->numeric(),
+                            TextInput::make('IBAN')->label(__('IBAN'))->prefix('UA')->numeric(),
+                            TextInput::make('INN')->label(__('INN'))->numeric(),
                             TextInput::make('own')->label(__('FOP')),
                         ])->columns(1),
                 ])

@@ -65,6 +65,8 @@ class ProductResource extends Resource
                     ->options(Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id'))
                     ->searchable(),
                 TranslatableTabs::make()
+                    ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))
+                    ->addSetActiveTabThatHasValue()
                     ->schema([
                         TextInput::make('frontend_name')->label(__('Front product name'))->translatable(),
                         Textarea::make('frontend_desc')->label(__('Description'))->translatable(),

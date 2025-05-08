@@ -150,7 +150,7 @@ class SupplierResource extends Resource
                             ->schema([
                                 TextEntry::make('own')->translateLabel()->copyable(),
                                 TextEntry::make('IBAN')->translateLabel()
-                                    ->formatStateUsing(fn (string $state): string => __("UA {$state}"))
+                                    ->formatStateUsing(fn (string $state): string => "UA {$state}")
                                     ->badge()->copyable(),
                                 TextEntry::make('INN')->translateLabel()->copyable(),
                             ])->columns(3),

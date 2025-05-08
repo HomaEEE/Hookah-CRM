@@ -52,7 +52,7 @@ class ReqvizitesResource extends Resource
                 Select::make('supplier_id')->label(__('Supplier'))
                     ->relationship('supplier', 'company')
                     ->searchable()
-                    ->searchingMessage('Searching supplier...')
+                    ->searchingMessage(__('Searching supplier...'))
                     ->searchDebounce(500)
                     ->native(false)
                     ->required()
@@ -66,8 +66,8 @@ class ReqvizitesResource extends Resource
                                 TextInput::make('email')->label(__('Email'))->email(),
                             ])->columns(2),
                     ]),
-                TextInput::make('IBAN')->prefix('UA'),
-                TextInput::make('INN')->numeric(),
+                TextInput::make('IBAN')->label(__('IBAN'))->prefix('UA'),
+                TextInput::make('INN')->label(__('INN'))->numeric(),
                 TextInput::make('own')->label(__('FOP')),
             ]);
     }
@@ -78,7 +78,8 @@ class ReqvizitesResource extends Resource
             ->columns([
                 TextColumn::make('supplier.company')->translateLabel()
                     ->description(fn (Reqvizite $record): string => $record->own ?? ''),
-                TextColumn::make('INN')->translateLabel(),
+                TextColumn::make('IBAN')->label(__('IBAN'))
+                    ->description(fn (Reqvizite $record): string => $record->inn ?? ''),
             ])
             ->filters([
                 //
