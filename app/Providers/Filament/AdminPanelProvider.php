@@ -5,7 +5,6 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EditUserProfile;
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
 use App\Filament\Pages\Tenancy\RegisterPlace;
-use App\Models\Place;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
 use Filament\Http\Middleware\Authenticate;
@@ -37,10 +36,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->authGuard('web')
             ->colors([
-                'primary' => Color::Emerald,
+                'primary' => Color::Slate,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->tenant(model: Place::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterPlace::class)
             ->tenantProfile(EditPlaceProfile::class)
             ->login()
@@ -51,16 +49,18 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('120s')
             ->unsavedChangesAlerts()
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->tenant(\App\Models\Place::class, slugAttribute: 'slug')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
+
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([])
+
+            ->pages([
+                \App\Filament\Pages\Dashboard::class,
+            ])
+            ->authGuard('web')
 
             ->navigationGroups([
-
-                NavigationGroup::make()
-                    ->label(__('Place'))
-                    ->icon('heroicon-o-home-modern'),
 
                 NavigationGroup::make()
                     ->label(__('Menu'))
@@ -73,29 +73,24 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label(__('Finance'))
                     ->icon('heroicon-o-banknotes'),
-
-                NavigationGroup::make()
-                    ->label('Data')
-                    ->icon('heroicon-o-arrow-down-on-square-stack'),
-
-                NavigationGroup::make()
-                    ->label(__('Settings'))
-                    ->icon('heroicon-o-home-modern'),
             ])
 
             ->plugins([
                 FilamentShieldPlugin::make()
+                    ->gridColumns([
+                        'default' => 2,
+                        'sm' => 1,
+                    ])
                     ->sectionColumnSpan(1)
                     ->checkboxListColumns([
                         'default' => 1,
                         'sm' => 2,
-                        'lg' => 4,
+                        'lg' => 3,
                     ])
                     ->resourceCheckboxListColumns([
-                        'default' => 2,
+                        'default' => 1,
                         'sm' => 2,
-                    ])
-                    ->centralApp(Place::class),
+                    ]),
 
                 SpatieLaravelTranslatablePlugin::make()
                     ->defaultLocales(['ru', 'uk', 'en']),
@@ -107,7 +102,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenantMiddleware([
                 SyncShieldTenant::class,
             ], isPersistent: true)
-            ->authGuard('web')
+
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

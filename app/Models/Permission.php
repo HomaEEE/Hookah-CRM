@@ -6,5 +6,8 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 
 class Permission extends SpatiePermission
 {
-    //
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 }

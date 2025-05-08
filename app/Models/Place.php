@@ -197,14 +197,14 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Withdrawal::class);
     }
 
-    public function roles()
+    public function roles(): HasMany
     {
         return $this->hasMany(Role::class);
     }
 
     public function permissions()
     {
-        return $this->hasMany(Permission::class, 'place_id');
+        return $this->hasMany(Permission::class);
     }
 
     public function categories()

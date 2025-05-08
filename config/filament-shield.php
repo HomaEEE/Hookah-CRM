@@ -4,16 +4,17 @@ return [
     'shield_resource' => [
         'should_register_navigation' => true,
         'slug' => 'shield/roles',
-        'navigation_sort' => 5,
+        'navigation_sort' => 99,
         'navigation_badge' => true,
         'navigation_group' => false,
+        'sub_navigation_position' => null,
         'is_globally_searchable' => false,
-        'show_model_path' => true,
+        'show_model_path' => false,
         'is_scoped_to_tenant' => true,
-        'cluster' => null,
+        'cluster' => 'App\Filament\Clusters\Settings',
     ],
 
-    'tenant_model' => 'App\\Models\\Place',
+    'tenant_model' => 'App\Models\Place',
 
     'auth_provider_model' => [
         'fqcn' => 'App\\Models\\User',
@@ -22,7 +23,7 @@ return [
     'super_admin' => [
         'enabled' => true,
         'name' => 'super_admin',
-        'define_via_gate' => true,
+        'define_via_gate' => false,
         'intercept_gate' => 'before', // after
     ],
 
@@ -34,8 +35,13 @@ return [
     'permission_prefixes' => [
         'resource' => [
             'view',
+            'view_any',
             'create',
             'update',
+            'restore',
+            'restore_any',
+            'replicate',
+            'reorder',
             'delete',
         ],
 
@@ -47,7 +53,7 @@ return [
         'pages' => true,
         'widgets' => true,
         'resources' => true,
-        'custom_permissions' => true,
+        'custom_permissions' => false,
     ],
 
     'generator' => [
@@ -63,15 +69,17 @@ return [
             'Dashboard',
         ],
 
-        'widgets' => [],
+        'widgets' => [
+            'AccountWidget', 'FilamentInfoWidget',
+        ],
 
         'resources' => [],
     ],
 
     'discovery' => [
-        'discover_all_resources' => true,
-        'discover_all_widgets' => true,
-        'discover_all_pages' => true,
+        'discover_all_resources' => false,
+        'discover_all_widgets' => false,
+        'discover_all_pages' => false,
     ],
 
     'register_role_policy' => [

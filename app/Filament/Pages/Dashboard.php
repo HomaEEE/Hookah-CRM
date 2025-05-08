@@ -26,9 +26,9 @@ use Filament\Notifications\Notification;
 use Filament\Support\RawJs;
 use Illuminate\Contracts\Support\Htmlable;
 
-class Dashboard extends \Filament\Pages\Dashboard  //implements HasShieldPermissions
+class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermissions
 {
-    // use HasPageShield;
+    // // use HasPageShield;
 
     // public static function getPermissionPrefixes(): array
     // {
