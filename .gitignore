@@ -63,3 +63,5 @@ coverage/
 
 #Filament php
 /app/Policies
+
+composer.lock
