@@ -50,7 +50,7 @@ class Cashflow extends Page
             ->schema([
                 Section::make()
                     ->schema([
-                            ::make('from')
+                        DatePicker::make('from')
                             ->translateLabel()
                             ->native(false)
                             ->default(now())
