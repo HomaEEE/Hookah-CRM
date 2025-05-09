@@ -21,7 +21,7 @@ class ExpensesGraph extends ChartWidget
 
     protected function getData(): array
     {
-        $start = now()->subMonths(6)->startOfMonth();
+        $start = now()->subMonths(11)->startOfMonth();
         $end = now()->endOfMonth();
 
         // Собираем список всех месяцев за период

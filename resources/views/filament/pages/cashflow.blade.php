@@ -1,8 +1,12 @@
 <x-filament-panels::page>
 
     <div>
-        {{-- {{ $this->filtersForm }} --}}
+        {{ $this->filtersForm }}
     </div>
+
+    @livewire(\App\Filament\Widgets\Statistic\Bills::class)
+    @livewire(\App\Filament\Widgets\Statistic\ExpensesGraph::class, ['filters' => $this->filters])
+    @livewire(\App\Filament\Widgets\Statistic\NetCashflowChart::class, ['filters' => $this->filters])
 
     <div x-data="{ tab: 'expenses' }">
         <x-filament::tabs>

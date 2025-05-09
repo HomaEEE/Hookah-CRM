@@ -19,7 +19,7 @@ class Expenses extends BaseWidget
 
     protected function getTableHeading(): string
     {
-        return __('Mountly Expenses');
+        return __('Expenses');
     }
 
     public function table(Table $table): Table
@@ -59,7 +59,7 @@ class Expenses extends BaseWidget
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 
             ])
-
+            // ->hiddenFilterIndicators()
             ->modifyQueryUsing(function ($query) {
 
                 $query->selectRaw('category_id as id, category_id, sum(sum) as total, count(*) as count')

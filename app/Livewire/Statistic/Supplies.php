@@ -19,7 +19,7 @@ class Supplies extends BaseWidget
 
     protected function getTableHeading(): string
     {
-        return __('Mountly Supplies');
+        return __('Supplies');
     }
 
     public function table(Table $table): Table
@@ -58,6 +58,7 @@ class Supplies extends BaseWidget
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 
             ])
+            ->hiddenFilterIndicators()
 
             ->modifyQueryUsing(function ($query) {
 

@@ -13,6 +13,7 @@
         "abdulmajeed-jamaan/filament-translatable-tabs": "^3.0",
         "afsakar/filament-translate-action": "*",
         "awobaz/compoships": "^2.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-language-switch": "^3.0",
         "bezhansalleh/filament-shield": "^3.3",
         "filament/filament": "^3.0-dev",

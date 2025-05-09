@@ -4,24 +4,28 @@ namespace App\Filament\Pages;
 
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
-use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
-use Filament\Pages\Concerns\InteractsWithFormActions;
+use Filament\Forms\Get;
+use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
-class Cashflow extends Page implements HasActions, HasForms
+class Cashflow extends Page
 {
-    use HasPageShield, InteractsWithFormActions, InteractsWithForms;
+    use HasFiltersForm;
+    use HasPageShield;
 
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
 
     protected static string $view = 'filament.pages.cashflow';
 
     protected static ?int $navigationSort = 2;
+
+    public $startDate;
+
+    public $endDate;
 
     public static function getPluralModelLabel(): string
     {
@@ -38,84 +42,47 @@ class Cashflow extends Page implements HasActions, HasForms
         return __('Cashflow');
     }
 
-    public ?array $data = [
-        'start_date' => null,
-        'end_date' => null,
-    ];
-
     public $reports = null;
 
-    public function mount()
+    public function filtersForm(Form $form): Form
     {
-        // $this->generate(new SellingReportService);
+        return $form
+            ->schema([
+                Section::make()
+                    ->schema([
+                            ::make('from')
+                            ->translateLabel()
+                            ->native(false)
+                            ->default(now())
+                            ->maxDate(fn (Get $get) => $get('to') ?: now()),
+                        DatePicker::make('to')
+                            ->translateLabel()
+                            ->minDate(fn (Get $get) => $get('from') ?: now())
+                            ->native(false)
+                            ->maxDate(now())
+                            ->default(now()),
+                    ])
+                    ->columns(2),
+            ]);
     }
 
-    public function form(Form $form): Form
-    {
-        return $form->schema([
-            DatePicker::make('start_date')
-                ->translateLabel()
-                ->date()
-                ->translateLabel()
-                ->required()
-                ->closeOnDateSelection()
-                ->default(now())
-                ->native(false),
-            DatePicker::make('end_date')
-                ->translateLabel()
-                ->date()
-                ->translateLabel()
-                ->closeOnDateSelection()
-                ->required()
-                ->default(now())
-                ->native(false),
-        ])
-            ->columns(2)
-            ->statePath('data');
-    }
-
-    public function getFormActions(): array
+    protected function getHeaderActions(): array
     {
         return [
-            Action::make(__('Generate'))
-                ->action('generate'),
-            Action::make(__('Print'))
-                ->color('warning')
-                ->extraAttributes([
-                    'id' => 'print-btn',
-                ])
-                ->icon('heroicon-o-printer'),
-            Action::make('download-pdf')
-                ->label(__('Download as PDF'))
-                ->action('downloadPdf')
-                ->color('warning')
-                ->icon('heroicon-o-arrow-down-on-square'),
-        ];
-    }
+            Action::make('downloadPdf')
+                ->label('PDF')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->url(function () {
+                    $start = $this->filters['start_date'] ?? now()->startOfMonth()->format('Y-m-d');
+                    $end = $this->filters['end_date'] ?? now()->endOfMonth()->format('Y-m-d');
 
-    // public function filtersForm(Form $form): Form
-    // {
-    //     return $form
-    //         ->schema([
-    //             Section::make()
-    //                 ->schema([
-    //                     Select::make('businessCustomersOnly')
-    //                         ->boolean(),
-    //                     DatePicker::make('startDate')
-    //                         ->maxDate(fn (Get $get) => $get('endDate') ?: now()),
-    //                     DatePicker::make('endDate')
-    //                         ->minDate(fn (Get $get) => $get('startDate') ?: now())
-    //                         ->maxDate(now()),
-    //                 ])
-    //                 ->columns(3),
-    //         ]);
-    // }
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            \App\Filament\Widgets\Statistic\ExpensesGraph::make(),
-            \App\Filament\Widgets\Statistic\NetCashflowChart::make(),
+                    return route('cashflow.report.pdf', [
+                        'start' => $start,
+                        'end' => $end,
+                    ]);
+                })
+                ->openUrlInNewTab(),
         ];
+
     }
 }
