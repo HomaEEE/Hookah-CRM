@@ -115,7 +115,7 @@ class Cashflow extends Page implements HasActions, HasForms
     {
         return [
             \App\Filament\Widgets\Statistic\ExpensesGraph::make(),
-            // \App\Filament\Widgets\Statistic\NetCashflowChart::make(),
+            \App\Filament\Widgets\Statistic\NetCashflowChart::make(),
         ];
     }
 }

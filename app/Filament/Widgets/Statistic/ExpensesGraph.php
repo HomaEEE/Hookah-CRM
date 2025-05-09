@@ -15,11 +15,13 @@ class ExpensesGraph extends ChartWidget
         return __('Money move');
     }
 
-    protected static ?string $maxHeight = '400';
+    // protected int|string|array $columnSpan = 'full';
+
+    protected static ?string $maxHeight = '250px';
 
     protected function getData(): array
     {
-        $start = now()->subMonths(11)->startOfMonth();
+        $start = now()->subMonths(6)->startOfMonth();
         $end = now()->endOfMonth();
 
         // Собираем список всех месяцев за период
@@ -77,12 +79,12 @@ class ExpensesGraph extends ChartWidget
                 [
                     'label' => 'Приход (грн)',
                     'data' => $cashIn,
-                    'backgroundColor' => 'rgb(30, 181, 33)',
+                    'backgroundColor' => 'rgba(30, 181, 33, 0.4)',
                 ],
                 [
                     'label' => 'Расход (грн)',
                     'data' => $cashOut,
-                    'backgroundColor' => 'rgb(203, 27, 27)',
+                    'backgroundColor' => 'rgba(203, 27, 27, 0.4)',
                 ],
             ],
         ];
