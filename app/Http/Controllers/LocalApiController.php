@@ -28,7 +28,7 @@ class LocalApiController extends Controller
         $tips = Tip::select('tips')
             ->where('place_id', $place_id)
             ->whereDate('created_at', Carbon::today());
-        $TOTAL = $tips->sum('tips');
+        $TOTAL = $tips->sum('tips') / 100;
 
         return $TOTAL;
     }

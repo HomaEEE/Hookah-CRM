@@ -46,16 +46,16 @@ class PosterWizard
                             $set('terminal', $posterTodayShift['payed_card_sum'] / 100);
 
                             $posterLocalExpense = (new LocalApiController)->getLocalExpenses($place->id);
-                            $set('expense', (int) $posterLocalExpense / 100);
+                            $set('expense', (int) $posterLocalExpense);
 
                             $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
-                            $set('income', (int) $posterLocalIncomes / 100);
+                            $set('income', (int) $posterLocalIncomes);
 
                             $LocalWithdrawal = (new LocalApiController)->getLocalWithdrawal($place->id);
-                            $set('withdrawal', $LocalWithdrawal / 100);
+                            $set('withdrawal', $LocalWithdrawal);
 
                             $localTips = (new LocalApiController)->getLocalTips($place->id);
-                            $set('tips', $localTips / 100);
+                            $set('tips', $localTips);
 
                             $posterTodayWorkshops = (new PosterApiController)->getTodayWorkshops($place->id);
 

@@ -5,7 +5,6 @@ namespace App\Filament\Clusters\Dev\Pages;
 use App\Filament\Clusters\Dev;
 use App\Models\Ingredient;
 use Filament\Actions\Action;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -45,64 +44,61 @@ class CostCalculator extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Section::make('')->schema([
-                Repeater::make('ingredients')
-                    ->schema([
-                        Select::make('ingredient_id')
-                            ->hiddenLabel()
-                            ->preload()
-                            ->native(false)
-                            ->searchable()
-                            ->columnSpan(4)
-                            ->reactive()
-                            ->live()
-                            ->options(
-                                Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
-                            ),
-                        TextInput::make('quantity')
-                            ->reactive()
-                            ->live()
-                            ->columnSpan(4)
-                            // ->hiddenLabel()
-                            ->suffix(static function (Get $get) {
+            Repeater::make('ingredients')->label(__('Ingredients'))
+                ->columns(12)
+                ->addActionLabel(__('Add'))
+                ->schema([
+                    Select::make('ingredient_id')
+                       // ->hiddenLabel()
+                        ->preload()
+                        ->native(false)
+                        ->searchable()
+                        ->reactive()
+                        ->options(
+                            Ingredient::get()->pluck('ingredient', 'id')
+                        ),
 
-                                if ($get('ingredient_id') != null) {
-                                    $ingredient = Ingredient::find($get('ingredient_id'));
-                                    if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
-                                        return $ingredient->unit->getLabel();
-                                    }
+                    TextInput::make('quantity')
+                        ->reactive()
+                        ->live()
+                        ->suffix(static function (Get $get) {
+
+                            if ($get('./ingredient_id') != null) {
+                                $ingredient = Ingredient::find($get('./ingredient_id'));
+                                if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
+                                    return $ingredient->unit->getLabel();
                                 }
+                            }
 
-                                return null;
+                            return null;
 
-                            })
-                            ->default(1)
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                if (! $get('quantity')) {
-                                    self::updateIngredientCost($get, $set);
-                                }
-                            }),
-                        TextInput::make('ingredient_cost')->translateLabel()
-                            ->reactive()
-                            ->columnSpan(4),
-                    ])->live()
-                    ->afterStateUpdated(function (Get $get, Set $set) {
-                        self::updateTotalIngredients($get, $set);
-                    }),
-                TextInput::make('cost_item')->label('Прямые затраты')->readOnly(),
-            ]),
+                        })
+                        ->default(1)
+                        ->afterStateUpdated(
+                            function (callable $set, callable $get) {
+                                self::updateIngredientCost($get, $set);
+                            }
+                        ),
+                    TextInput::make('ingredient_cost')->translateLabel()
+                        ->reactive(),
+                ])
+                ->afterStateUpdated(function (callable $set, callable $get) {
+                    self::updateTotalIngredients($get, $set);
+                })
+                ->columns(3),
+            TextInput::make('cost_item')->label('Прямые затраты')->readOnly(),
 
-            Section::make('')->schema([
-                TextInput::make('rent')->translateLabel(),
-                TextInput::make('wage')->translateLabel(),
-                TextInput::make('utils')->translateLabel(),  // Прочие расходы
-            ])->columns(3),
-            Section::make('')->schema([
-                TextInput::make('cost_other')->label('Косвенные затраты'),
-                TextInput::make('site_name')->label('Себестоимость'),
-                TextInput::make('x2')->label('x2'),
-                TextInput::make('x3')->label('x3'),
-            ])->columns(4),
+            // Section::make('')->schema([
+            //     TextInput::make('rent')->translateLabel(),
+            //     TextInput::make('wage')->translateLabel(),
+            //     TextInput::make('utils')->translateLabel(),  // Прочие расходы
+            // ])->columns(3),
+            // Section::make('')->schema([
+            //     TextInput::make('cost_other')->label('Косвенные затраты'),
+            //     TextInput::make('site_name')->label('Себестоимость'),
+            //     TextInput::make('x2')->label('x2'),
+            //     TextInput::make('x3')->label('x3'),
+            // ])->columns(4),
 
         ];
     }
@@ -118,7 +114,7 @@ class CostCalculator extends Page implements HasForms
 
     private static function updateTotalsIngredients(Get $get, Set $set)
     {
-        $totalWage = collect($get('users'))
+        $totalWage = collect($get('ingredients'))
             ->pluck('cashout')
             ->sum();
         $set('wages', $totalWage);
@@ -129,7 +125,7 @@ class CostCalculator extends Page implements HasForms
     private static function updateTotalIngredients(Get $get, Set $set)
     {
         $TotalIngredients = collect($get('ingredients'))
-            ->pluck('ingredient_costcashout')
+            ->pluck('ingredient_cost')
             ->sum();
         $set('cost_item', $TotalIngredients);
 
@@ -141,15 +137,16 @@ class CostCalculator extends Page implements HasForms
         if ($get('quantity') > 0) {
             try {
                 $ingredient = Ingredient::find($get('ingredient_id'));
+                dd($ingredient);
+
+                $ingredient_cost = $ingredient * $get('quantity');
+
+                $set('ingredient_cost', $ingredient_cost);
+
             } catch (ModelNotFoundException $e) {
                 dd($e);
             }
 
-            $TotalIngredients = $ingredient * $get('quantity');
-
-            dd($TotalIngredients);
-
-            $set('ingredient_cost', $TotalIngredients);
         }
 
         return 0;
