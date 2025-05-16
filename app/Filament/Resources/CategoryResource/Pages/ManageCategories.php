@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\CategoryResource\Pages;
 
 use App\Filament\Resources\CategoryResource;
-use App\Filament\Resources\CategoryResource\Widgets\Tree;
 use App\Http\Controllers\PosterApiController;
 use Filament\Actions;
 use Filament\Facades\Filament;
@@ -22,7 +21,7 @@ class ManageCategories extends ManageRecords
                 ->icon('heroicon-o-arrow-path')
                 ->action(function (): void {
                     (new PosterApiController)->getCategories(Filament::getTenant()->id);
-                    (new PosterApiController)->getProducts(Filament::getTenant()->id);
+                    //  (new PosterApiController)->getProducts(Filament::getTenant()->id);
                     Notification::make()
                         ->title(__('Updated successfully'))
                         ->icon('heroicon-o-qr-code')
@@ -36,7 +35,7 @@ class ManageCategories extends ManageRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            Tree::class,
+
         ];
     }
 }

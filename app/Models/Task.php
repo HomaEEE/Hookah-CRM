@@ -17,6 +17,7 @@ class Task extends Model
 
     protected $casts = [
         'priority' => Priority::class,
+
     ];
 
     public function place()
@@ -42,5 +43,10 @@ class Task extends Model
     public function getTimeAttribute()
     {
         return (new Carbon($this->date))->translatedFormat('H:i');
+    }
+
+    public function getDateAttribute($value)
+    {
+        return Carbon::parse($value)->translatedFormat('j M y');
     }
 }

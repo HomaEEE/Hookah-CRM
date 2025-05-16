@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +17,11 @@ class Seet extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
     }
 
     public function booking()

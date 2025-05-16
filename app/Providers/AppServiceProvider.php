@@ -56,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
         }
+
         TranslatableTabs::configureUsing(function (TranslatableTabs $component) {
             $component
                 // locales labels

@@ -16,7 +16,6 @@ class Supply extends Model implements HasMedia
 
     protected $fillable = ['place_id', 'supplier_id', 'added_at', 'sum', 'items', 'comment', 'bill_id', 'pay', 'poster', 'user_id'];
 
-
     protected $casts = [
         'sum' => MoneyCast::class,
         'pay' => 'boolean',
@@ -43,6 +42,11 @@ class Supply extends Model implements HasMedia
     public function suppliers()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function reqvizite()
+    {
+        return $this->HasOne(Reqvizite::class, 'id', 'reqvizite_id');
     }
 
     public function ingredient()
@@ -100,10 +104,8 @@ class Supply extends Model implements HasMedia
         return $query->where('type', $query);
     }
 
-
     public function getDelayDayAttribute()
     {
-        return (int) Carbon::now()->diffInDays(Carbon::parse($this->added_at)->addDays($this->delay), false);;
+        return (int) Carbon::now()->diffInDays(Carbon::parse($this->added_at)->addDays($this->delay), false);
     }
-
 }

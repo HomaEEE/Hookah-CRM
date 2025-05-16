@@ -4,6 +4,10 @@ namespace App\Livewire\Dashboard;
 
 use App\Models\Supply;
 use Filament\Facades\Filament;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
+use Filament\Infolists\Components\Tabs;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Tables\Actions;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -98,15 +102,19 @@ class Paying extends BaseWidget
                 TextEntry::make('bill.name')->translateLabel()
                     ->badge(),
                 TextEntry::make('invoice_number')->translateLabel()->badge()->copyable(),
-                KeyValueEntry::make('supplier.data')->label(__('Rekvizites'))
-                    ->keyLabel(' ')
-                    ->valueLabel('Реквизиты'),
 
                 Tabs::make('Tabs')
                     ->tabs([
+                        Tabs\Tab::make(__('Rekvizites'))
+                            ->schema([
+                                TextEntry::make('reqvizite.own')->label(__('FOP'))->badge()->copyable(),
+                                TextEntry::make('reqvizite.IBAN')->label(__('IBAN'))->badge()->copyable(),
+                                TextEntry::make('reqvizite.INN')->label(__('INN'))->badge()->copyable(),
+                            ])
+                            ->columns(3),
                         Tabs\Tab::make(__('Comment'))
                             ->schema([
-                                TextEntry::make('comment')->label(__('Comment'))->badge(),
+                                TextEntry::make('comment')->label(__('Comment'))->copyable()->hiddenLabel(),
                             ]),
                         Tabs\Tab::make(__('Photo'))
                             ->schema([
@@ -135,6 +143,6 @@ class Paying extends BaseWidget
 
                 // ])->columns(1)->collapsed(),
 
-            ]);
+            ])->columns(3);
     }
 }

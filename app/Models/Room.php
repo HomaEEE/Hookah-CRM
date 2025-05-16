@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
 {
-    use HasFactory, Compoships;
+    use Compoships, HasFactory;
 
     protected $fillable = ['room', 'tags'];
 
@@ -22,6 +22,11 @@ class Room extends Model
     public function meter()
     {
         return $this->belongsTo(Meter::class, 'place_id');
+    }
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
     }
 
     public function getRoomNameAttribute()

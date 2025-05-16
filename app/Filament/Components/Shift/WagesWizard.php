@@ -5,6 +5,7 @@ namespace App\Filament\Components\Shift;
 use App\Models\User;
 use App\Models\Wage;
 use App\Models\Workshop;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Hidden;
@@ -117,6 +118,9 @@ class WagesWizard
                         ->hidden(fn (Get $get) => $get('wage_id') == null),
                 ])->columns(3)
                 ->collapsible()
+                // ->deleteAction(
+                //     fn (Action $action) => $action->after(fn (Get $get, Set $set) => self::updateTotals($get, $set)),
+                // )
 
                 ->itemLabel(fn (array $state): ?string => User::find($state['user_id'])?->name.' '.$state['cashout'] ?? null),
 

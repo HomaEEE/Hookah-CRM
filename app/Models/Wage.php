@@ -15,9 +15,9 @@ class Wage extends Model
 
     protected $casts = ['procent' => 'array'];
 
-    public function places()
+    public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function user()

@@ -23,7 +23,7 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
 
     public function getCurrentTenantLabel(): string
     {
-        return 'Current team';
+        return __('Current place');
     }
 
     public function meters()
@@ -31,19 +31,9 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Meter::class);
     }
 
-    public function bill()
-    {
-        return $this->HasMany(Bill::class);
-    }
-
     public function arrears()
     {
         return $this->hasMany(Arrear::class);
-    }
-
-    public function supplier()
-    {
-        return $this->hasMany(Supplier::class);
     }
 
     public function reqvizites()
@@ -84,37 +74,37 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
 
     public function rooms()
     {
-        return $this->hasMany(Room::class, 'place_id');
+        return $this->hasMany(Room::class);
     }
 
     public function seets()
     {
-        return $this->hasMany(Seet::class, 'place_id');
+        return $this->hasMany(Seet::class);
     }
 
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class, 'place_id');
+        return $this->hasMany(Subscription::class);
     }
 
     public function bills()
     {
-        return $this->hasMany(Bill::class, 'place_id');
+        return $this->hasMany(Bill::class);
     }
 
     public function storages()
     {
-        return $this->hasMany(Storage::class, 'place_id');
+        return $this->hasMany(Storage::class);
     }
 
     public function workshops()
     {
-        return $this->hasMany(Workshop::class, 'place_id');
+        return $this->hasMany(Workshop::class);
     }
 
     public function wages()
     {
-        return $this->hasMany(Wage::class, 'place_id');
+        return $this->hasMany(Wage::class);
     }
 
     public function expenses()
@@ -202,14 +192,9 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Role::class);
     }
 
-    public function permissions()
-    {
-        return $this->hasMany(Permission::class);
-    }
-
     public function categories()
     {
-        return $this->hasMany(Category::class, ['category_id', 'palce_id']);
+        return $this->hasMany(Category::class, ['category_id', 'place_id']);
     }
 
     public function scopeVisibleMenu($query, $value)
@@ -227,21 +212,18 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->avatar_url;
     }
 
-    /** @return HasMany<\App\Models\Feedback, self> */
     public function feedback(): HasMany
     {
-        return $this->hasMany(\App\Models\Feedback::class);
+        return $this->hasMany(Feedback::class);
     }
 
-    /** @return HasMany<\App\Models\Ingredient, self> */
     public function ingredients(): HasMany
     {
-        return $this->hasMany(\App\Models\Ingredient::class);
+        return $this->hasMany(Ingredient::class);
     }
 
-    /** @return HasMany<\App\Models\Product, self> */
     public function products(): HasMany
     {
-        return $this->hasMany(\App\Models\Product::class);
+        return $this->hasMany(Product::class);
     }
 }

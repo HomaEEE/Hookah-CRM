@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Filament\Facades\Filament;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
@@ -196,10 +197,10 @@ class ExpenseResource extends Resource
                 TextEntry::make('category.name')->translateLabel()->badge(),
                 TextEntry::make('sum')->translateLabel()->badge(),
                 TextEntry::make('comment')->translateLabel()->badge(),
-                App\Filament\Resources\LightboxSpatieMediaLibraryImageEntry::make('invoice')
+                SpatieMediaLibraryImageEntry::make('invoice')
                     ->collection('supplies')
-                    ->conversion('thumb')
-                    ->translateLabel(),
+                    ->simpleLightbox()
+                    ->hiddenLabel(),
                 // ImageEntry::make('invoice')
                 // ->simpleLightbox(fn ($record) =>  $record?->image ?? "Your Image Url address", defaultDisplayUrl: true)
                 // ->translateLabel(),

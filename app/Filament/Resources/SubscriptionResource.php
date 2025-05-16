@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Bill as BillEnum;
 use App\Enums\Subscription as SubscriptionEnum;
 use App\Filament\Resources\SubscriptionResource\Pages;
-use App\Models\{Bill, Expense, ExpenseCategory, Subscription};
+use App\Models\Bill;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
+use App\Models\Subscription;
 use Auth;
 use Carbon\Carbon;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -16,18 +17,13 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
-use Filament\Tables\Table;
-
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Columns\SelectColumn;
-use Filament\Tables\Columns\TextColumn;
-
 use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Grouping\Group;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class SubscriptionResource extends Resource
 {
@@ -56,7 +52,6 @@ class SubscriptionResource extends Resource
     {
         return $form
             ->schema([
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('category_id')->label(__('Category'))
                     ->searchable()
                     ->preload()
@@ -151,7 +146,7 @@ class SubscriptionResource extends Resource
                         $record->update(
                             [
                                 'next_date' => Carbon::today()->addMonth(),
-                                'price' => $data['sum']
+                                'price' => $data['sum'],
                             ]
                         );
                         $record->save();

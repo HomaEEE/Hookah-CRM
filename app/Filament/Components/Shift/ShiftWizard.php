@@ -139,7 +139,7 @@ class ShiftWizard
                             ->icon('heroicon-o-arrow-path')
                             ->action(function (Set $set) {
                                 $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
-                                $set('expense', (int) $posterLocalExpense / 100);
+                                $set('expense', (int) $posterLocalExpense);
 
                                 Notification::make()
                                     ->title(__('Expenses updated'))

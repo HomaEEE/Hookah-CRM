@@ -5,9 +5,9 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EditUserProfile;
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
 use App\Filament\Pages\Tenancy\RegisterPlace;
+use App\Http\Middleware\ApplyTenantScopes;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
@@ -102,6 +102,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,
+                ApplyTenantScopes::class,
             ], isPersistent: true)
 
             ->middleware([
@@ -114,9 +115,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
+
             ]);
     }
 }

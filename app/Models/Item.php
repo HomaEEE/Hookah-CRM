@@ -23,4 +23,9 @@ class Item extends Model implements HasMedia
     {
         return $this->belongsToMany(Storage::class);
     }
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 }

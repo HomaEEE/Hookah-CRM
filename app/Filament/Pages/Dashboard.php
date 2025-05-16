@@ -220,10 +220,6 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ])
                     ->action(function (array $data): void {
                         (new PosterApiController)->deleteReceipt($data);
-                        Notification::make()
-                            ->title(__('Delete Receipt'))
-                            ->icon('heroicon-o-backspace')
-                            ->send();
                     }),
                 // Action::make('onShift')
                 //     ->label(__('On Shift'))

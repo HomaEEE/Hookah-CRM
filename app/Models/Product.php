@@ -12,7 +12,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, HasTranslations, Compoships;
+    use Compoships, HasFactory, HasTranslations;
     use InteractsWithMedia;
 
     protected $fillable = ['product_name', 'frontend_name', 'place_id', 'product_id', 'menu_category_id',
@@ -36,7 +36,7 @@ class Product extends Model implements HasMedia
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function scopeVisibleMenu($query, $value)

@@ -8,9 +8,9 @@ use Filament\Support\Contracts\HasLabel;
 
 enum Priority: string implements HasColor, HasIcon, HasLabel
 {
-    case Low = 'low';
-    case Middle = 'middle';
-    case High = 'high';
+    case Low = '1';
+    case Middle = '2';
+    case High = '3';
 
     public function getLabel(): ?string
     {

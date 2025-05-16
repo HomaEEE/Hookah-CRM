@@ -2,18 +2,20 @@
 
 namespace App\Filament\Components;
 
+use App\Models\Guest;
+use App\Models\Seet;
 use Auth;
-use Carbon\Carbon;
-use App\Models\{Guest, Seet};
 use Filament\Facades\Filament;
-
-use Filament\Forms\{Get, Set};
-use Filament\Support\RawJs;
-
 use Filament\Forms\Components\Actions\Action as FormAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Support\Enums\ActionSize;
-
-use Filament\Forms\Components\{Select, TextInput, Hidden, DateTimePicker, Textarea, Toggle, ToggleButtons};
+use Filament\Support\RawJs;
 
 class BookingForm
 {
@@ -37,7 +39,7 @@ class BookingForm
                         ->mask(RawJs::make(<<<'JS'
                     $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
                 JS))
-                    ->translateLabel(),
+                        ->translateLabel(),
                     TextInput::make('comment')->translateLabel(),
                 ])
                 ->editOptionForm([

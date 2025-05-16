@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Shift;
 use App\Models\Workshop;
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
 
 class PosterApiController extends Controller
@@ -19,6 +20,7 @@ class PosterApiController extends Controller
 
     private $urlApi = 'https://joinposter.com/api/';
 
+    // Получение категорий из Постера
     public function getCategories($place_id)
     {
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
@@ -40,42 +42,24 @@ class PosterApiController extends Controller
                 ]
             );
         }
+
+        // $categories = collect($categories)->map(function ($c) use ($place_id) {
+        //     return [
+        //         'place_id' => $place_id,
+        //         'category_id' => $c['category_id'],
+        //         'category_name' => $c['category_name'],
+        //         'parent_category' => $c['parent_category'],
+        //         'visible' => 1, // добавим только при вставке
+        //     ];
+        // })->toArray();
+
+        // Category::upsert(
+        //     $categories,
+        //     uniqueBy: ['place_id', 'category_id'],
+        //     update: ['category_name', 'parent_category'] // ← visible НЕ обновляем
+        // );
     }
-
-    public function updateCategories($place_id, $category)
-    {
-        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
-        $responseCategories = Http::get($this->urlApi.'menu.getProducts?token='.$place_api['api'].'&category_id='.$category.'&type=products')
-            ->throw()->json();
-
-        $products = $responseCategories['response'];
-
-        foreach ($products as $product) {
-
-            $ingredient_array = [];
-
-            if (isset($product['ingredients'])) {
-                foreach ($product['ingredients'] as $ingredient) {
-                    array_push($ingredient_array, $ingredient['ingredient_name']);
-                }
-            }
-            $product = Product::updateOrCreate(
-                [
-                    'place_id' => $place_id,
-                    'product_name' => $product['product_name'],
-                    'menu_category_id' => $product['menu_category_id'],
-                    'product_id' => $product['product_id'],
-                ],
-                [
-                    'cost' => $product['cost'],
-                    'price' => $product['spots'][0]['price'],
-                    'out' => $product['out'],
-                    'ingredients' => empty($ingredient_array) ? '' : implode(', ', $ingredient_array),
-                ]
-            );
-            $product = $product->getOriginal('out');
-        }
-    }
+    // Получение товаров и техкарт из Постера
 
     public function getProducts($place_id)
     {
@@ -111,6 +95,7 @@ class PosterApiController extends Controller
             );
         }
     }
+    // Получение ингридиентов из Постера
 
     public function getIngredients($place_id)
     {
@@ -155,6 +140,16 @@ class PosterApiController extends Controller
         }
     }
 
+    // Изменение товара в Poster'e
+
+    public function updateProduct($place_id)
+    {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+
+    }
+
+    // Получение техкарт из Постера
+
     public function getTechcards($place_id)
     {
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
@@ -163,6 +158,7 @@ class PosterApiController extends Controller
 
         dd($techcards);
     }
+    // Получение поставщиков из Постера
 
     public function getSuppliers($place_id)
     {
@@ -211,6 +207,8 @@ class PosterApiController extends Controller
 
         return $posterShift[0]['amount_end'] / 100;
     }
+
+    // Получение цехов из Постера
 
     public function getWorkshops($place_id)
     {
@@ -367,13 +365,34 @@ class PosterApiController extends Controller
         ]);
     }
 
+    // Удаление чека из Постера
+
     public function deleteReceipt($data)
     {
         $place_api = Place::whereId($data['place_id'])->select('settings->Poster_api  as api')->first();
 
-        Http::post($this->urlApi.'transactions.removeTransaction?token='.$place_api['api'], [
+        $response = Http::post($this->urlApi.'transactions.removeTransaction?token='.$place_api['api'], [
             'spot_tablet_id' => 1,
             'transaction_id' => $data['receipt_id'],
         ]);
+
+        if (isset($response['response']['err_code']) && $response['response']['err_code'] === 0) {
+            Notification::make()
+                ->title('#'.$data['receipt_id'].__('Receipt deleted'))
+                ->icon('heroicon-o-backspace')
+                ->color('success')
+                ->send();
+        } else {
+            // Получаем сообщение об ошибке, если есть
+            $errorMessage = $response['message'] ?? __('Unknown error');
+
+            Notification::make()
+                ->title(__('Error'))
+                ->body($errorMessage)
+                ->icon('heroicon-o-x-circle')
+                ->color('danger')
+                ->send();
+        }
+
     }
 }

@@ -20,7 +20,7 @@ class LocalApiController extends Controller
             ->where('place_id', $place_id)->where('bill_id', 0)
             ->whereDate('created_at', Carbon::today());
 
-        return $withdrawal->sum('sum');
+        return $withdrawal->sum('sum') / 100;
     }
 
     public function getLocalTips($place_id)
@@ -43,7 +43,7 @@ class LocalApiController extends Controller
         )
             ->whereDate('added_at', Carbon::today());
 
-        return $cash_expense->sum('sum');
+        return $cash_expense->sum('sum') / 100;
     }
 
     public function getLocalIncomes($place_id)
@@ -52,7 +52,7 @@ class LocalApiController extends Controller
             ->where('place_id', $place_id)
             ->whereDate('created_at', Carbon::today());
 
-        return $cash_incomes->sum('sum');
+        return $cash_incomes->sum('sum') / 100;
     }
 
     public function openShift($data)

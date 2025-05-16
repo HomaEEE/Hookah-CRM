@@ -134,6 +134,13 @@ class ProductResource extends Resource
                     ->boolean()
                     ->trueIcon('heroicon-o-eye')
                     ->falseIcon('heroicon-o-eye-slash')
+                    ->extraAttributes(function (Product $product) {
+                        if ($product->visible_menu === 0) {
+                            return ['class' => 'bg-danger-300 dark:bg-danger-600'];
+                        }
+
+                        return [];
+                    })
                     ->action(function ($record, $column) {
                         $name = $column->getName();
                         $record->update([

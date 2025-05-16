@@ -2,14 +2,13 @@
 
 namespace App\Filament\Components;
 
+use App\Models\Bill;
 use Auth;
-use App\Models\{Withdrawal, Bill};
 use Filament\Facades\Filament;
-
-use Filament\Forms\{Get, Set};
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Support\RawJs;
-
-use Filament\Forms\Components\{TextInput, Hidden, ToggleButtons};
 
 class WithdrawalForm
 {

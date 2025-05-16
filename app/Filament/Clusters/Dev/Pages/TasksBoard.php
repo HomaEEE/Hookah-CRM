@@ -54,9 +54,9 @@ class TasksBoard extends KanbanBoardPage
             ->descriptionField('text')
 
             ->columns([
-                '0' => 'To Do',
-                '1' => 'In Progress',
-                '2' => 'Completed',
+                '0' => __('To Do'),
+                '1' => __('In Progress'),
+                '2' => __('Completed'),
             ])
             ->columnColors([
                 '1' => 'blue',
@@ -65,9 +65,15 @@ class TasksBoard extends KanbanBoardPage
             ])
 
             ->cardAttributes([
+                //   'created_at' => __('Date'),
                 'date' => __('Date'),
-                'forUser.name' => 'For',
-                'priority' => 'Pri',
+                'forUser.name' => __('For User'),
+                // 'priority' => __('Priority'),
+            ])
+            ->cardAttributeColors([
+                'created_at' => 'blue',
+                'date' => 'red',
+                'forUser.name' => 'yellow',
             ]);
     }
 
