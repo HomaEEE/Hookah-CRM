@@ -85,6 +85,7 @@ return [
 
     'locale' => 'uk',
 
+    'crm_locale' => 'ru',
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -110,7 +111,6 @@ return [
     */
 
     'faker_locale' => 'en_US',
-
 
     'languages' => [
         'uk' => 'UA',

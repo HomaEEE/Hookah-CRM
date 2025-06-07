@@ -20,7 +20,7 @@ class SetLocale
         if (Session()->has('applocale') and array_key_exists(Session()->get('applocale'), config('app.languages'))) {
             App::setLocale(Session()->get('applocale'));
         } else { // This is optional as Laravel will automatically set the fallback language if there is none specified
-            App::setLocale(config('app.fallback_locale'));
+            App::setLocale(config('app.crm_locale'));
         }
 
         return $next($request);

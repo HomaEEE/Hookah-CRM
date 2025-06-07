@@ -195,7 +195,7 @@ class ShiftWizard
                     ->numeric()
                     ->required()
                     ->reactive()
-                    ->live(onBlur: true)
+                    ->debounce(500)
                     ->suffixAction(
                         Action::make('aproove')
                             ->label(__('Approve'))

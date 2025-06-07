@@ -18,7 +18,6 @@ class ApplyTenantScopes
         \App\Models\Role::class,
         \App\Models\Permission::class,
         \App\Models\ShiftUser::class,
-
         // Добавьте другие модели для исключения
     ];
 

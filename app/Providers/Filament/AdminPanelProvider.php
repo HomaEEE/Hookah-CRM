@@ -6,8 +6,10 @@ use App\Filament\Pages\Auth\EditUserProfile;
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
 use App\Filament\Pages\Tenancy\RegisterPlace;
 use App\Http\Middleware\ApplyTenantScopes;
+use App\Http\Middleware\SetLocale;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
@@ -40,18 +42,18 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Slate,
             ])
             ->sidebarCollapsibleOnDesktop()
+            ->tenant(\App\Models\Place::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterPlace::class)
             ->tenantProfile(EditPlaceProfile::class)
             ->login()
             // ->registration()
-            // ->passwordReset()
+            ->passwordReset()
             ->profile(EditUserProfile::class)
             ->databaseNotifications()
             ->databaseNotificationsPolling('120s')
             ->unsavedChangesAlerts()
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->tenant(\App\Models\Place::class, slugAttribute: 'slug')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
 
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
@@ -59,7 +61,6 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 \App\Filament\Pages\Dashboard::class,
             ])
-            ->authGuard('web')
 
             ->navigationGroups([
 
@@ -104,6 +105,7 @@ class AdminPanelProvider extends PanelProvider
                 SyncShieldTenant::class,
                 ApplyTenantScopes::class,
             ], isPersistent: true)
+            ->authGuard('web')
 
             ->middleware([
                 EncryptCookies::class,
@@ -115,6 +117,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetLocale::class,
+            ])
+            ->authMiddleware([
+                Authenticate::class,
 
             ]);
     }

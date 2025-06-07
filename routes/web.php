@@ -19,7 +19,10 @@ Route::get('/', 'App\Http\Controllers\SiteController@index');
 // Route::get('/getSpot/{place_id}', 'App\Http\Controllers\TestController@getSpot');
 
 //   Route::prefix('{suffix?}')->group(function () {
-Route::get('/menu', 'App\Http\Controllers\SiteController@menu');
+// Route::get('/menu', 'App\Http\Controllers\SiteController@menu');
+Route::get('/table/{table}', 'App\Http\Controllers\SiteController@table');
+
+Route::get('/menu/{table?}', 'App\Http\Controllers\SiteController@menu');
 Route::get('/vacancy', 'App\Http\Controllers\SiteController@vacancy');
 Route::get('/rules', 'App\Http\Controllers\SiteController@rules');
 Route::get('/booking', 'App\Http\Controllers\SiteController@booking');

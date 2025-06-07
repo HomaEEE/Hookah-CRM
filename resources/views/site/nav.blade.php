@@ -22,10 +22,10 @@
         <div class="col">
             <ul class="menu">
                 <li><a href="/">{{__('Home page')}}</a></li>
-                <li><a href="menu">{{__('Menu page')}}</a></li>
-                <li><a href="booking">{{__('Booking page')}}</a></li>
-                <li><a href="feedbacks">{{__('Feedbacks')}}</a></li>
-                <li><a href="rules">{{__('Rules')}}</a></li>
+                <li><a href="/menu">{{__('Menu page')}}</a></li>
+                <li><a href="/booking">{{__('Booking page')}}</a></li>
+                <li><a href="/feedbacks">{{__('Feedbacks')}}</a></li>
+                <li><a href="/rules">{{__('Rules')}}</a></li>
                 {{-- <li><a href="/vacancy">{{__('Vacancy page')}}</a></li> --}}
             </ul>
         </div>

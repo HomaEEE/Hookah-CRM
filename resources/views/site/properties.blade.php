@@ -1,5 +1,5 @@
     <div class="row middle-xs">
-        @if ($address == 1)
+         @if ($address == 1)
         <div class="col-xs-12 col-sm-4 col-md-3 properties">
             <p> <i class="icon-map-pin"></i> <a
                     href="https://www.google.com.ua/maps/place/{{ $place->address }},{{ $place->city }}"
@@ -9,6 +9,15 @@
 
         </div>
         @endif
+        {{-- @if ($address == 1)
+        <div class="col-xs-12 col-sm-4 col-md-3 properties">
+          <p>Номер стола : {{ $table_number}}</p>
+          <p> <i class="icon-instagram"></i> <a href="https://instagram.com/{{ $place->instagram }}"
+                    target="_blank">{{ $place->instagram }}</a></p>
+                    <p> <i class="icon-instagram"></i> <a href="https://instagram.com/{{ $place->instagram }}"
+                    target="_blank">{{ $place->instagram }}</a></p>
+        </div>
+        @endif --}}
         @if ($wifi == 1)
 
         <div class="col-xs-12 col-sm-4 col-md-3 properties">

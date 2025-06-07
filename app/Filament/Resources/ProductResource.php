@@ -110,9 +110,12 @@ class ProductResource extends Resource
 
                 TextColumn::make('cost')->money('uah')->translateLabel()
                     ->searchable()
+                    ->badge('info')
                     ->visibleFrom('md')
                     ->sortable(),
-                TextColumn::make('price')->money('uah')->translateLabel()
+
+                TextColumn::make('rrc')->money('uah')->badge('info')->translateLabel(),
+                TextColumn::make('price')->money('uah')->badge('success')->translateLabel()
                     ->searchable()
                     ->sortable(),
                 // IconColumn::make('visible')

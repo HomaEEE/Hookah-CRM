@@ -3,7 +3,9 @@
 namespace App\Filament\Clusters\Dev\Pages;
 
 use App\Filament\Clusters\Dev;
+use App\Models\ExpenseCategory;
 use App\Models\Ingredient;
+use App\Models\Wage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -41,64 +43,77 @@ class CostCalculator extends Page implements HasForms
         return __('Cost Calculator');
     }
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Clusters\Dev\Widgets\CostCalcWidgets::make(),
+        ];
+    }
+
     protected function getFormSchema(): array
     {
         return [
-            Repeater::make('ingredients')->label(__('Ingredients'))
-                ->columns(12)
-                ->addActionLabel(__('Add'))
-                ->schema([
-                    Select::make('ingredient_id')
-                       // ->hiddenLabel()
-                        ->preload()
-                        ->native(false)
-                        ->searchable()
-                        ->reactive()
-                        ->options(
-                            Ingredient::get()->pluck('ingredient', 'id')
-                        ),
+            // Repeater::make('ingredients')->label(__('Ingredients'))
+            //     ->columns(12)
+            //     ->addActionLabel(__('Add'))
+            //     ->schema([
+            //         Select::make('ingredient_id')
+            //            // ->hiddenLabel()
+            //             ->preload()
+            //             ->native(false)
+            //             ->searchable()
+            //             ->reactive()
+            //             ->options(
+            //                 Ingredient::get()->pluck('ingredient', 'id')
+            //             ),
 
-                    TextInput::make('quantity')
-                        ->reactive()
-                        ->live()
-                        ->suffix(static function (Get $get) {
+            //         TextInput::make('quantity')
+            //             ->reactive()
+            //             ->live()
+            //             ->suffix(static function (Get $get) {
 
-                            if ($get('./ingredient_id') != null) {
-                                $ingredient = Ingredient::find($get('./ingredient_id'));
-                                if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
-                                    return $ingredient->unit->getLabel();
-                                }
-                            }
+            //                 if ($get('./ingredient_id') != null) {
+            //                     $ingredient = Ingredient::find($get('./ingredient_id'));
+            //                     if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
+            //                         return $ingredient->unit->getLabel();
+            //                     }
+            //                 }
 
-                            return null;
+            //                 return null;
 
-                        })
-                        ->default(1)
-                        ->afterStateUpdated(
-                            function (callable $set, callable $get) {
-                                self::updateIngredientCost($get, $set);
-                            }
-                        ),
-                    TextInput::make('ingredient_cost')->translateLabel()
-                        ->reactive(),
-                ])
-                ->afterStateUpdated(function (callable $set, callable $get) {
-                    self::updateTotalIngredients($get, $set);
-                })
-                ->columns(3),
-            TextInput::make('cost_item')->label('Прямые затраты')->readOnly(),
+            //             })
+            //             ->default(1)
+            //             ->afterStateUpdated(
+            //                 function (callable $set, callable $get) {
+            //                     self::updateIngredientCost($get, $set);
+            //                 }
+            //             ),
+            //         TextInput::make('ingredient_cost')->translateLabel()
+            //             ->reactive(),
+            //     ])
+            //     ->afterStateUpdated(function (callable $set, callable $get) {
+            //         self::updateTotalIngredients($get, $set);
+            //     })
+            //     ->columns(3),
+            TextInput::make('cost_item')->label('Food Cost')->numeric(),
 
-            // Section::make('')->schema([
-            //     TextInput::make('rent')->translateLabel(),
-            //     TextInput::make('wage')->translateLabel(),
-            //     TextInput::make('utils')->translateLabel(),  // Прочие расходы
-            // ])->columns(3),
-            // Section::make('')->schema([
-            //     TextInput::make('cost_other')->label('Косвенные затраты'),
-            //     TextInput::make('site_name')->label('Себестоимость'),
-            //     TextInput::make('x2')->label('x2'),
-            //     TextInput::make('x3')->label('x3'),
-            // ])->columns(4),
+            Section::make('')->schema([
+                Select::make('expenses')
+                    ->options(ExpenseCategory::pluck('name', 'id'))
+                    ->native(false)
+                    ->multiple(),
+                Select::make('wage')->translateLabel()
+                    ->native(false)
+
+                    ->options(Wage::pluck('name', 'id')),
+                TextInput::make('counts')->label('Блюд в месяц')->default('5000')->numeric(),
+            ])->columns(3),
+            Section::make('')->schema([
+                TextInput::make('cost_other')->label('Косвенные затраты'),
+                TextInput::make('site_name')->label('Себестоимость')->readOnly(),
+                TextInput::make('x2')->label('x2')->readOnly(),
+                TextInput::make('x3')->label('x3')->readOnly(),
+            ])->columns(4),
 
         ];
     }
@@ -146,7 +161,6 @@ class CostCalculator extends Page implements HasForms
             } catch (ModelNotFoundException $e) {
                 dd($e);
             }
-
         }
 
         return 0;

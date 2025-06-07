@@ -30,15 +30,32 @@ class SiteController extends Controller
         return view('site.home', compact('place'));
     }
 
-    public function menu($slug = 'od')
+    public function table(?int $table_number = null)
     {
+
+        $slug = 'od';
+        $place = Place::where('slug', $slug)->first();
+
+        if (Session::get('table') !== $table_number) {
+            $table_number = Session::put('table', $table_number);
+        } else {
+            $table_number = Session::get('table');
+        }
+
+        return view('site.table', compact('place', 'table_number'));
+
+    }
+
+    public function menu(?int $table_number = null)
+    {
+        $slug = 'od';
         $place = Place::where('slug', $slug)->first();
 
         $categories = Category::where('place_id', $place->id)
             ->where('parent_category', 0)->orderBy('sort_order', 'asc')
             ->with('childs', 'products')->orderBy('sort_order', 'asc')->VisibleMenu(true)->get();
 
-        return view('site.menu', compact('place', 'categories'));
+        return view('site.menu', compact('place', 'categories', 'table_number'));
     }
 
     public function booking($slug = 'od')
