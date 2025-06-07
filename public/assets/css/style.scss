@@ -135,7 +135,7 @@ $icomoon-font-path: "../fonts" !default;
   content: "\f4ac";
 } /* '' */
 
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap");
 
 @font-face {
   font-family: "Phonk Sans";
@@ -180,7 +180,7 @@ html {
 
 body {
   background: $grey;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Unbounded", sans-serif;
   font-size: 16px;
   font-weight: 300;
   font-style: normal;
@@ -246,13 +246,15 @@ h2 {
 }
 
 h3 {
-  font-size: calc(1.5rem * var(--text-multiplier));
-  font-family: "Phonk Sans", sans-serif;
+  font-size: calc(1.25rem * var(--text-multiplier));
+  font-family: "Unbounded", sans-serif;
+  font-weight: 300;
 }
 
 h4 {
   font-size: calc(1.25rem * var(--text-multiplier));
-  font-family: "Phonk Sans", sans-serif;
+  font-family: "Unbounded", sans-serif;
+  font-weight: 300;
 }
 
 p {
@@ -260,6 +262,7 @@ p {
   font-weight: normal;
   font-style: normal;
   line-height: 1.5;
+  font-weight: 300;
 }
 
 a {
@@ -270,13 +273,19 @@ a {
 
 a.btn {
   padding: 10px 15px;
-  color: #e1e1e1;
-  border: 1px solid #e1e1e1;
-  border-radius: 5px;
+  width: 100%;
+  color: $text;
+  border: 1px solid $text;
+  border-radius: 12px;
   margin-top: 20px;
   position: relative;
-  display: inline-block;
+  display: block;
   text-align: center;
+  &:hover {
+    color: $grey;
+    background: $text;
+    transition: all 0.3s ease-in-out;
+  }
 }
 
 header {
@@ -812,6 +821,7 @@ main {
     border: none;
     border-radius: $radius;
     font-size: 1.25rem;
+    cursor: crosshair;
   }
 }
 
@@ -909,7 +919,9 @@ main {
     }
     h3 {
       text-transform: uppercase;
-      font-size: 1.25rem;
+      font-size: 1.4rem;
+      font-family: "Unbounded", sans-serif;
+      font-weight: 400;
       padding: 10px;
     }
     .menu-item {
@@ -934,12 +946,15 @@ main {
 
           h4 {
             font-size: 1.2rem;
+            font-family: "Unbounded", sans-serif;
+            font-weight: 300;
             margin-bottom: 10px;
           }
 
           p {
             font-size: 0.9rem;
             margin-bottom: 10px;
+            letter-spacing: 0.5px;
             color: #ccc;
           }
 
@@ -1284,7 +1299,7 @@ main {
         font-size: 2em;
         font-weight: 300;
         color: $text;
-        font-family: "Montserrat", sans-serif;
+        font-family: "Unbounded", sans-serif;
         display: flex;
         margin: 0;
         padding: 0;

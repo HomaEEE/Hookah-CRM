@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 @endpush
 
-@section('page', __('Table page'))
+@section('page', __('Seet page'))
 
 @section('content')
 <div class="container page">
@@ -12,10 +12,10 @@
         <h2 class="divider line razor title">{{__('Table')}} {{ $table_number }}</h2>
         <div class="row middle-xs beetwen-xs">
         <div class="col-xs-12">
-          <a href="/menu/{{ $table_number }}">{{__('Menu')}}</a>
-          <a href="#">Waiter</a>
-          <a href="#">Hookah</a>
-          <a href="#">Bill</a>
+          <a class="btn" href="/menu">{{__('View')}} {{__('Menu')}}</a>
+          <a class="btn" href="#">{{__('Call')}} {{__('Waiter')}}</a>
+          <a class="btn" href="#">{{__('Call')}} {{__('Hookah Master')}}</a>
+          <a  class="btn" href="#">{{__('Bill')}}</a>
         </div>
     </div>
     </div>

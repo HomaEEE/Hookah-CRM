@@ -30,19 +30,18 @@ class SiteController extends Controller
         return view('site.home', compact('place'));
     }
 
-    public function table(?int $table_number = null)
+    public function seet(?int $table_number = null)
     {
-
         $slug = 'od';
         $place = Place::where('slug', $slug)->first();
 
-        if (Session::get('table') !== $table_number) {
-            $table_number = Session::put('table', $table_number);
+        if (is_null($table_number)) {
+            $table_number = Session::get('table', null);
         } else {
-            $table_number = Session::get('table');
+            Session::put('table', $table_number);
         }
 
-        return view('site.table', compact('place', 'table_number'));
+        return view('site.seet', compact('place', 'table_number'));
 
     }
 
@@ -54,6 +53,12 @@ class SiteController extends Controller
         $categories = Category::where('place_id', $place->id)
             ->where('parent_category', 0)->orderBy('sort_order', 'asc')
             ->with('childs', 'products')->orderBy('sort_order', 'asc')->VisibleMenu(true)->get();
+
+        if (is_null($table_number)) {
+            $table_number = Session::get('table', null);
+        } else {
+            Session::put('table', $table_number);
+        }
 
         return view('site.menu', compact('place', 'categories', 'table_number'));
     }
