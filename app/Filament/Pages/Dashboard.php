@@ -13,6 +13,7 @@ use App\Models\Shift;
 use App\Models\ShiftUser;
 use App\Models\Supply;
 use App\Models\Tip;
+use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
@@ -240,6 +241,16 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
 
             ])
                 ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info'),
+
+            Action::make('test')->label('pusher')
+                ->action(function (): void {
+                    $recipient = User::find(1);
+                    Notification::make()
+                        ->title('Saved successfully')
+                        ->broadcast($recipient);
+                }
+                ),
         ];
+
     }
 }

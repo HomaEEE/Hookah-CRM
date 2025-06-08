@@ -105,16 +105,9 @@ class UserResource extends Resource
                     ->saveRelationshipsUsing(function (Model $record, $state) {
                         $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
                     })
-                    ->multiple()
                     ->preload()
                     ->searchable(),
                 // Using CheckboxList Component
-                CheckboxList::make('roles')
-                    ->relationship(name: 'roles', titleAttribute: 'name')
-                    ->saveRelationshipsUsing(function (Model $record, $state) {
-                        $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
-                    })
-                    ->searchable(),
             ]);
     }
 
