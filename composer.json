@@ -30,7 +30,6 @@
         "leandrocfe/filament-apex-charts": "^3.1",
         "livewire/livewire": "^3.0",
         "malzariey/filament-daterangepicker-filter": "^3.0",
-        "pusher/pusher-php-server": "^7.2",
         "relaticle/flowforge": "^0.1.6",
         "solution-forest/filament-simplelightbox": "^0.0.4",
         "solution-forest/filament-translate-field": "^0.0.2",

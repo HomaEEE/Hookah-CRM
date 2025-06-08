@@ -242,14 +242,6 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
             ])
                 ->button()->label(__('Shift'))->icon('heroicon-o-inbox-stack')->color('info'),
 
-            Action::make('test')->label('pusher')
-                ->action(function (): void {
-                    $recipient = User::find(1);
-                    Notification::make()
-                        ->title('Saved successfully')
-                        ->broadcast($recipient);
-                }
-                ),
         ];
 
     }
