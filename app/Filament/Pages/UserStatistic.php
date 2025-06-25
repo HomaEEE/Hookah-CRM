@@ -10,7 +10,7 @@ class UserStatistic extends Page
 {
     use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static ?string $navigationIcon = 'phosphor-user';
 
     protected static string $view = 'filament.pages.user-statistic';
 

@@ -33,6 +33,14 @@ Route::get('/contacts', 'App\Http\Controllers\SiteController@contacts');
 Route::post('/sendFeedback', 'App\Http\Controllers\SiteController@sendFeedback');
 Route::post('/sendReserve', 'App\Http\Controllers\SiteController@sendReserve');
 
+Route::prefix('bot')->group(function () {
+    Route::get('/', 'App\Http\Controllers\TelegramBotController@index')->name('bot.index');
+    Route::get('hookah', 'App\Http\Controllers\TelegramBotController@hookah')->name('bot.hookah');
+    Route::get('waiter', 'App\Http\Controllers\TelegramBotController@waiter')->name('bot.waiter');
+    Route::get('bill', 'App\Http\Controllers\TelegramBotController@bill')->name('bot.bill');
+    Route::post('order', 'App\Http\Controllers\TelegramBotController@order')->name('bot.order');
+});
+
 Route::get('lang/{lang}',
     ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\SiteController@switchLang']);
 

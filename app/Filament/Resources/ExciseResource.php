@@ -86,8 +86,7 @@ class ExciseResource extends Resource
                                     ->imagePreviewHeight('350')
                                     ->imageResizeMode('cover')
                                     ->imageEditor()
-                                    ->optimize('webp')
-                                    ->resize(70)
+                                    //                 ->optimize('webp')                                    ->resize(70)
                                     ->imageEditorAspectRatios([
                                         null,
                                         '16:9',

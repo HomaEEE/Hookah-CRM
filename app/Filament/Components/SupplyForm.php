@@ -183,7 +183,7 @@ class SupplyForm
                                 ->imageResizeMode('cover')
                                 ->optimize('webp')
                                 ->openable()
-                                ->resize(75),
+                                ->resize(70),
                         ]),
                     Tabs\Tab::make(__('Receipt'))
                         ->schema([
@@ -194,7 +194,7 @@ class SupplyForm
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
                                 ->optimize('webp')
-                                ->resize(75)
+                                ->resize(70)
                                 ->imageEditor()
                                 ->imageEditorAspectRatios([
                                     null,

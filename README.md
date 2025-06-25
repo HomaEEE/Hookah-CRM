@@ -1,1 +1,1 @@
--test
+[ ] Laravel 12 update

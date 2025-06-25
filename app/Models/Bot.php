@@ -17,4 +17,9 @@ class Bot extends Model
     {
         return $this->belongsTo(Place::class, 'place_id');
     }
+
+    public function chat()
+    {
+        return $this->belongsTo(BotChat::class, 'id', 'telegraph_bot_id');
+    }
 }

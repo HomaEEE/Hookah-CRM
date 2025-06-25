@@ -51,6 +51,11 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Booking::class);
     }
 
+    public function bots()
+    {
+        return $this->hasMany(Bot::class);
+    }
+
     public function guests()
     {
         return $this->hasMany(Guest::class);

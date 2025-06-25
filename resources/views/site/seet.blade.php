@@ -13,9 +13,11 @@
         <div class="row middle-xs beetwen-xs">
         <div class="col-xs-12">
           <a class="btn" href="/menu">{{__('View')}} {{__('Menu')}}</a>
-          <a class="btn" href="#">{{__('Call')}} {{__('Waiter')}}</a>
-          <a class="btn" href="#">{{__('Call')}} {{__('Hookah Master')}}</a>
-          <a  class="btn" href="#">{{__('Bill')}}</a>
+          <a  class="btn" href="/feedback">{{__('Feedback button')}}</a>
+
+          <a class="btn" href="/bot/waiter">{{__('Call')}} {{__('Waiter')}}</a>
+          <a class="btn" href="/bot/hookah">{{__('Call')}} {{__('Hookah Master')}}</a>
+          <a  class="btn" href="/bot/bill">{{__('Bill')}}</a>
         </div>
     </div>
     </div>

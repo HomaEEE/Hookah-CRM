@@ -9,6 +9,7 @@ use App\Http\Middleware\ApplyTenantScopes;
 use App\Http\Middleware\SetLocale;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -98,8 +99,14 @@ class AdminPanelProvider extends PanelProvider
                     ->defaultLocales(['ru', 'uk', 'en']),
                 FilamentTranslateFieldPlugin::make()
                     ->defaultLocales(['ru', 'uk', 'en']),
-                EnvironmentIndicatorPlugin::make(),
+                //     EnvironmentIndicatorPlugin::make(),
                 SimpleLightBoxPlugin::make(),
+                PhosphorIcons::make()
+                    ->overrideStyleForIcon([
+                        'phosphor-user',
+                        'phosphor-caret-up',
+                    ], 'thin'),
+
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,
