@@ -2,19 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use DefStudio\Telegraph\Models\TelegraphChat;
 
-class BotChat extends Model
+class BotChat extends TelegraphChat
 {
     protected $table = 'telegraph_chats';
 
-    use HasFactory;
-
-    public function bot()
-    {
-        return $this->belongsTo(Bot::class, 'bot_id');
-    }
+    // public function bot()
+    // {
+    //     return $this->belongsTo(Bot::class, 'bot_id');
+    // }
 
     public function place()
     {

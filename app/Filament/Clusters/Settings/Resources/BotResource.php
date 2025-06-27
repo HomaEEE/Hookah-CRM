@@ -11,12 +11,14 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
+use Illuminate\Support\Facades\Log;
 
 class BotResource extends Resource
 {
@@ -51,11 +53,22 @@ class BotResource extends Resource
 
                     ->label('Chat list')
                     ->relationManager(ChatRelationManager::make()),
-
-                Action::make('Webhook')->translateLabel()->button()
-                    ->action(function (Bot $record): void {
-                        (new TelegramBotController)->setWebhook($record->id);
-                    })->visible(fn (Bot $bot) => $bot->webhook == 0),
+                Action::make('Webhook')->button()
+                    ->requiresConfirmation()
+                    ->action(function (Bot $record) {
+                        $url = route('telegraph.webhook', $record);
+                        $response = $record->registerWebhook($url)->send();
+                        Log::info('Telegram Webhook', ['response' => $response->json()]);
+                        Notification::make()
+                            ->title('Webhook установлен')
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (Bot $bot) => $bot->webhook == 0),
+                // Action::make('Webhook')->translateLabel()->button()
+                //     ->action(function (Bot $record): void {
+                //         (new TelegramBotController)->setWebhook($record->id);
+                //     })->visible(fn (Bot $bot) => $bot->webhook == 0),
                 Tables\Actions\EditAction::make()->label(''),
                 Tables\Actions\DeleteAction::make()->label(''),
             ])

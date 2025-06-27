@@ -41,6 +41,11 @@ Route::prefix('bot')->group(function () {
     Route::post('order', 'App\Http\Controllers\TelegramBotController@order')->name('bot.order');
 });
 
+Route::prefix('telegraph')->group(function () {
+    Route::get('{bot_token}/webhook', 'App\Http\Controllers\TelegramBotController@webhook')->name('telegraph.webhook');
+
+});
+
 Route::get('lang/{lang}',
     ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\SiteController@switchLang']);
 

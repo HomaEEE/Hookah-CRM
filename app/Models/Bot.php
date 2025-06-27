@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use DefStudio\Telegraph\Models\TelegraphBot as BaseTelegraphBot;
 
-class Bot extends Model
+class Bot extends BaseTelegraphBot
 {
     protected $table = 'telegraph_bots';
-
-    use HasFactory;
 
     protected $fillable = ['token', 'name', 'place_id'];
 

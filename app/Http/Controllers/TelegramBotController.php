@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bot;
 use DefStudio\Telegraph\Facades\Telegraph;
 
 class TelegramBotController extends Controller
@@ -13,6 +14,7 @@ class TelegramBotController extends Controller
 
     public function setWebhook($bot_id)
     {
-        Telegraph::registerWebhook($bot_id)->send();
+        $bot = Bot::where('id', $bot_id);
+        $bot->registerWebhook()->send();
     }
 }
