@@ -39,9 +39,7 @@ Route::prefix('bot')->group(function () {
     Route::get('waiter', 'App\Http\Controllers\TelegramBotController@waiter')->name('bot.waiter');
     Route::get('bill', 'App\Http\Controllers\TelegramBotController@bill')->name('bot.bill');
     Route::post('order', 'App\Http\Controllers\TelegramBotController@order')->name('bot.order');
-});
 
-Route::prefix('telegraph')->group(function () {
     Route::get('{bot_token}/webhook', 'App\Http\Controllers\TelegramBotController@webhook')->name('telegraph.webhook');
 
 });

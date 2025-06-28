@@ -16,5 +16,7 @@ class TelegramBotController extends Controller
     {
         $bot = Bot::where('id', $bot_id);
         $bot->registerWebhook()->send();
+        $bot->webhook = 1;
+        $bot->save();
     }
 }
