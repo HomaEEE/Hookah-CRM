@@ -10,7 +10,6 @@ use App\Models\Income;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use Stringable;
 
 class TelegraphHandler extends WebhookHandler
 {
@@ -85,10 +84,10 @@ class TelegraphHandler extends WebhookHandler
             )->send();
     }
 
-    public function handleMessage(Stringable $text)
+    public function handleMessage(): void
     {
         $this->chat->html('Введите сумму');
-        $this->message->text($text);
+        $this->message->text();
         $this->addIncome($this->category_id, $this->bill_id, $this->sum);
     }
 

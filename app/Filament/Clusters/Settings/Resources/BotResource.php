@@ -65,6 +65,9 @@ class BotResource extends Resource
                             ->send();
                     })
                     ->visible(fn (Bot $bot) => $bot->webhook == 0),
+                Action::make('check')
+                    ->url(fn (Bot $record): string => 'https://api.telegram.org/bot'.$record->token.'/getWebhookInfo')
+                    ->openUrlInNewTab(),
                 // Action::make('Webhook')->translateLabel()->button()
                 //     ->action(function (Bot $record): void {
                 //         (new TelegramBotController)->setWebhook($record->id);
