@@ -53,7 +53,7 @@ class BotResource extends Resource
 
                     ->label('Chat list')
                     ->relationManager(ChatRelationManager::make()),
-                Action::make('Webhook')->button()
+                Action::make('Webhook')->button()->color('success')
                     ->requiresConfirmation()
                     ->action(function (Bot $record) {
                         $url = route('telegraph.webhook', $record);
