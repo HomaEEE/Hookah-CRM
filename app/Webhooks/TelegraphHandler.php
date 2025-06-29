@@ -2,14 +2,12 @@
 
 namespace App\Webhooks;
 
-use App\Models\Bill;
 use App\Models\BotChat;
-use App\Models\Category;
-use App\Models\ExpenseCategory;
 use App\Models\Income;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use Filament\Facades\Filament;
 
 class TelegraphHandler extends WebhookHandler
 {
@@ -24,99 +22,50 @@ class TelegraphHandler extends WebhookHandler
     public function start()
     {
 
-        BotChat::firstOrCreate(
-            ['chat_id' => $this->chat->chat_id],
-            ['chat_id' => $this->chat->chat_id,
-                'name' => $this->chat->id,
+        // BotChat::firstOrCreate(
+        //     ['chat_id' => $this->chat->chat_id],
+        //     ['chat_id' => $this->chat->chat_id,
+        //         'name' => $this->chat->id,
+        //         'telegraph_bot_id' => $this->bot->id,
+        //     ]
+        // );
+
+        // $this->chat->html('test hello')
+        //     ->keyboard(Keyboard::make()->buttons([
+        //         Button::make('🗑️ Расход')->action('expense'),
+        //         // Button::make("📖 Доход")->action("income"),
+        //     ])->chunk(2))->send();
+
+        // $this->messageId = $this->message->id();
+
+        $chatId = $this->chat->chat_id;
+        $text = $this->message->text();
+
+        // Находим чат
+        $chat = BotChat::where('chat_id', $chatId)->first();
+
+        if (! $chat) {
+            // Первое сообщение — создаём и ставим как "guest"
+            $chat = BotChat::create([
+                'chat_id' => $chatId,
                 'telegraph_bot_id' => $this->bot->id,
-            ]
-        );
-
-        $this->chat->html('test hello')
-            ->keyboard(Keyboard::make()->buttons([
-                Button::make('🗑️ Расход')->action('expense'),
-                // Button::make("📖 Доход")->action("income"),
-            ])->chunk(2))->send();
-
-        $this->messageId = $this->message->id();
-    }
-
-    public function menu()
-    {
-        $this->chat->edit($this->messageId)->html('edit')
-            ->keyboard(Keyboard::make()->buttons([
-                Button::make('🗑️ Расход')->action('expense'),
-                Button::make('📖 Доход')->action('income'),
-            ])->chunk(2))->send();
-    }
-
-    public function income()
-    {
-        $categories = Category::where('type', 1)->get();
-        $buttons = [];
-        foreach ($categories as $cat) {
-            $buttons[] = Button::make($cat->name)->action('bills')->param('category_id', $cat->id);
+                'role' => BotChat::GUEST,
+            ]);
         }
 
-        $buttons[] = Button::make('Меню')->action('menu');
+        // Привязка к тенанту, если ещё не выбрано
+        if (! $chat->place_id) {
+            // Показываем кнопки городов (например, из базы)
+            $cities = \App\Models\Place::pluck('city')->chunk(2)->toArray();
+            $this->chat->message('Выберите ваш город:')
+                ->keyboard($cities)
+                ->send();
 
-        $this->chat->edit($this->messageId)->html('Добавить доход')
-            ->replaceKeyboard(
-                messageId: $this->messageId,
-                newKeyboard: Keyboard::make()->buttons($buttons)
-            )->send();
-    }
-
-    public function bills()
-    {
-        $bills = Bill::get();
-
-        foreach ($bills as $bill) {
-            $buttons[] = Button::make($bill->name)->action('handleMessage')->param('bill_id', $bill->id);
+            return;
         }
 
-        $buttons[] = Button::make('Назад')->action('menu');
+        // ✅ Установка контекста арендатора
+        Filament::setTenant($chat->place_id);
 
-        $this->chat->edit($this->messageId)->html('Выбирите счет')
-            ->replaceKeyboard(
-                messageId: $this->messageId,
-                newKeyboard: Keyboard::make()->buttons($buttons)
-            )->send();
-    }
-
-    public function handleMessage(): void
-    {
-        $this->chat->html('Введите сумму');
-        $this->message->text();
-        $this->addIncome($this->category_id, $this->bill_id, $this->sum);
-    }
-
-    public function addIncome($category_id, $bill_id, $sum)
-    {
-        Income::create([
-            'comment' => 'test',
-            'category_id' => $category_id,
-            'bill_id' => $bill_id,
-            'sum' => $sum,
-        ]);
-        $this->menu();
-    }
-
-    public function expense()
-    {
-
-        $categories = ExpenseCategory::get();
-        $buttons = [];
-        foreach ($categories as $cat) {
-            $buttons[] = Button::make($cat->name)->action('add_expensr')->param('id', $cat->id);
-        }
-
-        $buttons[] = Button::make('Меню')->action('menu');
-
-        $this->chat->edit($this->messageId)->message('Расход')
-            ->replaceKeyboard(
-                messageId: $this->messageId,
-                newKeyboard: Keyboard::make()->buttons($buttons)
-            )->send();
     }
 }

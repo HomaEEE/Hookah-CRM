@@ -14,11 +14,13 @@ return new class extends Migration
             $table->string('chat_id');
             $table->foreignIdFor(Place::class);
             $table->string('name')->nullable();
+            $table->string('user_type')->nullable(); // 'guest' или 'user'
+            $table->unsignedBigInteger('user_id')->nullable();
 
+            $table->string('lang')->default('ua');
             $table->foreignId('telegraph_bot_id')->constrained('telegraph_bots')->cascadeOnDelete();
-            $table->timestamps();
-
             $table->unique(['chat_id', 'telegraph_bot_id']);
+            $table->timestamps();
         });
     }
 
