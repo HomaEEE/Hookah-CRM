@@ -7,7 +7,6 @@ use App\Filament\Clusters\Settings\Resources\UserResource\Pages;
 use App\Models\User;
 use App\Models\Wage;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -100,14 +99,14 @@ class UserResource extends Resource
                 //     ->preload()
                 //     ->relationship('roles', 'name'),
 
-                Select::make('roles')->translateLabel()
+                Select::make('roles')
                     ->relationship('roles', 'name')
                     ->saveRelationshipsUsing(function (Model $record, $state) {
                         $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
                     })
+                    ->multiple()
                     ->preload()
                     ->searchable(),
-                // Using CheckboxList Component
             ]);
     }
 

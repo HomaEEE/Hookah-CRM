@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PhoneCast;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
@@ -48,7 +49,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        // 'places' => 'array',
+        'phone' => PhoneCast::class,
     ];
 
     public function canAccessPanel(Panel $panel): bool

@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 
 class ChatRelationManager extends RelationManager
 {
-    protected static string $relationship = 'chat';
+    protected static string $relationship = 'chats';
 
     public function form(Form $form): Form
     {

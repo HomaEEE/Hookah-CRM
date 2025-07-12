@@ -8,6 +8,8 @@ class BotChat extends TelegraphChat
 {
     protected $table = 'telegraph_chats';
 
+    protected $fillable = ['place_id', 'name', 'telegraph_bot_id'];
+
     // public function bot()
     // {
     //     return $this->belongsTo(Bot::class, 'bot_id');
@@ -30,6 +32,12 @@ class BotChat extends TelegraphChat
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id')->where('user_type', 'user');
+    }
+
+    public function chats()
+    {
+        return $this->hasMany(BotChat::class, 'id', 'telegraph_bot_id');
+
     }
 
     public function getOwnerAttribute()

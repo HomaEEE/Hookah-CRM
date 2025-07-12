@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PhoneCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,10 @@ class Guest extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'place_id', 'phone', 'comment'];
+
+    protected $casts = [
+        'phone' => PhoneCast::class,
+    ];
 
     public $timestamps = false;
 
@@ -26,10 +31,9 @@ class Guest extends Model
     public function getFullNameAttribute()
     {
         if (isset($this->comment)) {
-        return $this->name . ' (' . $this->comment . ')';
+            return $this->name.' ('.$this->comment.')';
         } else {
             return $this->name;
         }
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PhoneCast;
 use App\Enums\SupplierType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,11 @@ class Supplier extends Model
 
     protected $fillable = ['name', 'company', 'place_id', 'phone', 'comment', 'mail', 'data'];
 
-    protected $casts = ['data' => 'array', 'type' => SupplierType::class];
+    protected $casts = [
+        'data' => 'array',
+        'type' => SupplierType::class,
+        'phone' => PhoneCast::class,
+    ];
 
     public $timestamps = false;
 

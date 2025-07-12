@@ -29,7 +29,8 @@ return [
          * For reference, see https://docs.defstudio.it/telegraph/webhooks/overview
          */
         // 'handler' => DefStudio\Telegraph\Handlers\EmptyWebhookHandler::class,
-        'handler' => App\Webhooks\TelegraphHandler::class,
+        'handler' => App\Http\Webhooks\Handler::class,
+        // 'handler' => App\Telegram\Handler::class,
 
         /*
          * Middleware to be applied to the webhook route
@@ -113,8 +114,8 @@ return [
      * Chat model must be or extend `DefStudio\Telegraph\Models\TelegraphChat::class`
      */
     'models' => [
-        'bot' => DefStudio\Telegraph\Models\TelegraphBot::class,
-        'chat' => DefStudio\Telegraph\Models\TelegraphChat::class,
+        'bot' => App\Models\Bot::class,
+        'chat' => App\Models\BotChat::class,
     ],
 
     'storage' => [
