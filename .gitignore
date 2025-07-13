@@ -23,7 +23,7 @@ storage/octane
 
 
 # Laravel ClockWorks
-storage/clockworks
+/storage/clockwork
 # Laravel Valet
 .valet
 
@@ -56,10 +56,10 @@ coverage/
 
 # Custom storage subfolders
 /storage/debugbar
-/storage/framework/cache
-/storage/framework/sessions
-/storage/framework/views
-/storage/logs
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
 
 #Filament php
 /app/Policies
