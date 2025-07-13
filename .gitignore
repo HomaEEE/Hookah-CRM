@@ -56,9 +56,7 @@ coverage/
 
 # Custom storage subfolders
 /storage/debugbar
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
+/storage/framework/*/*
 /storage/logs/*
 
 #Filament php
