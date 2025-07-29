@@ -2,9 +2,13 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\Bill;
 use App\Models\Expense;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Tables\Actions;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -87,6 +91,44 @@ class ExpensesDay extends BaseWidget implements HasTable
                             $name => ! $record->$name,
                         ]);
                     }),
+            ])
+            ->actions([
+                //  Actions\ViewAction::make()->label(''),
+                Actions\EditAction::make()->label('')
+                    ->form([
+                        TextInput::make('sum')->translateLabel(),
+                        ToggleButtons::make('bill_id')->label(__('Type pay'))
+                            ->options(Bill::get()->pluck('name', 'id'))
+                            ->default(0)
+                            ->required()
+                            ->inline()
+                            ->grouped()
+                            ->extraAttributes(['style' => 'width: 100%'])
+                            ->colors([
+                                0 => 'info',
+                                1 => 'success',
+                            ])
+                            ->reactive(),
+
+                        ToggleButtons::make('pay')->label(__('Pay'))
+                            ->options(
+                                [
+                                    0 => __('No pay'),
+                                    1 => __('Paid'),
+                                ]
+                            )
+                            ->colors([
+                                0 => 'danger',
+                                1 => 'success',
+                            ])
+                            ->default(0)
+                            ->inline()
+                            ->live()
+                            ->grouped()
+                            ->extraAttributes(['style' => 'width: 100%'])
+                            ->reactive(),
+                    ]
+                    ),
             ]);
     }
 }

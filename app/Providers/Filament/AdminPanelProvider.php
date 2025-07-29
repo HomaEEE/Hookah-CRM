@@ -26,9 +26,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
-use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
-use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -56,7 +54,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
-
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
 
             ->pages([
@@ -95,11 +92,8 @@ class AdminPanelProvider extends PanelProvider
                         'sm' => 2,
                     ]),
                 FilamentApexChartsPlugin::make(),
-                SpatieLaravelTranslatablePlugin::make()
-                    ->defaultLocales(['ru', 'uk', 'en']),
-                FilamentTranslateFieldPlugin::make()
-                    ->defaultLocales(['ru', 'uk', 'en']),
-                //     EnvironmentIndicatorPlugin::make(),
+                // SpatieLaravelTranslatablePlugin::make()
+                //     ->defaultLocales(['ru', 'uk', 'en']),
                 SimpleLightBoxPlugin::make(),
                 PhosphorIcons::make()
                     ->overrideStyleForIcon([

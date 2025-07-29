@@ -29,7 +29,7 @@ return [
          * For reference, see https://docs.defstudio.it/telegraph/webhooks/overview
          */
         // 'handler' => DefStudio\Telegraph\Handlers\EmptyWebhookHandler::class,
-        'handler' => App\Http\Webhooks\Handler::class,
+        'handler' => App\Telegraph\Handler::class,
         // 'handler' => App\Telegram\Handler::class,
 
         /*
