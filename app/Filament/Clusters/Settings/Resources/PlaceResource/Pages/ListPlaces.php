@@ -10,12 +10,11 @@ class ListPlaces extends ListRecords
 {
     protected static string $resource = PlaceResource::class;
 
-    use ListRecords\Concerns\Translatable;
+    // use ListRecords\Concerns\Translatable;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\LocaleSwitcher::make(),
             Actions\CreateAction::make(),
         ];
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Storage;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +16,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('price')->nullable();
+            $table->integer('count')->default(0);
+            $table->string('sn')->nullable();
+            $table->foreignIdFor(Storage::class);
+            $table->integer('own')->nullable();
         });
     }
 

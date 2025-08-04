@@ -2,13 +2,13 @@
 
 namespace App\Filament\Pages\Tenancy;
 
+use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
-use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class EditPlaceProfile extends EditTenantProfile
 {
@@ -21,7 +21,8 @@ class EditPlaceProfile extends EditTenantProfile
     {
         return $form
             ->schema([
-                Translate::make()
+                TranslatableTabs::make()
+                    ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))
                     ->schema([
                         TextInput::make('name')->translateLabel(),
                         TextInput::make('city')->translateLabel(),

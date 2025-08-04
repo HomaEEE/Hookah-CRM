@@ -5,20 +5,19 @@ namespace App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Components\Shift\PosterWizard;
 use App\Filament\Components\Shift\ShiftWizard;
 use App\Filament\Components\Shift\WagesWizard;
-use App\Filament\Resources\{ShiftResource};
-use App\Http\Controllers\{PosterApiController};
-use App\Models\{Bill, Expense, Place};
+use App\Filament\Resources\ShiftResource;
+use App\Http\Controllers\PosterApiController;
+use App\Models\Bill;
+use App\Models\Expense;
+use App\Models\Place;
 use Auth;
-
+use Filament\Forms\Components\Wizard\Step;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Forms\Components\Wizard\Step;
-
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
 
 class CreateShift extends CreateRecord
 {
-
     use HasWizard;
 
     protected static string $resource = ShiftResource::class;
@@ -31,6 +30,7 @@ class CreateShift extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['terminal'] = $data['terminal'] * 0.987;
+
         return $data;
     }
 
@@ -40,7 +40,7 @@ class CreateShift extends CreateRecord
 
         $wage = Place::where('id', $shift->place_id)->select('settings->wage_expense as expense')->first();
 
-        (new PosterApiController())->closeShift($shift);
+        (new PosterApiController)->closeShift($shift);
 
         Expense::create(
             [
@@ -62,7 +62,6 @@ class CreateShift extends CreateRecord
             ['id' => 1],
         )->increment('balance', $shift->terminal);
 
-
         Notification::make()
             ->title(__('Shift are closed'))
             ->send();
@@ -74,12 +73,12 @@ class CreateShift extends CreateRecord
         return [
 
             Step::make('Poster')->translateLabel()
-            ->completedIcon('heroicon-m-briefcase')
+                ->completedIcon('heroicon-m-briefcase')
                 ->schema(
                     PosterWizard::schema()
                 ),
             Step::make('Wages')->translateLabel()
-            ->completedIcon('heroicon-m-user-plus')
+                ->completedIcon('heroicon-m-user-plus')
                 ->schema(
                     WagesWizard::schema()
 
@@ -88,7 +87,7 @@ class CreateShift extends CreateRecord
                 ->completedIcon('heroicon-m-document-check')
                 ->schema(
                     ShiftWizard::schema()
-                )
+                ),
         ];
     }
 }

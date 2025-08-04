@@ -16,7 +16,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\SpatieLaravelTranslatablePlugin;
 use Filament\Support\Colors\Color;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -91,9 +90,8 @@ class AdminPanelProvider extends PanelProvider
                         'default' => 1,
                         'sm' => 2,
                     ]),
+
                 FilamentApexChartsPlugin::make(),
-                // SpatieLaravelTranslatablePlugin::make()
-                //     ->defaultLocales(['ru', 'uk', 'en']),
                 SimpleLightBoxPlugin::make(),
                 PhosphorIcons::make()
                     ->overrideStyleForIcon([

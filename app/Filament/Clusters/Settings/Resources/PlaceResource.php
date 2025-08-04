@@ -9,7 +9,6 @@ use App\Models\Place;
 use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -19,18 +18,11 @@ use Filament\Tables\Table;
 
 class PlaceResource extends Resource
 {
-    use Translatable;
-
     protected static ?string $cluster = Settings::class;
 
     protected static ?string $tenantOwnershipRelationshipName = 'users';
 
     protected static ?string $navigationIcon = 'heroicon-o-home-modern';
-
-    public static function getTranslatableLocales(): array
-    {
-        return ['ru', 'uk', 'en'];
-    }
 
     protected static ?string $model = Place::class;
 

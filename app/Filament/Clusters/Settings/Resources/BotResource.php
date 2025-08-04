@@ -49,8 +49,7 @@ class BotResource extends Resource
             ])
             ->actions([
 
-                RelationManagerAction::make('lesson-relation-manager')
-
+                RelationManagerAction::make('chats-manager')
                     ->label('Chat list')
                     ->relationManager(ChatRelationManager::make()),
                 Action::make('Webhook')->button()->color('success')

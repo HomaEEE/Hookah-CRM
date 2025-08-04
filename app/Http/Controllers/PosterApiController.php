@@ -301,9 +301,9 @@ class PosterApiController extends Controller
     public function getEmployees($place_id)
     {
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
-        $posterCategories = Http::get($this->urlApi.'access.getEmployees?token='.$place_api['api'])
+        $posterEmplyoeers = Http::get($this->urlApi.'access.getEmployees?token='.$place_api['api'])
             ->json('response');
-        dd($posterCategories);
+        dd($posterEmplyoeers);
     }
 
     public function MakeTransaction($place_id, $data)

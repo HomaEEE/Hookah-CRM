@@ -10,7 +10,7 @@ class Storage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['place_id', 'workshop_id', 'item_id', 'qty'];
+    protected $fillable = ['place_id', 'name'];
 
     protected $casts = [
         'own' => EnumsStorage::class,
@@ -20,12 +20,12 @@ class Storage extends Model
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function items()
     {
-        return $this->belongsToMany(Item::class);
+        return $this->HasMany(Item::class);
     }
 
     public function item()
@@ -33,9 +33,15 @@ class Storage extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public function getSumAttribute()
+    public function getTotalItemsAttribute(): int
     {
-        return $this->qty * $this->price;
+        return $this->items()->sum('count');
     }
 
+    public function getTotalSumAttribute(): float
+    {
+        return $this->items()->get()->sum(function ($item) {
+            return $item->price * $item->count;
+        });
+    }
 }
