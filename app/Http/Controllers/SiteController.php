@@ -51,8 +51,11 @@ class SiteController extends Controller
         $place = Place::where('slug', $slug)->first();
 
         $categories = Category::where('place_id', $place->id)
-            ->where('parent_category', 0)->orderBy('sort_order', 'asc')
-            ->with('childs', 'products')->orderBy('sort_order', 'asc')->VisibleMenu(true)->get();
+            ->where('parent_category', 0)
+            ->VisibleMenu(true)
+            ->orderBy('sort_order', 'asc')
+            ->with('childs', 'products')
+            ->get();
 
         if (is_null($table_number)) {
             $table_number = Session::get('table', null);

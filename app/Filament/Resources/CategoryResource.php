@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
 use Filament\Facades\Filament;
@@ -18,7 +19,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class CategoryResource extends Resource
 {
@@ -52,7 +52,8 @@ class CategoryResource extends Resource
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                Translate::make()
+                TranslatableTabs::make()
+                    ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))
                     ->schema([
                         TextInput::make('frontend_name')->label(__('Front category name')),
                         TextInput::make('frontend_menu_name')->label(__('Front menu')),

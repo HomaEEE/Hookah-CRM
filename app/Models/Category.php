@@ -30,12 +30,14 @@ class Category extends Model
 
     public function childs()
     {
-        return $this->hasMany(Category::class, ['parent_category', 'place_id'], ['category_id', 'place_id'])->visibleMenu(true);
+        return $this->hasMany(Category::class, ['parent_category', 'place_id'], ['category_id', 'place_id'])
+            ->orderBy('sort_order', 'asc')->VisibleMenu(true);
     }
 
     public function parent()
     {
-        return $this->belongsTo(Category::class, ['parent_category', 'place_id'], ['category_id', 'place_id']);
+        return $this->belongsTo(Category::class, ['parent_category', 'place_id'], ['category_id', 'place_id'])
+            ->orderBy('sort_order', 'asc')->VisibleMenu(true);
     }
 
     public function scopeVisibleMenu($query, $value)
@@ -47,8 +49,7 @@ class Category extends Model
     {
         return $this->hasMany(Product::class, ['menu_category_id', 'place_id'], ['category_id', 'place_id'])
             ->orderBy('price', 'asc')
-            ->where('visible_menu', true)
-            ->where('price', '>', 1);
+            ->VisibleMenu(true);
     }
 
     public function place()
