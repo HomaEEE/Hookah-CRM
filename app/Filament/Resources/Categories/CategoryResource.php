@@ -1,7 +1,15 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Categories;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Support\Enums\IconSize;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Categories\Pages\ManageCategories;
 use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
@@ -11,8 +19,6 @@ use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -41,10 +47,10 @@ class CategoryResource extends Resource
         return __('Categories');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
 
                 TextInput::make('category_name')
@@ -98,7 +104,7 @@ class CategoryResource extends Resource
 
                 IconColumn::make('visible_menu')
                     ->translateLabel()
-                    ->size(IconColumn\IconColumnSize::Large)
+                    ->size(IconSize::Large)
                     ->boolean()
                     ->sortable()
                     ->trueIcon('heroicon-o-eye')
@@ -118,13 +124,13 @@ class CategoryResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -132,7 +138,7 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCategories::route('/'),
+            'index' => ManageCategories::route('/'),
         ];
     }
 }

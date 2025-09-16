@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use App\Casts\MoneyCast;
 use App\Enums\IngredientUnit;
 use App\Enums\SupplyUnit;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ingredient extends Model
 {
     use HasFactory;
-    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+    use HasJsonRelationships;
 
     protected $fillable = ['ingredient', 'unit', 'workshop_id', 'place_id', 'price'];
 

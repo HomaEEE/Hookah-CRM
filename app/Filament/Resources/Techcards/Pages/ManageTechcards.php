@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\TechcardResource\Pages;
+namespace App\Filament\Resources\Techcards\Pages;
 
-use App\Filament\Resources\TechcardResource;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Tabs\Tab;
+use App\Filament\Resources\Techcards\TechcardResource;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Workshop;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
-use Filament\Resources\Components\Tab;
 use Filament\Tables\Actions\CreateAction;
 
 class ManageTechcards extends ManageRecords
@@ -19,7 +20,7 @@ class ManageTechcards extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\Action::make('update')
+            Action::make('update')
             ->label(__('Update techcards'))
             ->icon('heroicon-o-arrow-path')
             ->action(function (): void {

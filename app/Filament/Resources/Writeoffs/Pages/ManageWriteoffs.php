@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\WriteoffResource\Pages;
+namespace App\Filament\Resources\Writeoffs\Pages;
 
-use App\Filament\Resources\WriteoffResource;
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use App\Filament\Resources\Writeoffs\WriteoffResource;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -17,14 +18,14 @@ class ManageWriteoffs extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->schema([
                         TextEntry::make('workshop.name')->label(''),

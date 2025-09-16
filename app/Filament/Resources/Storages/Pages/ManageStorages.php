@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\StorageResource\Pages;
+namespace App\Filament\Resources\Storages\Pages;
 
+use Filament\Actions\CreateAction;
+use Filament\Actions\ImportAction;
+use Filament\Actions\ExportAction;
 use App\Filament\Exports\ItemExporter;
 use App\Filament\Imports\ItemImporter;
-use App\Filament\Resources\StorageResource;
+use App\Filament\Resources\Storages\StorageResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -15,11 +18,11 @@ class ManageStorages extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
 
-            Actions\ImportAction::make()
+            ImportAction::make()
             ->importer(ItemImporter::class),
-            Actions\ExportAction::make()
+            ExportAction::make()
             ->exporter(ItemExporter::class),
         ];
     }

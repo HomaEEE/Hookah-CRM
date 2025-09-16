@@ -2,26 +2,26 @@
 
 namespace App\Filament\Components;
 
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Size;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Models\Bill;
-use App\Models\Ingredient;
 use App\Models\Reqvizite;
 use App\Models\Supplier;
 use Auth;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Support\Enums\ActionSize;
 
 class SupplyForm
 {
@@ -131,8 +131,8 @@ class SupplyForm
             TextInput::make('delay')->label(__('Delay'))
                 ->inputMode('none')
                 ->suffixAction(
-                    FormAction::make('DelayPlus')
-                        ->size(ActionSize::Large)
+                    Action::make('DelayPlus')
+                        ->size(Size::Large)
                         ->color('success')
                         ->icon('heroicon-o-plus')
                         ->iconButton()
@@ -142,8 +142,8 @@ class SupplyForm
                         })
                 )
                 ->prefixAction(
-                    FormAction::make('DelayMinus')
-                        ->size(ActionSize::Large)
+                    Action::make('DelayMinus')
+                        ->size(Size::Large)
                         ->icon('heroicon-o-minus')
                         ->color('danger')
                         ->iconButton()
@@ -166,14 +166,14 @@ class SupplyForm
             Tabs::make('Tabs')
                 ->contained(false)
                 ->tabs([
-                    Tabs\Tab::make(__('Comment'))
+                    Tab::make(__('Comment'))
                         ->schema([
 
                             Textarea::make('comment')->label(__('Comment'))
                                 ->rows(3),
 
                         ]),
-                    Tabs\Tab::make(__('Photo'))
+                    Tab::make(__('Photo'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('invoice')
                                 ->label(__('Photo'))
@@ -181,11 +181,11 @@ class SupplyForm
                                 ->multiple()
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
-                                ->optimize('webp')
-                                ->openable()
-                                ->resize(70),
+                                // ->optimize('webp')
+                                ->openable(),
+                            // ->resize(80),
                         ]),
-                    Tabs\Tab::make(__('Receipt'))
+                    Tab::make(__('Receipt'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('receipt')
                                 ->collection('receipts')
@@ -193,8 +193,8 @@ class SupplyForm
                                 ->multiple()
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
-                                ->optimize('webp')
-                                ->resize(70)
+                               // ->optimize('webp')
+                                // ->resize(70)
                                 ->imageEditor()
                                 ->imageEditorAspectRatios([
                                     null,

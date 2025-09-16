@@ -2,17 +2,19 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\UserStat\UserStatShift;
+use App\Filament\Widgets\UserStat\UserTableShift;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
 class UserStatistic extends Page
 {
-    use HasPageShield;
+    // use HasPageShield;
 
-    protected static ?string $navigationIcon = 'phosphor-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'phosphor-user';
 
-    protected static string $view = 'filament.pages.user-statistic';
+    protected string $view = 'filament.pages.user-statistic';
 
     protected static ?int $navigationSort = 2;
 
@@ -34,8 +36,8 @@ class UserStatistic extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\UserStat\UserStatShift::make(),
-            \App\Filament\Widgets\UserStat\UserTableShift::make(),
+            UserStatShift::make(),
+            UserTableShift::make(),
         ];
     }
 }

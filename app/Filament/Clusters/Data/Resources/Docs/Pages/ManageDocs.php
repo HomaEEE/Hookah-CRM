@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\DocResource\Pages;
+namespace App\Filament\Clusters\Data\Resources\Docs\Pages;
 
-use App\Filament\Clusters\Data\Resources\DocResource;
-use Filament\Infolists\Components\Section;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Components\Tab;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use App\Filament\Clusters\Data\Resources\Docs\DocResource;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\ListRecords\Tab;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -18,7 +19,7 @@ class ManageDocs extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()->slideOver(),
+            CreateAction::make()->slideOver(),
         ];
     }
 
@@ -39,9 +40,9 @@ class ManageDocs extends ManageRecords
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
+        return $schema->components([
             Section::make()
                 ->columns(3)
                 ->schema([

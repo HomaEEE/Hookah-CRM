@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\ServiceResource\Pages;
+namespace App\Filament\Clusters\Data\Resources\Services\Pages;
 
-use App\Filament\Clusters\Data\Resources\ServiceResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Clusters\Data\Resources\Services\ServiceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -13,7 +14,7 @@ class ManageServices extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->createAnother(false),
+            CreateAction::make()->createAnother(false),
         ];
     }
 }

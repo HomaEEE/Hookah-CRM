@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\LeftoverResource\Pages;
+namespace App\Filament\Resources\Leftovers\Pages;
 
-use App\Filament\Resources\LeftoverResource;
+use App\Filament\Resources\Leftovers\LeftoverResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 

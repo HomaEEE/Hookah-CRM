@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Filament\Resources\ShiftResource\Pages;
+namespace App\Filament\Resources\Shifts\Pages;
 
-use App\Filament\Resources\ShiftResource;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Size;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\Shifts\ShiftResource;
 use App\Models\User;
 use App\Models\Wage;
 use App\Models\Workshop;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Support\Enums\ActionSize;
-use Filament\Tables\Actions\CreateAction;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -30,7 +30,7 @@ class Users extends ManageRelatedRecords
 
     protected static string $relationship = 'shift_users';
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     public static function getNavigationLabel(): string
     {
@@ -42,10 +42,10 @@ class Users extends ManageRelatedRecords
         return __('Shift Users');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('shift_id')->default($this->record->id),
                 Select::make('user_id')->translateLabel()
                     ->options(
@@ -105,8 +105,8 @@ class Users extends ManageRelatedRecords
                 TextInput::make('procent_day')->translateLabel()->numeric()
                     ->prefix('%')
                     ->suffixAction(
-                        FormAction::make('Reset')
-                            ->size(ActionSize::Large)
+                        Action::make('Reset')
+                            ->size(Size::Large)
                             ->icon('heroicon-o-x-mark')
                             ->iconButton()
                             ->color('danger')
@@ -116,8 +116,8 @@ class Users extends ManageRelatedRecords
                             })
                     )
                     ->suffixAction(
-                        FormAction::make('Round')
-                            ->size(ActionSize::Large)
+                        Action::make('Round')
+                            ->size(Size::Large)
                             ->icon('heroicon-o-arrow-path')
                             ->iconButton()
                             ->color('info')
@@ -159,11 +159,11 @@ class Users extends ManageRelatedRecords
             ->headerActions([
                 CreateAction::make()->label(__('Add')),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
             ]);
     }
 

@@ -3,10 +3,12 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditUserProfile;
+use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
 use App\Filament\Pages\Tenancy\RegisterPlace;
 use App\Http\Middleware\ApplyTenantScopes;
 use App\Http\Middleware\SetLocale;
+use App\Models\Place;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
 use Filafly\Icons\Phosphor\PhosphorIcons;
@@ -24,7 +26,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -40,7 +41,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Slate,
             ])
             ->sidebarCollapsibleOnDesktop()
-            ->tenant(\App\Models\Place::class, slugAttribute: 'slug')
+            ->tenant(Place::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterPlace::class)
             ->tenantProfile(EditPlaceProfile::class)
             ->login()
@@ -56,7 +57,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
 
             ->pages([
-                \App\Filament\Pages\Dashboard::class,
+                Dashboard::class,
             ])
 
             ->navigationGroups([
@@ -75,23 +76,7 @@ class AdminPanelProvider extends PanelProvider
             ])
 
             ->plugins([
-                FilamentShieldPlugin::make()
-                    ->gridColumns([
-                        'default' => 2,
-                        'sm' => 1,
-                    ])
-                    ->sectionColumnSpan(1)
-                    ->checkboxListColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                        'lg' => 3,
-                    ])
-                    ->resourceCheckboxListColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                    ]),
-
-                FilamentApexChartsPlugin::make(),
+                FilamentShieldPlugin::make(),
                 SimpleLightBoxPlugin::make(),
                 PhosphorIcons::make()
                     ->overrideStyleForIcon([
@@ -101,8 +86,8 @@ class AdminPanelProvider extends PanelProvider
 
             ])
             ->tenantMiddleware([
-                SyncShieldTenant::class,
-                ApplyTenantScopes::class,
+                //  SyncShieldTenant::class,
+                //   ApplyTenantScopes::class,
             ], isPersistent: true)
             ->authGuard('web')
 

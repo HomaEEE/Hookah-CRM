@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\ShiftResource\Pages;
+namespace App\Filament\Resources\Shifts\Pages;
 
-use App\Filament\Resources\ShiftResource;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use App\Filament\Resources\Shifts\ShiftResource;
 use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -21,7 +22,7 @@ class Expenses extends ManageRelatedRecords
 
     protected static string $relationship = 'expenses';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
 
@@ -35,11 +36,11 @@ class Expenses extends ManageRelatedRecords
         return __('Expenses');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('Expenses')
+        return $schema
+            ->components([
+                TextInput::make('Expenses')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -71,10 +72,10 @@ class Expenses extends ManageRelatedRecords
             ->headerActions([
 
             ])
-            ->actions([
+            ->recordActions([
 
             ])
-            ->bulkActions([
+            ->toolbarActions([
 
             ]);
     }

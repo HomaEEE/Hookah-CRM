@@ -1,18 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\SupplyResource\Pages;
+namespace App\Filament\Resources\Supplies\Pages;
 
-use App\Enums\SupplierType;
-use App\Filament\Resources\SupplyResource;
-use App\Models\{Supply, Supplier, Workshop};
-use Auth;
+use App\Filament\Resources\Supplies\SupplyResource;
 use Filament\Actions\CreateAction;
-use Filament\Facades\Filament;
-use Filament\Resources\Components\Tab;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ManageRecords;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Contracts\Pagination\Paginator;
 
 class ManageSupplies extends ManageRecords
 {
@@ -24,5 +16,4 @@ class ManageSupplies extends ManageRecords
             CreateAction::make(),
         ];
     }
-
 }

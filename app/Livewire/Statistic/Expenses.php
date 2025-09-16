@@ -5,8 +5,8 @@ namespace App\Livewire\Statistic;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Filament\Facades\Filament;
-use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -30,13 +30,13 @@ class Expenses extends BaseWidget
             )
             ->columns([
 
-                Tables\Columns\TextColumn::make('category.name')
+                TextColumn::make('category.name')
                     ->translateLabel()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('count')
+                TextColumn::make('count')
                     ->translateLabel()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total')
+                TextColumn::make('total')
                     ->label(__('Sum'))
                     ->sortable()
                     ->money('UAH', 100)
@@ -54,7 +54,6 @@ class Expenses extends BaseWidget
                     ),
                 DateRangeFilter::make('created_at')
                     ->translateLabel()
-                    ->separator(' - ')
                     ->defaultThisMonth()
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 

@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Filament\Resources\StorageResource\RelationManagers;
+namespace App\Filament\Resources\Storages\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use App\Enums\Storage;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,10 +27,10 @@ class ItemsRelationManager extends RelationManager
 {
     protected static string $relationship = 'items';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Section::make()->schema([
 
@@ -54,33 +60,33 @@ class ItemsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('Item')
             ->columns([
-                Tables\Columns\TextColumn::make('name')->translateLabel(),
-                Tables\Columns\TextColumn::make('count')->translateLabel(),
-                Tables\Columns\TextColumn::make('price')->translateLabel()->money('UAH', divideBy: 1),
-                Tables\Columns\TextColumn::make('total')->translateLabel()->money('UAH', divideBy: 1),
+                TextColumn::make('name')->translateLabel(),
+                TextColumn::make('count')->translateLabel(),
+                TextColumn::make('price')->translateLabel()->money('UAH', divideBy: 1),
+                TextColumn::make('total')->translateLabel()->money('UAH', divideBy: 1),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->label(''),
-                Tables\Actions\EditAction::make()->label(''),
-                Tables\Actions\DeleteAction::make()->label(''),
+            ->recordActions([
+                ViewAction::make()->label(''),
+                EditAction::make()->label(''),
+                DeleteAction::make()->label(''),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('name'),
                 // другие поля
             ]);

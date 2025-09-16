@@ -1,14 +1,32 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources;
+namespace App\Filament\Clusters\Settings\Resources\Places;
 
-use App\Filament\Clusters\Settings;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\StorageRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\WagesRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\ExpenseCategoryRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\WorkshopsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\BillsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\SeetsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\RoomsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\MetersRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\Pages\ListPlaces;
+use App\Filament\Clusters\Settings\Resources\Places\Pages\CreatePlace;
+use App\Filament\Clusters\Settings\Resources\Places\Pages\EditPlace;
+use App\Filament\Clusters\Settings\Resources\Places\Pages\ViewPlace;
+use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Filament\Clusters\Settings\Resources\PlaceResource\Pages;
 use App\Filament\Clusters\Settings\Resources\PlaceResource\RelationManagers;
 use App\Models\Place;
-use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -18,11 +36,11 @@ use Filament\Tables\Table;
 
 class PlaceResource extends Resource
 {
-    protected static ?string $cluster = Settings::class;
+    protected static ?string $cluster = SettingsCluster::class;
 
     protected static ?string $tenantOwnershipRelationshipName = 'users';
 
-    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home-modern';
 
     protected static ?string $model = Place::class;
 
@@ -66,27 +84,27 @@ class PlaceResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Tabs::make('Label')
                     ->tabs([
-                        Tabs\Tab::make(__('Place'))
+                        Tab::make(__('Place'))
                             ->schema([
                                 TextEntry::make('name')->translateLabel(),
                                 TextEntry::make('city')->translateLabel(),
@@ -102,26 +120,26 @@ class PlaceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\StorageRelationManager::class,
-            RelationManagers\WagesRelationManager::class,
-            RelationManagers\ExpenseCategoryRelationManager::class,
-            RelationManagers\WorkshopsRelationManager::class,
-            RelationManagers\BillsRelationManager::class,
+            StorageRelationManager::class,
+            WagesRelationManager::class,
+            ExpenseCategoryRelationManager::class,
+            WorkshopsRelationManager::class,
+            BillsRelationManager::class,
             RelationGroup::make(__('Room & Seets'), [
-                RelationManagers\SeetsRelationManager::class,
-                RelationManagers\RoomsRelationManager::class,
+                SeetsRelationManager::class,
+                RoomsRelationManager::class,
             ]),
-            RelationManagers\MetersRelationManager::class,
+            MetersRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPlaces::route('/'),
-            'create' => Pages\CreatePlace::route('/create'),
-            'edit' => Pages\EditPlace::route('/{record}/edit'),
-            'view' => Pages\ViewPlace::route('/{record}'),
+            'index' => ListPlaces::route('/'),
+            'create' => CreatePlace::route('/create'),
+            'edit' => EditPlace::route('/{record}/edit'),
+            'view' => ViewPlace::route('/{record}'),
 
         ];
     }

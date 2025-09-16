@@ -1,5 +1,6 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+
 @font-face {
   font-family: "fontello";
   src: url("../fonts/fontello.eot?20259845");
@@ -222,7 +223,7 @@ p {
 a {
   text-decoration: none;
   color: #e1e1e1;
-  font-family: "Phonk Sans", sans-serif;
+  font-family: "Unbounded", sans-serif;
 }
 
 a.btn {
@@ -246,14 +247,14 @@ header {
   position: relative;
 }
 header .logo {
-  width: 60%;
+  width: 65%;
   margin: 10px 0;
   padding-top: 10px;
 }
 @media (max-width: 575px) {
   header .logo {
     left: 15px;
-    width: 45%;
+    width: 40%;
     top: 5px;
     position: relative;
     margin-bottom: 10px;
@@ -370,6 +371,7 @@ header .menu-header .langs li a {
 header .menu-header .langs li.active {
   padding: 3px;
   background: #e1e1e1;
+  border-radius: 7px;
 }
 header .menu-header .langs li.active a {
   color: #151515;
@@ -406,29 +408,23 @@ main .page-container h2.title {
     padding: 40px 0 0 0;
   }
 }
-main .page-container::before {
-  position: absolute;
-  height: 100%;
-  width: 50vw;
-  top: 0;
-  left: 0;
-  content: "";
-  background: #760000;
-  z-index: -1;
-}
-@media (max-width: 575px) {
-  main .page-container::before {
-    width: 80vw;
-  }
+main .page-container .container {
+  position: relative;
 }
 main .page-container .hero {
-  height: 70vh;
+  height: 55vh;
+  overflow-y: hidden;
   position: relative;
+}
+@media (max-width: 575px) {
+  main .page-container .hero {
+    height: 50vh;
+  }
 }
 main .page-container .hero .links {
   position: absolute;
   top: 50%;
-  right: 12vw;
+  right: 0;
   transform: translateY(-50%);
   text-align: right;
   font-size: 1.5rem;
@@ -440,9 +436,9 @@ main .page-container .hero .links {
   main .page-container .hero .links {
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.8rem;
+    font-size: 1rem;
     writing-mode: vertical-rl;
-    right: 30px;
+    right: 35px;
     display: flex;
     white-space: nowrap;
   }
@@ -457,7 +453,7 @@ main .page-container .hero .links li a {
   color: #e1e1e1;
   text-decoration: none;
   text-transform: uppercase;
-  font-family: "Phonk Sans", sans-serif;
+  font-family: "Unbounded", sans-serif;
   transition: 0.5s;
 }
 @media (max-width: 575px) {
@@ -485,101 +481,110 @@ main .page-container .hero .links li a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
 }
-main .page-container .hero .swiper-pagination {
-  position: absolute;
-  top: 50%;
-  left: 5vw;
-  transform: translateY(-50%);
-}
-main .page-container .hero .swiper-pagination span {
-  width: 15px;
-  height: 15px;
-  margin-bottom: 15px;
-}
-main .page-container .hero .swiper-pagination span.swiper-pagination-bullet-active {
-  background: #a3a3a3;
-}
 main .page-container .hero .swiper {
+  height: 55vh;
+  overflow-y: hidden;
   position: relative;
-  height: 100%;
+}
+@media (max-width: 575px) {
+  main .page-container .hero .swiper {
+    height: 50vh;
+  }
+}
+main .page-container .hero .swiper::before {
+  content: "";
+  width: 50%;
+  height: 90%;
+  background: #760000;
+  position: absolute;
+  z-index: -1;
+  top: 20px;
+  border-radius: 37px;
+}
+@media (max-width: 575px) {
+  main .page-container .hero .swiper::before {
+    width: 70vw;
+    border-radius: 0 23px 23px 0;
+  }
 }
 main .page-container .hero .swiper .swiper-slide {
-  position: relative;
+  display: flex;
 }
 main .page-container .hero .swiper .swiper-slide .text {
   position: absolute;
   top: 50%;
-  left: 11%;
-  transform: translateY(-50%) !important;
-}
-main .page-container .hero .swiper .swiper-slide .text h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-main .page-container .hero .swiper .swiper-slide .text h4 {
-  margin-bottom: 10px;
-}
-main .page-container .hero .swiper .swiper-slide .text p {
-  font-size: 1rem;
-  width: 80%;
+  transform: translateY(-50%);
+  width: 60%;
+  padding: 30px;
 }
 @media (max-width: 575px) {
   main .page-container .hero .swiper .swiper-slide .text {
-    top: 20%;
-    left: 10%;
-    width: 80%;
-    transform: translateX(-50%);
-  }
-  main .page-container .hero .swiper .swiper-slide .text h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
-  main .page-container .hero .swiper .swiper-slide .text h4 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-  main .page-container .hero .swiper .swiper-slide .text p {
-    font-size: 0.75rem;
-    width: 80%;
+    top: 35vw;
   }
 }
 main .page-container .hero .swiper .swiper-slide img {
-  display: block;
-  width: 295px;
   position: absolute;
+  bottom: 10px;
+  height: 95%;
   left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
+  transform: translateX(-60%);
 }
 @media (max-width: 575px) {
   main .page-container .hero .swiper .swiper-slide img {
-    width: 20vh;
+    transform: translateX(-10%);
+    width: 40vw;
+    bottom: 0;
+    height: auto;
   }
 }
-main .page-container .about {
+main .page-container .swiper-pagination {
+  position: absolute;
+  bottom: 50px;
+}
+main .page-container .swiper-pagination .swiper-pagination-bullet {
+  background-color: #ccc;
+  opacity: 0.8;
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+}
+main .page-container .swiper-pagination .swiper-pagination-bullet-active {
+  background-color: #007aff;
+  opacity: 1;
+}
+main .page-container .swiper-pagination .swiper-pagination-progressbar {
+  background-color: #eee;
+}
+main .page-container .swiper-pagination .swiper-pagination-progressbar-fill {
+  background-color: #007aff;
+}
+main .block {
+  padding: 40px;
+}
+main .about {
   padding: 150px 0;
   background: #151515;
   font-family: "Phonk Sans";
   /* Alignement spécifique */
 }
 @media (max-width: 617px) {
-  main .page-container .about {
+  main .about {
     padding: 50px 0;
   }
 }
-main .page-container .about h2 {
+main .about h2 {
   font-size: 1.75em;
   text-transform: uppercase;
   border-bottom: 1px solid #535353;
   margin: 0;
 }
 @media (max-width: 617px) {
-  main .page-container .about h2 {
+  main .about h2 {
     padding: 20px;
     font-size: 1.25rem;
   }
 }
-main .page-container .about .inner {
+main .about .inner {
   color: #fff;
   display: flex;
   flex-flow: row wrap;
@@ -587,55 +592,55 @@ main .page-container .about .inner {
   align-items: flex-end;
   width: 100%;
 }
-main .page-container .about .box {
+main .about .box {
   width: 50%;
 }
 @media (max-width: 617px) {
-  main .page-container .about .box {
+  main .about .box {
     width: 100%;
     padding: 20px;
   }
 }
-main .page-container .about .box p {
+main .about .box p {
   padding: 20px 40px 80px 0;
   line-height: 2;
 }
 @media (max-width: 617px) {
-  main .page-container .about .box p {
+  main .about .box p {
     text-align: left;
     padding: 20px 40px 40px 0;
   }
 }
-main .page-container .about .box p.right {
+main .about .box p.right {
   text-align: right;
   padding: 40px 0px 0px 50px;
 }
 @media (max-width: 617px) {
-  main .page-container .about .box p.right {
+  main .about .box p.right {
     text-align: left;
     padding: 20px 40px 40px 0;
   }
 }
-main .page-container .about .box:nth-child(1) {
+main .about .box:nth-child(1) {
   border-right: 1px solid #535353;
 }
 @media (max-width: 575px) {
-  main .page-container .about .box:nth-child(1) {
+  main .about .box:nth-child(1) {
     border: none;
   }
 }
-main .page-container .about .box h3 {
+main .about .box h3 {
   padding: 0;
   margin: 0;
   text-transform: uppercase;
   font-size: 1.5rem;
 }
 @media (max-width: 617px) {
-  main .page-container .about .box h3 {
+  main .about .box h3 {
     font-size: 1.15rem;
   }
 }
-main .page-container .about .flex-panel div:nth-child(2) {
+main .about .flex-panel div:nth-child(2) {
   align-self: flex-start;
   flex: 1;
   order: 1;
@@ -736,7 +741,7 @@ main .feedbacks .feedback {
 .form .input-group input:focus::placeholder {
   color: #535353;
 }
-.form .input-group input:not(:-moz-placeholder-shown) + label {
+.form .input-group input:not(:-moz-placeholder) + label {
   top: 0;
   font-size: 0.8rem;
 }
@@ -746,7 +751,7 @@ main .feedbacks .feedback {
   font-size: 0.8rem;
 }
 @media (max-width: 320px) {
-  .form .input-group input:not(:-moz-placeholder-shown) + label {
+  .form .input-group input:not(:-moz-placeholder) + label {
     font-size: 0.8rem;
   }
   .form .input-group input:focus + label,
@@ -771,26 +776,37 @@ main .feedbacks .feedback {
   border: none;
   border-radius: 13px;
   font-size: 1.25rem;
-  cursor: crosshair;
+  cursor: grab;
 }
 
 .tabs {
-  position: sticky;
+  height: 70vh;
 }
 .tabs ul {
+  margin: 0;
+  position: sticky;
+  padding: 20px 0;
+  list-style: none;
+  display: flex;
+  flex-flow: row nowrap;
+  flex-direction: column;
+  font-size: 1.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-flow: row nowrap;
   flex-direction: column;
-  font-size: 2rem;
+  height: 100%;
+  position: sticky;
+  flex-grow: 1;
+  transition: flex 3s ease;
 }
 .tabs ul li {
   margin: 2px;
   box-sizing: border-box;
   flex: 1 1 1;
-  transition: flex 0.5s ease;
+  transition: all 0.5s ease;
   text-transform: uppercase;
   color: #535353;
   cursor: pointer;
@@ -831,7 +847,7 @@ main .feedbacks .feedback {
     transition: font-size 0.5s ease;
     text-transform: uppercase;
     width: auto;
-    color: #535353;
+    color: #e1e1e1;
     cursor: pointer;
     text-wrap: nowrap;
   }
@@ -841,14 +857,11 @@ main .feedbacks .feedback {
     text-transform: uppercase;
   }
   .tabs ul li.active {
-    font-size: 1.15rem;
-    padding: 0 10px;
-    color: #e1e1e1;
-  }
-  .tabs ul li::hover a {
-    font-size: 1.25rem;
-    padding: 0 10px;
-    color: #e1e1e1;
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: #202020;
+    background: #e1e1e1;
   }
 }
 
@@ -859,12 +872,13 @@ main .feedbacks .feedback {
 .list .positions {
   display: none;
   height: 0;
-  transition: height 1s ease;
+  transition: opacity 0.3s ease-in-out;
   padding: 20px 0;
+  opacity: 0;
 }
 .list .positions.active {
   display: block;
-  height: 100%;
+  opacity: 1;
 }
 .list .positions h3 {
   text-transform: uppercase;
@@ -883,6 +897,13 @@ main .feedbacks .feedback {
   color: white;
   align-items: stretch;
   position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.list .positions .menu-item.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 .list .positions .menu-item .card-info {
   flex: 1;
@@ -892,14 +913,14 @@ main .feedbacks .feedback {
 .list .positions .menu-item .card-info .content {
   width: 100%;
 }
-.list .positions .menu-item .card-info .content h4 {
-  font-size: 1.2rem;
+.list .positions .menu-item .card-info .content .title {
+  font-size: 1rem;
   font-family: "Unbounded", sans-serif;
   font-weight: 300;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
-.list .positions .menu-item .card-info .content p {
-  font-size: 0.9rem;
+.list .positions .menu-item .card-info .content .description {
+  font-size: 0.8rem;
   margin-bottom: 10px;
   letter-spacing: 0.5px;
   color: #ccc;
@@ -928,11 +949,14 @@ main .feedbacks .feedback {
 .list .positions .menu-item .card-image {
   position: relative;
   aspect-ratio: 1/1;
-  min-height: 100%;
-  max-width: 25%;
+  min-height: 120px;
+  max-width: 120px;
   flex-shrink: 0;
+  padding: 16px;
 }
 .list .positions .menu-item .card-image img {
+  border-radius: 10px;
+  overflow: hidden;
   height: 100%;
   width: 100%;
   -o-object-fit: cover;
@@ -998,14 +1022,14 @@ main .feedbacks .feedback {
 .properties .hidden {
   display: none;
 }
-.properties .comment {
+.properties.comment {
   cursor: pointer;
   display: flex;
 }
-.properties .comment i {
-  display: flex;
+.properties.comment i {
+  display: inline;
 }
-.properties .comment p {
+.properties.comment p {
   font-size: 0.7rem;
 }
 
@@ -1013,21 +1037,202 @@ main .feedbacks .feedback {
   background: #760000;
 }
 
-.modal-feedback-overlay {
+.modal-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  width: 50vw;
+  transform: translateX(-50%);
+  height: auto;
+  display: grid;
+  padding: 1em 1em;
+  background: #e1e1e1;
+  align-items: flex-end;
+  overflow: hidden;
+  color: #535353;
+  transition: all 0.3s;
+  border-radius: 37px 37px 0 0;
+  z-index: 301;
+  opacity: 0;
+  visibility: hidden;
+}
+.modal-container.active {
+  opacity: 1;
+  visibility: visible;
+}
+@media screen and (max-width: 576px) {
+  .modal-container {
+    width: 90vw;
+  }
+  .modal-container .content {
+    margin: auto;
+    width: 100%;
+    border-radius: 1.25rem;
+  }
+  .modal-container .content .modal-img {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 16/9;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+  .modal-container .content .modal-img .sup {
+    background: #760000;
+    color: #e1e1e1;
+    font-size: 0.8rem;
+    top: 0;
+    right: 0;
+    width: 15vw;
+    text-align: center;
+    padding: 3px 10px;
+    text-transform: capitalize;
+    border-radius: 0 0 5px 0;
+  }
+  .modal-container .content .modal-img img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    width: auto;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+    z-index: -1;
+  }
+}
+.modal-container .bottom-sheet-handle {
+  width: 80px;
+  height: 8px;
+  background-color: #a3a3a3;
+  border-radius: 10px;
+  margin: 10px auto 16px;
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+.modal-container .bottom-sheet-handle:hover {
+  background-color: #a3a3a3;
+  transform: scale(1.05);
+}
+.modal-container .modal-feedback form {
+  margin: auto;
+  box-sizing: content-box;
+  position: relative;
+  padding: 0;
+}
+@media (max-width: 617px) {
+  .modal-container .modal-feedback form {
+    padding: 0px;
+  }
+}
+.modal-container .modal-feedback form .input-group {
+  position: relative;
+  margin: 15px 0;
+}
+.modal-container .modal-feedback form .input-group label {
+  padding: 0 10px;
+  background-color: #e1e1e1;
+  color: #202020;
+  position: absolute;
+  top: 25px;
+  left: 15px;
+  transform: translateY(-50%);
+  text-transform: capitalize;
+  pointer-events: none;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+@media (max-width: 320px) {
+  .modal-container .modal-feedback form .input-group label {
+    font-size: 0.8rem;
+  }
+}
+.modal-container .modal-feedback form .input-group input {
+  padding: 10px;
+  width: 100%;
+  border: 2px solid #202020;
+  outline: none;
+  color: #202020;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: 10px;
+}
+@media (max-width: 320px) {
+  .modal-container .modal-feedback form .input-group input {
+    font-size: 0.8rem;
+  }
+}
+.modal-container .modal-feedback form .input-group input::-moz-placeholder {
+  color: transparent;
+}
+.modal-container .modal-feedback form .input-group input::placeholder {
+  color: transparent;
+}
+.modal-container .modal-feedback form .input-group textarea {
+  padding: 15px;
+  width: 100%;
+  border: 2px solid #202020;
+  outline: none;
+  color: #202020;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: 10px;
+}
+.modal-container .modal-feedback form .input-group input:focus::-moz-placeholder {
+  color: #535353;
+}
+.modal-container .modal-feedback form .input-group input:focus::placeholder {
+  color: #535353;
+}
+.modal-container .modal-feedback form .input-group input:not(:-moz-placeholder) + label {
+  top: 0;
+  font-size: 0.8rem;
+}
+.modal-container .modal-feedback form .input-group input:focus + label,
+.modal-container .modal-feedback form .input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.8rem;
+}
+@media (max-width: 320px) {
+  .modal-container .modal-feedback form .input-group input:not(:-moz-placeholder) + label {
+    font-size: 0.8rem;
+  }
+  .modal-container .modal-feedback form .input-group input:focus + label,
+  .modal-container .modal-feedback form .input-group input:not(:placeholder-shown) + label {
+    font-size: 0.8rem;
+  }
+}
+.modal-container .modal-feedback form .input-group textarea:focus + label {
+  top: 0;
+  font-size: 0.8rem;
+}
+@media (max-width: 320px) {
+  .modal-container .modal-feedback form .input-group textarea:focus + label {
+    font-size: 0.8rem;
+  }
+}
+
+.modal-overlay {
   position: fixed;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   top: 0%;
   left: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.3);
   visibility: hidden;
   transition: all 0.5s ease-in-out;
+  backdrop-filter: blur(5px); /* Apply blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari compatibility */
   opacity: 0;
-  z-index: 101;
+  z-index: 300;
 }
-.modal-feedback-overlay.active {
+.modal-overlay.active {
   opacity: 1;
   visibility: visible;
 }
@@ -1069,84 +1274,6 @@ main .feedbacks .feedback {
     -webkit-transform: rotate(0deg);
     width: 100%;
     padding: 30px 0;
-  }
-}
-
-.modal-feedback {
-  visibility: hidden;
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  width: 450px;
-  z-index: 102;
-  background: #202020;
-  border-radius: 17px;
-  padding: 15px;
-  text-align: center;
-  transform: translate(-50%, 100%);
-}
-@media (max-width: 575px) {
-  .modal-feedback {
-    width: 80%;
-    height: auto;
-  }
-}
-@media (max-width: 320px) {
-  .modal-feedback {
-    width: 80%;
-    height: auto;
-  }
-}
-.modal-feedback.active {
-  visibility: visible;
-  opacity: 100%;
-  animation: div-to-top 0.5s cubic-bezier(0.39, 0.57, 0.56, 1) 0.5s forwards;
-}
-.modal-feedback h4 {
-  margin: 10px auto;
-  font-size: 1rem;
-}
-.modal-feedback p {
-  font-size: 0.8rem;
-}
-.modal-feedback #close {
-  position: absolute;
-  bottom: -120px;
-  left: 50%;
-  height: 70px;
-  width: 70px;
-  transform: translateX(-10%);
-  font-size: 3rem;
-  z-index: 100;
-}
-.modal-feedback #close:before {
-  position: absolute;
-  content: "";
-  top: -50px;
-  left: 0;
-  background: #e1e1e1;
-  width: 10px;
-  height: 40px;
-  transform: rotate(-45deg);
-}
-.modal-feedback #close:after {
-  position: absolute;
-  content: "";
-  top: -50px;
-  left: 0;
-  background: #e1e1e1;
-  width: 10px;
-  height: 40px;
-  transform: rotate(45deg);
-}
-@keyframes div-to-top {
-  0% {
-    transform: translate(-50%, 100%);
-    -webkit-transform: translate(-50%, 100%);
-  }
-  100% {
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
   }
 }
 
@@ -1441,4 +1568,4 @@ footer .dev a img {
   footer .dev a img {
     height: 13px;
   }
-}/*# sourceMappingURL=style.css.map */
+}

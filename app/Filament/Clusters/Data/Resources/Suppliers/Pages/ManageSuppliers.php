@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\SupplierResource\Pages;
+namespace App\Filament\Clusters\Data\Resources\Suppliers\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Enums\SupplierType;
-use App\Filament\Clusters\Data\Resources\SupplierResource;
+use App\Filament\Clusters\Data\Resources\Suppliers\SupplierResource;
 use App\Http\Controllers\PosterApiController;
 use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageSuppliers extends ManageRecords
@@ -18,7 +20,7 @@ class ManageSuppliers extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\Action::make('update')
+            Action::make('update')
                 ->label(__('Update suppliers'))
                 ->icon('heroicon-o-arrow-path')
                 ->action(function (): void {
@@ -29,7 +31,7 @@ class ManageSuppliers extends ManageRecords
                         ->iconColor('success')
                         ->send();
                 }),
-            Actions\CreateAction::make()->createAnother(false),
+            CreateAction::make()->createAnother(false),
         ];
     }
 

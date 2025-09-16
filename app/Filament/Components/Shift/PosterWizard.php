@@ -2,6 +2,12 @@
 
 namespace App\Filament\Components\Shift;
 
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Fieldset;
 use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Place;
@@ -9,14 +15,8 @@ use App\Models\Shift;
 use App\Models\Workshop;
 use Auth;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 
 class PosterWizard

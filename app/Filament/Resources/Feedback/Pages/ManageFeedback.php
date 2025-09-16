@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\FeedbackResource\Pages;
+namespace App\Filament\Resources\Feedback\Pages;
 
-use App\Filament\Resources\FeedbackResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Feedback\FeedbackResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -13,7 +14,7 @@ class ManageFeedback extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

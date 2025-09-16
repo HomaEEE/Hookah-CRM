@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\CategoryResource\Pages;
+namespace App\Filament\Resources\Categories\Pages;
 
-use App\Filament\Resources\CategoryResource;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Categories\CategoryResource;
 use App\Http\Controllers\PosterApiController;
 use Filament\Actions;
 use Filament\Facades\Filament;
@@ -16,7 +18,7 @@ class ManageCategories extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('update')
+            Action::make('update')
                 ->label(__('Update menu'))
                 ->icon('heroicon-o-arrow-path')
                 ->action(function (): void {
@@ -28,7 +30,7 @@ class ManageCategories extends ManageRecords
                         ->iconColor('success')
                         ->send();
                 }),
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

@@ -5,18 +5,22 @@ namespace App\Livewire\Dashboard;
 use App\Models\Bill;
 use App\Models\Reqvizite;
 use App\Models\Supply;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
-use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
-use Filament\Tables\Actions;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -29,8 +33,9 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class Paying extends Component implements HasForms, HasTable
+class Paying extends Component implements HasActions, HasForms, HasTable
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithInfolists;
     use InteractsWithTable;
@@ -99,9 +104,9 @@ class Paying extends Component implements HasForms, HasTable
                         ]);
                     }),
             ])->defaultSort('created_at', 'desc')
-            ->actions([
-                Actions\ViewAction::make()->label('')
-                    ->infolist([
+            ->recordActions([
+                ViewAction::make()->label('')
+                    ->schema([
                         Section::make()->schema([
                             TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
                                 ->badge(),
@@ -115,25 +120,25 @@ class Paying extends Component implements HasForms, HasTable
 
                         Tabs::make('Tabs')
                             ->tabs([
-                                Tabs\Tab::make(__('Rekvizites'))
+                                Tab::make(__('Rekvizites'))
                                     ->schema([
                                         TextEntry::make('reqvizite.own')->label(__('FOP'))->badge()->copyable(),
                                         TextEntry::make('reqvizite.IBAN')->label(__('IBAN'))->badge()->copyable(),
                                         TextEntry::make('reqvizite.INN')->label(__('INN'))->badge()->copyable(),
                                     ])
                                     ->columns(3),
-                                Tabs\Tab::make(__('Comment'))
+                                Tab::make(__('Comment'))
                                     ->schema([
                                         TextEntry::make('comment')->label(__('Comment'))->copyable()->hiddenLabel(),
                                     ]),
-                                Tabs\Tab::make(__('Photo'))
+                                Tab::make(__('Photo'))
                                     ->schema([
                                         SpatieMediaLibraryImageEntry::make('invoice')
                                             ->collection('supplies')
                                             ->simpleLightbox()
                                             ->hiddenLabel(),
                                     ]),
-                                Tabs\Tab::make(__('Supply'))
+                                Tab::make(__('Supply'))
                                     ->schema([
                                         // SpatieMediaLibraryImageEntry::make('invoice')
                                         // ->collection('supplies')
@@ -154,9 +159,12 @@ class Paying extends Component implements HasForms, HasTable
                         // ])->columns(1)->collapsed(),
                     ]),
 
-                Actions\EditAction::make()->label('')
-                    ->form([
+                EditAction::make()->label('')
+                    ->modalWidth('xs')
+
+                    ->schema([
                         Select::make('supplier_id')->label(__('Supplier'))
+
                             ->relationship('supplier', 'company')->disabled(),
                         Select::make('reqvizite_id')
                             ->label('Реквизиты')

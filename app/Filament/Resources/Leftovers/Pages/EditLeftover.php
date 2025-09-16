@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\LeftoverResource\Pages;
+namespace App\Filament\Resources\Leftovers\Pages;
 
-use App\Filament\Resources\LeftoverResource;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\Leftovers\LeftoverResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -13,7 +14,7 @@ class EditLeftover extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

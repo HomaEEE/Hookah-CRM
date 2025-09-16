@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\ProductResource\Pages;
+namespace App\Filament\Resources\Products\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\ExportAction;
+use Filament\Actions\CreateAction;
 use App\Filament\Exports\ProductExporter;
-use App\Filament\Resources\ProductResource;
+use App\Filament\Resources\Products\ProductResource;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Category;
 use App\Models\Product;
@@ -20,7 +23,7 @@ class ManageProducts extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('update')
+            Action::make('update')
                 ->label(__('Update menu'))
                 ->icon('heroicon-o-arrow-path')
                 ->action(function (): void {
@@ -32,9 +35,9 @@ class ManageProducts extends ManageRecords
                         ->iconColor('success')
                         ->send();
                 }),
-            Actions\ExportAction::make()
+            ExportAction::make()
                 ->exporter(ProductExporter::class),
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

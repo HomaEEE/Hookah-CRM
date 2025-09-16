@@ -1,7 +1,15 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Purchases;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use App\Enums\IngredientUnit;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Purchases\Pages\ManagePurchases;
 use App\Filament\Resources\PurchaseResource\Pages;
 use App\Models\Ingredient;
 use App\Models\Purchase;
@@ -12,8 +20,6 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -23,7 +29,7 @@ class PurchaseResource extends Resource
 {
     protected static ?string $model = Purchase::class;
 
-    protected static ?string $navigationGroup = 'Stocks';
+    protected static string | \UnitEnum | null $navigationGroup = 'Stocks';
 
     protected static ?int $navigationSort = 4;
 
@@ -47,10 +53,10 @@ class PurchaseResource extends Resource
         return 'heroicon-o-view-grid-add';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Select::make('supplier_id')->label(__('Supplier'))
@@ -83,7 +89,7 @@ class PurchaseResource extends Resource
 
                                 if ($get('ingredient_id') != null) {
                                     $ingredient = Ingredient::find($get('ingredient_id'));
-                                    if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
+                                    if ($ingredient && $ingredient->unit instanceof IngredientUnit) {
                                         return $ingredient->unit->getLabel();
                                     }
                                 }
@@ -106,13 +112,13 @@ class PurchaseResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -120,7 +126,7 @@ class PurchaseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManagePurchases::route('/'),
+            'index' => ManagePurchases::route('/'),
         ];
     }
 }

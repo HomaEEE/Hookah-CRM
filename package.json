@@ -8,11 +8,23 @@
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.10",
+        "@tailwindcss/vite": "^4.1.13",
+        "@vitejs/plugin-vue": "^6.0.1",
         "autoprefixer": "^10.4.17",
-        "laravel-vite-plugin": "^0.7.5",
+        "laravel-vite-plugin": "^2.0.0",
         "postcss": "^8.4.33",
         "postcss-nesting": "^12.0.2",
-        "tailwindcss": "^3.4.1",
-        "vite": "^4.0.0"
+        "tailwindcss": "^4.1.13",
+        "vite": "^7.0.6"
+    },
+    "dependencies": {
+        "@splidejs/splide": "^4.1.4",
+        "@swup/head-plugin": "^2.3.1",
+        "@tailwindcss/postcss": "^4.1.13",
+        "jquery": "^3.7.1",
+        "locomotive-scroll": "^4.1.4",
+        "micromodal": "^0.6.1",
+        "swiper": "^11.2.10",
+        "swup": "^4.8.2"
     }
 }

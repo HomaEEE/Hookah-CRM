@@ -9,7 +9,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class Bills extends BaseWidget
 {
-    use HasWidgetShield;
+    // use HasWidgetShield;
 
     protected function getHeading(): ?string
     {

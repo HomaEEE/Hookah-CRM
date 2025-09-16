@@ -1,7 +1,12 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Withdrawals;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Withdrawals\Pages\ManageWithdrawals;
 use App\Filament\Resources\WithdrawalResource\Pages;
 use App\Models\Bill;
 use App\Models\Place;
@@ -14,7 +19,6 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -48,10 +52,10 @@ class WithdrawalResource extends Resource
         return __('Withdrawals');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
@@ -77,7 +81,7 @@ class WithdrawalResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Filter::make('created_at')
-                    ->form([
+                    ->schema([
                         DatePicker::make('created_from')->translateLabel()->native(false)
                             ->placeholder(fn ($state): string => now()->subMonth()->format('d/m/Y')),
                         DatePicker::make('created_until')->translateLabel()->native(false)
@@ -109,19 +113,19 @@ class WithdrawalResource extends Resource
                 SelectFilter::make('bill_id')
                 ->options(Bill::get()->pluck('name', 'id'))
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageWithdrawals::route('/'),
+            'index' => ManageWithdrawals::route('/'),
         ];
     }
 }

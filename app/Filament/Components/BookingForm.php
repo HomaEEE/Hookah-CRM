@@ -2,19 +2,19 @@
 
 namespace App\Filament\Components;
 
+use Filament\Actions\Action;
+use Filament\Support\Enums\Size;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use App\Models\Guest;
 use App\Models\Seet;
 use Auth;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Support\Enums\ActionSize;
 use Filament\Support\RawJs;
 
 class BookingForm
@@ -63,8 +63,8 @@ class BookingForm
             TextInput::make('person')->label(__('Person'))->numeric()->default(3)
 
                 ->suffixAction(
-                    FormAction::make('PersonPlus')
-                        ->size(ActionSize::Large)
+                    Action::make('PersonPlus')
+                        ->size(Size::Large)
                         ->color('success')
                         ->icon('heroicon-o-user-plus')
                         ->iconButton()
@@ -74,8 +74,8 @@ class BookingForm
                         })
                 )
                 ->prefixAction(
-                    FormAction::make('PersonMinus')
-                        ->size(ActionSize::Large)
+                    Action::make('PersonMinus')
+                        ->size(Size::Large)
                         ->icon('heroicon-o-user-minus')
                         ->color('danger')
                         ->iconButton()

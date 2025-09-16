@@ -2,9 +2,9 @@
 
 namespace App\Filament\Pages\Tenancy;
 
+use Filament\Schemas\Schema;
 use App\Models\Place;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
 
 class RegisterPlace extends RegisterTenant
@@ -14,10 +14,10 @@ class RegisterPlace extends RegisterTenant
         return 'Register place';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name'),
                 TextInput::make('city'),
                 TextInput::make('address'),

@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Storages;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Storages\Pages\ManageStorages;
 use App\Filament\Resources\StorageResource\Pages;
 use App\Filament\Resources\StorageResource\RelationManagers;
-use App\Filament\Resources\StorageResource\RelationManagers\ItemsRelationManager;
+use App\Filament\Resources\Storages\RelationManagers\ItemsRelationManager;
 use App\Models\Storage;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -39,10 +44,10 @@ class StorageResource extends Resource
         return __('Storage');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name'),
 
@@ -62,16 +67,16 @@ class StorageResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 RelationManagerAction::make('lesson-relation-manager')
                     ->label(__('Items list'))
                     ->relationManager(ItemsRelationManager::make()),
-                Tables\Actions\EditAction::make()->label(''),
-                Tables\Actions\DeleteAction::make()->label(''),
+                EditAction::make()->label(''),
+                DeleteAction::make()->label(''),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -79,14 +84,14 @@ class StorageResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ItemsRelationManager::class,
+            ItemsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageStorages::route('/'),
+            'index' => ManageStorages::route('/'),
         ];
     }
 }

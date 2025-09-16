@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\PlaceResource\Pages;
+namespace App\Filament\Clusters\Settings\Resources\Places\Pages;
 
-use App\Filament\Clusters\Settings\Resources\PlaceResource;
+use Filament\Actions\EditAction;
+use App\Filament\Clusters\Settings\Resources\Places\PlaceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -13,7 +14,7 @@ class ViewPlace extends ViewRecord
     protected function getActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 

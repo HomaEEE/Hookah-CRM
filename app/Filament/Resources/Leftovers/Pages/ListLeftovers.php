@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\LeftoverResource\Pages;
+namespace App\Filament\Resources\Leftovers\Pages;
 
-use App\Filament\Resources\LeftoverResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Leftovers\LeftoverResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -13,7 +14,7 @@ class ListLeftovers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

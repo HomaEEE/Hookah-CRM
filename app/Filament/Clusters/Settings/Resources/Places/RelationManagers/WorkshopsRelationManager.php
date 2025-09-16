@@ -1,12 +1,18 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\PlaceResource\RelationManagers;
+namespace App\Filament\Clusters\Settings\Resources\Places\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use App\Http\Controllers\PosterApiController;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,10 +34,10 @@ class WorkshopsRelationManager extends RelationManager
         return __('Workshops');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->label(__('Place'))
                     ->default(fn (Livewire $livewire) => $livewire->ownerRecord->id),
                 TextInput::make('name')->label(__('Workshop'))
@@ -52,15 +58,15 @@ class WorkshopsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label(__('Workshop')),
-                Tables\Columns\TextColumn::make('workshop_id')->label(__('ID')),
+                TextColumn::make('name')->label(__('Workshop')),
+                TextColumn::make('workshop_id')->label(__('ID')),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\Action::make('getWorkshop')
+                CreateAction::make(),
+                Action::make('getWorkshop')
                     ->label(__('Get Workshops'))
                     ->color('info')
                     ->icon('heroicon-o-arrow-down-circle')
@@ -71,12 +77,12 @@ class WorkshopsRelationManager extends RelationManager
                         (new PosterApiController)->getWorkshops($this->ownerRecord->id);
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 }

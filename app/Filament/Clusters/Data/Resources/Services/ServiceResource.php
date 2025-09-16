@@ -1,16 +1,22 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources;
+namespace App\Filament\Clusters\Data\Resources\Services;
 
-use App\Filament\Clusters\Data;
+use Filament\Schemas\Schema;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\CreateAction;
+use App\Filament\Clusters\Data\Resources\Services\Pages\ManageServices;
+use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\ServiceResource\Pages;
 use App\Models\Service;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\RawJs;
@@ -22,13 +28,13 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static ?string $cluster = Data::class;
+    protected static ?string $cluster = DataCluster::class;
 
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?int $navigationSort = 5;
 
-    protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-exclamation-triangle';
 
     public static function getPluralModelLabel(): string
     {
@@ -45,10 +51,10 @@ class ServiceResource extends Resource
         return __('Service Contacts');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name')),
                 TextInput::make('phone')->label(__('Phone'))
@@ -82,25 +88,25 @@ class ServiceResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('place.city')->translateLabel(),
                 TextEntry::make('company')->translateLabel(),
                 TextEntry::make('name')->translateLabel(),
@@ -114,7 +120,7 @@ class ServiceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageServices::route('/'),
+            'index' => ManageServices::route('/'),
         ];
     }
 }

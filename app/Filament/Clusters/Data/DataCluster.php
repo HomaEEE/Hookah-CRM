@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Clusters;
+namespace App\Filament\Clusters\Data;
 
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Clusters\Cluster;
 
-class Data extends Cluster
+class DataCluster extends Cluster
 {
     use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static ?int $navigationSort = 5;
 

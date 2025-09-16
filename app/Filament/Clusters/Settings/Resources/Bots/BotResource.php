@@ -1,37 +1,40 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources;
+namespace App\Filament\Clusters\Settings\Resources\Bots;
 
-use App\Filament\Clusters\Settings;
-use App\Filament\Clusters\Settings\Resources\BotResource\Pages;
-use App\Filament\Clusters\Settings\Resources\BotResource\RelationManagers\ChatRelationManager;
+use App\Filament\Clusters\Settings\Resources\Bots\Pages\ManageBots;
+use App\Filament\Clusters\Settings\Resources\Bots\RelationManagers\ChatRelationManager;
+use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Http\Controllers\TelegramBotController;
 use App\Models\Bot;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\Action;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
+use Guava\FilamentModalRelationManagers\Actions\RelationManagerAction;
 use Illuminate\Support\Facades\Log;
 
 class BotResource extends Resource
 {
     protected static ?string $model = Bot::class;
 
-    protected static ?string $navigationIcon = 'phosphor-robot';
+    protected static string|\BackedEnum|null $navigationIcon = 'phosphor-robot';
 
-    protected static ?string $cluster = Settings::class;
+    protected static ?string $cluster = SettingsCluster::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->translateLabel(),
                 TextInput::make('token')->translateLabel(),
@@ -47,7 +50,7 @@ class BotResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
 
                 RelationManagerAction::make('chats-manager')
                     ->label('Chat list')
@@ -71,12 +74,12 @@ class BotResource extends Resource
                 //     ->action(function (Bot $record): void {
                 //         (new TelegramBotController)->setWebhook($record->id);
                 //     })->visible(fn (Bot $bot) => $bot->webhook == 0),
-                Tables\Actions\EditAction::make()->label(''),
-                Tables\Actions\DeleteAction::make()->label(''),
+                EditAction::make()->label(''),
+                DeleteAction::make()->label(''),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -84,7 +87,7 @@ class BotResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageBots::route('/'),
+            'index' => ManageBots::route('/'),
         ];
     }
 }

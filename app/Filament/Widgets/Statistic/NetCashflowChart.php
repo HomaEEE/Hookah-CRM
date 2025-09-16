@@ -10,9 +10,9 @@ use Flowframe\Trend\Trend;
 
 class NetCashflowChart extends ChartWidget
 {
-    protected static ?string $heading = 'Net Cashflow';
+    protected ?string $heading = 'Net Cashflow';
 
-    protected static ?string $maxHeight = '250px';
+    protected ?string $maxHeight = '250px';
 
     protected function getType(): string
     {

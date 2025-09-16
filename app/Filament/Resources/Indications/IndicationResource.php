@@ -1,14 +1,19 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Indications;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Indications\Pages\ManageIndications;
 use App\Filament\Resources\IndicationResource\Pages;
 use App\Models\{Indication,Meter};
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,10 +40,10 @@ class IndicationResource extends Resource
         return __('Indications');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TableRepeater::make('data')
                 ->headers(['Meter', 'Indication'])
                 ->emptyLabel('Add ingredients to techcard')
@@ -62,13 +67,13 @@ class IndicationResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -76,7 +81,7 @@ class IndicationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageIndications::route('/'),
+            'index' => ManageIndications::route('/'),
         ];
     }
 }

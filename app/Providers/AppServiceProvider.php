@@ -5,7 +5,6 @@ namespace App\Providers;
 use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use App\Models\Permission;
 use App\Models\Role;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
@@ -17,6 +16,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Permission\PermissionRegistrar;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         app(\Spatie\Permission\PermissionRegistrar::class)
+            ->setPermissionClass(Permission::class)
+            ->setRoleClass(Role::class);
+
+        app(PermissionRegistrar::class)
             ->setPermissionClass(Permission::class)
             ->setRoleClass(Role::class);
 
@@ -67,11 +71,6 @@ class AppServiceProvider extends ServiceProvider
                 ])
                 // default locales
                 ->locales(['ru', 'uk', 'en']);
-        });
-
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-            $switch
-                ->locales(['uk', 'en', 'ru']);
         });
 
         // FilamentAsset::register([

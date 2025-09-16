@@ -5,6 +5,8 @@ namespace App\Filament\Pages;
 use App\Filament\Components\ExpenseForm;
 use App\Filament\Components\IncomeForm;
 use App\Filament\Components\SupplyForm;
+use App\Filament\Widgets\Dashboard\PosterShift;
+use App\Filament\Widgets\Dashboard\TodayShift;
 use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Expense;
@@ -40,9 +42,9 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
     //     ];
     // }
 
-    protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-computer-desktop';
 
-    protected static string $view = 'filament.pages.dashboard';
+    protected string $view = 'filament.pages.dashboard';
 
     protected static ?string $slug = 'dashboard';
 
@@ -56,8 +58,8 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\Dashboard\TodayShift::class,
-            \App\Filament\Widgets\Dashboard\PosterShift::class,
+            TodayShift::class,
+            PosterShift::class,
         ];
     }
 
@@ -112,7 +114,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->slideOver()
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
-                    ->form(
+                    ->schema(
                         ExpenseForm::schema(),
                     )
                     ->successNotification(
@@ -131,7 +133,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->slideOver()
-                    ->form(
+                    ->schema(
                         SupplyForm::schema(),
                     )
                     ->successNotification(
@@ -146,10 +148,10 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Income'))
                     ->createAnother(false)
-                    ->modalWidth('sm')
+                    ->modalWidth('xs')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->form(
+                    ->schema(
                         IncomeForm::schema()
                     )
                     ->successNotification(
@@ -169,7 +171,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                 ->modalHeading(__('Add Tips'))
                 ->keyBindings(['command+s', 'ctrl+s'])
                 ->requiresConfirmation()
-                ->form([
+                ->schema([
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     TextInput::make('tips')->label('')
                         ->numeric()
@@ -195,7 +197,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->icon('heroicon-o-lock-open')
                     ->modalHeading(__('Open Shift'))
                     ->requiresConfirmation()
-                    ->form([
+                    ->schema([
                         Hidden::make('place_id')->default(Filament::getTenant()->id),
                     ])
                     ->action(function (array $data): void {
@@ -211,9 +213,11 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                 Action::make('deleteReceipt')
                     ->label(__('Delete Receipt'))
                     ->icon('heroicon-o-backspace')
+                    ->modalWidth('xs')
+
                     ->modalHeading(__('Delete Receipt'))
                     ->requiresConfirmation()
-                    ->form([
+                    ->schema([
                         Hidden::make('place_id')->default(Filament::getTenant()->id)
                             ->required()
                             ->reactive(),

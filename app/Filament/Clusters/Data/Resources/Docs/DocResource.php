@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources;
+namespace App\Filament\Clusters\Data\Resources\Docs;
 
-use App\Filament\Clusters\Data;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Clusters\Data\Resources\Docs\Pages\ManageDocs;
+use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\DocResource\Pages;
 use App\Models\Doc;
 use Filament\Facades\Filament;
@@ -11,9 +16,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -23,9 +26,9 @@ class DocResource extends Resource
 {
     protected static ?string $model = Doc::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $cluster = Data::class;
+    protected static ?string $cluster = DataCluster::class;
 
     protected static ?int $navigationSort = 1;
 
@@ -39,10 +42,10 @@ class DocResource extends Resource
         return __('Docs');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name'))->required(),
                 Select::make('type')->label(__('Type'))
@@ -89,12 +92,12 @@ class DocResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -106,10 +109,10 @@ class DocResource extends Resource
         ];
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('name')->translateLabel(),
                 TextEntry::make('type')->translateLabel(),
                 TextEntry::make('date')->label(__('Date Expired'))->badge(),
@@ -119,7 +122,7 @@ class DocResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageDocs::route('/'),
+            'index' => ManageDocs::route('/'),
             // 'index' => Pages\ListDocs::route('/'),
             // 'create' => Pages\CreateDoc::route('/create'),
             // 'edit' => Pages\EditDoc::route('/{record}/edit'),

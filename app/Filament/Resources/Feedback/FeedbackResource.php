@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Feedback;
 
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconSize;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Feedback\Pages\ManageFeedback;
 use App\Filament\Resources\FeedbackResource\Pages;
 use App\Models\Feedback;
 
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -43,10 +48,10 @@ class FeedbackResource extends Resource
     //     return Feedback::count();
     // }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name'),
                 TextInput::make('contact'),
                 TextInput::make('text'),
@@ -66,7 +71,7 @@ class FeedbackResource extends Resource
 
                 IconColumn::make('approve')
                 ->translateLabel()
-                ->size(IconColumn\IconColumnSize::Large)
+                ->size(IconSize::Large)
                  ->boolean()
                  ->trueIcon('heroicon-o-eye')
                  ->falseIcon('heroicon-o-eye-slash')
@@ -80,19 +85,19 @@ class FeedbackResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageFeedback::route('/'),
+            'index' => ManageFeedback::route('/'),
         ];
     }
 }

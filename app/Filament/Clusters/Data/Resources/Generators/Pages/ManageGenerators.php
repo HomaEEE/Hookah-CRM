@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\GeneratorResource\Pages;
+namespace App\Filament\Clusters\Data\Resources\Generators\Pages;
 
-use App\Filament\Clusters\Data\Resources\GeneratorResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Clusters\Data\Resources\Generators\GeneratorResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -13,8 +14,8 @@ class ManageGenerators extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->mutateFormDataUsing(function (array $data): array {
+            CreateAction::make()
+                ->mutateDataUsing(function (array $data): array {
                     $data['load'] = $data['load'] * 100;
 
                     return $data;

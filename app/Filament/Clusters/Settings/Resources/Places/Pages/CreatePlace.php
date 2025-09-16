@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\PlaceResource\Pages;
+namespace App\Filament\Clusters\Settings\Resources\Places\Pages;
 
-use App\Filament\Clusters\Settings\Resources\PlaceResource;
+use LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
+use App\Filament\Clusters\Settings\Resources\Places\PlaceResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePlace extends CreateRecord
 {
-    use CreateRecord\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = PlaceResource::class;
 

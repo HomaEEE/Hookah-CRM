@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\WithdrawalResource\Pages;
+namespace App\Filament\Resources\Withdrawals\Pages;
 
-use App\Filament\Resources\WithdrawalResource;
+use Filament\Schemas\Components\Tabs\Tab;
+use App\Filament\Resources\Withdrawals\WithdrawalResource;
 use App\Models\Bill;
 use Auth;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\ManageRecords;
-use Filament\Resources\Components\Tab;
 
 class ManageWithdrawals extends ManageRecords
 {

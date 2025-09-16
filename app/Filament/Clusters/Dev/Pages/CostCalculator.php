@@ -2,19 +2,20 @@
 
 namespace App\Filament\Clusters\Dev\Pages;
 
-use App\Filament\Clusters\Dev;
+use App\Filament\Clusters\Dev\Widgets\CostCalcWidgets;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use App\Filament\Clusters\Dev\DevCluster;
 use App\Models\ExpenseCategory;
 use App\Models\Ingredient;
 use App\Models\Wage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -22,11 +23,11 @@ class CostCalculator extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calculator';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-calculator';
 
-    protected static string $view = 'filament.clusters.modules.pages.cost-calculator';
+    protected string $view = 'filament.clusters.modules.pages.cost-calculator';
 
-    protected static ?string $cluster = Dev::class;
+    protected static ?string $cluster = DevCluster::class;
 
     public static function getPluralModelLabel(): string
     {
@@ -46,7 +47,7 @@ class CostCalculator extends Page implements HasForms
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Clusters\Dev\Widgets\CostCalcWidgets::make(),
+            CostCalcWidgets::make(),
         ];
     }
 

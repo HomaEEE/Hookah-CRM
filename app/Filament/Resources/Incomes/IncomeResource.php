@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Incomes;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Incomes\Pages\ManageIncomes;
 use App\Filament\Components\IncomeForm;
 use App\Filament\Resources\IncomeResource\Pages;
 use App\Models\Income;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -32,10 +36,10 @@ class IncomeResource extends Resource
         return __('Finance');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema(
+        return $schema
+            ->components(
                 IncomeForm::schema()
             );
     }
@@ -59,12 +63,12 @@ class IncomeResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -72,7 +76,7 @@ class IncomeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageIncomes::route('/'),
+            'index' => ManageIncomes::route('/'),
         ];
     }
 }

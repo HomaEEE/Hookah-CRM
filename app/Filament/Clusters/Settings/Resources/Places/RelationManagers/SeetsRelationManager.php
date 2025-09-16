@@ -1,13 +1,20 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\PlaceResource\RelationManagers;
+namespace App\Filament\Clusters\Settings\Resources\Places\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use App\Models\Room;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,10 +25,10 @@ class SeetsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'table_id';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('table_id')->label(__('Table_id')),
                 Select::make('room_id')->label(__('Room'))
                     ->options(Room::where('place_id', Filament::getTenant()->id)->pluck('room', 'id')),
@@ -34,22 +41,22 @@ class SeetsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('table_id')->translateLabel(),
-                Tables\Columns\TextColumn::make('room.roomName')->translateLabel(),
+                TextColumn::make('table_id')->translateLabel(),
+                TextColumn::make('room.roomName')->translateLabel(),
             ])
             ->filters([
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                RestoreAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
+                RestoreBulkAction::make(),
             ]);
     }
 }

@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
 @endpush
 
-@section('page', __('Seet page'))
+@section('page', __('Table page'))
 
 @section('content')
 <div class="container page">

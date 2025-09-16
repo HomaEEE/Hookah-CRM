@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Expenses;
 
 use App\Filament\Components\ExpenseForm;
-use App\Filament\Resources\ExpenseResource\Pages;
+use App\Filament\Resources\Expenses\Pages\ManageExpenses;
 use App\Models\Bill;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -56,10 +59,10 @@ class ExpenseResource extends Resource
         return parent::getEloquentQuery()->with('category', 'user', 'supply');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema(
+        return $schema
+            ->components(
                 ExpenseForm::schema()
             );
     }
@@ -117,7 +120,7 @@ class ExpenseResource extends Resource
             ->defaultPaginationPageOption(10)
             ->striped()
             ->filters([
-                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                DateRangeFilter::make('created_at')->translateLabel()
                     ->defaultLast30Days(),
                 SelectFilter::make('category_id')
                     ->label(__('Category'))
@@ -175,22 +178,22 @@ class ExpenseResource extends Resource
                 //     ),
 
             ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('added_at')->translateLabel()->badge()->dateTime('d F Y'),
                 TextEntry::make('user.name')->translateLabel()->badge(),
                 TextEntry::make('bill.name')->translateLabel()->badge(),
@@ -210,7 +213,7 @@ class ExpenseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageExpenses::route('/'),
+            'index' => ManageExpenses::route('/'),
         ];
     }
 

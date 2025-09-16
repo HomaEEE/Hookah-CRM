@@ -5,8 +5,8 @@ namespace App\Livewire\Statistic;
 use App\Models\Supplier;
 use App\Models\Supply;
 use Filament\Facades\Filament;
-use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -29,13 +29,13 @@ class Supplies extends BaseWidget
                 Supply::query()->where('place_id', Filament::getTenant()->id)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('supplier.company')
+                TextColumn::make('supplier.company')
                     ->translateLabel()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('count')
+                TextColumn::make('count')
                     ->translateLabel()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total')
+                TextColumn::make('total')
                     ->label(__('Sum'))
                     ->sortable()
                     ->money('UAH', 100)
@@ -53,7 +53,6 @@ class Supplies extends BaseWidget
                     ),
                 DateRangeFilter::make('created_at')
                     ->translateLabel()
-                    ->separator(' - ')
                     ->defaultThisMonth()
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 

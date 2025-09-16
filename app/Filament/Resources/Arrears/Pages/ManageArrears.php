@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\ArrearResource\Pages;
+namespace App\Filament\Resources\Arrears\Pages;
 
-use App\Filament\Resources\ArrearResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Arrears\ArrearResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -13,7 +14,7 @@ class ManageArrears extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

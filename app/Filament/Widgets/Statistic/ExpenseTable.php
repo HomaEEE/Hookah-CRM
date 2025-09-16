@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets\Statistic;
 
+use Filament\Tables\Columns\TextColumn;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use Filament\Facades\Filament;
@@ -29,13 +30,13 @@ class ExpenseTable extends BaseWidget
                 Expense::query()->where('place_id', Filament::getTenant()->id)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('category.id')
+                TextColumn::make('category.id')
                     ->label('Категория')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category.name')
+                TextColumn::make('category.name')
                     ->label('Категория')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total')
+                TextColumn::make('total')
                     ->label(__('Sum'))
                     ->sortable()
                     ->money('UAH', 100)

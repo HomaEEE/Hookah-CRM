@@ -1,21 +1,25 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Products;
 
 use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
-use App\Filament\Resources\ProductResource\Pages;
+use App\Filament\Resources\Products\Pages\ManageProducts;
 use App\Models\Category;
 use App\Models\Product;
 use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -49,26 +53,29 @@ class ProductResource extends Resource
         return Product::query()->with('childs', 'parent')->fastPaginate();
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Toggle::make('visible')->label(__('Visible'))->inline(),
-                Toggle::make('visible_menu')->label(__('Visible menu'))->inline(),
+        return $schema
+            ->components([
                 TextInput::make('product_name')
                     ->translateLabel()
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columns(1),
 
                 Select::make('menu_category_id')
                     ->label(__('Category'))
                     ->options(Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id'))
                     ->searchable(),
+
+                ToggleButtons::make('visible')->label(__('Visible'))->inline()->boolean()->grouped()->columns(1),
+                ToggleButtons::make('visible_menu')->label(__('Visible menu'))->inline()->boolean()->grouped()->columns(1),
+
                 TranslatableTabs::make()
                     ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))
                     ->schema([
-                        TextInput::make('frontend_name')->label(__('Front product name'))->translatable(),
-                        Textarea::make('frontend_desc')->label(__('Description'))->translatable(),
+                        TextInput::make('frontend_name')->label(__('Front product name')),
+                        Textarea::make('frontend_desc')->label(__('Description')),
                     ]),
                 TextInput::make('sup')->label(__('sup')),
                 TextInput::make('barcode')->label('Barcode'),
@@ -133,7 +140,7 @@ class ProductResource extends Resource
 
                 IconColumn::make('visible_menu')
                     ->label(__('Visible menu'))
-                    ->size(IconColumn\IconColumnSize::Medium)
+                    ->size(IconSize::Medium)
                     ->boolean()
                     ->trueIcon('heroicon-o-eye')
                     ->falseIcon('heroicon-o-eye-slash')
@@ -161,13 +168,13 @@ class ProductResource extends Resource
                         Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id')
                     ),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -175,7 +182,7 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageProducts::route('/'),
+            'index' => ManageProducts::route('/'),
         ];
     }
 }

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\BookingResource\Pages;
+namespace App\Filament\Resources\Bookings\Pages;
 
-use App\Filament\Resources\BookingResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Bookings\BookingResource;
 use App\Models\Booking;
 use Auth;
 use Filament\Pages\Actions;
@@ -16,7 +17,7 @@ class ManageBookings extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()->createAnother(false),
+            CreateAction::make()->createAnother(false),
         ];
     }
 

@@ -1,37 +1,39 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources;
+namespace App\Filament\Clusters\Settings\Resources\Users;
 
-use App\Filament\Clusters\Settings;
-use App\Filament\Clusters\Settings\Resources\UserResource\Pages;
+use App\Filament\Clusters\Settings\Resources\Users\Pages\ManageUsers;
+use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Models\User;
 use App\Models\Wage;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
-use STS\FilamentImpersonate\Tables\Actions\Impersonate;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $cluster = Settings::class;
+    protected static ?string $cluster = SettingsCluster::class;
 
     use Translatable;
 
@@ -45,10 +47,10 @@ class UserResource extends Resource
         return __('Personal');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->compact()
                     ->schema([
@@ -124,14 +126,13 @@ class UserResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Impersonate::make(),
-                Tables\Actions\EditAction::make()->label(''),
-                Tables\Actions\DeleteAction::make()->label(''),
+            ->recordActions([
+                EditAction::make()->label(''),
+                DeleteAction::make()->label(''),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -139,7 +140,7 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageUsers::route('/'),
+            'index' => ManageUsers::route('/'),
         ];
     }
 }

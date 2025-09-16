@@ -1,13 +1,21 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\PlaceResource\RelationManagers;
+namespace App\Filament\Clusters\Settings\Resources\Places\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
 use App\Enums\Bill as BillEnum;
 use App\Enums\Currency;
 use App\Http\Controllers\PosterApiController;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,10 +36,10 @@ class BillsRelationManager extends RelationManager
         return __('Bills');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')->label(__('Bill name')),
                 Select::make('currency')->label(__('Currency'))
                     ->options(Currency::class),
@@ -45,16 +53,16 @@ class BillsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('currency')->badge(),
-                Tables\Columns\TextColumn::make('type')->badge(),
-                Tables\Columns\TextColumn::make('balance'),
+                TextColumn::make('name'),
+                TextColumn::make('currency')->badge(),
+                TextColumn::make('type')->badge(),
+                TextColumn::make('balance'),
             ])
             ->filters([
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\Action::make('getBills')
+                CreateAction::make(),
+                Action::make('getBills')
                     ->label(__('Get Bills'))
                     ->color('info')
                     ->icon('heroicon-o-arrow-down-circle')
@@ -65,14 +73,14 @@ class BillsRelationManager extends RelationManager
                         (new PosterApiController)->getBills($this->ownerRecord->id);
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                RestoreAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
+                RestoreBulkAction::make(),
             ]);
     }
 }

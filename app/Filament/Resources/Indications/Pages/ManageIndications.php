@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\IndicationResource\Pages;
+namespace App\Filament\Resources\Indications\Pages;
 
-use App\Filament\Resources\IndicationResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Resources\Indications\IndicationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -13,7 +14,7 @@ class ManageIndications extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

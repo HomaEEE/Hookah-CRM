@@ -1,20 +1,26 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources;
+namespace App\Filament\Clusters\Data\Resources\Guests;
 
-use App\Filament\Clusters\Data;
+use Filament\Schemas\Schema;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\CreateAction;
+use App\Filament\Clusters\Data\Resources\Guests\Pages\ManageGuests;
+use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\GuestResource\Pages;
 use App\Models\Guest;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -22,11 +28,11 @@ class GuestResource extends Resource
 {
     protected static ?string $model = Guest::class;
 
-    protected static ?string $cluster = Data::class;
+    protected static ?string $cluster = DataCluster::class;
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?int $navigationSort = 2;
 
@@ -40,10 +46,10 @@ class GuestResource extends Resource
         return __('Guests');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name')),
                 TextInput::make('phone')->label(__('Phone'))
@@ -56,10 +62,10 @@ class GuestResource extends Resource
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('name')->translateLabel(),
                 TextEntry::make('phone')->translateLabel(),
                 TextEntry::make('comment')->translateLabel(),
@@ -87,27 +93,27 @@ class GuestResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make()->createAnother(false),
+                CreateAction::make()->createAnother(false),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageGuests::route('/'),
+            'index' => ManageGuests::route('/'),
         ];
     }
 }

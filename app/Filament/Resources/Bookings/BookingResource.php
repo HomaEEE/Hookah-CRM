@@ -1,7 +1,15 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Bookings;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Bookings\Pages\ManageBookings;
 use App\Filament\Components\BookingForm;
 use App\Filament\Resources\BookingResource\Pages;
 use Illuminate\Database\Eloquent\Model;
@@ -9,9 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\{Booking};
 use Auth;
 use Carbon\Carbon;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -58,10 +64,10 @@ class BookingResource extends Resource
         return Booking::query()->whereDate('time', '>=', Carbon::today());
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema(
+        return $schema
+            ->components(
                 BookingForm::schema()
             );
     }
@@ -86,8 +92,8 @@ class BookingResource extends Resource
                 Filter::make('today')->translateLabel()
                     ->query(fn (Builder $query): Builder => $query->whereDate('time', Carbon::today())),
             ])
-            ->actions([
-                Tables\Actions\ReplicateAction::make(),
+            ->recordActions([
+                ReplicateAction::make(),
                 // ->form([
                 //     DateTimePicker::make('time')->seconds(false)
                 //     ->native(false)
@@ -97,21 +103,21 @@ class BookingResource extends Resource
                 //     $record['time'] = $data['time'];
                 //     // Access and apply form data (e.g., $record->custom_field = $data['custom_field'])
                 // }),
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('guest.name')->hiddenLabel(),
                 TextEntry::make('comment')->hiddenLabel(),
                 TextEntry::make('guest.phone')->hiddenLabel()->copyable(),
@@ -125,7 +131,7 @@ class BookingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageBookings::route('/'),
+            'index' => ManageBookings::route('/'),
         ];
     }
 }

@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\BotResource\RelationManagers;
+namespace App\Filament\Clusters\Settings\Resources\Bots\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use App\Http\Controllers\TelegramBotController;
 use App\Models\BotChat;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -20,10 +25,10 @@ class ChatRelationManager extends RelationManager
 {
     protected static string $relationship = 'chats';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Hidden::make('telegraph_bot_id')->default($this->ownerRecord->id),
                 TextInput::make('chat_id')
@@ -48,25 +53,24 @@ class ChatRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Action::make('Sendtest')->label('Send Message')
-                    ->form([
+            ->recordActions([
+                Action::make('Sendtest')->label(__('Send Message'))
+                    ->schema([
                         Textarea::make('message')->translateLabel(),
                     ])
                     ->action(function (BotChat $record, array $data): void {
-                        // (new TelegramBotController)->sendMessage($record->chat_id, $data);
                         (new TelegramBotController)->sendTestMessage($record->chat_id, $data);
                     }),
                 ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

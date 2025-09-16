@@ -34,6 +34,7 @@
         @endif --}}
 
         @if ($feedback == 1)
+
         <div class="col-xs-12 col-sm-4 col-md-5 properties comment" id="comment">
             <h4> <i class="icon-comment"></i> {{ __('Feedback button') }}</h4>
             <h4 class="hidden"> <i class="icon-comment"></i> {{ __('Feedback send') }}</h4>
@@ -43,33 +44,6 @@
             </div>
         </div>
 
-        <div class="modal-feedback">
-            <h4>{{ __('Feedback') }}</h4>
-            <p>{{ __('Feedback comment') }}</p>
-
-            <form data-action="/sendFeedback" method="POST" id="feedback" class="form">
-                @csrf
-                <input type="hidden" name="place_id" value="{{ $place->id }}" id="place_id">
-
-                <div class="input-group">
-                    <input type="text" name="name" id="name" placeholder=" " required />
-                    <label for="name">{{ __('Name') }}</label>
-                </div>
-                <div class="input-group">
-                    <input type="tel" name="contact" id="name" placeholder=" " required />
-                    <label for="contact">{{ __('Phone or Telegram') }}</label>
-                </div>
-
-                <div class="input-group">
-                    <textarea type="text" name="text" id="text" rows="8" required></textarea>
-                    <label for="text">{{ __('Comment') }}</label>
-                </div>
-                <button type="submit" class="button-success">{{ __('Send') }}</button>
-            </form>
-            <i id="close"></i>
-
-        </div>
-        <div class="modal-feedback-overlay"></div>
         @endif
 
 

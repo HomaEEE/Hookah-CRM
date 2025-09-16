@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\ShiftResource\Pages;
+namespace App\Filament\Resources\Shifts\Pages;
 
-use App\Filament\Resources\ShiftResource;
+use App\Filament\Resources\Shifts\ShiftResource;
 use App\Models\Shift;
 use Auth;
 use Filament\Resources\Pages\ListRecords\Tab;

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\IngredientResource\Pages;
+namespace App\Filament\Resources\Ingredients\Pages;
 
-use App\Filament\Resources\IngredientResource;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
+use App\Filament\Resources\Ingredients\IngredientResource;
 use App\Http\Controllers\PosterApiController;
 use Filament\Actions;
 use Filament\Facades\Filament;
@@ -16,8 +18,8 @@ class ManageIngredients extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
-            Actions\Action::make('update')
+            CreateAction::make(),
+            Action::make('update')
             ->label(__('Update ingredients'))
             ->icon('heroicon-o-arrow-path')
             ->action(function (): void {

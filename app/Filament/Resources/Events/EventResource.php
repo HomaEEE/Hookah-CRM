@@ -1,7 +1,14 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Events;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Events\Pages\ManageEvents;
 use App\Enums\EventType;
 use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
@@ -40,10 +47,10 @@ class EventResource extends Resource
     //     return Event::query()->whereDate('datetime', '>=', Carbon::today())->count();
     // }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('title')->translateLabel(),
                 Select::make('type')->options(EventType::class)->native(false),
                 DateTimePicker::make('datetime')->seconds(false)
@@ -52,7 +59,7 @@ class EventResource extends Resource
                 ->default(now())
                 ->translateLabel()
                 ->reactive()->afterStateUpdated(
-                    function (Set $set, Get $get) {
+                    function (\Filament\Schemas\Components\Utilities\Set $set, \Filament\Schemas\Components\Utilities\Get $get) {
                         $set('end_time', $get('datetime'));
                     }
                 ),
@@ -77,9 +84,9 @@ class EventResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ReplicateAction::make()
-                ->form([
+            ->recordActions([
+                ReplicateAction::make()
+                ->schema([
                     DateTimePicker::make('datetime')->seconds(false)
                     ->native(false)
                     ->minDate(now())->default(now())
@@ -89,12 +96,12 @@ class EventResource extends Resource
                     ->minDate(now())->default(now()->subHours(2))
                     ->translateLabel(),
                 ]),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -109,7 +116,7 @@ class EventResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageEvents::route('/'),
+            'index' => ManageEvents::route('/'),
         ];
     }
 }

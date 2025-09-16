@@ -1,30 +1,34 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Excises;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Size;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Excises\Pages\ManageExcises;
 use App\Filament\Resources\ExciseResource\Pages;
 use App\Models\Excise;
 use Auth;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -53,10 +57,10 @@ class ExciseResource extends Resource
         return __('Excises');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Group::make()
                     ->schema([
                         Section::make()
@@ -122,7 +126,7 @@ class ExciseResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('approve')->button()->label('')
                     ->icon('heroicon-o-arrow-uturn-up')
                     ->color('success')
@@ -140,14 +144,14 @@ class ExciseResource extends Resource
                     ->modalHeading(__('Portions'))
                     ->color('info')
                     ->modalWidth('xs')
-                    ->form([
+                    ->schema([
                         TextInput::make('portions')
                             ->hiddenLabel()->numeric()
                             ->default(1)
                             ->required()
                             ->suffixAction(
-                                FormAction::make('plus')
-                                    ->size(ActionSize::Large)
+                                Action::make('plus')
+                                    ->size(Size::Large)
                                     ->color('success')
                                     ->icon('heroicon-o-plus')
                                     ->iconButton()
@@ -157,8 +161,8 @@ class ExciseResource extends Resource
                                     })
                             )
                             ->prefixAction(
-                                FormAction::make('minus')
-                                    ->size(ActionSize::Large)
+                                Action::make('minus')
+                                    ->size(Size::Large)
                                     ->icon('heroicon-o-minus')
                                     ->color('danger')
                                     ->iconButton()
@@ -173,24 +177,24 @@ class ExciseResource extends Resource
                         $record->increment('portions', $data['portions']);
                     })
                     ->visible(fn (Excise $record) => $record->volume * 1000 / 40 - $record->portions != 0),
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make()->slideOver(),
-                    Tables\Actions\DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
 
         //   dd($this->record);
 
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('added_at')->translateLabel(),
                 TextEntry::make('title')->translateLabel(),
                 TextEntry::make('excise')->translateLabel(),
@@ -217,7 +221,7 @@ class ExciseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageExcises::route('/'),
+            'index' => ManageExcises::route('/'),
         ];
     }
 }

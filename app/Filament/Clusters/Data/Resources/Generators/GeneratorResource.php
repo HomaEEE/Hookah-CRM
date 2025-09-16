@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources;
+namespace App\Filament\Clusters\Data\Resources\Generators;
 
-use App\Filament\Clusters\Data;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Clusters\Data\Resources\Generators\Pages\ManageGenerators;
+use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\GeneratorResource\Pages;
 use App\Models\Generator;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -19,9 +24,9 @@ class GeneratorResource extends Resource
 {
     protected static ?string $model = Generator::class;
 
-    protected static ?string $cluster = Data::class;
+    protected static ?string $cluster = DataCluster::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bolt';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
 
     protected static ?int $navigationSort = 999;
 
@@ -40,10 +45,10 @@ class GeneratorResource extends Resource
         return __('Generator');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('tech')->translateLabel()->required()->columns(1),
                 Select::make('box.num')->label(__('Switch Box'))->options([
@@ -87,9 +92,9 @@ class GeneratorResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
-                    ->mutateFormDataUsing(function (array $data): array {
+            ->recordActions([
+                EditAction::make()
+                    ->mutateDataUsing(function (array $data): array {
                         $data['load'] = $data['load'] * 100;
 
                         return $data;
@@ -99,11 +104,11 @@ class GeneratorResource extends Resource
 
                         return $data;
                     }),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -111,7 +116,7 @@ class GeneratorResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageGenerators::route('/'),
+            'index' => ManageGenerators::route('/'),
         ];
     }
 }

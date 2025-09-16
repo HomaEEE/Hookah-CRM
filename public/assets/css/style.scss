@@ -268,7 +268,7 @@ p {
 a {
   text-decoration: none;
   color: $text;
-  font-family: "Phonk Sans", sans-serif;
+  font-family: "Unbounded", sans-serif;
 }
 
 a.btn {
@@ -291,7 +291,7 @@ a.btn {
 header {
   position: relative;
   .logo {
-    width: 60%;
+    width: 65%;
     margin: 10px 0;
     padding-top: 10px;
     @media (max-width: 1199px) {
@@ -305,7 +305,7 @@ header {
 
     @media (max-width: 575px) {
       left: 15px;
-      width: 45%;
+      width: 40%;
       top: 5px;
       position: relative;
       margin-bottom: 10px;
@@ -432,6 +432,7 @@ header {
         &.active {
           padding: 3px;
           background: $text;
+          border-radius: 7px;
           a {
             color: $black;
           }
@@ -472,27 +473,22 @@ main {
         padding: 40px 0 0 0;
       }
     }
-    &::before {
-      position: absolute;
-      height: 100%;
-      width: 50vw;
-      top: 0;
-      left: 0;
-      content: "";
-      background: $red;
-      z-index: -1;
-      @media (max-width: 575px) {
-        width: 80vw;
-      }
+
+    .container {
+      position: relative;
     }
 
     .hero {
-      height: 70vh;
+      height: 55vh;
+      overflow-y: hidden;
       position: relative;
+      @media (max-width: 575px) {
+        height: 50vh;
+      }
       .links {
         position: absolute;
         top: 50%;
-        right: 12vw;
+        right: 0;
         transform: translateY(-50%);
         text-align: right;
         font-size: 1.5rem;
@@ -502,9 +498,9 @@ main {
         @media (max-width: 575px) {
           top: 50%;
           transform: translateY(-50%);
-          font-size: 0.8rem;
+          font-size: 1rem;
           writing-mode: vertical-rl;
-          right: 30px;
+          right: 35px;
           display: flex;
           white-space: nowrap;
         }
@@ -517,7 +513,7 @@ main {
             color: $text;
             text-decoration: none;
             text-transform: uppercase;
-            font-family: "Phonk Sans", sans-serif;
+            font-family: "Unbounded", sans-serif;
             transition: 0.5s;
             @media (max-width: 575px) {
               display: flex;
@@ -548,162 +544,167 @@ main {
         }
       }
 
-      .swiper-pagination {
-        position: absolute;
-        top: 50%;
-        left: 5vw;
-        transform: translateY(-50%);
-        span {
-          width: 15px;
-          height: 15px;
-          margin-bottom: 15px;
-          &.swiper-pagination-bullet-active {
-            background: $text-grey;
+      .swiper {
+        height: 55vh;
+        overflow-y: hidden;
+        position: relative;
+
+        @media (max-width: 575px) {
+          height: 50vh;
+        }
+        &::before {
+          content: "";
+          width: 50%;
+          height: 90%;
+          background: $red;
+          position: absolute;
+          z-index: -1;
+          top: 20px;
+          border-radius: 37px;
+          @media (max-width: 575px) {
+            width: 70vw;
+            border-radius: 0 23px 23px 0;
           }
         }
-      }
-
-      .swiper {
-        position: relative;
-        height: 100%;
         .swiper-slide {
-          position: relative;
+          display: flex;
           .text {
             position: absolute;
             top: 50%;
-            left: 11%;
-            transform: translateY(-50%) !important;
-            h2 {
-              font-size: 2rem;
-              margin-bottom: 10px;
-            }
-
-            h4 {
-              margin-bottom: 10px;
-            }
-            p {
-              font-size: 1rem;
-              width: 80%;
-            }
-
+            transform: translateY(-50%);
+            width: 60%;
+            padding: 30px;
             @media (max-width: 575px) {
-              top: 20%;
-              left: 10%;
-              width: 80%;
-              transform: translateX(-50%);
-              h2 {
-                font-size: 1.5rem;
-                margin-bottom: 10px;
-              }
-
-              h4 {
-                font-size: 1rem;
-                margin-bottom: 10px;
-              }
-              p {
-                font-size: 0.75rem;
-                width: 80%;
-              }
+              top: 35vw;
             }
           }
           img {
-            display: block;
-            width: 295px;
             position: absolute;
+            bottom: 10px;
+            height: 95%;
             left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-
+            transform: translateX(-60%);
             @media (max-width: 575px) {
-              width: 20vh;
+              transform: translateX(-10%);
+              width: 40vw;
+              bottom: 0;
+              height: auto;
             }
           }
         }
       }
     }
+    .swiper-pagination {
+      position: absolute;
+      bottom: 50px;
+      .swiper-pagination-bullet {
+        background-color: #ccc; // Inactive bullet color
+        opacity: 0.8;
+        width: 10px;
+        height: 10px;
+        margin: 0 5px; // Adjust spacing
+      }
 
-    .about {
-      padding: 150px 0;
-      background: $black;
-      font-family: "Phonk Sans";
+      .swiper-pagination-bullet-active {
+        background-color: #007aff; // Active bullet color
+        opacity: 1;
+      }
+
+      .swiper-pagination-progressbar {
+        background-color: #eee;
+      }
+
+      .swiper-pagination-progressbar-fill {
+        background-color: #007aff;
+      }
+    }
+  }
+
+  .block {
+    padding: 40px;
+  }
+
+  .about {
+    padding: 150px 0;
+    background: $black;
+    font-family: "Phonk Sans";
+    @media (max-width: 617px) {
+      padding: 50px 0;
+    }
+    h2 {
+      font-size: 1.75em;
+      text-transform: uppercase;
+      border-bottom: 1px solid $text-dark-grey;
+      margin: 0;
       @media (max-width: 617px) {
-        padding: 50px 0;
+        padding: 20px;
+        font-size: 1.25rem;
       }
-      h2 {
-        font-size: 1.75em;
-        text-transform: uppercase;
-        border-bottom: 1px solid $text-dark-grey;
-        margin: 0;
-        @media (max-width: 617px) {
-          padding: 20px;
-          font-size: 1.25rem;
-        }
-      }
+    }
 
-      .inner {
-        color: #fff;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-flow: row wrap;
-        flex-flow: row wrap;
-        -webkit-justify-content: space-between;
-        justify-content: space-between;
-        -webkit-align-items: flex-end;
-        align-items: flex-end;
+    .inner {
+      color: #fff;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+      -webkit-align-items: flex-end;
+      align-items: flex-end;
+      width: 100%;
+    }
+
+    .box {
+      width: 50%;
+      @media (max-width: 617px) {
         width: 100%;
+        padding: 20px;
       }
-
-      .box {
-        width: 50%;
+      p {
+        padding: 20px 40px 80px 0;
+        line-height: 2;
         @media (max-width: 617px) {
-          width: 100%;
-          padding: 20px;
+          text-align: left;
+          padding: 20px 40px 40px 0;
         }
-        p {
-          padding: 20px 40px 80px 0;
-          line-height: 2;
+        &.right {
+          text-align: right;
+          padding: 40px 0px 0px 50px;
           @media (max-width: 617px) {
             text-align: left;
             padding: 20px 40px 40px 0;
           }
-          &.right {
-            text-align: right;
-            padding: 40px 0px 0px 50px;
-            @media (max-width: 617px) {
-              text-align: left;
-              padding: 20px 40px 40px 0;
-            }
-          }
         }
-        &:nth-child(1) {
-          border-right: 1px solid $text-dark-grey;
-          @media (max-width: 575px) {
-            border: none;
-          }
-        }
-
-        h3 {
-          padding: 0;
-          margin: 0;
-          text-transform: uppercase;
-          font-size: 1.5rem;
-          @media (max-width: 617px) {
-            font-size: 1.15rem;
-          }
+      }
+      &:nth-child(1) {
+        border-right: 1px solid $text-dark-grey;
+        @media (max-width: 575px) {
+          border: none;
         }
       }
 
-      /* Alignement spécifique */
-      .flex-panel div:nth-child(2) {
-        -webkit-align-self: flex-start;
-        align-self: flex-start;
-
-        -webkit-flex: 1 312px;
-        flex: 1;
-
-        -webkit-order: 1;
-        order: 1;
+      h3 {
+        padding: 0;
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        @media (max-width: 617px) {
+          font-size: 1.15rem;
+        }
       }
+    }
+
+    /* Alignement spécifique */
+    .flex-panel div:nth-child(2) {
+      -webkit-align-self: flex-start;
+      align-self: flex-start;
+
+      -webkit-flex: 1 312px;
+      flex: 1;
+
+      -webkit-order: 1;
+      order: 1;
     }
   }
 
@@ -821,25 +822,42 @@ main {
     border: none;
     border-radius: $radius;
     font-size: 1.25rem;
-    cursor: crosshair;
+    cursor: grab;
   }
 }
 
 .tabs {
-  position: sticky;
+  height: 70vh;
   ul {
     margin: 0;
-    padding: 0;
+    position: sticky;
+
+    padding: 20px 0;
     list-style: none;
     display: flex;
     flex-flow: row nowrap;
     flex-direction: column;
-    font-size: 2rem;
+    font-size: 1.75rem;
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    flex-direction: column;
+    height: 100%;
+    position: sticky;
+    flex-grow: 1;
+    transition: flex 3s ease;
     li {
       margin: 2px;
       box-sizing: border-box;
       flex: 1 1 1;
-      transition: flex 0.5s ease;
+      transition: all 0.5s ease;
       text-transform: uppercase;
       color: $text-dark-grey;
       cursor: pointer;
@@ -881,7 +899,7 @@ main {
         transition: font-size 0.5s ease;
         text-transform: uppercase;
         width: auto;
-        color: $text-dark-grey;
+        color: $text;
         cursor: pointer;
         text-wrap: nowrap;
         a {
@@ -890,16 +908,11 @@ main {
           text-transform: uppercase;
         }
         &.active {
-          font-size: 1.15rem;
-          padding: 0 10px;
-          color: $text;
-        }
-        &::hover {
-          a {
-            font-size: 1.25rem;
-            padding: 0 10px;
-            color: $text;
-          }
+          font-size: 1rem;
+          padding: 5px 10px;
+          border-radius: 12px;
+          color: $grey;
+          background: $text;
         }
       }
     }
@@ -911,11 +924,12 @@ main {
   .positions {
     display: none;
     height: 0;
-    transition: height 1s ease;
+    transition: opacity 0.3s ease-in-out;
     padding: 20px 0;
+    opacity: 0;
     &.active {
       display: block;
-      height: 100%;
+      opacity: 1;
     }
     h3 {
       text-transform: uppercase;
@@ -934,8 +948,18 @@ main {
       color: white;
       align-items: stretch;
       position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+
       // border: 1px solid $text-dark-grey;
 
+      &.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
       .card-info {
         flex: 1;
         padding: 20px;
@@ -943,16 +967,15 @@ main {
         justify-content: space-between;
         .content {
           width: 100%;
-
-          h4 {
-            font-size: 1.2rem;
+          .title {
+            font-size: 1rem;
             font-family: "Unbounded", sans-serif;
             font-weight: 300;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
           }
 
-          p {
-            font-size: 0.9rem;
+          .description {
+            font-size: 0.8rem;
             margin-bottom: 10px;
             letter-spacing: 0.5px;
             color: #ccc;
@@ -986,12 +1009,13 @@ main {
       .card-image {
         position: relative;
         aspect-ratio: 1 / 1;
-        min-height: 100%;
-        // min-width: 150px; // минимальная ширина для квадрата
-        max-width: 25%;
+        min-height: 120px;
+        max-width: 120px;
         flex-shrink: 0;
-
+        padding: 16px;
         img {
+          border-radius: 10px;
+          overflow: hidden;
           height: 100%;
           width: 100%;
           object-fit: cover;
@@ -1063,12 +1087,12 @@ main {
     display: none;
   }
 
-  .comment {
+  &.comment {
     cursor: pointer;
     display: flex;
 
     i {
-      display: flex;
+      display: inline;
     }
 
     p {
@@ -1081,19 +1105,186 @@ main {
   background: $red;
 }
 
-.modal-feedback-overlay {
+.modal-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  width: 50vw;
+  transform: translateX(-50%);
+  height: auto;
+  display: grid;
+  padding: 1em 1em;
+  background: $text;
+  align-items: flex-end;
+  overflow: hidden;
+  color: $text-dark-grey;
+  transition: all 0.3s;
+  border-radius: 37px 37px 0 0;
+  z-index: 301;
+  opacity: 0;
+  visibility: hidden;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media screen and (max-width: 576px) {
+    width: 90vw;
+    .content {
+      margin: auto;
+      width: 100%;
+      border-radius: 1.25rem;
+      .modal-img {
+        width: 100%;
+        position: relative;
+        aspect-ratio: 16/9;
+        position: relative;
+        overflow: hidden;
+        border-radius: 1rem;
+        .sup {
+          background: $red;
+          color: $text;
+          font-size: 0.8rem;
+          top: 0;
+          right: 0;
+          width: 15vw;
+          text-align: center;
+          padding: 3px 10px;
+          text-transform: capitalize;
+          border-radius: 0 0 5px 0;
+        }
+        img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          height: 100%;
+          width: auto;
+          transform: translate(-50%, -50%);
+          min-width: 100%;
+          min-height: 100%;
+          object-fit: cover;
+          z-index: -1;
+        }
+      }
+    }
+  }
+  .bottom-sheet-handle {
+    width: 80px;
+    height: 8px;
+    background-color: $text-grey;
+    border-radius: 10px;
+    margin: 10px auto 16px;
+    cursor: grab;
+    transition: all 0.2s ease;
+  }
+
+  .bottom-sheet-handle:hover {
+    background-color: $text-grey;
+    transform: scale(1.05);
+  }
+
+  .modal-feedback {
+    form {
+      margin: auto;
+      box-sizing: content-box;
+      position: relative;
+      padding: 0;
+
+      @media (max-width: 617px) {
+        padding: 0px;
+      }
+      .input-group {
+        position: relative;
+        margin: 15px 0;
+        label {
+          padding: 0 10px;
+          background-color: $text;
+          color: $grey;
+          position: absolute;
+          top: 25px;
+          left: 15px;
+          transform: translateY(-50%);
+          text-transform: capitalize;
+          pointer-events: none;
+          font-size: 1rem;
+          transition: all 0.3s;
+
+          @media (max-width: 320px) {
+            font-size: 0.8rem;
+          }
+        }
+
+        input {
+          padding: 10px;
+          width: 100%;
+          border: 2px solid $grey;
+          outline: none;
+          color: $grey;
+          font-size: 1rem;
+          font-family: inherit;
+          background-color: transparent;
+          border-radius: 10px;
+          @media (max-width: 320px) {
+            font-size: 0.8rem;
+          }
+          &::placeholder {
+            color: transparent;
+          }
+        }
+
+        textarea {
+          padding: 15px;
+          width: 100%;
+          border: 2px solid $grey;
+          outline: none;
+          color: $grey;
+
+          font-size: 1rem;
+          font-family: inherit;
+          background-color: transparent;
+          border-radius: 10px;
+        }
+        input:focus::placeholder {
+          color: $text-dark-grey;
+        }
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+          top: 0;
+          font-size: 0.8rem;
+
+          @media (max-width: 320px) {
+            font-size: 0.8rem;
+          }
+        }
+
+        textarea:focus + label {
+          top: 0;
+          font-size: 0.8rem;
+          @media (max-width: 320px) {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+.modal-overlay {
   position: fixed;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   top: 0%;
   left: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.3);
   visibility: hidden;
   transition: all 0.5s ease-in-out;
+  backdrop-filter: blur(5px); /* Apply blur effect */
+  -webkit-backdrop-filter: blur(5px); /* Safari compatibility */
   opacity: 0;
-  z-index: 101;
+  z-index: 300;
   &.active {
     opacity: 1;
     visibility: visible;
@@ -1144,87 +1335,6 @@ main {
       -webkit-transform: rotate(0deg);
       width: 100%;
       padding: 30px 0;
-    }
-  }
-}
-
-.modal-feedback {
-  visibility: hidden;
-  position: fixed;
-  top: 45%;
-  left: 50%;
-  width: 450px;
-  z-index: 102;
-  background: $grey;
-  border-radius: 17px;
-  padding: 15px;
-  text-align: center;
-  -webkit-transform: translate(-50%, 100%);
-  transform: translate(-50%, 100%);
-
-  @media (max-width: 575px) {
-    width: 80%;
-    height: auto;
-  }
-
-  @media (max-width: 320px) {
-    width: 80%;
-    height: auto;
-  }
-
-  &.active {
-    visibility: visible;
-    opacity: 100%;
-    animation: div-to-top 0.5s cubic-bezier(0.39, 0.57, 0.56, 1) 0.5s forwards;
-  }
-
-  h4 {
-    margin: 10px auto;
-    font-size: 1rem;
-  }
-  p {
-    font-size: 0.8rem;
-  }
-
-  #close {
-    position: absolute;
-    bottom: -120px;
-    left: 50%;
-    height: 70px;
-    width: 70px;
-    transform: translateX(-10%);
-    font-size: 3rem;
-    z-index: 100;
-    &:before {
-      position: absolute;
-      content: "";
-      top: -50px;
-      left: 0;
-      background: $text;
-      width: 10px;
-      height: 40px;
-      transform: rotate(-45deg);
-    }
-    &:after {
-      position: absolute;
-      content: "";
-      top: -50px;
-      left: 0;
-      background: $text;
-      width: 10px;
-      height: 40px;
-      transform: rotate(45deg);
-    }
-  }
-
-  @keyframes div-to-top {
-    0% {
-      transform: translate(-50%, 100%);
-      -webkit-transform: translate(-50%, 100%);
-    }
-    100% {
-      transform: translate(-50%, -50%);
-      -webkit-transform: translate(-50%, -50%);
     }
   }
 }

@@ -2,20 +2,19 @@
 
 namespace App\Filament\Components\Shift;
 
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Support\Enums\Size;
+use Filament\Schemas\Components\Utilities\Set;
 use App\Models\User;
 use App\Models\Wage;
 use App\Models\Workshop;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Support\Enums\ActionSize;
 
 class WagesWizard
 {
@@ -91,8 +90,8 @@ class WagesWizard
                         ->default(0)
                         ->debounce(500)
                         ->suffixAction(
-                            FormAction::make('Reset')
-                                ->size(ActionSize::Large)
+                            Action::make('Reset')
+                                ->size(Size::Large)
                                 ->icon('heroicon-o-x-mark')
                                 ->iconButton()
                                 ->color('danger')

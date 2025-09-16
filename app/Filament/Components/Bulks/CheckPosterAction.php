@@ -1,7 +1,8 @@
 <?php
     namespace App\Filament\Components\Bulks;
 
-    use Filament\Tables\Actions\BulkAction;
+    use Filament\Actions\BulkAction;
+    use Exception;
     use Illuminate\Database\Eloquent\Collection;
     use Illuminate\Support\Facades\Log;
     use Filament\Forms\Components\Select;
@@ -31,7 +32,7 @@ class CheckPosterAction extends BulkAction {
                         ->success()
                         ->send();
 
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::error($e);
                     Notification::make('Error')
                         ->title('An error occurred during update.')

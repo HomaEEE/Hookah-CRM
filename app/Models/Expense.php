@@ -6,7 +6,7 @@ use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\HasMedia; // Import this
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Expense extends Model implements HasMedia
@@ -15,10 +15,10 @@ class Expense extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = ['sum', 'added_at', 'poster', 'bill_id',
-    'category_id', 'supply_id', 'user_id', 'place_id', 'comment'];
+        'category_id', 'supply_id', 'user_id', 'place_id', 'comment'];
 
     protected $casts = [
-       'sum' => MoneyCast::class,
+        'sum' => MoneyCast::class,
     ];
 
     public function place()
@@ -51,17 +51,26 @@ class Expense extends Model implements HasMedia
         return $this->hasOne(Supply::class, 'id', 'supply_id');
     }
 
+    public function registerMediaConversions(): void
+    {
+        // add this function to register conversion for media
+        // and choice what format is it
+        $this->addMediaConversion('media-webp')
+            ->quality(75)
+            ->optimize() // Optimize the converted image
+            ->nonQueued();
+
+    }
 
     public function bill()
     {
         return $this->belongsTo(Bill::class, 'bill_id');
     }
 
-    public function getInvoiceAttribute() {
+    public function getInvoiceAttribute()
+    {
         return $this->supply_id ?
                $this->supply->getFirstMediaUrl('invoce') : $this->getFirstMediaUrl('invoce');
 
     }
-
-
 }

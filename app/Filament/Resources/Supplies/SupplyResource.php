@@ -1,28 +1,33 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Supplies;
 
 use App\Filament\Components\Bulks\CheckAsPaidAction;
 use App\Filament\Components\Bulks\CheckPosterAction;
 use App\Filament\Components\SupplyForm;
+use App\Filament\Resources\Supplies\Pages\ManageSupplies;
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
 use App\Models\Ingredient;
 use App\Models\Supplier;
 use App\Models\Supply;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
-use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -62,10 +67,10 @@ class SupplyResource extends Resource
         return Supply::query()->with(['supplier', 'user', 'bill'])->fastPaginate();
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema(
+        return $schema
+            ->components(
                 SupplyForm::schema(),
             );
     }
@@ -134,7 +139,7 @@ class SupplyResource extends Resource
             ->striped()
             ->filters([
 
-                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                DateRangeFilter::make('created_at')->translateLabel()
                     ->defaultLast30Days(),
 
                 SelectFilter::make('supplier_id')
@@ -183,37 +188,37 @@ class SupplyResource extends Resource
                     ),
             ])
 
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make()
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()
                         ->mutateRecordDataUsing(function (array $data): array {
                             $data['sum'] = $data['sum'] / 100;
 
                             return $data;
                         })
-                        ->mutateFormDataUsing(function (array $data): array {
+                        ->mutateDataUsing(function (array $data): array {
                             $data['sum'] = $data['sum'] * 100;
 
                             return $data;
                         }),
-                    Tables\Actions\DeleteAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // BulkAction::make('pay')->icon('heroicon-s-inbox-in')->translateLabel()
                 // ->action(fn (Collection $records) => $records->each->pay())
                 // ->deselectRecordsAfterCompletion(),
                 CheckAsPaidAction::make('check'),
                 CheckPosterAction::make('poster'),
-                Tables\Actions\DeleteBulkAction::make(),
+                DeleteBulkAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
                     ->badge(),
                 TextEntry::make('user.name')->translateLabel(),
@@ -225,25 +230,25 @@ class SupplyResource extends Resource
 
                 Tabs::make('Tabs')
                     ->tabs([
-                        Tabs\Tab::make(__('Rekvizites'))
+                        Tab::make(__('Rekvizites'))
                             ->schema([
                                 TextEntry::make('reqvizite.own')->label(__('FOP'))->badge()->copyable(),
                                 TextEntry::make('reqvizite.IBAN')->label(__('IBAN'))->badge()->copyable(),
                                 TextEntry::make('reqvizite.INN')->label(__('INN'))->badge()->copyable(),
                             ])
                             ->columns(3),
-                        Tabs\Tab::make(__('Comment'))
+                        Tab::make(__('Comment'))
                             ->schema([
                                 TextEntry::make('comment')->label(__('Comment'))->copyable()->hiddenLabel(),
                             ]),
-                        Tabs\Tab::make(__('Photo'))
+                        Tab::make(__('Photo'))
                             ->schema([
                                 SpatieMediaLibraryImageEntry::make('invoice')
                                     ->collection('supplies')
                                     ->simpleLightbox()
                                     ->hiddenLabel(),
                             ]),
-                        Tabs\Tab::make(__('Supply'))
+                        Tab::make(__('Supply'))
                             ->schema([
                                 // SpatieMediaLibraryImageEntry::make('invoice')
                                 // ->collection('supplies')
@@ -269,7 +274,7 @@ class SupplyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageSupplies::route('/'),
+            'index' => ManageSupplies::route('/'),
             // 'view' => Pages\ViewSupply::route('/{record}/view'),
             // 'edit' => Pages\EditSupply::route('/{record}/edit'),
         ];

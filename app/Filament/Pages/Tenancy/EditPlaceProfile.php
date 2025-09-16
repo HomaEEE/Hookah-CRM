@@ -2,12 +2,12 @@
 
 namespace App\Filament\Pages\Tenancy;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
 use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
 
 class EditPlaceProfile extends EditTenantProfile
@@ -17,10 +17,10 @@ class EditPlaceProfile extends EditTenantProfile
         return __('Place profile');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TranslatableTabs::make()
                     ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))
                     ->schema([

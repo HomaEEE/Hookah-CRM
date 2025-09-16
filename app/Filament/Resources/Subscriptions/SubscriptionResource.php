@@ -1,7 +1,16 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Subscriptions;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Width;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Subscriptions\Pages\ManageSubscriptions;
 use App\Enums\Subscription as SubscriptionEnum;
 use App\Filament\Resources\SubscriptionResource\Pages;
 use App\Models\Bill;
@@ -15,12 +24,8 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -48,10 +53,10 @@ class SubscriptionResource extends Resource
         return __('Finance');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('category_id')->label(__('Category'))
                     ->searchable()
                     ->preload()
@@ -115,7 +120,7 @@ class SubscriptionResource extends Resource
                 //
             ])
 
-            ->actions([
+            ->recordActions([
                 Action::make('paid')->button()->translateLabel()
                     ->icon('heroicon-s-banknotes')
                     ->color('success')
@@ -123,8 +128,8 @@ class SubscriptionResource extends Resource
                     ->modalIconColor('success')
                     ->modalHeading('Оплата платежа')
                     ->requiresConfirmation()
-                    ->modalWidth(MaxWidth::Small)
-                    ->form([
+                    ->modalWidth(Width::Small)
+                    ->schema([
                         Hidden::make('user_id')->default(Auth::user()->id),
                         TextInput::make('sum')->translateLabel()
                             ->numeric()
@@ -162,20 +167,20 @@ class SubscriptionResource extends Resource
                         );
                     }),
                 ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageSubscriptions::route('/'),
+            'index' => ManageSubscriptions::route('/'),
         ];
     }
 }

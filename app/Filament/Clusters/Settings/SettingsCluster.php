@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Clusters;
+namespace App\Filament\Clusters\Settings;
 
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use BackedEnum;
+
 use Filament\Clusters\Cluster;
 
-class Settings extends Cluster
+class SettingsCluster extends Cluster
 {
-    use HasPageShield;
-
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog';
 
     protected static ?int $navigationSort = 5;
 

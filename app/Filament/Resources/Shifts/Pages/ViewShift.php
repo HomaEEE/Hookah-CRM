@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\ShiftResource\Pages;
+namespace App\Filament\Resources\Shifts\Pages;
 
-use App\Filament\Resources\ShiftResource;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\Shifts\ShiftResource;
 use App\Models\Shift;
-use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewShift extends ViewRecord

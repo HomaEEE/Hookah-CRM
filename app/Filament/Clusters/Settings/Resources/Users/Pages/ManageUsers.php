@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Filament\Clusters\Settings\Resources\UserResource\Pages;
+namespace App\Filament\Clusters\Settings\Resources\Users\Pages;
 
-use App\Filament\Clusters\Settings\Resources\UserResource;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
+use App\Filament\Clusters\Settings\Resources\Users\UserResource;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Facades\Filament;
@@ -18,12 +20,12 @@ class ManageUsers extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
-            Actions\Action::make('Attach')
+            CreateAction::make(),
+            Action::make('Attach')
                 ->label(__('Attach user'))
                 ->modalHeading(__('Attach user'))
                 ->requiresConfirmation()
-                ->form([
+                ->schema([
                     Hidden::make('place_id')->default(Filament::getTenant()->id),
                     Select::make('user_id')->options(
                         User::whereDoesntHave('places', function ($query) {

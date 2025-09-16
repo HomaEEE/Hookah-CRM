@@ -1,8 +1,17 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources;
+namespace App\Filament\Clusters\Data\Resources\Suppliers;
 
-use App\Filament\Clusters\Data;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconSize;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Schemas\Components\Section;
+use App\Filament\Clusters\Data\Resources\Suppliers\Pages\ManageSuppliers;
+use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\SupplierResource\Pages;
 use App\Models\Supplier;
 use Filament\Facades\Filament;
@@ -11,11 +20,8 @@ use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Support\RawJs;
@@ -28,13 +34,13 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
-    protected static ?string $cluster = Data::class;
+    protected static ?string $cluster = DataCluster::class;
 
     protected static ?string $recordTitleAttribute = 'company';
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     public static function getPluralModelLabel(): string
     {
@@ -51,10 +57,10 @@ class SupplierResource extends Resource
         return __('Suppliers');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('name')->label(__('Name')),
                 TextInput::make('phone')->label(__('Phone'))
@@ -98,7 +104,7 @@ class SupplierResource extends Resource
                     ->alignLeft(),
                 IconColumn::make('visible')
                     ->label(__('Visible'))
-                    ->size(IconColumn\IconColumnSize::Medium)
+                    ->size(IconSize::Medium)
                     ->boolean()
                     ->trueIcon('heroicon-o-eye')
                     ->falseIcon('heroicon-o-eye-slash')
@@ -112,22 +118,22 @@ class SupplierResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Contacts')
                     ->schema([
                         TextEntry::make('company')->translateLabel(),
@@ -162,7 +168,7 @@ class SupplierResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageSuppliers::route('/'),
+            'index' => ManageSuppliers::route('/'),
             //  'reqs' => Pages\ManageSupplierReqizites::route('/{record}/reqs'),
 
         ];

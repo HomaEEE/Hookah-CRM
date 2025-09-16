@@ -17,7 +17,7 @@ class ExpensesGraph extends ChartWidget
 
     // protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $maxHeight = '250px';
+    protected ?string $maxHeight = '250px';
 
     protected function getData(): array
     {

@@ -2,6 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
+use App\Models\Place;
+use App\Models\Role;
+use App\Models\Permission;
+use App\Models\ShiftUser;
+use Illuminate\Database\Eloquent\Model;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,11 +19,11 @@ class ApplyTenantScopes
 {
     // Модели, к которым НЕ применяется скоуп
     protected array $excludedModels = [
-        \App\Models\User::class,
-        \App\Models\Place::class,
-        \App\Models\Role::class,
-        \App\Models\Permission::class,
-        \App\Models\ShiftUser::class,
+        User::class,
+        Place::class,
+        Role::class,
+        Permission::class,
+        ShiftUser::class,
         // Добавьте другие модели для исключения
     ];
 
@@ -33,7 +39,7 @@ class ApplyTenantScopes
             // Проверяем, существует ли класс и является ли он моделью
             if (
                 class_exists($class) &&
-                is_subclass_of($class, \Illuminate\Database\Eloquent\Model::class) &&
+                is_subclass_of($class, Model::class) &&
                 ! in_array($class, $this->excludedModels)
             ) {
                 // Проверяем, использует ли модель трейт SoftDeletes

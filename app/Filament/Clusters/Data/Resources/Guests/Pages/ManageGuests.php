@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\GuestResource\Pages;
+namespace App\Filament\Clusters\Data\Resources\Guests\Pages;
 
-use App\Filament\Clusters\Data\Resources\GuestResource;
+use Filament\Actions\CreateAction;
+use App\Filament\Clusters\Data\Resources\Guests\GuestResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
@@ -13,7 +14,7 @@ class ManageGuests extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->createAnother(false),
+            CreateAction::make()->createAnother(false),
         ];
     }
 }

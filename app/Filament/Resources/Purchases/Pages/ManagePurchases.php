@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\PurchaseResource\Pages;
+namespace App\Filament\Resources\Purchases\Pages;
 
-use App\Filament\Resources\PurchaseResource;
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use App\Filament\Resources\Purchases\PurchaseResource;
 use Filament\Actions;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManagePurchases extends ManageRecords
@@ -16,13 +17,13 @@ class ManagePurchases extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
+        return $schema->components([
             Section::make()
                 ->columns(3)
                 ->schema([

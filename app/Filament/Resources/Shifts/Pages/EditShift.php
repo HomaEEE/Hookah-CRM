@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ShiftResource\Pages;
+namespace App\Filament\Resources\Shifts\Pages;
 
-use App\Filament\Resources\ShiftResource;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Schemas\Components\Grid;
+use App\Filament\Resources\Shifts\ShiftResource;
 use App\Models\Shift;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Actions;
@@ -18,9 +21,9 @@ class EditShift extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-            Actions\RestoreAction::make(),
-            Actions\ForceDeleteAction::make(),
+            DeleteAction::make(),
+            RestoreAction::make(),
+            ForceDeleteAction::make(),
         ];
     }
 

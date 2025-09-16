@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Clusters;
+namespace App\Filament\Clusters\Modules;
 
 use Filament\Clusters\Cluster;
 
-class Modules extends Cluster
+class ModulesCluster extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-squares-2x2';
 }

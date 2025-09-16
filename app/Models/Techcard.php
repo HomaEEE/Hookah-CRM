@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use App\Models\Ingredient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Techcard extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
-    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+    use HasJsonRelationships;
 
     protected $fillable = ['product_name', 'workshop_id', 'process', 'ingredients'];
 

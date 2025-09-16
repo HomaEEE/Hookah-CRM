@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\Bill;
 use App\Models\Expense;
 use Carbon\Carbon;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
@@ -92,10 +93,12 @@ class ExpensesDay extends BaseWidget implements HasTable
                         ]);
                     }),
             ])
-            ->actions([
+            ->recordActions([
                 //  Actions\ViewAction::make()->label(''),
-                Actions\EditAction::make()->label('')
-                    ->form([
+                EditAction::make()->label('')
+                    ->modalWidth('xs')
+
+                    ->schema([
                         TextInput::make('sum')->translateLabel(),
                         ToggleButtons::make('bill_id')->label(__('Type pay'))
                             ->options(Bill::get()->pluck('name', 'id'))

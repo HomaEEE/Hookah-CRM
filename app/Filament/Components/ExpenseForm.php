@@ -39,10 +39,11 @@ class ExpenseForm
             SpatieMediaLibraryFileUpload::make('invoice')
                 ->label(__('Invoice'))
                 ->collection('supplies')
+                ->conversion('media-webp')
                 ->multiple()
                 ->imagePreviewHeight(450)
-                ->imageResizeMode('cover')
-                ->optimize('webp')->resize(70),
+                ->imageResizeMode('cover'),
+            //   ->optimize('webp')->resize(70),
             ToggleButtons::make('bill_id')->label(__('Type pay'))
                 ->options(Bill::get()->pluck('name', 'id'))
                 ->default(0)

@@ -3,9 +3,10 @@
 namespace App\Filament\Widgets\UserStat;
 
 use App\Models\ShiftUser;
-use Auth;
+use App\Models\User;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
@@ -34,7 +35,7 @@ class UserTableShift extends BaseWidget
     {
         return $table
             ->query(
-                ShiftUser::query()->where('user_id', Auth::user()->id)
+                ShiftUser::query()
             )
             ->defaultPaginationPageOption(10)
             ->defaultSort('created_at', 'desc')
@@ -49,7 +50,10 @@ class UserTableShift extends BaseWidget
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
             ])
             ->filters([
-                DateRangeFilter::make('created_at')->translateLabel()->separator(' - ')
+                SelectFilter::make('user_id')->options(
+                    User::get()->pluck('name', 'id'),
+                ),
+                DateRangeFilter::make('created_at')->translateLabel()
                     ->defaultLast30Days(),
             ]);
     }

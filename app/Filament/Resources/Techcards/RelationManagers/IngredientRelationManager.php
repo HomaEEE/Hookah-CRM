@@ -1,9 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\TechcardResource\RelationManagers;
+namespace App\Filament\Resources\Techcards\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,11 +21,11 @@ class IngredientRelationManager extends RelationManager
 {
     protected static string $relationship = 'ingredients';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('ingredient')
+        return $schema
+            ->components([
+                TextInput::make('ingredient')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -29,26 +36,26 @@ class IngredientRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('ingredient')
             ->columns([
-                Tables\Columns\TextColumn::make('ingredient'),
-                Tables\Columns\TextColumn::make('place.city'),
+                TextColumn::make('ingredient'),
+                TextColumn::make('place.city'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ]);
     }
 }

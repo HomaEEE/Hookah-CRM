@@ -5,21 +5,21 @@ namespace App\Filament\Pages;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Cashflow extends Page
 {
     use HasFiltersForm;
-    use HasPageShield;
+    // use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
-    protected static string $view = 'filament.pages.cashflow';
+    protected string $view = 'filament.pages.cashflow';
 
     protected static ?int $navigationSort = 2;
 
@@ -44,10 +44,10 @@ class Cashflow extends Page
 
     public $reports = null;
 
-    public function filtersForm(Form $form): Form
+    public function filtersForm(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->schema([
                         DatePicker::make('from')
@@ -62,7 +62,8 @@ class Cashflow extends Page
                             ->maxDate(now())
                             ->default(now()),
                     ])
-                    ->columns(2),
+                    ->columns(2)
+                    ->columnSpanFull(),
             ]);
     }
 

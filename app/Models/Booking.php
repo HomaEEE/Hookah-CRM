@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     use HasFactory;
-    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+    use HasJsonRelationships;
 
     protected $fillable = ['user_id', 'place_id', 'seet_ids', 'date', 'guest_id', 'time', 'person', 'comment'];
 

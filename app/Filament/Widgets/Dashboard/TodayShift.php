@@ -13,7 +13,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TodayShift extends BaseWidget
 {
-    use HasWidgetShield;
+    // use HasWidgetShield;
 
     protected function getHeading(): ?string
     {

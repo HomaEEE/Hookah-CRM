@@ -6,8 +6,10 @@ use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Feedback;
 use App\Models\Place;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -63,7 +65,40 @@ class SiteController extends Controller
             Session::put('table', $table_number);
         }
 
-        return view('site.menu', compact('place', 'categories', 'table_number'));
+        $productsJson = Cache::remember('products', 60, function () {
+            return Product::VisibleMenu(true)->get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product_name' => $item->product_name,
+                    'frontend_name' => $item->frontend_name,
+                    'frontend_desc' => $item->frontend_desc,
+                    'price' => number_format($item->price, 0),
+                    'image' => $item->getFirstMediaUrl('images') ?: null,
+                    'sup' => $item->sup,
+                    'out' => $item->out ? number_format($item->out, 0) : null,
+                    'ingredients' => $item->ingredients,
+                ];
+            })->toJson();
+        });
+
+        return view('site.menu', compact('place', 'categories', 'table_number', 'productsJson'));
+    }
+
+    public function getProduct($id)
+    {
+        $locale = session('locale', 'uk');
+        $product = Product::findOrFail($id);
+
+        return response()->json([
+            'product_name' => $product->product_name,
+            'frontend_name' => $product->frontend_name,
+            'frontend_desc' => $product->frontend_desc,
+            'price' => number_format($product->price, 0),
+            'image' => $product->getFirstMediaUrl('products') ?: 'assets/imgs/menu/no-photo.jpg',
+            'sup' => $product->sup,
+            'out' => $product->out ? number_format($product->out, 0) : null,
+            'ingredients' => $product->ingredients,
+        ]);
     }
 
     public function booking($slug = 'od')

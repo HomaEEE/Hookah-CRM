@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Clusters;
+namespace App\Filament\Clusters\Dev;
 
 use Filament\Clusters\Cluster;
 
-class Dev extends Cluster
+class DevCluster extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-bug-ant';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bug-ant';
 
     protected static ?int $navigationSort = 99;
 

@@ -31,7 +31,7 @@
               </div>
 
               <div class="input-group">
-                <input type="number" name="person" id="person" placeholder=" " required min="1"/>
+                <input type="number" name="person" id="person" placeholder=" " required min="2"/>
                 <label for="person">{{__('Persons')}}</label>
               </div>
 

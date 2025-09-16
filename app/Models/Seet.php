@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Seet extends Model
 {
     use HasFactory;
-    use \Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+    use HasJsonRelationships;
 
     protected $fillable = ['number', 'tags', 'room_id', 'place_id'];
 

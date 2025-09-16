@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Resources\ShiftResource\Pages;
+namespace App\Filament\Resources\Shifts\Pages;
 
+use Filament\Schemas\Components\Wizard\Step;
 use App\Filament\Components\Shift\PosterWizard;
 use App\Filament\Components\Shift\ShiftWizard;
 use App\Filament\Components\Shift\WagesWizard;
-use App\Filament\Resources\ShiftResource;
+use App\Filament\Resources\Shifts\ShiftResource;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Bill;
 use App\Models\Expense;
 use App\Models\Place;
 use Auth;
-use Filament\Forms\Components\Wizard\Step;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;

@@ -1,12 +1,18 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Leftovers;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\Leftovers\Pages\ListLeftovers;
+use App\Filament\Resources\Leftovers\Pages\CreateLeftover;
+use App\Filament\Resources\Leftovers\Pages\EditLeftover;
 use App\Filament\Resources\LeftoverResource\Pages;
 use App\Filament\Resources\LeftoverResource\RelationManagers;
 use App\Models\Leftover;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -34,10 +40,10 @@ class LeftoverResource extends Resource
     {
         return __('Leftovers');
     }
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
             ]);
     }
@@ -54,12 +60,12 @@ class LeftoverResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -74,9 +80,9 @@ class LeftoverResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLeftovers::route('/'),
-            'create' => Pages\CreateLeftover::route('/create'),
-            'edit' => Pages\EditLeftover::route('/{record}/edit'),
+            'index' => ListLeftovers::route('/'),
+            'create' => CreateLeftover::route('/create'),
+            'edit' => EditLeftover::route('/{record}/edit'),
         ];
     }
 }

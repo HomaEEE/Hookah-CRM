@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\ReqvizitesResource\Pages;
+namespace App\Filament\Clusters\Data\Resources\Reqvizites\Pages;
 
-use App\Filament\Clusters\Data\Resources\ReqvizitesResource;
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Schema;
+use App\Filament\Clusters\Data\Resources\Reqvizites\ReqvizitesResource;
 use Filament\Actions;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageReqvizites extends ManageRecords
@@ -15,13 +16,13 @@ class ManageReqvizites extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
+        return $schema->components([
             TextEntry::make('supplier.company')->hiddenLabel(),
             TextEntry::make('IBAN')->badge()->copyable(),
             TextEntry::make('INN')->badge()->copyable(),

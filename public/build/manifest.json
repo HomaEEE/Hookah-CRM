@@ -1,12 +1,37 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-9cd839d4.css",
+    "file": "assets/app-BY0_B0FG.css",
+    "src": "resources/css/app.css",
     "isEntry": true,
-    "src": "resources/css/app.css"
+    "names": [
+      "app.css"
+    ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-4ed993c7.js",
+    "file": "assets/app-B99crm8q.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/modal.js": {
+    "file": "assets/modal-BgFDZHGK.js",
+    "name": "modal",
+    "src": "resources/js/modal.js",
+    "isEntry": true
+  },
+  "resources/js/swiper.js": {
+    "file": "assets/swiper-eZi01B8j.js",
+    "name": "swiper",
+    "src": "resources/js/swiper.js",
     "isEntry": true,
-    "src": "resources/js/app.js"
+    "css": [
+      "assets/swiper-DV8PrLMj.css"
+    ]
+  },
+  "resources/js/tab-menu.js": {
+    "file": "assets/tab-menu-BSeRAwgV.js",
+    "name": "tab-menu",
+    "src": "resources/js/tab-menu.js",
+    "isEntry": true
   }
 }

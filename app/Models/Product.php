@@ -6,6 +6,7 @@ use App\Casts\MoneyCast;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
@@ -26,6 +27,12 @@ class Product extends Model implements HasMedia
         'visible_menu' => 'boolean'];
 
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        static::saved(fn () => Cache::forget('products'));
+        static::deleted(fn () => Cache::forget('products'));
+    }
 
     public $translatable = ['frontend_name', 'frontend_desc'];
 

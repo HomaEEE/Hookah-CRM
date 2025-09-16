@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Arrears;
 
-use App\Filament\Resources\ArrearResource\Pages;
+use App\Filament\Resources\Arrears\Pages\ManageArrears;
 use App\Models\Arrear;
 use App\Models\User;
 use Auth;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\Action;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -39,10 +41,10 @@ class ArrearResource extends Resource
         return __('Arrears');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Hidden::make('user_id')->default(Auth::user()->id),
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('from_user_id')->label(__('From User'))
@@ -72,7 +74,7 @@ class ArrearResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('approve')->button()->label(__('Refund'))
                     ->icon('heroicon-s-check')
                     ->color('success')
@@ -85,20 +87,19 @@ class ArrearResource extends Resource
                         $record->save();
                     })->visible(fn (Arrear $record) => $record->refund == '0'),
 
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                ]),
+                EditAction::make()->iconButton(),
+                DeleteAction::make()->iconButton(),
+
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                DeleteBulkAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageArrears::route('/'),
+            'index' => ManageArrears::route('/'),
         ];
     }
 }
