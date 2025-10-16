@@ -84,7 +84,7 @@ class ConvertMediaToWebp
                 if ($width > $targetWidth && $targetWidth > 0) {
                     $newWidth = $targetWidth;
                     $newHeight = (int) floor($height * ($newWidth / $width));
-                    $dst = imagescale($src, $newWidth, IMG_BILINEAR_FIXED);
+                    $dst = imagescale($src, $newWidth, $newHeight, IMG_BILINEAR_FIXED);
                 } else {
                     $dst = $src;
                 }
