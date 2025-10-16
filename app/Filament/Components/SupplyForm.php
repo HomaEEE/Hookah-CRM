@@ -2,26 +2,27 @@
 
 namespace App\Filament\Components;
 
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Actions\Action;
-use Filament\Support\Enums\Size;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Models\Bill;
+use App\Models\Ingredient;
 use App\Models\Reqvizite;
 use App\Models\Supplier;
 use Auth;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Support\Enums\Size;
 
 class SupplyForm
 {
@@ -29,7 +30,7 @@ class SupplyForm
     {
         return [
             Hidden::make('user_id')->default(Auth::user()->id),
-            Hidden::make('place_id')->default(Filament::getTenant()->id),
+            //  Hidden::make('place_id')->default(Filament::getTenant()->id),
             DateTimePicker::make('added_at')
                 ->label(__('Date Added'))
                 ->native(false)
@@ -46,14 +47,10 @@ class SupplyForm
                 ->createOptionForm([
                     Section::make()
                         ->schema([
-                            Hidden::make('place_id')->default(Filament::getTenant()->id),
                             TextInput::make('name')->label(__('Name')),
                             TextInput::make('phone')->label(__('Phone')),
                             TextInput::make('company')->label(__('Company')),
-                            TextInput::make('email')->label(__('Email'))->email(),
-                            KeyValue::make('data')
-                                ->keyLabel(__('Rekvizites'))
-                                ->valueLabel(__('Value')),
+                            TextInput::make('mail')->label(__('Email'))->email(),
                         ])->columns(2),
                 ]),
 
@@ -88,15 +85,12 @@ class SupplyForm
                 ->extraAttributes(['style' => 'width: 100%'])
                 ->reactive(),
 
-            TextInput::make('invoice_number')->label(__('Invoice'))
-                ->visible(fn (Get $get) => $get('bill_id') == '1' && $get('pay') == '0')
-                ->required(fn (Get $get) => $get('bill_id') === '1' && $get('pay') == '0'),
-
             Select::make('reqvizite_id')
                 ->label('Реквизиты')
                 ->preload()
+                ->reactive()
                 ->options(function (callable $get) {
-                    if (null == ($get('place_id'))) {
+                    if (null == ($get('supplier_id'))) {
                         return null;
                     } else {
                         return Reqvizite::where('supplier_id', $get('supplier_id'))->pluck('own', 'id');
@@ -106,21 +100,30 @@ class SupplyForm
                 ->createOptionForm(fn ($get) => [
                     Section::make()
                         ->schema([
-                            Select::make('supplier_id')->label(__('Supplier'))->relationship('supplier', 'company')
-                                ->native(false)
-                                ->searchable()
-                                ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id')),
+                            Hidden::make('supplier_id')
+                                ->default(fn () => $get('supplier_id')),
                             TextInput::make('IBAN')->label(__('IBAN'))->prefix('UA')->numeric(),
                             TextInput::make('INN')->label(__('INN'))->numeric(),
                             TextInput::make('own')->label(__('FOP')),
                         ])->columns(1),
                 ])
-
+                ->createOptionUsing(function (array $data) {
+                    return Reqvizite::create([
+                        'supplier_id' => $data['supplier_id'],
+                        'IBAN' => $data['IBAN'],
+                        'INN' => $data['INN'],
+                        'own' => $data['own'],
+                    ])->id;
+                })
                 ->searchable()
                 ->reactive()
-                ->disabled(fn (Get $get) => $get('place_id') === null)
-                ->required(fn (Get $get) => $get('bill_id') === '1' && $get('pay') == '0')
-                ->visible(fn (Get $get) => $get('pay') == '0' && $get('bill_id') === '1'),
+                ->disabled(fn (Get $get) => $get('supplier_id') === null)
+                ->required(fn (Get $get) => (int) $get('bill_id') === 1 && (int) $get('pay') === 0)
+                ->visible(fn (Get $get) => (int) $get('pay') === 0 && (int) $get('bill_id') === 1),
+
+            TextInput::make('invoice_number')->label(__('Invoice'))
+                ->visible(fn (Get $get) => (int) $get('bill_id') === 1 && (int) $get('pay') === 0)
+                ->required(fn (Get $get) => (int) $get('bill_id') === 1 && (int) $get('pay') === 0),
 
             TextInput::make('sum')->label(__('Sum'))
                 ->numeric()
@@ -166,25 +169,21 @@ class SupplyForm
             Tabs::make('Tabs')
                 ->contained(false)
                 ->tabs([
-                    Tab::make(__('Comment'))
-                        ->schema([
 
-                            Textarea::make('comment')->label(__('Comment'))
-                                ->rows(3),
-
-                        ]),
                     Tab::make(__('Photo'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('invoice')
                                 ->label(__('Photo'))
                                 ->collection('supplies')
                                 ->multiple()
-                                ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
-                                // ->optimize('webp')
+                                ->imagePreviewHeight(350)
+                                ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
                                 ->openable(),
-                            // ->resize(80),
+                            Textarea::make('comment')->label(__('Comment'))
+                                ->rows(3),
                         ]),
+
                     Tab::make(__('Receipt'))
                         ->schema([
                             SpatieMediaLibraryFileUpload::make('receipt')
@@ -193,8 +192,8 @@ class SupplyForm
                                 ->multiple()
                                 ->imagePreviewHeight(450)
                                 ->imageResizeMode('cover')
-                               // ->optimize('webp')
-                                // ->resize(70)
+                                ->imagePreviewHeight(350)
+                                ->imageResizeTargetWidth('1800')
                                 ->imageEditor()
                                 ->imageEditorAspectRatios([
                                     null,
@@ -204,36 +203,36 @@ class SupplyForm
                                 ])
                                 ->openable(),
 
-                            // ])->columns(1),
-                            // Tabs\Tab::make(__('List'))
-                            //     ->schema([
-                            //         TableRepeater::make('items')
-                            //             ->schema([
-                            //                 Select::make('ingredient_id')->label(__('Ingredient'))
-                            //                     ->searchable()
-                            //                     ->preload()
-                            //                     ->required()
-                            //                     ->options(Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id'))
-                            //                     ->reactive(),
-                            //                 TextInput::make('qty')->translateLabel()
-                            //                     ->reactive()
-                            //                     ->suffix(static function (Get $get, $state) {
-                            //                         $ingredient = Ingredient::find($get('ingredient_id'));
-                            //                         return $ingredient;
-                            //                     }),
-                            //                 TextInput::make('price')->translateLabel()->suffix('')
-                            //                     ->numeric()
-                            //                     ->autocomplete(false)
-                            //                     ->inputMode('decimal')
-                            //                     ->stripCharacters(',')
-                            //                     ->required()
-                            //                     ->prefix('₴'),
+                        ])->columns(1),
+                    // Tabs\Tab::make(__('List'))
+                    //     ->schema([
+                    //         Repeater::make('items')
+                    //             ->schema([
+                    //                 TextInput::make('name')
+                    //                     ->label(__('Имя из накладной'))
+                    //                     ->disabled(),
+                    //                 Select::make('ingredient_id')
+                    //                     ->label(__('Ingredient'))
+                    //                     ->searchable()
+                    //                     ->preload()
+                    //                     ->options(Ingredient::get()->pluck('ingredient', 'id'))
+                    //                     ->required(fn (Get $get) => empty($get('ingredient_id')))
+                    //                     ->visible(fn (Get $get) => empty($get('ingredient_id'))),
+                    //                 TextInput::make('qty')->translateLabel()
+                    //                     ->reactive(),
+                    //                 TextInput::make('price')->translateLabel()->suffix('')
+                    //                     ->numeric()
+                    //                     ->autocomplete(false)
+                    //                     ->inputMode('decimal')
+                    //                     ->stripCharacters(',')
+                    //                     ->required()
+                    //                     ->prefix('₴'),
 
-                            //             ])
-
-                        ]),
+                    //             ]),
+                    //     ]),
 
                 ]),
+
         ];
     }
 }

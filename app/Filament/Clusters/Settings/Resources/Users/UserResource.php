@@ -109,6 +109,7 @@ class UserResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable(),
+
             ]);
     }
 

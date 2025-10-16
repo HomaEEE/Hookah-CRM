@@ -2,26 +2,25 @@
 
 namespace App\Filament\Components\Shift;
 
-use Filament\Schemas\Components\Fieldset;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Utilities\Get;
 use App\Filament\Components\ExpenseForm;
 use App\Filament\Components\IncomeForm;
 use App\Filament\Components\WithdrawalForm;
 use App\Http\Controllers\LocalApiController;
 use App\Models\Expense;
 use App\Models\Income;
-use App\Models\Place;
 use App\Models\Withdrawal;
 use Auth;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 
 class ShiftWizard
 {
@@ -171,12 +170,12 @@ class ShiftWizard
 
             Fieldset::make('Shift')->translateLabel()->schema([
 
-                Placeholder::make('total_shift')->translateLabel()
+                TextEntry::make('total_shift')->translateLabel()
                     ->content(function (Get $get, Set $set): string {
                         return self::CalcShift($get, $set);
                     }),
 
-                Placeholder::make('different')->translateLabel()
+                TextEntry::make('different')->translateLabel()
                     ->content(function (Get $get, Set $set) {
                         if ($get('shift') != null) {
                             $different = (float) $get('shift') - (float) $get('calc_shift');
@@ -195,7 +194,7 @@ class ShiftWizard
                     ->numeric()
                     ->required()
                     ->reactive()
-                    ->debounce(500)
+                    ->live(onBlur: true)
                     ->suffixAction(
                         Action::make('aproove')
                             ->label(__('Approve'))

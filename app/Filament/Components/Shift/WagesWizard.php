@@ -2,19 +2,19 @@
 
 namespace App\Filament\Components\Shift;
 
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Support\Enums\Size;
-use Filament\Schemas\Components\Utilities\Set;
 use App\Models\User;
 use App\Models\Wage;
 use App\Models\Workshop;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Support\Enums\Size;
 
 class WagesWizard
 {
@@ -88,7 +88,7 @@ class WagesWizard
                     TextInput::make('procent_day')->translateLabel()->numeric()
                         ->prefix('%')
                         ->default(0)
-                        ->debounce(500)
+                        ->live(onBlur: true)
                         ->suffixAction(
                             Action::make('Reset')
                                 ->size(Size::Large)
@@ -123,7 +123,7 @@ class WagesWizard
 
                 ->itemLabel(fn (array $state): ?string => User::find($state['user_id'])?->name.' '.$state['cashout'] ?? null),
 
-            Placeholder::make('wages')->translateLabel()
+            TextEntry::make('wages')->translateLabel()
                 ->content(function (Set $set, $get) {
                     $totalWage = collect($get('users'))
                         ->pluck('cashout')

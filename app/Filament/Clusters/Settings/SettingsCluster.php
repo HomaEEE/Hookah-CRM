@@ -2,8 +2,6 @@
 
 namespace App\Filament\Clusters\Settings;
 
-use BackedEnum;
-
 use Filament\Clusters\Cluster;
 
 class SettingsCluster extends Cluster

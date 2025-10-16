@@ -1,5 +1,32 @@
 @if (!empty($item->getFirstMediaUrl('products')))
 
+
+<div class="mx-auto max-w-md overflow-hidden rounded-xl bg-grey shadow-md md:max-w-2xl">
+  <!-- [!code word:md:flex] -->
+  <div class="md:flex">
+    <!-- [!code word:md:shrink-0] -->
+    <div class="md:shrink-0">
+      <!-- [!code word:md:h-full] -->
+      <!-- [!code word:md:w-48] -->
+      <img
+        class="h-48 w-full object-fit md:h-full md:w-48"
+        src="{{$item->getFirstMediaUrl('products')}}"
+        alt="{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}" >
+
+    </div>
+    <div class="p-8">
+      <div class="text-sm font-semibold tracking-wide text-indigo-500 uppercase">
+        <h4>{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}</h4>
+      </div>
+
+      <p class="mt-2 text-gray-500">
+ @if (!empty($item['frontend_desc']))
+       {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+      @endif      </p>
+    </div>
+  </div>
+</div>
+
     <div class="col-xs">
   <div class="menu-item box"  data-id="{{ $item->id }}">
   <div class="card-info">

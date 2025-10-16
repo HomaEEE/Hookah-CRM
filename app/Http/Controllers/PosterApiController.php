@@ -188,11 +188,10 @@ class PosterApiController extends Controller
         $getAllBills = Http::get($this->urlApi.'dash.getTransactions?token='
             .$place_api['api']
             .'&dateFrom='.Carbon::today()->format('Ymd')
-            .'&dateTo='.Carbon::today()->format('Ymd'))
-            ->json('response');
+            .'&dateTo='.Carbon::today()->format('Ymd'));
 
         //   -->>> EDIT RETURN
-        //         return $getAllBills['total'];
+        return (array) $getAllBills->json('response', []);
     }
 
     // Получение прошлой смены

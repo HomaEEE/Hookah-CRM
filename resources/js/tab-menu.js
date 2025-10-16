@@ -7,8 +7,8 @@ $(document).ready(function () {
         $targetSection.find(".menu-item").each(function (index) {
             $(this)
                 .css({ opacity: 0, transform: "translateY(20px)" })
-                .delay(index * 100)
-                .animate({ opacity: 1, top: 0 }, 300);
+                .delay(index * 50)
+                .animate({ opacity: 1, top: 0 }, 100);
         });
     }
 

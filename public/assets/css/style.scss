@@ -10,6 +10,8 @@ $cubic: cubic-bezier(0.4, 0.01, 0.165, 0.99);
 $icomoon-font-family: "fontello" !default;
 $icomoon-font-path: "../fonts" !default;
 
+@import "tailwindcss";
+
 @font-face {
   font-family: "#{$icomoon-font-family}";
   src: url("#{$icomoon-font-path}/#{$icomoon-font-family}.eot?20259845");
@@ -826,107 +828,14 @@ main {
   }
 }
 
-.tabs {
-  height: 70vh;
-  ul {
-    margin: 0;
-    position: sticky;
-
-    padding: 20px 0;
-    list-style: none;
-    display: flex;
-    flex-flow: row nowrap;
-    flex-direction: column;
-    font-size: 1.75rem;
-
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-flow: row nowrap;
-    -ms-flex-flow: row nowrap;
-    flex-flow: row nowrap;
-    flex-direction: column;
-    height: 100%;
-    position: sticky;
-    flex-grow: 1;
-    transition: flex 3s ease;
-    li {
-      margin: 2px;
-      box-sizing: border-box;
-      flex: 1 1 1;
-      transition: all 0.5s ease;
-      text-transform: uppercase;
-      color: $text-dark-grey;
-      cursor: pointer;
-      a {
-        color: var(text-dark-grey);
-        text-decoration: none;
-        transition: color 0.4s ease;
-        text-transform: uppercase;
-      }
-      &.active {
-        flex: 2 1 200px;
-        color: $text;
-      }
-      &:hover {
-        a {
-          color: $text-grey;
-        }
-      }
-    }
-  }
-
-  @media screen and (max-width: 614px) {
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    padding: 10px 0;
-    margin: 0;
-    top: 0;
-    overflow-x: scroll;
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: -webkit-box;
-      font-size: 1rem;
-      vertical-align: bottom;
-      li {
-        padding: 5px 10px;
-        transition: font-size 0.5s ease;
-        text-transform: uppercase;
-        width: auto;
-        color: $text;
-        cursor: pointer;
-        text-wrap: nowrap;
-        a {
-          text-decoration: none;
-          transition: color 0.4s ease;
-          text-transform: uppercase;
-        }
-        &.active {
-          font-size: 1rem;
-          padding: 5px 10px;
-          border-radius: 12px;
-          color: $grey;
-          background: $text;
-        }
-      }
-    }
-  }
-}
 .list {
   max-height: 100%;
-  overflow-y: scroll;
   .positions {
     display: none;
     height: 0;
     transition: opacity 0.3s ease-in-out;
     padding: 20px 0;
-    opacity: 0;
+    //    opacity: 0;
     &.active {
       display: block;
       opacity: 1;

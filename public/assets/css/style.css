@@ -1,6 +1,5 @@
 @charset "UTF-8";
-@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap");
 @font-face {
   font-family: "fontello";
   src: url("../fonts/fontello.eot?20259845");
@@ -779,102 +778,14 @@ main .feedbacks .feedback {
   cursor: grab;
 }
 
-.tabs {
-  height: 70vh;
-}
-.tabs ul {
-  margin: 0;
-  position: sticky;
-  padding: 20px 0;
-  list-style: none;
-  display: flex;
-  flex-flow: row nowrap;
-  flex-direction: column;
-  font-size: 1.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-flow: row nowrap;
-  flex-direction: column;
-  height: 100%;
-  position: sticky;
-  flex-grow: 1;
-  transition: flex 3s ease;
-}
-.tabs ul li {
-  margin: 2px;
-  box-sizing: border-box;
-  flex: 1 1 1;
-  transition: all 0.5s ease;
-  text-transform: uppercase;
-  color: #535353;
-  cursor: pointer;
-}
-.tabs ul li a {
-  color: var(text-dark-grey);
-  text-decoration: none;
-  transition: color 0.4s ease;
-  text-transform: uppercase;
-}
-.tabs ul li.active {
-  flex: 2 1 200px;
-  color: #e1e1e1;
-}
-.tabs ul li:hover a {
-  color: #a3a3a3;
-}
-@media screen and (max-width: 614px) {
-  .tabs {
-    padding: 10px 0;
-    margin: 0;
-    top: 0;
-    overflow-x: scroll;
-  }
-  .tabs::-webkit-scrollbar {
-    display: none;
-  }
-  .tabs ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: -webkit-box;
-    font-size: 1rem;
-    vertical-align: bottom;
-  }
-  .tabs ul li {
-    padding: 5px 10px;
-    transition: font-size 0.5s ease;
-    text-transform: uppercase;
-    width: auto;
-    color: #e1e1e1;
-    cursor: pointer;
-    text-wrap: nowrap;
-  }
-  .tabs ul li a {
-    text-decoration: none;
-    transition: color 0.4s ease;
-    text-transform: uppercase;
-  }
-  .tabs ul li.active {
-    font-size: 1rem;
-    padding: 5px 10px;
-    border-radius: 12px;
-    color: #202020;
-    background: #e1e1e1;
-  }
-}
-
 .list {
   max-height: 100%;
-  overflow-y: scroll;
 }
 .list .positions {
   display: none;
   height: 0;
   transition: opacity 0.3s ease-in-out;
   padding: 20px 0;
-  opacity: 0;
 }
 .list .positions.active {
   display: block;
@@ -1568,4 +1479,4 @@ footer .dev a img {
   footer .dev a img {
     height: 13px;
   }
-}
+}/*# sourceMappingURL=style.css.map */

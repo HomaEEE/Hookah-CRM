@@ -2,14 +2,13 @@
 
 namespace App\Filament\Clusters\Data\Resources\Docs\Pages;
 
-use Filament\Actions\CreateAction;
-use Filament\Resources\Components\Tab;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
 use App\Filament\Clusters\Data\Resources\Docs\DocResource;
+use Filament\Actions\CreateAction;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
 
 class ManageDocs extends ManageRecords

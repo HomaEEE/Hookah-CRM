@@ -23,6 +23,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
@@ -70,6 +71,11 @@ class ExpenseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
+            ->groups([
+                Group::make('created_at')->date()
+                    ->label(__('Added at')),
+            ])
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d-m-Y')
                     ->size('md')

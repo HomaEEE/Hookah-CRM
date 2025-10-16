@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 class Booking extends Model
 {
@@ -18,7 +18,7 @@ class Booking extends Model
 
     public function place()
     {
-        return $this->belongsTo(Place::class, 'place_id');
+        return $this->belongsTo(Place::class);
     }
 
     public function seet()
@@ -36,10 +36,9 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
     public function getBookingTimeAttribute()
     {
-        return (new Carbon($this->time))->translatedFormat('l d/m') .', '
-        . (new Carbon($this->time))->translatedFormat('H:i');
+        return (new Carbon($this->time))->translatedFormat('l d/m').', '
+        .(new Carbon($this->time))->translatedFormat('H:i');
     }
 }

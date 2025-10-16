@@ -10,7 +10,8 @@
         <link rel="preload" href="/assets/fonts/PhonkSans-Light.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="/assets/fonts/PhonkSans-LightItalic.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="stylesheet" href="https://unpkg.com/flexboxgrid2@7.2.1/flexboxgrid2.css">
-<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+        @vite('resources/css/app.css')
+        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
         <meta name="description" content="@yield('description', 'Описание по умолчанию')">
 

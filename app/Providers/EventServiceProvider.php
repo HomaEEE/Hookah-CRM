@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
-use App\Models\{Booking,Expense, Shift, Supply, Withdrawal};
+use App\Listeners\ConvertMediaToWebp;
+use App\Models\Expense;
+use App\Models\Supply;
+use App\Models\Withdrawal;
+use App\Observers\SupplyToExpense;
+use App\Observers\UpdateBill;
+use App\Observers\WithdrawalBill;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use App\Observers\{SupplyToExpense, BookingToGuest, UpdateBill, WithdrawalBill};
-
+use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,6 +26,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        MediaHasBeenAddedEvent::class => [
+            ConvertMediaToWebp::class,
+        ],
+
     ];
 
     /**

@@ -27,6 +27,11 @@ class Cashflow extends Page
 
     public $endDate;
 
+    public function persistsFiltersInSession(): bool
+    {
+        return false;
+    }
+
     public static function getPluralModelLabel(): string
     {
         return __('Cashflow');
@@ -53,14 +58,19 @@ class Cashflow extends Page
                         DatePicker::make('from')
                             ->translateLabel()
                             ->native(false)
-                            ->default(now())
+                            ->default(now()->startOfMonth())
+                            ->placeholder(now()->startOfMonth())
+                            ->defaultFocusedDate(now()->startOfMonth())->closeOnDateSelection()
                             ->maxDate(fn (Get $get) => $get('to') ?: now()),
                         DatePicker::make('to')
                             ->translateLabel()
                             ->minDate(fn (Get $get) => $get('from') ?: now())
                             ->native(false)
-                            ->maxDate(now())
-                            ->default(now()),
+                            ->closeOnDateSelection()
+                            ->default(now())
+                            ->placeholder(now()->endOfMonth())
+                            ->defaultFocusedDate(now())
+                            ->maxDate(now()),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),

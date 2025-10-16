@@ -4,18 +4,19 @@ namespace App\Livewire\Statistic;
 
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
-use Filament\Facades\Filament;
+use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Malzariey\FilamentDaterangepickerFilter\Enums\OpenDirection;
-use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class Expenses extends BaseWidget
 {
     // protected int|string|array $columnSpan = 'full';
+
+    use InteractsWithPageFilters;
 
     protected function getTableHeading(): string
     {
@@ -26,7 +27,7 @@ class Expenses extends BaseWidget
     {
         return $table
             ->query(
-                Expense::query()->where('place_id', Filament::getTenant()->id)
+                Expense::query()
             )
             ->columns([
 
@@ -47,21 +48,29 @@ class Expenses extends BaseWidget
                 SelectFilter::make('category_id')
                     ->label('Категория')
                     ->native(false)
+                    ->multiple()
                     ->options(
                         ExpenseCategory::query()
                             ->pluck('name', 'id')
                             ->toArray()
                     ),
-                DateRangeFilter::make('created_at')
-                    ->translateLabel()
-                    ->defaultThisMonth()
-                    ->showDropdowns()->opens(OpenDirection::LEFT),
-
             ])
-            // ->hiddenFilterIndicators()
-            ->modifyQueryUsing(function ($query) {
 
-                $query->selectRaw('category_id as id, category_id, sum(sum) as total, count(*) as count')
+            ->modifyQueryUsing(function ($query) {
+                $startDate = ! is_null($this->pageFilters['startDate'] ?? null) ?
+                    Carbon::parse($this->pageFilters['startDate']) :
+                    null;
+
+                $endDate = ! is_null($this->pageFilters['endDate'] ?? null) ?
+                    Carbon::parse($this->pageFilters['endDate']) :
+                    now();
+
+                // Применение фильтрации по датам, если значения присутствуют
+                if ($startDate && $endDate) {
+                    $query->whereBetween('created_at');
+                }
+
+                $query->selectRaw('category_id as id, category_id, sum(sum) as total')
                     ->groupBy('category_id')
                     ->orderBy('sum', 'desc');
             });

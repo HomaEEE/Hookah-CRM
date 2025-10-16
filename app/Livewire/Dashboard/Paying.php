@@ -5,19 +5,15 @@ namespace App\Livewire\Dashboard;
 use App\Models\Bill;
 use App\Models\Reqvizite;
 use App\Models\Supply;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -29,15 +25,11 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Contracts\View\View;
-use Livewire\Component;
 
-class Paying extends Component implements HasActions, HasForms, HasTable
+class Paying extends BaseWidget implements HasTable
 {
-    use InteractsWithActions;
-    use InteractsWithForms;
-    use InteractsWithInfolists;
     use InteractsWithTable;
 
     protected function getTableHeading(): string|Htmlable
@@ -56,8 +48,7 @@ class Paying extends Component implements HasActions, HasForms, HasTable
                     ->titlePrefixedWithLabel(false),
             ])
             ->groupingSettingsInDropdownOnDesktop()
-            ->query(Supply::query()->where('place_id', Filament::getTenant()->id)->with('supplier')
-                ->where('pay', 0))
+            ->query(Supply::query()->with('supplier')->where('pay', 0))
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
                     ->size('sm')
@@ -112,8 +103,16 @@ class Paying extends Component implements HasActions, HasForms, HasTable
                                 ->badge(),
                             TextEntry::make('user.name')->translateLabel(),
                             TextEntry::make('supplier.company')->label(__('Supplier'))->badge(),
+                            TextEntry::make('delay_day')->label(__('Delay'))
+                                ->badge()
+                                ->color(fn (int $state): string => match (true) {
+                                    default => 'info',
+                                    $state < 1 => 'danger',
+                                    $state < 3 => 'warning',
+                                    $state < 7 => 'success',
+                                }),
                             TextEntry::make('sum')->label(__('Sum'))->badge()->money('UAH')->copyable(),
-                            TextEntry::make('bill.name')->translateLabel()
+                            TextEntry::make('bill.name')->label(__('Bill'))
                                 ->badge(),
                             TextEntry::make('invoice_number')->translateLabel()->badge()->copyable(),
                         ])->columns(3),
@@ -160,61 +159,78 @@ class Paying extends Component implements HasActions, HasForms, HasTable
                     ]),
 
                 EditAction::make()->label('')
-                    ->modalWidth('xs')
+                    ->modalWidth('sm')
 
                     ->schema([
-                        Select::make('supplier_id')->label(__('Supplier'))
+                        Tabs::make('Tabs')
+                            ->contained(false)
+                            ->tabs([
 
-                            ->relationship('supplier', 'company')->disabled(),
-                        Select::make('reqvizite_id')
-                            ->label('Реквизиты')
-                            ->native(false)
-                            ->preload()
-                            ->options(function (callable $get) {
-                                if (null == ($get('place_id'))) {
-                                    return null;
-                                } else {
-                                    return Reqvizite::where('supplier_id', $get('supplier_id'))->pluck('own', 'id');
-                                }
-                            }),
-                        TextInput::make('sum')->translateLabel(),
-                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->extraAttributes(['style' => 'width: 100%'])
-                            ->colors([
-                                0 => 'info',
-                                1 => 'success',
-                            ])
-                            ->reactive(),
+                                Tab::make(__('Supply'))
+                                    ->schema([
+                                        Select::make('supplier_id')->label(__('Supplier'))
 
-                        ToggleButtons::make('pay')->label(__('Pay'))
-                            ->options(
-                                [
-                                    0 => __('No pay'),
-                                    1 => __('Paid'),
-                                ]
-                            )
-                            ->colors([
-                                0 => 'danger',
-                                1 => 'success',
-                            ])
-                            ->default(0)
-                            ->inline()
-                            ->live()
-                            ->grouped()
-                            ->extraAttributes(['style' => 'width: 100%'])
-                            ->reactive(),
+                                            ->relationship('supplier', 'company')->disabled(),
+                                        Select::make('reqvizite_id')
+                                            ->label(__('Reqvizites'))
+                                            ->native(false)
+                                            ->preload()
+                                            ->options(function (callable $get) {
+                                                if (null == ($get('place_id'))) {
+                                                    return null;
+                                                } else {
+                                                    return Reqvizite::where('supplier_id', $get('supplier_id'))->pluck('own', 'id');
+                                                }
+                                            }),
+                                        TextInput::make('sum')->translateLabel(),
+                                        ToggleButtons::make('bill_id')->label(__('Type pay'))
+                                            ->options(Bill::get()->pluck('name', 'id'))
+                                            ->default(0)
+                                            ->required()
+                                            ->inline()
+                                            ->grouped()
+                                            ->extraAttributes(['style' => 'width: 100%'])
+                                            ->colors([
+                                                0 => 'info',
+                                                1 => 'success',
+                                            ])
+                                            ->reactive(),
+
+                                        ToggleButtons::make('pay')->label(__('Pay'))
+                                            ->options(
+                                                [
+                                                    0 => __('No pay'),
+                                                    1 => __('Paid'),
+                                                ]
+                                            )
+                                            ->colors([
+                                                0 => 'danger',
+                                                1 => 'success',
+                                            ])
+                                            ->default(0)
+                                            ->inline()
+                                            ->live()
+                                            ->grouped()
+                                            ->extraAttributes(['style' => 'width: 100%'])
+                                            ->reactive(),
+                                    ]),
+                                Tab::make(__('Photo'))
+                                    ->schema([
+                                        SpatieMediaLibraryFileUpload::make('invoice')
+                                            ->label(__('Photo'))
+                                            ->collection('supplies')
+                                            ->multiple()
+                                            ->imageResizeMode('cover')
+                                            ->imagePreviewHeight(250)
+                                            ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
+                                            ->openable(),
+                                        Textarea::make('comment')->label(__('Comment'))
+                                            ->rows(3),
+                                    ]),
+
+                            ]),
                     ]
                     ),
             ]);
-    }
-
-    public function render(): View
-    {
-        return view('livewire.paying');
     }
 }

@@ -48,6 +48,8 @@ class AdminPanelProvider extends PanelProvider
             // ->registration()
             ->passwordReset()
             ->profile(EditUserProfile::class)
+            ->topbar(false)
+            ->globalSearch(false)
             ->databaseNotifications()
             ->databaseNotificationsPolling('120s')
             ->unsavedChangesAlerts()
@@ -76,17 +78,15 @@ class AdminPanelProvider extends PanelProvider
             ])
 
             ->plugins([
-                FilamentShieldPlugin::make(),
-                SimpleLightBoxPlugin::make(),
-                PhosphorIcons::make()
-                    ->overrideStyleForIcon([
-                        'phosphor-user',
-                        'phosphor-caret-up',
-                    ], 'thin'),
+                FilamentShieldPlugin::make()
+                    ->localizePermissionLabels()
 
+                    ->scopeToTenant(true),
+                SimpleLightBoxPlugin::make(),
+                PhosphorIcons::make(),
             ])
             ->tenantMiddleware([
-                //  SyncShieldTenant::class,
+                SyncShieldTenant::class,
                 //   ApplyTenantScopes::class,
             ], isPersistent: true)
             ->authGuard('web')

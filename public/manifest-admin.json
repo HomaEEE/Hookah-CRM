@@ -81,19 +81,19 @@
   "shortcuts": [
     {
       "name": "Добавить поставку",
-      "url": "https://noire.ee/admin/supplies",
+      "url": "/supplies",
       "description": "Новая поставка"
     },
 
     {
       "name": "Добавить расход",
-      "url": "https://noire.ee/admin/expenses",
+      "url": "/expenses",
       "description": "Новая поставка"
     },
 
     {
       "name": "Добавить задачу",
-      "url": "https://noire.ee/admin/tasks",
+      "url": "/tasks",
       "description": "Новая задача"
     }
   ]

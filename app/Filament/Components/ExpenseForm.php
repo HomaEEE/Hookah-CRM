@@ -4,7 +4,6 @@ namespace App\Filament\Components;
 
 use App\Models\Bill;
 use App\Models\ExpenseCategory;
-use Auth;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -13,6 +12,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseForm
 {
@@ -20,7 +20,6 @@ class ExpenseForm
     {
         return [
             Hidden::make('user_id')->default(Auth::user()->id),
-            Hidden::make('place_id')->default(Filament::getTenant()->id),
             DateTimePicker::make('added_at')
                 ->label(__('Date Added'))
                 ->native(false)
@@ -39,11 +38,12 @@ class ExpenseForm
             SpatieMediaLibraryFileUpload::make('invoice')
                 ->label(__('Invoice'))
                 ->collection('supplies')
-                ->conversion('media-webp')
                 ->multiple()
-                ->imagePreviewHeight(450)
-                ->imageResizeMode('cover'),
-            //   ->optimize('webp')->resize(70),
+                ->imagePreviewHeight(350)
+                ->imageEditor()
+                ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 80])
+                ->downloadable()
+                ->deletable(),
             ToggleButtons::make('bill_id')->label(__('Type pay'))
                 ->options(Bill::get()->pluck('name', 'id'))
                 ->default(0)

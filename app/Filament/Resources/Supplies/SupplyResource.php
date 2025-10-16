@@ -35,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
@@ -78,6 +79,11 @@ class SupplyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
+            ->groups([
+                Group::make('created_at')->date()
+                    ->label(__('Added at')),
+            ])
             ->columns([
                 TextColumn::make('id')->label(__('#'))->searchable()->visibleFrom('xl'),
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
@@ -99,7 +105,7 @@ class SupplyResource extends Resource
                     ->limit(3)
                     ->height(40)
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
-                    ->placeholder('No description.'),
+                    ->placeholder('No photo'),
 
                 IconColumn::make('bill.type')->label(__('Bill'))
                     ->action(function ($record) {

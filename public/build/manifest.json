@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-BY0_B0FG.css",
+    "file": "assets/app-BA_WYFZ8.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -29,7 +29,7 @@
     ]
   },
   "resources/js/tab-menu.js": {
-    "file": "assets/tab-menu-BSeRAwgV.js",
+    "file": "assets/tab-menu--D6h_mhn.js",
     "name": "tab-menu",
     "src": "resources/js/tab-menu.js",
     "isEntry": true
