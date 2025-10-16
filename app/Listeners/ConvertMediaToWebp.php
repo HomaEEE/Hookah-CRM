@@ -34,15 +34,128 @@ class ConvertMediaToWebp
             $targetWidth = (int) ($properties['width'] ?? ($properties['max_width'] ?? 1600));
             $quality = (int) ($properties['quality'] ?? 82);
 
-            // Temp output path
-            $tempPath = $originalPath.'.tmp.'.$format;
+            // Prepare processing path (handle HEIC/HEIF -> create intermediate JPEG if needed)
+            $processingPath = $originalPath;
+            $intermediatePath = null;
+            $cleanupIntermediate = false;
+
+            $isHeic = preg_match('/heif|heic/i', $media->mime_type) || preg_match('/\.heic$|\.heif$/i', $originalPath);
+
+            if ($isHeic) {
+                // create an intermediate JPEG for downstream processing
+                $intermediatePath = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('heic_').'.jpg';
+
+                // Prefer Imagick if it can read HEIC
+                if (class_exists('Imagick')) {
+                    try {
+                        $he = new \Imagick($originalPath);
+                        // Some Imagick builds require readImage; ensure it loads
+                        // write intermediate as jpeg
+                        $he->setImageFormat('jpeg');
+                        $he->setImageCompressionQuality($quality);
+                        $he->writeImage($intermediatePath);
+                        $he->clear();
+                        $he->destroy();
+                        if (file_exists($intermediatePath)) {
+                            $processingPath = $intermediatePath;
+                            $cleanupIntermediate = true;
+                        }
+                    } catch (\Throwable $e) {
+                        Log::warning('Imagick HEIC conversion failed: '.$e->getMessage());
+                    }
+                }
+
+                // If no intermediate yet, try CLI tools: heif-convert, magick, convert
+                if (! $cleanupIntermediate) {
+                    // try heif-convert
+                    $escapedSrc = escapeshellarg($originalPath);
+                    $escapedDst = escapeshellarg($intermediatePath);
+                    $commands = [
+                        "heif-convert $escapedSrc $escapedDst",
+                        "magick $escapedSrc $escapedDst",
+                        "convert $escapedSrc $escapedDst",
+                    ];
+
+                    foreach ($commands as $cmd) {
+                        try {
+                            exec($cmd.' 2>&1', $output, $exitCode);
+                            if ($exitCode === 0 && file_exists($intermediatePath)) {
+                                $processingPath = $intermediatePath;
+                                $cleanupIntermediate = true;
+                                break;
+                            }
+                        } catch (\Throwable $e) {
+                            // ignore and try next
+                        }
+                    }
+                }
+
+                if ($processingPath === $originalPath) {
+                    Log::warning("HEIC/HEIF conversion failed for: {$originalPath}");
+                    // give up but do not delete original
+                    if ($intermediatePath && file_exists($intermediatePath)) {
+                        @unlink($intermediatePath);
+                    }
+
+                    return;
+                }
+            }
+
+            // Temp output path (placed next to the processing file)
+            $tempPath = $processingPath.'.tmp.'.$format;
 
             $conversionSucceeded = false;
 
-            // Try Imagick first
+            // Try Imagick first (apply EXIF orientation where possible)
             if (class_exists('Imagick')) {
                 try {
-                    $img = new \Imagick($originalPath);
+                    $img = new \Imagick($processingPath);
+
+                    // Try to get orientation from Imagick or EXIF and apply transforms
+                    $orientation = null;
+                    if (method_exists($img, 'getImageOrientation')) {
+                        $orientation = $img->getImageOrientation();
+                    } elseif (function_exists('exif_read_data')) {
+                        $exif = @exif_read_data($processingPath);
+                        $orientation = $exif['Orientation'] ?? null;
+                    }
+
+                    if ($orientation) {
+                        switch ($orientation) {
+                            case 2: // mirrored horizontally
+                                if (method_exists($img, 'flopImage')) {
+                                    $img->flopImage();
+                                }
+                                break;
+                            case 3: // rotated 180
+                                $img->rotateImage(new \ImagickPixel('none'), 180);
+                                break;
+                            case 4: // mirrored vertically
+                                if (method_exists($img, 'flipImage')) {
+                                    $img->flipImage();
+                                }
+                                break;
+                            case 5: // mirrored horizontally then rotate 90 CW
+                                if (method_exists($img, 'flopImage')) {
+                                    $img->flopImage();
+                                }
+                                $img->rotateImage(new \ImagickPixel('none'), 90);
+                                break;
+                            case 6: // rotate 90 CW
+                                $img->rotateImage(new \ImagickPixel('none'), 90);
+                                break;
+                            case 7: // mirrored horizontally then rotate 270 CW
+                                if (method_exists($img, 'flopImage')) {
+                                    $img->flopImage();
+                                }
+                                $img->rotateImage(new \ImagickPixel('none'), -90);
+                                break;
+                            case 8: // rotate 270 CW
+                                $img->rotateImage(new \ImagickPixel('none'), -90);
+                                break;
+                        }
+                    }
+
                     $width = $img->getImageWidth();
                     if ($width > $targetWidth && $targetWidth > 0) {
                         $height = $img->getImageHeight();
@@ -74,9 +187,52 @@ class ConvertMediaToWebp
 
                 $src = @imagecreatefromstring($contents);
                 if ($src === false) {
-                    Log::warning("GD failed to create image resource from: {$originalPath}");
+                    Log::warning("GD failed to create image resource from: {$processingPath}");
 
                     return;
+                }
+
+                // Apply EXIF orientation for GD if available
+                $orientation = null;
+                if (function_exists('exif_read_data')) {
+                    $exif = @exif_read_data($processingPath);
+                    $orientation = $exif['Orientation'] ?? null;
+                }
+
+                if ($orientation) {
+                    switch ($orientation) {
+                        case 2:
+                            if (function_exists('imageflip')) {
+                                imageflip($src, IMG_FLIP_HORIZONTAL);
+                            }
+                            break;
+                        case 3:
+                            $src = imagerotate($src, 180, 0);
+                            break;
+                        case 4:
+                            if (function_exists('imageflip')) {
+                                imageflip($src, IMG_FLIP_VERTICAL);
+                            }
+                            break;
+                        case 5:
+                            if (function_exists('imageflip')) {
+                                imageflip($src, IMG_FLIP_HORIZONTAL);
+                            }
+                            $src = imagerotate($src, -90, 0);
+                            break;
+                        case 6:
+                            $src = imagerotate($src, -90, 0);
+                            break;
+                        case 7:
+                            if (function_exists('imageflip')) {
+                                imageflip($src, IMG_FLIP_HORIZONTAL);
+                            }
+                            $src = imagerotate($src, 90, 0);
+                            break;
+                        case 8:
+                            $src = imagerotate($src, 90, 0);
+                            break;
+                    }
                 }
 
                 $width = imagesx($src);
