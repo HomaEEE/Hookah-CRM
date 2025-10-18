@@ -60,8 +60,9 @@ coverage/
 /storage/framework/sessions/*
 /storage/framework/views/*
 /storage/logs/*
-
+/pulbic/buld
 #Filament php
 /app/Policies
 
 composer.lock
+config/insights.php
