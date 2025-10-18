@@ -12,8 +12,7 @@
 
 
 @section('content')
-<div data-scroll-section>
-<div class="page-container">
+<div data-scroll-section class="page-container">
 	<div class="hero">
 	<div class="container">
 
@@ -107,14 +106,7 @@
 		</div>
     </div>
 
-	<div class="roomtour block">
-
     </div>
-
-	<div class="menu block">
-
-    </div>
-	</div>
 </div>
 @endsection
 

@@ -18,6 +18,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
@@ -31,7 +32,7 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 1;
 
     public static function getNavigationGroup(): ?string
     {
@@ -57,6 +58,18 @@ class ProductResource extends Resource
     {
         return $schema
             ->components([
+                Fieldset::make()
+                    ->contained(false)
+                    ->columns([
+                        'default' => 3,
+                        'md' => 3,
+                        'xl' => 3,
+                    ])
+                    ->schema([
+                        ToggleButtons::make('visible')->label(__('Visible'))->inline()->boolean()->grouped()->columns(1),
+                        ToggleButtons::make('visible_menu')->label(__('Visible menu'))->inline()->boolean()->grouped()->columns(1),
+                    ]),
+
                 TextInput::make('product_name')
                     ->translateLabel()
                     ->required()
@@ -67,9 +80,6 @@ class ProductResource extends Resource
                     ->label(__('Category'))
                     ->options(Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id'))
                     ->searchable(),
-
-                ToggleButtons::make('visible')->label(__('Visible'))->inline()->boolean()->grouped()->columns(1),
-                ToggleButtons::make('visible_menu')->label(__('Visible menu'))->inline()->boolean()->grouped()->columns(1),
 
                 TranslatableTabs::make()
                     ->addEmptyBadgeWhenAllFieldsAreEmpty(emptyLabel: __('locale empty'))

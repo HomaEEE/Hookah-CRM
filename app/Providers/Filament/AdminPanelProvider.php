@@ -19,6 +19,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -26,6 +27,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\View\View;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -77,16 +79,21 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-banknotes'),
             ])
 
+            ->renderHook(
+                PanelsRenderHook::USER_MENU_PROFILE_AFTER,
+                fn (): View => view('filament.hooks.lang-switcher'),
+            )
+
             ->plugins([
                 FilamentShieldPlugin::make()
                     ->localizePermissionLabels()
-
                     ->scopeToTenant(true),
                 SimpleLightBoxPlugin::make(),
                 PhosphorIcons::make(),
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,
+                SetLocale::class,
                 //   ApplyTenantScopes::class,
             ], isPersistent: true)
             ->authGuard('web')

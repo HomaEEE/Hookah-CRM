@@ -7,12 +7,12 @@
 
 @section('content')
 
-<div class="container">
+<div class="">
     @include('site.properties', ['address' => 1, 'wifi' => 1, 'feedback'=> 1])
 
-    <div class="row">
+    <div class="flex-wrap">
         <div class="col-xs-12">
-            <div class="tabs">
+            <div class="tabs flex flex-nowrap">
             <ul>
                 @foreach ($categories as $cat)
                     <li data-target="{{ $cat['slug'] }}"

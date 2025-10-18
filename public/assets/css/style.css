@@ -778,6 +778,40 @@ main .feedbacks .feedback {
   cursor: grab;
 }
 
+.tabs {
+  width: 100%;
+  overflow-y: scroll;
+}
+@media (min-width: 617px) {
+  .tabs {
+    font-size: 1.65em;
+    flex: content;
+  }
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tabs ul {
+  display: flex;
+}
+.tabs ul li {
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 7px 10px;
+  margin: 0px 10px 0 0;
+}
+.tabs ul li.active {
+  background: #a3a3a3;
+  color: #202020;
+  border-radius: 6px;
+}
+@media (min-width: 617px) {
+  .tabs ul li.active {
+    border-radius: 16px;
+  }
+}
+
 .list {
   max-height: 100%;
 }

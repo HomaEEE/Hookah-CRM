@@ -8,7 +8,7 @@ $(document).ready(function () {
             $(this)
                 .css({ opacity: 0, transform: "translateY(20px)" })
                 .delay(index * 50)
-                .animate({ opacity: 1, top: 0 }, 100);
+                .animate({ opacity: 1, top: 0 }, 300);
         });
     }
 

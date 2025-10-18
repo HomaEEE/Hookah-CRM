@@ -10,8 +10,6 @@ $cubic: cubic-bezier(0.4, 0.01, 0.165, 0.99);
 $icomoon-font-family: "fontello" !default;
 $icomoon-font-path: "../fonts" !default;
 
-@import "tailwindcss";
-
 @font-face {
   font-family: "#{$icomoon-font-family}";
   src: url("#{$icomoon-font-path}/#{$icomoon-font-family}.eot?20259845");
@@ -825,6 +823,37 @@ main {
     border-radius: $radius;
     font-size: 1.25rem;
     cursor: grab;
+  }
+}
+
+.tabs {
+  width: 100%;
+  overflow-y: scroll;
+  @media (min-width: 617px) {
+    font-size: 1.65em;
+    flex: content;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  ul {
+    display: flex;
+    li {
+      display: inline-block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 7px 10px;
+      margin: 0px 10px 0 0;
+      &.active {
+        background: $text-grey;
+        color: $grey;
+        border-radius: 6px;
+        @media (min-width: 617px) {
+          border-radius: 16px;
+        }
+      }
+    }
   }
 }
 

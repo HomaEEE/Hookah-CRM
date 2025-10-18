@@ -2,25 +2,25 @@
 
 namespace App\Filament\Resources\Ingredients;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Ingredients\Pages\ManageIngredients;
-use App\Filament\Resources\IngredientResource\Pages;
 use App\Models\Ingredient;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class IngredientResource extends Resource
 {
     protected static ?string $model = Ingredient::class;
+
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationGroup(): ?string
     {

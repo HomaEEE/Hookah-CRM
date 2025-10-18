@@ -1,28 +1,37 @@
 @if (!empty($item->getFirstMediaUrl('products')))
 
 
-<div class="mx-auto max-w-md overflow-hidden rounded-xl bg-grey shadow-md md:max-w-2xl">
-  <!-- [!code word:md:flex] -->
-  <div class="md:flex">
-    <!-- [!code word:md:shrink-0] -->
-    <div class="md:shrink-0">
-      <!-- [!code word:md:h-full] -->
-      <!-- [!code word:md:w-48] -->
+<div class="flex max-w-xs items-center gap-x-4 overflow-hidden rounded-xl  md:max-w-2xl menu-item" data-id="{{ $item->id }}">
+  <div class="flex">
+    <div class="shrink-0">
       <img
-        class="h-48 w-full object-fit md:h-full md:w-48"
+        class="size-24 md:size-32 lg:size-48 object-fit shrink-0"
         src="{{$item->getFirstMediaUrl('products')}}"
         alt="{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}" >
 
     </div>
-    <div class="p-8">
-      <div class="text-sm font-semibold tracking-wide text-indigo-500 uppercase">
+    <div class="p-8  gap-x-4 ">
+      <div class="text-sm font-semibold tracking-wide uppercase">
         <h4>{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}</h4>
       </div>
 
-      <p class="mt-2 text-gray-500">
- @if (!empty($item['frontend_desc']))
-       {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
-      @endif      </p>
+      <p class="mt-2">
+          @if (!empty($item['frontend_desc']))
+              {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
+            @endif
+      </p class="property">
+        <div>
+          {{number_format($item['price'], 0)}} ₴
+        </div>
+
+        <div>
+          {{number_format($item['out'], 0)}} <small>{{ __('gr') }}</small>
+        </div>
+        <div>
+          {{$item['sup']}}
+        </div>
+      <p>
+      </p>
     </div>
   </div>
 </div>
