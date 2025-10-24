@@ -2,31 +2,22 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Components\ExpenseForm;
-use App\Filament\Components\IncomeForm;
-use App\Filament\Components\SupplyForm;
+use App\Filament\Components\Forms\ExpenseForm;
+use App\Filament\Components\Forms\IncomeForm;
+use App\Filament\Components\Forms\SupplyForm;
+use App\Filament\Components\Forms\WithdrawalForm;
 use App\Filament\Widgets\Dashboard\PosterShift;
 use App\Filament\Widgets\Dashboard\TodayShift;
-use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
-use App\Models\Expense;
 use App\Models\Income;
-use App\Models\Shift;
-use App\Models\ShiftUser;
-use App\Models\Supply;
-use App\Models\Tip;
-use App\Models\User;
-use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Notifications\Notification;
-use Filament\Support\RawJs;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermissions
@@ -66,66 +57,10 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
     protected function getActions(): array
     {
         return [
-            // Action::make('onShift')
-            //     ->label(__('On Shift'))
-            //     ->size('lg')
-            //     ->icon('heroicon-o-login')
-            //     ->color('success')
-
-            //     ->modalHeading(__('Add portions'))
-            //     ->modalWidth('xs')
-
-            //     ->form([
-            //         TextInput::make('portion')
-            //             ->label(__('Add portions'))->numeric()
-            //             ->required(),
-            //     ])
-            //     ->action(function (ShiftUser $record, array $data): void {
-            //         $record->update(
-            //             [$record->portions += $data['portion']]
-            //         );
-            //     }),
-
-            // Action::make('ImOnShift')
-            // ->label(__('I\'m on shift'))
-            // ->color('info')
-            // ->modalWidth('xs')
-            // ->icon('heroicon-o-user-plus')
-            // ->modalHeading(__('I\'m on shift'))
-            // ->requiresConfirmation()
-            // ->action(function (array $data): void {
-            //     (new LocalApiController)->AddUserToShift($data);
-
-            //     Notification::make()
-            //         ->title(__('User added'))
-            //         ->icon('heroicon-o-user-plus')
-            //         ->iconColor('success')
-            //         ->send();
-            // }),
 
             ActionGroup::make([
 
-                CreateAction::make('add_expense')->label(__('Expense'))
-                    ->model(Expense::class)
-                    ->createAnother(false)
-                    ->icon('heroicon-o-document-minus')
-                    ->modalHeading(__('Add Expense'))
-                    ->modalWidth('md')
-                    ->slideOver()
-                    ->modalIcon('heroicon-o-document-minus')
-                    ->keyBindings(['command+s', 'ctrl+s'])
-                    ->schema(
-                        ExpenseForm::schema(),
-                    )
-                    ->successNotification(
-                        Notification::make()
-                            ->success()
-                            ->title(__('Expense added'))
-                            ->icon('heroicon-o-document-minus')
-                    ),
-
-                CreateAction::make('add_supply')->label(__('Supply'))
-                    ->model(Supply::class)
+                CreateAction::make('add_supply')->label(__('Expense'))
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
                     ->createAnother(false)
@@ -133,8 +68,27 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->slideOver()
-                    ->schema(
+                    ->schema([
+                        ToggleButtons::make('type')->label(__('Type'))
+                            ->options(
+                                [
+                                    0 => __('Supply'),
+                                    1 => __('Expense'),
+                                ]
+                            )
+                            ->colors([
+                                0 => 'info',
+                                1 => 'success',
+                            ])
+                            ->default(0)
+                            ->inline()
+                            ->live()
+                            ->grouped()
+                            ->extraAttributes(['style' => 'width: 100%'])
+                            ->reactive(),
                         SupplyForm::schema(),
+                        ExpenseForm::schema(),
+                    ]
                     )
                     ->successNotification(
                         Notification::make()
@@ -145,7 +99,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
 
                 CreateAction::make('addIncome')->label(__('Income'))
                     ->model(Income::class)
-                    ->icon('heroicon-o-inbox-arrow-down')
+                    ->icon('heroicon-o-plus')
                     ->modalHeading(__('Add Income'))
                     ->createAnother(false)
                     ->modalWidth('xs')
@@ -161,35 +115,53 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                             ->title(__('Income added'))
                     ),
 
-            ])->button()->label(__('Add'))->icon('heroicon-o-squares-plus'),
+                CreateAction::make('addWithdraval')->label(__('Withdraval'))
+                    ->model(Income::class)
+                    ->icon('heroicon-o-minus')
+                    ->modalHeading(__('Add Withdraval'))
+                    ->createAnother(false)
+                    ->modalWidth('sm')
+                    ->keyBindings(['command+s', 'ctrl+s'])
+                    ->modalIcon('heroicon-o-inbox-arrow-down')
+                    ->schema(
+                        WithdrawalForm::schema()
+                    )
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->icon('heroicon-o-minus')
+                            ->title(__('Withdraval added'))
+                    ),
 
-            Action::make('addTips')
-                ->label(__('Add Tips'))
-                ->color('success')
-                ->modalWidth('xs')
-                ->icon('heroicon-o-banknotes')
-                ->modalHeading(__('Add Tips'))
-                ->keyBindings(['command+s', 'ctrl+s'])
-                ->requiresConfirmation()
-                ->schema([
-                    Hidden::make('place_id')->default(Filament::getTenant()->id),
-                    TextInput::make('tips')->label('')
-                        ->numeric()
-                        ->mask(RawJs::make('$money($input)'))
-                        ->stripCharacters(',')
-                        ->required(),
-                ])
-                ->action(function (array $data): void {
-                    Tip::updateOrCreate(
-                        ['created_at' => Carbon::today(), 'place_id' => $data['place_id']],
-                    )->increment('tips', $data['tips'] * 100);
+            ])->button()->label(__('Add'))->color('success')->icon('heroicon-o-squares-plus'),
 
-                    Notification::make()
-                        ->title(__('Tips added'))
-                        ->icon('heroicon-o-banknotes')
-                        ->iconColor('success')
-                        ->send();
-                }),
+            // Action::make('addTips')
+            //     ->label(__('Add Tips'))
+            //     ->color('success')
+            //     ->modalWidth('xs')
+            //     ->icon('heroicon-o-banknotes')
+            //     ->modalHeading(__('Add Tips'))
+            //     ->keyBindings(['command+s', 'ctrl+s'])
+            //     ->requiresConfirmation()
+            //     ->schema([
+            //         Hidden::make('place_id')->default(Filament::getTenant()->id),
+            //         TextInput::make('tips')->label('')
+            //             ->numeric()
+            //             ->mask(RawJs::make('$money($input)'))
+            //             ->stripCharacters(',')
+            //             ->required(),
+            //     ])
+            //     ->action(function (array $data): void {
+            //         Tip::updateOrCreate(
+            //             ['created_at' => Carbon::today(), 'place_id' => $data['place_id']],
+            //         )->increment('tips', $data['tips'] * 100);
+
+            //         Notification::make()
+            //             ->title(__('Tips added'))
+            //             ->icon('heroicon-o-banknotes')
+            //             ->iconColor('success')
+            //             ->send();
+            //     }),
             ActionGroup::make([
 
                 Action::make('openShift')
@@ -205,6 +177,23 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
 
                         Notification::make()
                             ->title(__('Shift opened'))
+                            ->icon('heroicon-o-banknotes')
+                            ->iconColor('success')
+                            ->send();
+                    }),
+                Action::make('closeShift')
+                    ->label(__('Close Shift'))
+                    ->icon('heroicon-o-lock-closed')
+                    ->modalHeading(__('Close Shift'))
+                    ->requiresConfirmation()
+                    ->schema([
+                        Hidden::make('place_id')->default(Filament::getTenant()->id),
+                    ])
+                    ->action(function (array $data): void {
+                        (new PosterApiController)->openShift($data);
+
+                        Notification::make()
+                            ->title(__('Shift closed'))
                             ->icon('heroicon-o-banknotes')
                             ->iconColor('success')
                             ->send();

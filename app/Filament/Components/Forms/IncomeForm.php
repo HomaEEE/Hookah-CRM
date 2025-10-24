@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Components;
+namespace App\Filament\Components\Forms;
 
 use Auth;
 use Filament\Forms\Components\Hidden;

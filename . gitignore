@@ -23,5 +23,7 @@ yarn-error.log
 /storage/clockwork
 /storage/app/*
 /storage/app/*/*
+/storage/app/*
+/public/build
 .ai
 .github

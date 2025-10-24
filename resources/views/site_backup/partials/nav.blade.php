@@ -1,10 +1,9 @@
 <header>
-    <div class="container">
-    <div class="row middle-xs">
-    <div class="col-xs-7 col-md-2">
+  <div class="min-h-60">
+        <div class="col-xs-7 col-md-2">
         <div class="logo">
             <h1>
-                <a href="/"><img src="/assets/imgs/logo.svg" alt="Noire hookah Lounge"></a>
+                <a href="/"><img class="w-48" src="/assets/imgs/logo.svg" alt="Noire hookah Lounge"></a>
             </h1>
         </div>
     </div>
@@ -26,7 +25,7 @@
                 <li><a href="/booking">{{__('Booking page')}}</a></li>
                 <li><a href="/feedbacks">{{__('Feedbacks')}}</a></li>
                 <li><a href="/rules">{{__('Rules')}}</a></li>
-                {{-- <li><a href="/vacancy">{{__('Vacancy page')}}</a></li> --}}
+                <li><a href="/vacancy">{{__('Vacancy page')}}</a></li>
             </ul>
         </div>
 

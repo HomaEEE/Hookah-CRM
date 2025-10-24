@@ -9,3 +9,29 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+
+/* @utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+} */
+
+@theme {
+	--container-2xs: 24rem; /* 320px */
+	--container-xs: 30rem; /* 480px */
+	--container-sm: 40rem; /* 640px */
+	--container-md: 48rem; /* 768px */
+	--container-lg: 64rem; /* 1024px */
+	--container-xl: 80rem; /* 1280px */
+	--container-2xl: 96rem; /* 1536px */
+}
+
+@layer components {
+	.container {
+		margin-inline: auto;
+		padding-inline: 2rem;
+		width: 100%;
+
+		/* Важно! Устанавливаем max-width вручную */
+		max-width: 1280px; /* или 80rem, если используете шкалу Tailwind */
+	}
+}

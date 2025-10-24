@@ -10,7 +10,6 @@
         <title>{{ env('SITE_NAME') }} - @yield('page') - {{$place->city}}</title>
         <link rel="preload" href="/assets/fonts/PhonkSans-Light.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="/assets/fonts/PhonkSans-LightItalic.woff2" as="font" type="font/woff2" crossorigin>
-        <link rel="stylesheet" href="https://unpkg.com/flexboxgrid2@7.2.1/flexboxgrid2.css">
         @vite('resources/css/app.css')
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
@@ -32,7 +31,7 @@
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="600"/>
         <link rel="canonical" href="{{ url()->current() }}">
-        @vite(['resources/js/app.js'])
+        @vite(['resources/js/app.js' , 'resources/css/app.css'])
 
         @stack('css')
 
@@ -48,17 +47,19 @@
 
     </head>
 <body>
-        @include('site.nav')
-             <main class="">
-                @yield('content')
-            </main>
+<div class="w-full">
+        @include('site.partials.nav')
+
+        <main>
+         @yield('content')
+         </main>
         <footer>
             <div class="dev">{{__('Created by')}}
-                <a href="https://black-design.pw" rel="noopener noreferrer"><img src="https://black-design.pw/themes/black-design/assets/images/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
+                <a href="https://black-design.pw" rel="noopener noreferrer"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
             </div>
         </footer>
-
+        </div>
         @stack('scripts')
-
+    </div>
     </body>
 </html>

@@ -157,14 +157,6 @@ $icomoon-font-path: "../fonts" !default;
   font-display: swap;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -291,26 +283,6 @@ a.btn {
 header {
   position: relative;
   .logo {
-    width: 65%;
-    margin: 10px 0;
-    padding-top: 10px;
-    @media (max-width: 1199px) {
-    }
-
-    @media (max-width: 767px) {
-    }
-
-    @media (max-width: 991px) {
-    }
-
-    @media (max-width: 575px) {
-      left: 15px;
-      width: 40%;
-      top: 5px;
-      position: relative;
-      margin-bottom: 10px;
-      padding: 0;
-    }
   }
 
   .menu-icon {
@@ -443,39 +415,12 @@ header {
 }
 
 main {
-  max-width: 100vw;
-  flex-grow: 1;
-  height: auto;
-  overflow-x: hidden;
-
-  .loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: $grey;
-    z-index: 1000;
-    #logo-loader {
-      width: 50%;
-      height: auto;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-
-  .page-container {
+  .container {
     h2.title {
       padding: 20px 0;
       @media (max-width: 575px) {
         padding: 40px 0 0 0;
       }
-    }
-
-    .container {
-      position: relative;
     }
 
     .hero {
@@ -971,72 +916,10 @@ main {
   }
 }
 
-.properties {
-  border: 1px solid $text-grey;
-  max-width: 95%;
-  text-align: left;
-  padding: 15px;
-  border-radius: 27px;
-  margin: 10px auto;
-  font-size: 1.2em;
-  line-height: 1.6;
-  position: relative;
-
-  p {
-    margin: 7px 0;
-  }
-
-  small {
-    padding-left: 40px;
-    font-size: 0.8rem;
-    display: block;
-  }
-
-  [class^="icon-"],
-  [class*="icon-"] {
-    font-size: 1em;
-    margin-right: 10px;
-  }
-  img {
-    width: 105%;
-    @media (min-width: 575px) {
-      width: auto;
-      height: 80px;
-      text-align: center;
-      margin: 0 auto;
-    }
-  }
-  .arrow {
-    background: $text;
-    display: none;
-    padding: 10px;
-    height: 40px;
-    width: 40px;
-    font-size: 2em;
-    border-radius: 100%;
-    color: $black;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 20px;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  &.comment {
-    cursor: pointer;
-    display: flex;
-
-    i {
-      display: inline;
-    }
-
-    p {
-      font-size: 0.7rem;
-    }
-  }
+.advice {
+  background: $black;
+  color: $text-grey;
+  border-radius: 37px;
 }
 
 .send {
@@ -1530,7 +1413,7 @@ footer {
     a {
       img {
         display: inline-block;
-        height: 14px;
+        height: 12px;
         margin-left: 10px;
         vertical-align: baseline;
         @media (max-width: 575px) {

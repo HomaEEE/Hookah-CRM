@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Statistic\Pages;
 
+use App\Filament\Clusters\Statistic\StatisticCluster;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
@@ -15,9 +16,11 @@ use Illuminate\Contracts\Support\Htmlable;
 class Cashflow extends Page
 {
     use HasFiltersForm;
-    // use HasPageShield;
+    use HasPageShield;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
+
+    protected static ?string $cluster = StatisticCluster::class;
 
     protected string $view = 'filament.pages.cashflow';
 

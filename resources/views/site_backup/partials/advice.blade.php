@@ -1,6 +1,7 @@
-    <div class="columns-3">
+
+<div class="advice p-6 mx-auto columns-3 gap-12">
          @if ($address == 1)
-        <div class="properties">
+        <div>
             {{-- <p> <i class="icon-map-pin"></i> <a
                     href="https://www.google.com.ua/maps/place/{{ $place->address }},{{ $place->city }}"
                     target="_blank"><span>{{ $place->address }}</span></a> </p> --}}
@@ -14,7 +15,7 @@
 
         @if ($wifi == 1)
 
-        <div class="properties">
+        <div>
             <p><i class="icon-wifi"></i> {{ $place->properties['wifi'] }}</p>
             <p><i class="icon-key"></i> {{ $place->properties['password'] }}</p>
             <p> <i class="icon-instagram"></i> <a href="https://instagram.com/{{ $place->instagram }}"
@@ -27,7 +28,7 @@
 
         @if ($feedback == 1)
 
-        <div class="properties comment" id="comment">
+        <div class="comment" id="comment">
             <h4> <i class="icon-comment"></i> {{ __('Feedback button') }}</h4>
             <h4 class="hidden"> <i class="icon-comment"></i> {{ __('Feedback send') }}</h4>
 

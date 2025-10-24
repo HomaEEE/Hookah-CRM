@@ -2,31 +2,26 @@
 
 namespace App\Filament\Resources\Withdrawals;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Withdrawals\Pages\ManageWithdrawals;
-use App\Filament\Resources\WithdrawalResource\Pages;
 use App\Models\Bill;
-use App\Models\Place;
 use App\Models\Withdrawal;
 use Auth;
 use Carbon\Carbon;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Table;
-
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class WithdrawalResource extends Resource
@@ -60,12 +55,13 @@ class WithdrawalResource extends Resource
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 TextInput::make('sum')->label(__('Sum'))->numeric()->prefix('₴')->default(3000),
                 ToggleButtons::make('bill_id')->label(__('Type pay'))
-                ->options(Bill::get()->pluck('name', 'id'))
-                ->default(0)
-                ->required()
-                ->inline()
-                ->grouped()
-                ->live()
+                    ->options(Bill::get()->pluck('name', 'id'))
+
+                    ->default(0)
+                    ->required()
+                    ->inline()
+                    ->grouped()
+                    ->live(),
             ])->columns(1);
     }
 
@@ -75,8 +71,8 @@ class WithdrawalResource extends Resource
             ->columns([
                 TextColumn::make('created_at')->dateTime('d/m/Y')->translateLabel()->badge(),
                 TextColumn::make('sum')->translateLabel()
-                ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
-                TextColumn::make('bill.name')->badge()
+                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
+                TextColumn::make('bill.name')->badge(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
@@ -102,16 +98,16 @@ class WithdrawalResource extends Resource
                         $indicators = [];
 
                         if ($data['created_from'] ?? null) {
-                            $indicators['created_from'] = 'Расходы с ' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                            $indicators['created_from'] = 'Расходы с '.Carbon::parse($data['created_from'])->format('d/m/Y');
                         }
                         if ($data['created_until'] ?? null) {
-                            $indicators['created_until'] = 'Расходы до ' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                            $indicators['created_until'] = 'Расходы до '.Carbon::parse($data['created_until'])->format('d/m/Y');
                         }
 
                         return $indicators;
                     }),
                 SelectFilter::make('bill_id')
-                ->options(Bill::get()->pluck('name', 'id'))
+                    ->options(Bill::get()->pluck('name', 'id')),
             ])
             ->recordActions([
                 EditAction::make(),

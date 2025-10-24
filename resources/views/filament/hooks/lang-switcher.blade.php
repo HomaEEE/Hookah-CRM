@@ -6,13 +6,14 @@
     class="fi-theme-switcher flex items-center gap-1 me-2"
 >
     <template x-for="(lang, code) in {
-        ru: { label: 'RU', flag: '' },
         en: { label: ' EN', flag: '🇺🇸 ' },
         uk: { label: ' UA', flag: '🇺🇦 ' },
+        ru: { label: ' RU', flag: '' },
+
     }" :key="code">
         <button
             type="button"
-            class="fi-theme-switcher-btn text-sm flex items-center justify-center gap-1 px-2 py-1 rounded-lg border border-transparent transition"
+            class="fi-theme-switcher-btn text-sm flex items-center justify-center gap-1 px-1 py-1 rounded-lg border border-transparent transition"
             :class="{
                 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30': locale === code,
                 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800': locale !== code

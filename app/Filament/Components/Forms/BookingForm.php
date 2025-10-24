@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Filament\Components;
+namespace App\Filament\Components\Forms;
 
-use Filament\Actions\Action;
-use Filament\Support\Enums\Size;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use App\Models\Guest;
 use App\Models\Seet;
 use Auth;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Support\Enums\Size;
 use Filament\Support\RawJs;
 
 class BookingForm

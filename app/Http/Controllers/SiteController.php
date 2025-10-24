@@ -108,13 +108,6 @@ class SiteController extends Controller
         return view('site.booking', compact('place'));
     }
 
-    public function pays($slug = 'od')
-    {
-        $place = Place::where('slug', $slug)->first();
-
-        return view('site.pays', compact('place'));
-    }
-
     public function feedbacks($slug = 'od')
     {
 

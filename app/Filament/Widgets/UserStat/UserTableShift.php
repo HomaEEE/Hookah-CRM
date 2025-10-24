@@ -55,6 +55,7 @@ class UserTableShift extends BaseWidget
                 ),
                 DateRangeFilter::make('created_at')->translateLabel()
                     ->defaultLast30Days(),
-            ]);
+            ])->deferFilters(false);
+
     }
 }

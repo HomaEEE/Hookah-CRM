@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\Products\Pages;
 
-use Filament\Actions\Action;
-use Filament\Actions\ExportAction;
-use Filament\Actions\CreateAction;
 use App\Filament\Exports\ProductExporter;
 use App\Filament\Resources\Products\ProductResource;
+use App\Filament\Resources\Products\Widgets\ProductWidget;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Category;
 use App\Models\Product;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ExportAction;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Resources\Components\Tab;
@@ -38,6 +38,13 @@ class ManageProducts extends ManageRecords
             ExportAction::make()
                 ->exporter(ProductExporter::class),
             CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ProductWidget::class,
         ];
     }
 

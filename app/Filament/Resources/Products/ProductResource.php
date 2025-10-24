@@ -25,6 +25,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -176,6 +177,18 @@ class ProductResource extends Resource
                     ->native(false)
                     ->options(
                         Category::where('place_id', Filament::getTenant()->id)->pluck('category_name', 'category_id')
+                    ),
+                TernaryFilter::make('visible_menu')
+                    ->label(__('Visible'))
+                    ->nullable()
+                    ->native(false)
+                    ->placeholder(__('All'))
+                    ->trueLabel(__('Visible'))
+                    ->falseLabel(__('Not'))
+                    ->queries(
+                        true: fn (Builder $query) => $query->where('visible_menu', 1),
+                        false: fn (Builder $query) => $query->where('visible_menu', 0),
+                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
             ])
             ->recordActions([

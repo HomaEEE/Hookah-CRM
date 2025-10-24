@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Statistic\Pages;
 
+use App\Filament\Clusters\Statistic\StatisticCluster;
 use App\Filament\Widgets\UserStat\UserStatShift;
 use App\Filament\Widgets\UserStat\UserTableShift;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -10,9 +11,11 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class UserStatistic extends Page
 {
-    // use HasPageShield;
+    use HasPageShield;
 
     protected static string|\BackedEnum|null $navigationIcon = 'phosphor-user';
+
+    protected static ?string $cluster = StatisticCluster::class;
 
     protected string $view = 'filament.pages.user-statistic';
 

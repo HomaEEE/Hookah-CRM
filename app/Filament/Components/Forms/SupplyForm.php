@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Components;
+namespace App\Filament\Components\Forms;
 
 use App\Models\Bill;
 use App\Models\Ingredient;

@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Withdrawals\Pages;
 
-use Filament\Schemas\Components\Tabs\Tab;
+use App\Filament\Resources\Withdrawals\Widgets\WithrawWidget;
 use App\Filament\Resources\Withdrawals\WithdrawalResource;
 use App\Models\Bill;
-use Auth;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 
 class ManageWithdrawals extends ManageRecords
 {
@@ -21,6 +21,12 @@ class ManageWithdrawals extends ManageRecords
         ];
     }
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            WithrawWidget::class,
+        ];
+    }
 
     public function getTabs(): array
     {
@@ -36,5 +42,4 @@ class ManageWithdrawals extends ManageRecords
 
         return $tabs;
     }
-
 }

@@ -7,8 +7,8 @@
 
 @section('content')
 
-<div class="">
-    @include('site.properties', ['address' => 1, 'wifi' => 1, 'feedback'=> 1])
+<div class="container">
+        @include('site.partials.advice', ['address' => 1, 'wifi' => 1, 'feedback'=> 1])
 
     <div class="flex-wrap">
         <div class="col-xs-12">
@@ -49,6 +49,7 @@
                     </div>
             @endforeach
 
+    </div>
     </div>
 </div>
 </div>
