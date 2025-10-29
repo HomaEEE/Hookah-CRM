@@ -65,4 +65,5 @@ coverage/
 /app/Policies
 
 composer.lock
+package-lock.json
 config/insights.php

@@ -115,10 +115,10 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                             ->title(__('Income added'))
                     ),
 
-                CreateAction::make('addWithdraval')->label(__('Withdraval'))
+                CreateAction::make('addWithdrawal')->label(__('Withdrawal'))
                     ->model(Income::class)
                     ->icon('heroicon-o-minus')
-                    ->modalHeading(__('Add Withdraval'))
+                    ->modalHeading(__('Add Withdrawal'))
                     ->createAnother(false)
                     ->modalWidth('sm')
                     ->keyBindings(['command+s', 'ctrl+s'])
@@ -130,7 +130,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                         Notification::make()
                             ->success()
                             ->icon('heroicon-o-minus')
-                            ->title(__('Withdraval added'))
+                            ->title(__('Withdrawal added'))
                     ),
 
             ])->button()->label(__('Add'))->color('success')->icon('heroicon-o-squares-plus'),

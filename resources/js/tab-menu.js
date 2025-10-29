@@ -29,6 +29,12 @@ $(document).ready(function () {
         const $targetSection = $("#" + target);
         showCategory($targetSection);
 
+        	var containerWidth = $('.tabs').width();
+    var activeItemPosition = $(this).position().left;
+    var activeItemWidth = $(this).outerWidth();
+    var scrollOffset = activeItemPosition - containerWidth / 2 + activeItemWidth / 2;
+	$('.tabs').animate({ scrollLeft: "+=" + scrollOffset }, 1000);
+
         // Плавный скролл к секции
         $("html, body").animate({
             scrollTop: $(".list").offset().top - $(".tabs").outerHeight() - 10

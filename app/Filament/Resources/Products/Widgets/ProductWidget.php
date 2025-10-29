@@ -16,8 +16,8 @@ class ProductWidget extends StatsOverviewWidget
 
         return [
             Stat::make(__('All'), $all),
-            Stat::make(__('Visible'), $visible),
-            Stat::make(__('Hide'), $hide),
+            Stat::make(__('Visibles'), $visible),
+            Stat::make(__('Hidden'), $hide),
 
         ];
     }

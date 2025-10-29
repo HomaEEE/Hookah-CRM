@@ -23,6 +23,31 @@
 	--container-lg: 64rem; /* 1024px */
 	--container-xl: 80rem; /* 1280px */
 	--container-2xl: 96rem; /* 1536px */
+
+	--text-tiny: 0.5rem;
+	--text-tiny--line-height: 1rem;
+	--text-tiny--font-weight: 500;
+
+	--animate-marquee: marquee 25s linear infinite;
+	--animate-marquee2: marquee2 25s linear infinite;
+
+	@keyframes marquee {
+		0% {
+			transform: translateX(0%);
+		}
+		100% {
+			transform: translateX(-100%);
+		}
+	}
+
+	@keyframes marquee2 {
+		0% {
+			transform: translateX(100%);
+		}
+		100% {
+			transform: translateX(0%);
+		}
+	}
 }
 
 @layer components {

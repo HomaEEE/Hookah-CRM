@@ -6,13 +6,13 @@
 @section('page', __('Feedbacks'))
 
 @section('content')
-    <div class="container feedbacks">
+    <div class="container">
         <h2>{{__('Feedbacks')}}</h2>
-        @include('site.partilas.advice', ['address' => 0, 'wifi' => 0, 'feedback'=> 1])
+        @include('site.partials.advice', ['address' => 1, 'wifi' => 0, 'feedback'=> 1])
 
-        <div class="row">
+        <div class="flex flex-row">
         @foreach ($feedbacks as $f)
-            <div class="col-xs-12 col-md-4">
+            <div class="">
             <div class="feedback">
                 <h4>{{ $f->name}} </h4>
                 <p>{{ $f->text}} </p>

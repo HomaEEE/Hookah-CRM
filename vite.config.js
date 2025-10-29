@@ -19,7 +19,8 @@ export default defineConfig({
                 'app/Providers/Filament/**',
                 'app/Tables/Columns/**',
             ],
-                        detectTls: 'hookah4.test',
+
+            detectTls: 'hookah4.test',
 
         }),
        tailwindcss({
