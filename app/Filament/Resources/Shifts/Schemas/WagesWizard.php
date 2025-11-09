@@ -77,6 +77,7 @@ class WagesWizard
                         ->hidden(fn (Get $get) => $get('user_id') == null)
                         ->required()
                         ->reactive()
+                        ->live(onBlur: true)
 
                         ->afterStateUpdated(
                             function (callable $set, callable $get) {
@@ -85,13 +86,15 @@ class WagesWizard
                         )
                         ->reactive(),
                     TextInput::make('wage')->translateLabel()->numeric()
+                        ->live(onBlur: true)
+                        ->reactive()
+
                         ->hidden(fn (Get $get) => $get('wage_id') == null)
                         ->columns(2),
 
                     TextInput::make('procent_day')->translateLabel()->numeric()
                         ->prefix('%')
                         ->default(0)
-                        ->reactive()
                         ->live(onBlur: true)
                         ->suffixAction(
                             Action::make('Reset')
@@ -115,7 +118,6 @@ class WagesWizard
                     TextInput::make('cashout')->translateLabel()
                         ->readOnly()
                         ->reactive()
-                        ->live(onBlur: true)
 
                         ->afterStateUpdated(function (Get $get, Set $set) {
                             self::updateTotals($get, $set);
