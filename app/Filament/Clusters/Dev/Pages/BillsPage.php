@@ -53,12 +53,15 @@ class BillsPage extends Page implements HasTable
                         '1' => Phosphor::CaretDoubleRight,
                         '2' => Phosphor::CaretLineRight,
                         '3' => Phosphor::LineVertical,
+                        '4' => Phosphor::Truck,
 
                     })
                     ->color(fn (string $state): string => match ($state) {
                         '1' => 'info',
                         '2' => 'success',
                         '3' => 'danger',
+                        '4' => 'success',
+
                     }),
 
                 TextColumn::make('date_start')->label(__('Created at'))

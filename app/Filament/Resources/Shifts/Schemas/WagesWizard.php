@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Components\Shift;
+namespace App\Filament\Resources\Shifts\Schemas;
 
 use App\Models\User;
 use App\Models\Wage;
@@ -50,6 +50,7 @@ class WagesWizard
                         )
                         ->preload()
                         ->required()
+                        ->reactive()
                         ->live(onBlur: true)
                         ->searchable()
                         ->hidden(fn (Get $get) => $get('user_id') == null)
@@ -75,6 +76,8 @@ class WagesWizard
                         )->default(0)
                         ->hidden(fn (Get $get) => $get('user_id') == null)
                         ->required()
+                        ->reactive()
+
                         ->afterStateUpdated(
                             function (callable $set, callable $get) {
                                 self::WageCalc($set, $get);
@@ -88,6 +91,7 @@ class WagesWizard
                     TextInput::make('procent_day')->translateLabel()->numeric()
                         ->prefix('%')
                         ->default(0)
+                        ->reactive()
                         ->live(onBlur: true)
                         ->suffixAction(
                             Action::make('Reset')
@@ -111,6 +115,8 @@ class WagesWizard
                     TextInput::make('cashout')->translateLabel()
                         ->readOnly()
                         ->reactive()
+                        ->live(onBlur: true)
+
                         ->afterStateUpdated(function (Get $get, Set $set) {
                             self::updateTotals($get, $set);
                         })
@@ -120,18 +126,21 @@ class WagesWizard
                 // ->deleteAction(
                 //     fn (Action $action) => $action->after(fn (Get $get, Set $set) => self::updateTotals($get, $set)),
                 // )
-
-                ->itemLabel(fn (array $state): ?string => User::find($state['user_id'])?->name.' '.$state['cashout'] ?? null),
-
-            TextEntry::make('wages')->translateLabel()
-                ->content(function (Set $set, $get) {
+                ->itemLabel(fn (array $state, callable $get): ?string => User::find($state['user_id'])?->name.' '.$get('cashout') ?? null),
+            TextEntry::make('wages')
+                ->translateLabel()
+                ->state(function (Set $set, Get $get) { // Changed content() to state()
                     $totalWage = collect($get('users'))
                         ->pluck('cashout')
                         ->sum();
+
+                    // This line is often redundant in TextEntry, as the return value sets the state.
+                    // However, if 'wages' is a field you need to explicitly set for submission/caching, keep it.
                     $set('wages', $totalWage);
 
-                    return $totalWage;
+                    return $totalWage; // The return value is the text displayed by TextEntry.
                 })
+
                 ->reactive(),
 
             Hidden::make('wages')

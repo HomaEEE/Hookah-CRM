@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Supplies;
 
 use App\Filament\Components\Bulks\CheckAsPaidAction;
 use App\Filament\Components\Bulks\CheckPosterAction;
-use App\Filament\Components\SupplyForm;
+use App\Filament\Components\Forms\SupplyForm;
 use App\Filament\Resources\Supplies\Pages\ManageSupplies;
 use App\Filament\Resources\SupplyResource\Pages;
 use App\Models\Bill;
@@ -72,7 +72,7 @@ class SupplyResource extends Resource
     {
         return $schema
             ->components(
-                SupplyForm::schema(),
+                SupplyForm::schema()
             );
     }
 

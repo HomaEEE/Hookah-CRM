@@ -30,6 +30,8 @@ class ExpensesDay extends BaseWidget implements HasTable
 
     // protected $listeners = ['refreshExpensesList' => 'loadExpenses'];
 
+    protected $listeners = ['refreshExpensesDay' => '$refresh'];
+
     use InteractsWithTable;
 
     public static function badge(): ?string

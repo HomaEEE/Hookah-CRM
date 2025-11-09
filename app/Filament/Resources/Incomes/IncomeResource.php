@@ -2,16 +2,14 @@
 
 namespace App\Filament\Resources\Incomes;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
+use App\Filament\Components\Forms\IncomeForm;
+use App\Filament\Resources\Incomes\Pages\ManageIncomes;
+use App\Models\Income;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Incomes\Pages\ManageIncomes;
-use App\Filament\Components\IncomeForm;
-use App\Filament\Resources\IncomeResource\Pages;
-use App\Models\Income;
+use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -40,7 +38,7 @@ class IncomeResource extends Resource
     {
         return $schema
             ->components(
-                IncomeForm::schema()
+                IncomeForm::configure($schema)
             );
     }
 

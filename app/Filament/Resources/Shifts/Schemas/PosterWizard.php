@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Filament\Components\Shift;
+namespace App\Filament\Resources\Shifts\Schemas;
 
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Actions;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Fieldset;
 use App\Http\Controllers\LocalApiController;
 use App\Http\Controllers\PosterApiController;
 use App\Models\Place;
 use App\Models\Shift;
 use App\Models\Workshop;
 use Auth;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 
 class PosterWizard
 {

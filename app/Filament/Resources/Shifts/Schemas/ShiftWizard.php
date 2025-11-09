@@ -1,26 +1,29 @@
 <?php
 
-namespace App\Filament\Components\Shift;
+namespace App\Filament\Resources\Shifts\Schemas;
 
-use App\Filament\Components\ExpenseForm;
-use App\Filament\Components\IncomeForm;
-use App\Filament\Components\WithdrawalForm;
+use App\Filament\Components\Forms\ExpenseForm;
+use App\Filament\Components\Forms\IncomeForm;
+use App\Filament\Components\Forms\SupplyForm;
+use App\Filament\Components\Forms\WithdrawalForm;
 use App\Http\Controllers\LocalApiController;
 use App\Models\Expense;
 use App\Models\Income;
+use App\Models\Supply;
 use App\Models\Withdrawal;
-use Auth;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 
 class ShiftWizard
 {
@@ -28,85 +31,106 @@ class ShiftWizard
     {
         return [
 
-            // Actions::make([
-            //     Action::make('Add Withdrawal')->label(__('Add Withdrawal'))
-            //         ->icon('heroicon-s-banknotes')
-            //         ->color('success')
-            //         ->modalHeading(__('Add Withdrawal'))
-            //         ->requiresConfirmation()
-            //         ->form(
-            //             WithdrawalForm::schema()
-            //         )
-            //         ->action(function (Set $set, array $data): void {
-            //             // Withdrawal::create(
-            //             //     [
-            //             //         'place_id' => Filament::getTenant()->id,
-            //             //         'user_id' => Auth::user()->id,
-            //             //         'bill_id' => $data['bill_id'],
-            //             //         'sum' => $data['sum']
-            //             //     ]
-            //             // );
+            Section::make()
+                ->columns(5)
+                ->schema([
 
-            //             $LocalWithdrawal = (new LocalApiController())->getLocalWithdrawal(Filament::getTenant()->id);
-            //             $set('withdrawal', $LocalWithdrawal / 100);
-            //         }),
+                    Action::make('test')->label('TEST')
+                        ->label(__('Expenses list'))
+                        ->icon('heroicon-o-queue-list')
+                        ->extraAttributes(['style' => 'width: 100%'])
+                        ->modalHeading(__('Expenses'))
+                        ->modalWidth('3xl')
+                        ->modalContent(function () {
+                            return view('filament.tables.expenses-day');
+                        }),
 
-            //         Action::make('add_income')->label(__('Add Income'))
-            //         ->icon('heroicon-o-document-plus')
-            //         ->color('info')
-            //         ->modalHeading(__('Add Income'))
-            //         ->requiresConfirmation()
-            //         ->form(
-            //             IncomeForm::schema()
-            //         )
-            //         ->action(function (Set $set, array $data): void {
-            //             // Income::create(
-            //             //     [
-            //             //         'place_id' => Filament::getTenant()->id,
-            //             //         'user_id' => Auth::user()->id,
-            //             //         'sum' => $data['sum'],
-            //             //         'comment' => $data['comment'],
-            //             //     ],
-            //             // );
+                    Action::make('add_supply')->label(__('Supply'))
+                        ->model(Supply::class)
+                        ->icon('heroicon-o-inbox-arrow-down')
+                        ->extraAttributes(['style' => 'width: 100%'])
+                        ->modalHeading(__('Add Supply'))
+                        ->modalWidth('md')
+                        ->color('success')
+                        ->keyBindings(['command+s', 'ctrl+s'])
+                        ->modalIcon('heroicon-o-inbox-arrow-down')
+                        ->slideOver()
+                        ->form(
+                            SupplyForm::schema(),
+                        )
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->icon('heroicon-o-inbox-arrow-down')
+                                ->title(__('Supply added'))
+                        ),
 
-            //             Notification::make()
-            //                 ->title(__('Income added'))
-            //                 ->send();
+                    Action::make('add_expense')->label(__('Expense'))
+                        ->model(Expense::class)
+                        ->color('danger')
+                        ->icon('heroicon-o-document-minus')
+                        ->extraAttributes(['style' => 'width: 100%'])
 
-            //             $posterLocalIncomes = (new LocalApiController())->getLocalIncomes(Filament::getTenant()->id);
-            //             $set('income', (int) $posterLocalIncomes / 100);
-            //         }),
+                        ->modalHeading(__('Add Expense'))
+                        ->modalWidth('md')
+                        ->slideOver()
+                        ->modalIcon('heroicon-o-document-minus')
+                        ->keyBindings(['command+s', 'ctrl+s'])
+                        ->schema(
+                            ExpenseForm::schema(),
+                        )
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->title(__('Expense added'))
+                                ->icon('heroicon-o-document-minus')
+                        ),
 
-            //         Action::make('add_expense')->label(__('Add Expense'))
-            //         ->icon('heroicon-o-document-minus')
-            //         ->color('danger')
-            //         ->modalHeading(__('Add Expense'))
-            //         ->requiresConfirmation()
-            //         ->form(
-            //             ExpenseForm::schema()
-            //         )
-            //         ->action(function (Set $set, array $data): void {
-            //             // Expense::create(
-            //             //     [
-            //             //         'place_id' => Filament::getTenant()->id,
-            //             //         'user_id' => Auth::user()->id,
-            //             //         'category_id' => $data['category_id'],
-            //             //         'sum' => $data['sum'],
-            //             //         'added_at' => $data['added_at'],
-            //             //         'comment' => $data['comment'],
-            //             //         'bill_id' => $data['bill_id'],
-            //             //         'pay' => 1
-            //             //     ],
-            //             // );
+                    Action::make('addIncome')->label(__('Income'))
+                        ->model(Income::class)
+                        ->color('info')
+                        ->icon('heroicon-o-plus')
+                        ->extraAttributes(['style' => 'width: 100%'])
 
-            //             Notification::make()
-            //                 ->title(__('Expense added'))
-            //                 ->send();
+                        ->modalHeading(__('Add Income'))
+                        ->modalWidth('xs')
+                        ->keyBindings(['command+s', 'ctrl+s'])
+                        ->modalIcon('heroicon-o-inbox-arrow-down')
+                        ->schema([
+                            Group::make(function (Schema $schema) {
+                                return IncomeForm::configure($schema)->getComponents();
+                            }),
+                        ])
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->icon('heroicon-o-plus-circle')
+                                ->title(__('Income added'))
+                        ),
 
-            //             $posterLocalExpense = (new LocalApiController())->getLocalExpenses(Filament::getTenant()->id);
-            //             $set('expense', (int) $posterLocalExpense / 100);
-            //         }),
-            //     ])->fullWidth(),
+                    Action::make('addWithdrawal')->label(__('Withdrawal'))
+                        ->model(Withdrawal::class)
+                        ->color('warning')
+                        ->extraAttributes(['style' => 'width: 100%'])
+
+                        ->icon('heroicon-o-minus')
+                        ->modalHeading(__('Add Withdrawal'))
+                        ->modalWidth('sm')
+                        ->keyBindings(['command+s', 'ctrl+s'])
+                        ->modalIcon('heroicon-o-inbox-arrow-down')
+                        ->schema([
+                            Group::make(function (Schema $schema) {
+                                return WithdrawalForm::configure($schema)->getComponents();
+                            }),
+                        ])
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->icon('heroicon-o-minus')
+                                ->title(__('Withdrawal added'))
+                        ),
+
+                ]),
 
             Fieldset::make(__('Expenses & Income'))->schema([
                 TextInput::make('income')->translateLabel()
@@ -171,19 +195,23 @@ class ShiftWizard
             Fieldset::make('Shift')->translateLabel()->schema([
 
                 TextEntry::make('total_shift')->translateLabel()
-                    ->content(function (Get $get, Set $set): string {
+                    ->state(function (Get $get, Set $set): string { // Changed content() to state()
+                        // Assuming self::CalcShift() calculates a value and returns a string
                         return self::CalcShift($get, $set);
                     }),
 
                 TextEntry::make('different')->translateLabel()
-                    ->content(function (Get $get, Set $set) {
+                    ->state(function (Get $get, Set $set) { // Changed content() to state()
                         if ($get('shift') != null) {
                             $different = (float) $get('shift') - (float) $get('calc_shift');
+
+                            // This line is fine if 'different' needs to be stored in the form data
                             $set('different', $different);
 
                             return number_format($different, 2);
 
                         } else {
+                            // Display 'calc_shift' value if 'shift' is null
                             return $get('calc_shift');
                         }
                     }),

@@ -19,6 +19,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -42,15 +43,17 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Slate,
             ])
+            ->spa()
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterPlace::class)
             ->tenantProfile(EditPlaceProfile::class)
             ->login()
+            ->maxContentWidth(Width::Full)
             // ->registration()
             ->passwordReset()
             ->profile(EditUserProfile::class)
-            ->topbar(false)
+            // ->topbar(false)
             ->globalSearch(false)
             ->databaseNotifications()
             ->databaseNotificationsPolling('120s')

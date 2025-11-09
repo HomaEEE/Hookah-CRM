@@ -22,6 +22,7 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\Size;
 
 class SupplyForm
@@ -179,7 +180,11 @@ class SupplyForm
                                 ->imageResizeMode('cover')
                                 ->imagePreviewHeight(350)
                                 ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
-                                ->openable(),
+                                ->openable()
+                                ->preserveFilenames()
+                                ->reactive(),
+                            //   ->afterStateUpdated(fn ($state, callable $set) => app(\App\Services\MistralOCRService::class)->parseInvoice($state)),
+
                             Textarea::make('comment')->label(__('Comment'))
                                 ->rows(3),
                         ]),

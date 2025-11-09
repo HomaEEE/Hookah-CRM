@@ -857,10 +857,11 @@ main {
       .modal-img {
         width: 100%;
         position: relative;
-        aspect-ratio: 16/9;
+        aspect-ratio: 1/1;
         position: relative;
         overflow: hidden;
         border-radius: 1rem;
+        margin-bottom: 5px;
         .sup {
           background: $red;
           color: $text;
@@ -886,6 +887,10 @@ main {
           z-index: -1;
         }
       }
+
+      .modal-menu-description {
+        margin: 10px auto;
+      }
     }
   }
   .bottom-sheet-handle {
@@ -901,6 +906,15 @@ main {
   .bottom-sheet-handle:hover {
     background-color: $text-grey;
     transform: scale(1.05);
+  }
+
+  #close-modal {
+    margin: 10px auto;
+    text-align: center;
+    padding: 7px 10px;
+    border-radius: 12px;
+    background: $red;
+    color: $text;
   }
 
   .modal-feedback {
@@ -1144,10 +1158,6 @@ main {
       }
       p {
         color: $text-dark-grey;
-        margin: 10px 0;
-        width: 60%;
-        font-size: 1.2em;
-        line-height: 1.4;
         @media (max-width: 575px) {
           font-size: 1em;
           width: 100%;
@@ -1295,16 +1305,13 @@ main {
 }
 
 footer {
-  margin: 0;
-  padding: 0;
-  height: 50px;
+  width: 100%;
   font-size: 0.8rem;
   .dev {
-    width: 100vw;
     background: #090909;
     color: #a3a3a3;
     text-align: center;
-    padding: 15px 0;
+    padding: 10px 0;
     @media (max-width: 575px) {
       padding: 10px 0;
     }

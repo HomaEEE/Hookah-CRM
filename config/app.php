@@ -115,7 +115,6 @@ return [
     'languages' => [
         'uk' => 'UA',
         'ru' => 'RU',
-        'en' => 'EN',
     ],
 
     'languages_frontend' => [

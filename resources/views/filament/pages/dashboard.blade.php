@@ -1,7 +1,7 @@
-<x-filament-panels::page>
+<x-filament-panels::page >
 
 <div x-data="{ tab: 'expenses' }">
-        <x-filament::tabs>
+        <x-filament::tabs >
             <x-filament::tabs.item @click="tab = 'expenses'" :alpine-active="'tab === \'expenses\''"
                     icon="heroicon-o-queue-list">
                 {{ __('Expenses')}}
@@ -37,7 +37,7 @@
 
         </x-filament::tabs>
 
-        <div class="mt-2">
+        <div class="m-2">
             <div x-show="tab === 'expenses'">
                 @livewire(\App\Livewire\Dashboard\ExpensesDay::class)
             </div>

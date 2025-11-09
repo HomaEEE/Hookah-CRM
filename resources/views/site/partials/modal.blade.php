@@ -13,6 +13,7 @@
                 <p class="modal-menu-description" id="modal-description"></p>
                 <p class="modal-menu-price" id="modal-price"></p>
                 <p class="modal-menu-out" id="modal-out"></p>
+                <div class="modal-buttom-close" id="close-modal" title="Close">{{__('Close')}}</div>
 
             @endif
             @if ($modal == 'feedback')

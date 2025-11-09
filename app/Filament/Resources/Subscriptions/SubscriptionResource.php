@@ -2,32 +2,12 @@
 
 namespace App\Filament\Resources\Subscriptions;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\Action;
-use Filament\Support\Enums\Width;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Subscriptions\Pages\ManageSubscriptions;
-use App\Enums\Subscription as SubscriptionEnum;
-use App\Filament\Resources\SubscriptionResource\Pages;
-use App\Models\Bill;
-use App\Models\Expense;
-use App\Models\ExpenseCategory;
+use App\Filament\Resources\Subscriptions\Schemas\SubscriptionForm;
+use App\Filament\Resources\Subscriptions\Tables\SubscriptionTable;
 use App\Models\Subscription;
-use Auth;
-use Carbon\Carbon;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 class SubscriptionResource extends Resource
@@ -56,125 +36,14 @@ class SubscriptionResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->components([
-                Select::make('category_id')->label(__('Category'))
-                    ->searchable()
-                    ->preload()
-                    ->options(function (callable $get) {
-                        if (null == ($get('place_id'))) {
-                            return null;
-                        } else {
-                            return ExpenseCategory::where('place_id', $get('place_id'))->pluck('name', 'id');
-                        }
-                    })
-                    ->createOptionForm([
-                        Select::make('place_id')->translateLabel()
-                            ->options(
-                                Auth::user()->place->pluck('nameCity', 'id')
-                            ),
-                        TextInput::make('name')->translateLabel(),
-                        TextInput::make('category_id')->translateLabel()->default(0),
-                    ]),
-
-                TextInput::make('name')->label('Услуга'),
-                TextInput::make('price')->label(__('price')),
-                Select::make('period')
-                    ->label(__('Payment period'))
-                    ->native(false)
-                    ->options(SubscriptionEnum::class),
-                DatePicker::make('next_date')->label(__('next date'))->default(now())->native(false),
-                TextInput::make('notes')->label(__('Notes')),
-            ]);
+            ->components(
+                SubscriptionForm::schema()
+            );
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('name')
-                    ->label(__('Destination'))
-                    ->searchable()
-                    ->sortable()
-                    ->visibleFrom('xl')
-                    ->description(fn (Subscription $record): string => $record->category->name ?? '', position: 'above')
-                    ->toggleable(),
-
-                TextColumn::make('next_date')
-                    ->label(__('next date'))
-                    ->date('d M Y')
-                    ->sortable()
-                    ->toggleable(),
-
-                TextColumn::make('price')
-                    ->translateLabel()
-                    ->money('uah')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->badge()
-                    ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
-
-            ])
-            ->defaultSort('next_date', 'asc')
-            ->filters([
-                //
-            ])
-
-            ->recordActions([
-                Action::make('paid')->button()->translateLabel()
-                    ->icon('heroicon-s-banknotes')
-                    ->color('success')
-                    ->modalIcon('heroicon-o-banknotes')
-                    ->modalIconColor('success')
-                    ->modalHeading('Оплата платежа')
-                    ->requiresConfirmation()
-                    ->modalWidth(Width::Small)
-                    ->schema([
-                        Hidden::make('user_id')->default(Auth::user()->id),
-                        TextInput::make('sum')->translateLabel()
-                            ->numeric()
-                            ->required()
-                            ->prefix('₴')
-                            ->columnSpan(6)
-                            ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
-                            ->default(fn (Subscription $record): int => $record->price),
-                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(Bill::get()->pluck('name', 'id'))
-                            ->default(0)
-                            ->required()
-                            ->inline()
-                            ->grouped()
-                            ->live(),
-                    ])
-                    ->action(function (Subscription $record, array $data): void {
-
-                        $record->update(
-                            [
-                                'next_date' => Carbon::today()->addMonth(),
-                                'price' => $data['sum'],
-                            ]
-                        );
-                        $record->save();
-                        Expense::create(
-                            [
-                                'place_id' => $record->place_id,
-                                'user_id' => Auth::user()->id,
-                                'category_id' => $record->category_id,
-                                'sum' => $data['sum'],
-                                'bill_id' => $data['bill_id'],
-                                'comment' => $record->name,
-                            ]
-                        );
-                    }),
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ]),
-            ])
-            ->toolbarActions([
-                DeleteBulkAction::make(),
-            ]);
+        return SubscriptionTable::configure($table);
     }
 
     public static function getPages(): array

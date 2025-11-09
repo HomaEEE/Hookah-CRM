@@ -29,7 +29,7 @@
                     @endforeach
                     @if(isset($category->childs))
                     @foreach($category->childs as $subcategory)
-                    <h3 class="pt-8 pb-2 text-xl" id="{{ $subcategory['id'] }}">
+                    <h3 class="pt-8 pb-0 text-left" id="{{ $subcategory['id'] }}">
                         {{
                             $subcategory["frontend_name"]
                                 ? $subcategory["frontend_name"]

@@ -806,10 +806,11 @@ main .feedbacks .feedback {
   .modal-container .content .modal-img {
     width: 100%;
     position: relative;
-    aspect-ratio: 16/9;
+    aspect-ratio: 1/1;
     position: relative;
     overflow: hidden;
     border-radius: 1rem;
+    margin-bottom: 5px;
   }
   .modal-container .content .modal-img .sup {
     background: #760000;
@@ -836,6 +837,9 @@ main .feedbacks .feedback {
        object-fit: cover;
     z-index: -1;
   }
+  .modal-container .content .modal-menu-description {
+    margin: 10px auto;
+  }
 }
 .modal-container .bottom-sheet-handle {
   width: 80px;
@@ -849,6 +853,14 @@ main .feedbacks .feedback {
 .modal-container .bottom-sheet-handle:hover {
   background-color: #a3a3a3;
   transform: scale(1.05);
+}
+.modal-container #close-modal {
+  margin: 10px auto;
+  text-align: center;
+  padding: 7px 10px;
+  border-radius: 12px;
+  background: #760000;
+  color: #e1e1e1;
 }
 .modal-container .modal-feedback form {
   margin: auto;
@@ -1115,10 +1127,6 @@ main .feedbacks .feedback {
 }
 .menu_category .menu_item .item-title p {
   color: #535353;
-  margin: 10px 0;
-  width: 60%;
-  font-size: 1.2em;
-  line-height: 1.4;
 }
 @media (max-width: 575px) {
   .menu_category .menu_item .item-title p {
@@ -1275,17 +1283,14 @@ main .feedbacks .feedback {
 }
 
 footer {
-  margin: 0;
-  padding: 0;
-  height: 50px;
+  width: 100%;
   font-size: 0.8rem;
 }
 footer .dev {
-  width: 100vw;
   background: #090909;
   color: #a3a3a3;
   text-align: center;
-  padding: 15px 0;
+  padding: 10px 0;
 }
 @media (max-width: 575px) {
   footer .dev {

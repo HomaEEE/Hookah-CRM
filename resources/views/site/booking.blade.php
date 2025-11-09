@@ -6,12 +6,11 @@
 @section('page', __('Booking page'))
 
 @section('content')
-<div class="container page">
     <div class="container">
 
         <h2 class="divider line razor title">{{__('Booking')}}</h2>
-        <div class="row middle-xs beetwen-xs">
-        <div class="col-xs-12 col-md-5">
+        <div class="grid grid-cols-2">
+        <div>
         <div class="reserve-message hidden">
             <h3>{{__('reserve-message')}}</h3>
             <h4>{{__('reserve-message-content')}}</h4>
@@ -49,7 +48,7 @@
 
         </form>
         </div>
-        <div class="col-xs-12 col-md-2">
+        <div>
             <h3 class="divider line razor rotate">{{__('OR')}}</h3>
         </div>
 
@@ -59,7 +58,6 @@
         <h3> <a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}" target="_blank"><span>{{$place->address}}</span></a> </h3>
         <h3>{{$place->time['day']}}</h3>
         </div>
-    </div>
     </div>
 
 @endsection
