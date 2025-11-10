@@ -284,6 +284,7 @@ header .menu-icon {
     left: -110vw;
     width: 100vw;
     height: 100vh;
+    padding-top: 100px;
     z-index: 100;
     background-color: #202020;
     transition: all 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
@@ -358,9 +359,9 @@ main .container .hero {
   overflow-y: hidden;
   position: relative;
 }
-@media (max-width: 575px) {
+@media (max-width: 639px) {
   main .container .hero {
-    height: 50vh;
+    height: 54vh;
   }
 }
 main .container .hero .hero-image {
@@ -384,11 +385,11 @@ main .container .hero .links {
 }
 @media (max-width: 575px) {
   main .container .hero .links {
-    top: 50%;
+    top: 47%;
     transform: translateY(-50%);
-    font-size: 1.25rem;
+    font-size: 1rem;
     writing-mode: vertical-rl;
-    right: 45px;
+    right: 25px;
     display: flex;
     white-space: nowrap;
   }
@@ -406,19 +407,13 @@ main .container .hero .links li a {
   font-family: "Unbounded", sans-serif;
   transition: 0.5s;
 }
-@media (max-width: 575px) {
-  main .container .hero .links li a {
-    display: flex;
-    width: auto;
-  }
-}
 main .container .hero .links li a::after {
   position: absolute;
   content: "";
-  top: 0;
+  bottom: 0;
   left: 0;
-  width: 2px;
-  height: 100%;
+  width: 100%;
+  height: 2px;
   background: #760000;
   transform: scaleX(0);
   transform-origin: right;
@@ -430,6 +425,31 @@ main .container .hero .links li a:hover {
 main .container .hero .links li a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+@media (max-width: 575px) {
+  main .container .hero .links li a {
+    display: flex;
+    width: auto;
+  }
+  main .container .hero .links li a::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: #760000;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s;
+  }
+  main .container .hero .links li a:hover {
+    color: #95a5a6;
+  }
+  main .container .hero .links li a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }
 main .container .hero .swiper {
   height: 55vh;
@@ -672,9 +692,9 @@ main .feedbacks .feedback {
   width: 100%;
   overflow-y: scroll;
 }
-@media (min-width: 617px) {
+@media (min-width: 640px) {
   .tabs {
-    font-size: 1.65em;
+    font-size: 1.65rem;
     flex: content;
   }
 }
@@ -765,6 +785,12 @@ main .feedbacks .feedback {
 }
 .advice .comment p {
   font-size: 0.625rem;
+}
+@media (min-width: 640px) {
+  .advice p {
+    font-size: 0.7rem;
+    flex: content;
+  }
 }
 
 .send {

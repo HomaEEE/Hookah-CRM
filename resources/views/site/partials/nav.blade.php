@@ -1,4 +1,4 @@
-<header class="container mx-auto py-2">
+<header class="container mx-auto py-4 px-8 md:p-2">
     <div class="flex flex-row justify-between items-center relative">
         <!-- ЛОГО -->
         <div class="flex-auto">
@@ -10,7 +10,7 @@
         </div>
 
         <!-- БУРГЕР -->
-   <div class="absolute top-2 right-0 size-16">
+   <div class="absolute top-2 right-0 size-12">
         <div class="menu-icon">
             <span class="menu-icon__line menu-icon__line-left"></span>
             <span class="menu-icon__line"></span>

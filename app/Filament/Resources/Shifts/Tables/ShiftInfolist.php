@@ -7,6 +7,7 @@ use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 
 class ShiftInfolist
 {
@@ -17,42 +18,63 @@ class ShiftInfolist
                 Fieldset::make('Shift')->translateLabel()
                     ->schema([
                         TextEntry::make('cash')->translateLabel()
-                            ->badge()->color('warning'),
+                            ->color('warning')->money('UAH')
+                            ->size(TextSize::Large),
                         TextEntry::make('terminal')->translateLabel()
-                            ->badge(),
+                            ->color('success')->money('UAH')
+                            ->size(TextSize::Large),
 
                         TextEntry::make('sum')->translateLabel()
-                            ->badge()
-                            ->color('gray')
+                            ->color('info')->money('UAH')
+                            ->size(TextSize::Large)
                             ->getStateUsing(fn (Shift $record): int => $record->cash + $record->terminal ?? ''),
 
                         TextEntry::make('calc_shift')->translateLabel()
-                            ->badge()
+                            ->money('UAH')
+                            ->size(TextSize::Large)
                             ->color('gray'),
 
                         TextEntry::make('shift')->translateLabel()
-                            ->badge()
+                            ->money('UAH')
+                            ->size(TextSize::Large)
                             ->color('info'),
 
                         TextEntry::make('different')->translateLabel()
-                            ->badge()
-                            ->color('danger')
+                            ->money('UAH')
+                            ->size(TextSize::Large)
+                            ->color(fn (Shift $record): string => match (true) {
+                                ($record->shift - $record->calc_shift) < 0 => 'danger',
+                                ($record->shift - $record->calc_shift) > 0 => 'success',
+                                default => 'gray',
+                            }
+                            )
                             ->getStateUsing(fn (Shift $record): int => $record->shift - $record->calc_shift ?? ''),
                     ])->columns(['md' => 2, 'xl' => 3]),
 
                 Fieldset::make('Workshops')->translateLabel()
                     ->schema([
                         TextEntry::make('hookahs')->translateLabel()
+                            ->size(TextSize::Large)
                             ->getStateUsing(fn (Shift $record): int => $record->bulbs + $record->hookah ?? ''),
-                        TextEntry::make('bar')->translateLabel(),
-                        TextEntry::make('kitchen')->translateLabel(),
+                        TextEntry::make('bar')->translateLabel()
+                            ->size(TextSize::Large)
+                            ->money('UAH'),
+                        TextEntry::make('kitchen')->translateLabel()
+                            ->size(TextSize::Large)
+                            ->money('UAH'),
                     ])->columns(3),
 
                 Fieldset::make('Expenses')->translateLabel()
                     ->schema([
-                        TextEntry::make('wages')->translateLabel(),
-                        TextEntry::make('expense')->translateLabel(),
-                        TextEntry::make('tips')->translateLabel(),
+                        TextEntry::make('wages')->translateLabel()
+                            ->size(TextSize::Large)
+                            ->money('UAH'),
+                        TextEntry::make('expense')->translateLabel()
+                            ->size(TextSize::Large)
+                            ->money('UAH'),
+                        TextEntry::make('tips')->translateLabel()
+                            ->size(TextSize::Large)
+                            ->money('UAH'),
                     ])->columns(3)->columnSpanFull(),
 
                 Fieldset::make('Reports')->translateLabel()
@@ -67,6 +89,6 @@ class ShiftInfolist
                             ->falseIcon('heroicon-o-x-mark'),
 
                     ])->columns(3),
-            ]);
+            ])->columns(1);
     }
 }

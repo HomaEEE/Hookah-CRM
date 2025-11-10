@@ -35,7 +35,7 @@ class ShiftWizard
                 ->columns(5)
                 ->schema([
 
-                    Action::make('test')->label('TEST')
+                    Action::make('expenses_list')
                         ->label(__('Expenses list'))
                         ->icon('heroicon-o-queue-list')
                         ->extraAttributes(['style' => 'width: 100%'])

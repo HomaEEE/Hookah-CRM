@@ -20,25 +20,23 @@ class ShiftTable
         return $table
             ->columns([
                 TextColumn::make('created_at')->dateTime('l')->translateLabel()
-                    ->badge()
                     ->size('xs')
                     ->description(fn (Shift $record): string => $record->created_at->format('d-m-Y') ?? ''),
 
-                TextColumn::make('terminal')->translateLabel()->badge()
+                TextColumn::make('terminal')->translateLabel()->color('success')
                     ->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
-                TextColumn::make('cash')->translateLabel()->badge()->color('warning')
+                TextColumn::make('cash')->translateLabel()->color('warning')
                     ->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
 
-                TextColumn::make('sum')->translateLabel()->badge()->color('gray')
+                TextColumn::make('sum')->translateLabel()->color('gray')
                     ->state(function (Shift $record): int {
                         return $record->terminal + $record->cash;
                     })->money('UAH'),
 
                 TextColumn::make('shift')->color('info')
-                    ->badge()
                     ->money('UAH')->translateLabel(),
             ])
             ->defaultSort('id', 'desc')

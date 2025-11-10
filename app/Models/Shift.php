@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Casts\MoneyCast;
 use Attribute;
-use Awobaz\Compoships\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,11 +11,10 @@ class Shift extends Model
 {
     use HasFactory;
 
-
-    protected $fillable = ['place_id', 'user_id', 'cash', 'terminal','old_shift', 'bar',
-                            'kitchen', 'hookah', 'bulbs', 'report', 'withdrawal',
-                            'wages', 'tips', 'expense', 'income', 'calc_shift', 'shift',
-                            ];
+    protected $fillable = ['place_id', 'user_id', 'cash', 'terminal', 'old_shift', 'bar',
+        'kitchen', 'hookah', 'bulbs', 'report', 'withdrawal',
+        'wages', 'tips', 'expense', 'income', 'calc_shift', 'shift',
+    ];
 
     protected $casts = [
         'report' => 'json',
@@ -31,7 +29,7 @@ class Shift extends Model
         'income' => MoneyCast::class,
         'withdrawal' => MoneyCast::class,
         'calc_shift' => MoneyCast::class,
-        'shift' => MoneyCast::class
+        'shift' => MoneyCast::class,
     ];
 
     public function place()
@@ -82,8 +80,13 @@ class Shift extends Model
     protected function getMonthsAndYearsForSelect()
     {
         return $this->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month')
-                ->groupBy('year', 'month')
-                ->orderBy('year', 'asc')
-                ->orderBy('month', 'asc');
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc');
+    }
+
+    public function getTitleAttribute(): string
+    {
+        return $this->created_at->format('d F Y');
     }
 }

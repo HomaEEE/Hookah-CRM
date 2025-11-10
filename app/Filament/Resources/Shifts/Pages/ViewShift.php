@@ -2,14 +2,21 @@
 
 namespace App\Filament\Resources\Shifts\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Filament\Resources\Shifts\ShiftResource;
-use App\Models\Shift;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewShift extends ViewRecord
 {
     protected static string $resource = ShiftResource::class;
+
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public function getTitle(): string
+    {
+
+        return __('Shift').' '.$this->record->created_at->translatedFormat('d F Y');
+    }
 
     protected function getActions(): array
     {
@@ -22,5 +29,4 @@ class ViewShift extends ViewRecord
     {
         return __('Shift');
     }
-
 }

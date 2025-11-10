@@ -22,8 +22,10 @@ class WagesWizard
     {
         return [
             Repeater::make('users')
+                ->hiddenLabel()
                 ->translateLabel()
                 ->relationship()
+                ->addActionLabel(__('Add'))
                 ->schema([
                     Select::make('user_id')->translateLabel()
                         ->options(
@@ -88,7 +90,7 @@ class WagesWizard
                     TextInput::make('wage')->translateLabel()->numeric()
                         ->live(onBlur: true)
                         ->reactive()
-
+                        ->readOnly()
                         ->hidden(fn (Get $get) => $get('wage_id') == null)
                         ->columns(2),
 
@@ -125,24 +127,24 @@ class WagesWizard
                         ->hidden(fn (Get $get) => $get('wage_id') == null),
                 ])->columns(3)
                 ->collapsible()
+                ->collapsed()
+
                 // ->deleteAction(
                 //     fn (Action $action) => $action->after(fn (Get $get, Set $set) => self::updateTotals($get, $set)),
                 // )
-                ->itemLabel(fn (array $state, callable $get): ?string => User::find($state['user_id'])?->name.' '.$get('cashout') ?? null),
+                ->itemLabel(fn (array $state): ?string => (User::find($state['user_id'] ?? null)?->name).' '.($state['cashout'] ?? '-')
+                ),
             TextEntry::make('wages')
                 ->translateLabel()
-                ->state(function (Set $set, Get $get) { // Changed content() to state()
+                ->state(function (Set $set, Get $get) {
                     $totalWage = collect($get('users'))
                         ->pluck('cashout')
                         ->sum();
 
-                    // This line is often redundant in TextEntry, as the return value sets the state.
-                    // However, if 'wages' is a field you need to explicitly set for submission/caching, keep it.
                     $set('wages', $totalWage);
 
-                    return $totalWage; // The return value is the text displayed by TextEntry.
+                    return $totalWage;
                 })
-
                 ->reactive(),
 
             Hidden::make('wages')

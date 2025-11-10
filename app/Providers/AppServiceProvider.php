@@ -5,6 +5,7 @@ namespace App\Providers;
 use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use App\Models\Permission;
 use App\Models\Role;
+use Carbon\Carbon;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
@@ -60,6 +61,12 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
         }
+
+        // Принудительно устанавливаем локаль для Carbon
+        Carbon::setLocale(config('app.locale')); // 'uk' или 'ru'
+
+        // Дополнительно: для макросов и isoFormat
+        \Carbon\CarbonImmutable::setLocale(config('app.locale'));
 
         TranslatableTabs::configureUsing(function (TranslatableTabs $component) {
             $component

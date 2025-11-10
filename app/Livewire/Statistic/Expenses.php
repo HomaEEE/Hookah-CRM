@@ -14,8 +14,6 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class Expenses extends BaseWidget
 {
-    // protected int|string|array $columnSpan = 'full';
-
     use InteractsWithPageFilters;
 
     protected function getTableHeading(): string
@@ -30,7 +28,6 @@ class Expenses extends BaseWidget
                 Expense::query()
             )
             ->columns([
-
                 TextColumn::make('category.name')
                     ->translateLabel()
                     ->sortable(),
@@ -57,22 +54,28 @@ class Expenses extends BaseWidget
             ])
 
             ->modifyQueryUsing(function ($query) {
-                $startDate = ! is_null($this->pageFilters['startDate'] ?? null) ?
-                    Carbon::parse($this->pageFilters['startDate']) :
-                    null;
+                // Получаем фильтры с правильными ключами
+                $from = $this->pageFilters['from'] ?? null;
+                $to = $this->pageFilters['to'] ?? null;
 
-                $endDate = ! is_null($this->pageFilters['endDate'] ?? null) ?
-                    Carbon::parse($this->pageFilters['endDate']) :
-                    now();
-
-                // Применение фильтрации по датам, если значения присутствуют
-                if ($startDate && $endDate) {
-                    $query->whereBetween('created_at');
+                // Применяем фильтр по датам
+                if ($from) {
+                    $query->whereDate('created_at', '>=', Carbon::parse($this->pageFilters['from'] ?? null));
+                }
+                if ($to) {
+                    $query->whereDate('created_at', '<=', Carbon::parse($this->pageFilters['to'] ?? null));
                 }
 
-                $query->selectRaw('category_id as id, category_id, sum(sum) as total')
+                // Группировка: считаем количество и сумму
+                return $query
+                    ->selectRaw('
+                        category_id as id,
+                        category_id,
+                        COUNT(*) as count,
+                        SUM(sum) as total
+                    ')
                     ->groupBy('category_id')
-                    ->orderBy('sum', 'desc');
+                    ->orderByDesc('total');
             });
     }
 }

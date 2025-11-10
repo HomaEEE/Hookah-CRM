@@ -6,6 +6,7 @@ use App\Filament\Clusters\Statistic\StatisticCluster;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
@@ -15,8 +16,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class Cashflow extends Page
 {
-    use HasFiltersForm;
-    use HasPageShield;
+    use HasFiltersForm, HasPageShield, InteractsWithForms;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
@@ -29,6 +29,16 @@ class Cashflow extends Page
     public $startDate;
 
     public $endDate;
+
+    public function mount(): void
+    {
+
+        // Инициализация фильтров
+        $this->filtersForm->fill([
+            'from' => now()->startOfMonth()->format('Y-m-d'),
+            'to' => now()->format('Y-m-d'),
+        ]);
+    }
 
     public function persistsFiltersInSession(): bool
     {
@@ -64,9 +74,11 @@ class Cashflow extends Page
                             ->default(now()->startOfMonth())
                             ->placeholder(now()->startOfMonth())
                             ->defaultFocusedDate(now()->startOfMonth())->closeOnDateSelection()
-                            ->maxDate(fn (Get $get) => $get('to') ?: now()),
+                            ->maxDate(fn (Get $get) => $get('to') ?: now())
+                            ->reactive(),
                         DatePicker::make('to')
                             ->translateLabel()
+                            ->reactive()
                             ->minDate(fn (Get $get) => $get('from') ?: now())
                             ->native(false)
                             ->closeOnDateSelection()
@@ -77,7 +89,8 @@ class Cashflow extends Page
                     ])
                     ->columns(2)
                     ->columnSpanFull(),
-            ]);
+            ])
+            ->statePath('filters');
     }
 
     protected function getHeaderActions(): array

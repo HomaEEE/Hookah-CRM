@@ -5,8 +5,8 @@
     </div>
 
     @livewire(\App\Filament\Widgets\Statistic\Bills::class)
-    @livewire(\App\Filament\Widgets\Statistic\ExpensesGraph::class, ['filters' => $this->filters])
-    @livewire(\App\Filament\Widgets\Statistic\NetCashflowChart::class, ['filters' => $this->filters])
+    @livewire(\App\Filament\Widgets\Statistic\ExpensesGraph::class)
+    @livewire(\App\Filament\Widgets\Statistic\NetCashflowChart::class)
 
     <div x-data="{ tab: 'expenses' }">
         <x-filament::tabs>
@@ -23,13 +23,7 @@
         </x-filament::tabs>
 
         <div class="mt-2">
-            <div x-show="tab === 'expenses'">
-                @livewire(\App\Livewire\Statistic\Expenses::class)
-            </div>
 
-            <div x-show="tab === 'supplies'">
-                @livewire(\App\Livewire\Statistic\Supplies::class)
-            </div>
         </div>
     </div>
 
