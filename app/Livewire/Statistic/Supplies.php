@@ -4,7 +4,6 @@ namespace App\Livewire\Statistic;
 
 use App\Models\Supplier;
 use App\Models\Supply;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -33,12 +32,6 @@ class Supplies extends BaseWidget
                 TextColumn::make('count')
                     ->label(__('Count'))
                     ->sortable(),
-
-                TextColumn::make('total')
-                    ->label(__('Sum'))
-                    ->money('UAH', 100)
-                    ->sortable()
-                    ->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
             ])
             ->filters([
                 SelectFilter::make('supplier_id')

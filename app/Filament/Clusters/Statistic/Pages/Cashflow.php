@@ -78,7 +78,6 @@ class Cashflow extends Page
                             ->reactive(),
                         DatePicker::make('to')
                             ->translateLabel()
-                            ->reactive()
                             ->minDate(fn (Get $get) => $get('from') ?: now())
                             ->native(false)
                             ->closeOnDateSelection()

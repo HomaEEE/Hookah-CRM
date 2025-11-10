@@ -23,7 +23,13 @@
         </x-filament::tabs>
 
         <div class="mt-2">
+            <div x-show="tab === 'expenses'">
+                @livewire(\App\Livewire\Statistic\Expenses::class, ['filters' => $this->filters ])
+            </div>
 
+            <div x-show="tab === 'supplies'">
+                @livewire(\App\Livewire\Statistic\Supplies::class, ['filters' => $this->filters ])
+            </div>
         </div>
     </div>
 
