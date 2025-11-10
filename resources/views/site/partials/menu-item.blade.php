@@ -11,7 +11,7 @@
      data-image-url="{{$item->getFirstMediaUrl('products')}}">
   <div class="flex">
     <div class="shrink-0 rounded-xl">
-      <img
+      <img loading="lazy"
         class="h-32 w-32 object-cover md:h-full md:w-38"
         src="{{$item->getFirstMediaUrl('products')}}"
         alt="{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}" />
