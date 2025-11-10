@@ -1,4 +1,4 @@
-<div class="advice p-4 mb-4 mx-auto
+<div class="advice hidden md:inline p-4 mb-4 mx-auto
              grid grid-cols-1 md:grid-cols-3
              gap-4 md:gap-6
              divide-y divide-[#535353] md:divide-y-0 md:divide-x">
@@ -23,11 +23,4 @@
         <p>{{ __('Feedback comment') }}</p>
     </div>
 
-    <!-- На мобильных – комментарий растягивается на всю ширину -->
-    <div class="md:hidden col-span-1 p-2">
-        <div class="comment">
-            <h4><i class="icon-comment"></i> {{ __('Feedback button') }}</h4>
-            <p>{{ __('Feedback comment') }}</p>
-        </div>
-    </div>
 </div>
