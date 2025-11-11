@@ -134,7 +134,7 @@ class WagesWizard
                 // )
                 ->itemLabel(fn (array $state): ?string => (User::find($state['user_id'] ?? null)?->name).' '.($state['cashout'] ?? '-')
                 ),
-            TextEntry::make('wages')
+            TextEntry::make('wages_text')
                 ->translateLabel()
                 ->state(function (Set $set, Get $get) {
                     $totalWage = collect($get('users'))
@@ -150,7 +150,8 @@ class WagesWizard
             Hidden::make('wages')
                 ->inlineLabel()
                 ->reactive()
-                ->translateLabel()->default(
+                ->translateLabel()
+                ->default(
                     function (Set $set, $get) {
                         $totalWage = collect($get('users'))
                             ->pluck('cashout')
