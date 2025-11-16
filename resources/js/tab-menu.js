@@ -8,7 +8,7 @@ $(document).ready(function () {
             $(this)
                 .css({ opacity: 0, transform: "translateY(20px)" })
                 .delay(index * 50)
-                .animate({ opacity: 1, top: 0 }, 300);
+                .animate({ opacity: 1, top: 0 }, 200);
         });
     }
 
@@ -29,17 +29,17 @@ $(document).ready(function () {
         const $targetSection = $("#" + target);
         showCategory($targetSection);
 
-        	var containerWidth = $('.tabs').width();
-    var activeItemPosition = $(this).position().left;
-    var activeItemWidth = $(this).outerWidth();
-    var scrollOffset = activeItemPosition - containerWidth / 2 + activeItemWidth / 2;
-	$('.tabs').animate({ scrollLeft: "+=" + scrollOffset }, 1000);
+        var containerWidth = $('.tabs').width();
+        var activeItemPosition = $(this).position().left;
+        var activeItemWidth = $(this).outerWidth();
+        var scrollOffset = activeItemPosition - containerWidth / 2 + activeItemWidth / 2;
+        $('.tabs').animate({ scrollLeft: "+=" + scrollOffset }, 1000);
 
-        // Плавный скролл к секции
-        $("html, body").animate({
-            scrollTop: $(".list").offset().top - $(".tabs").outerHeight() - 10
-        }, 600);
-    });
+            // Плавный скролл к секции
+            $("html, body").animate({
+                scrollTop: $(".list").offset().top - $(".tabs").outerHeight() - 10
+            }, 600);
+        });
 
     // === Автооткрытие первой категории при загрузке ===
     const $firstTab = $(".tab-item").first();

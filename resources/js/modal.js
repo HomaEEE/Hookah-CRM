@@ -6,16 +6,13 @@ $('#comment').click(function () {
 });
 
 $(".menu-item").on('click', function () {
-    console.log('item click');
-
     const $item = $(this);
-
         // 2. Извлекаем данные с помощью метода .data()
-        const title = $item.data('title');
-        const sup = $item.data('sup');
-        const desc = $item.data('desc');
-        const price = $item.data('price');
-        const imageUrl = $item.data('image-url');
+        let title = $item.data('title');
+        let sup = $item.data('sup');
+        let desc = $item.data('desc');
+        let price = $item.data('price');
+        let imageUrl = $item.data('image-url');
 
 
         const $modal = $('#modal-item');
@@ -26,8 +23,11 @@ $(".menu-item").on('click', function () {
         $modal.find('#modal-price').text(price);
         $modal.find('#modal-image').attr('src', imageUrl);
 
-    $('#modal-item').addClass('active');
-    $('.modal-overlay').addClass('active');
+    if (title) {
+        console.log('open modal');
+        $('#modal-item').toggleClass('active');
+        $('.modal-overlay').toggleClass('active');
+    }
 });
 $('.bottom-sheet-handle').click(function () {
     console.log('close click');

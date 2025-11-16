@@ -542,7 +542,7 @@ main .about {
   }
 }
 main .about h2 {
-  font-size: 1.85em;
+  font-size: 1.8rem;
   text-transform: uppercase;
   border-bottom: 1px solid #535353;
   margin: 0;
@@ -711,15 +711,19 @@ main .feedbacks .feedback {
   padding: 7px 15px;
   margin: 0px 10px 0 0;
   cursor: pointer;
+  border-radius: 27px;
+  transition: all 0.3s ease;
 }
 .tabs ul li.active {
   background: #a3a3a3;
   color: #202020;
-  border-radius: 26px;
+  border-radius: 37px;
 }
-@media (min-width: 617px) {
+@media (max-width: 617px) {
   .tabs ul li.active {
-    border-radius: 16px;
+    border-radius: 27px;
+    margin: 0px 5px 0 0;
+    padding: 7px 10px;
   }
 }
 
@@ -784,12 +788,15 @@ main .feedbacks .feedback {
   border-radius: 37px;
 }
 .advice .comment p {
-  font-size: 0.625rem;
+  font-size: 0.8rem;
 }
-@media (min-width: 640px) {
+@media (max-width: 640px) {
   .advice p {
     font-size: 0.7rem;
     flex: content;
+  }
+  .advice .comment p {
+    font-size: 0.6rem;
   }
 }
 

@@ -609,7 +609,7 @@ main {
       padding: 50px 0;
     }
     h2 {
-      font-size: 1.85em;
+      font-size: 1.8rem;
       text-transform: uppercase;
       border-bottom: 1px solid $text-dark-grey;
       margin: 0;
@@ -759,12 +759,17 @@ main {
       padding: 7px 15px;
       margin: 0px 10px 0 0;
       cursor: pointer;
+      border-radius: 27px;
+
+      transition: all 0.3s ease;
       &.active {
         background: $text-grey;
         color: $grey;
-        border-radius: 26px;
-        @media (min-width: 617px) {
-          border-radius: 16px;
+        border-radius: 37px;
+        @media (max-width: 617px) {
+          border-radius: 27px;
+          margin: 0px 5px 0 0;
+          padding: 7px 10px;
         }
       }
     }
@@ -841,13 +846,18 @@ main {
   border-radius: 37px;
   .comment {
     p {
-      font-size: 0.625rem;
+      font-size: 0.8rem;
     }
   }
-  @media (min-width: 640px) {
+  @media (max-width: 640px) {
     p {
       font-size: 0.7rem;
       flex: content;
+    }
+    .comment {
+      p {
+        font-size: 0.6rem;
+      }
     }
   }
 }
