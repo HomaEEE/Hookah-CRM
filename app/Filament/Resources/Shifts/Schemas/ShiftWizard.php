@@ -55,9 +55,15 @@ class ShiftWizard
                         ->keyBindings(['command+s', 'ctrl+s'])
                         ->modalIcon('heroicon-o-inbox-arrow-down')
                         ->slideOver()
-                        ->form(
+                        ->schema(
                             SupplyForm::schema(),
                         )
+                        ->action(function (array $data, Set $set) {
+                            Supply::create($data);
+
+                            $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
+                            $set('expense', (int) $posterLocalExpense);
+                        })
                         ->successNotification(
                             Notification::make()
                                 ->success()
@@ -79,6 +85,12 @@ class ShiftWizard
                         ->schema(
                             ExpenseForm::schema(),
                         )
+                        ->action(function (array $data, Set $set) {
+                            Expense::create($data);
+
+                            $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
+                            $set('expense', (int) $posterLocalExpense);
+                        })
                         ->successNotification(
                             Notification::make()
                                 ->success()
@@ -96,11 +108,16 @@ class ShiftWizard
                         ->modalWidth('xs')
                         ->keyBindings(['command+s', 'ctrl+s'])
                         ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->schema([
-                            Group::make(function (Schema $schema) {
-                                return IncomeForm::configure($schema)->getComponents();
-                            }),
-                        ])
+                        ->schema(
+                            IncomeForm::schema(),
+                        )
+                        ->action(function (array $data, Set $set) {
+                            Income::create($data);
+
+                            $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
+                            $set('income', (int) $posterLocalIncomes);
+                        })
+
                         ->successNotification(
                             Notification::make()
                                 ->success()
@@ -123,13 +140,18 @@ class ShiftWizard
                                 return WithdrawalForm::configure($schema)->getComponents();
                             }),
                         ])
-                        ->successNotification(
-                            Notification::make()
-                                ->success()
-                                ->icon('heroicon-o-minus')
-                                ->title(__('Withdrawal added'))
-                        ),
+                        ->action(
+                            function (array $data, Set $set) {
 
+                                Withdrawal::create($data);
+
+                                $LocalWithdrawal = (new LocalApiController)->getLocalWithdrawal(Filament::getTenant()->id);
+                                $set('withdrawal', $LocalWithdrawal);
+                                Notification::make()
+                                    ->success()
+                                    ->icon('heroicon-o-minus')
+                                    ->title(__('Withdrawal added'));
+                            }),
                 ]),
 
             Fieldset::make(__('Expenses & Income'))->schema([
@@ -187,10 +209,23 @@ class ShiftWizard
                     ),
                 TextInput::make('withdrawal')->translateLabel()
                     ->numeric()
+                    ->readOnly()
                     ->default(0)
                     ->reactive()
-                    ->hidden(fn (Get $get) => $get('withdrawal') == 0),
-            ])->columns(3),
+                    ->suffixAction(
+                        Action::make('update_withdrawal')
+                            ->translateLabel()
+                            ->icon('heroicon-o-arrow-path')
+                            ->action(function (Set $set) {
+                                $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
+                                $set('expense', (int) $posterLocalExpense);
+
+                                Notification::make()
+                                    ->title(__('Expenses updated'))
+                                    ->send();
+                            })
+                    ),
+            ])->columns(4),
 
             Fieldset::make('Shift')->translateLabel()->schema([
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Storage;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +12,42 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->integer('workshop_id');
-            $table->json('items');
+            $table->foreignIdFor(Storage::class);
+            $table->string('name'); // название инвентаря
+            $table->enum('ownership_type', ['own', 'rented', 'other']); // форма владения
+            $table->decimal('unit_price', 12, 2)->nullable(); // цена за единицу
+            $table->integer('quantity')->default(0); // текущее количество
+            $table->timestamps(); // дата добавления и обновления
+        });
+
+        Schema::create('inventory_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Storage::class);
+            $table->string('name'); // название инвентаря
+            $table->enum('ownership_type', ['own', 'rented', 'other']); // форма владения
+            $table->decimal('unit_price', 12, 2)->nullable(); // цена за единицу
+            $table->integer('quantity')->default(0); // текущее количество
+            $table->timestamps(); // дата добавления и обновления
+        });
+
+        Schema::create('inventory_audits', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Storage::class);
+            $table->date('audit_date'); // дата проведения инвентаризации
+            $table->decimal('total_loss_cost', 12, 2)->default(0); // общая сумма недостачи
+            $table->timestamps();
+        });
+
+        Schema::create('inventory_audit_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('inventory_audit_id')->constrained('inventory_audits')->cascadeOnDelete();
+            $table->foreignId('inventory_item_id')->constrained('inventory_items')->cascadeOnDelete();
+            $table->integer('previous_quantity'); // до инвентаризации
+            $table->integer('current_quantity');  // после инвентаризации
+            $table->decimal('loss_cost', 12, 2)->default(0); // стоимость недостачи
             $table->timestamps();
         });
     }

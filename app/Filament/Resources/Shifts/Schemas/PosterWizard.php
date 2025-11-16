@@ -32,10 +32,10 @@ class PosterWizard
                         ->icon('heroicon-s-cloud-arrow-down')
                         ->color('success')
                         ->action(function (Get $get, Set $set) {
-                            $place = Place::where('id', $get('place_id'))->first();
+                            $place = Place::where('id', Filament::getTenant()->id)->first();
                             //  $posterShift =  (new PosterApi())->getCurrentShift($poster_api->id);  API
                             $posterShift = Shift::where('place_id', $place->id)->select('shift')->latest()->first();
-                            $posterTodayShift = (new PosterApiController)->getTodayShift($place->id);
+                            $posterTodayShift = (new PosterApiController)->getTodayShift(Filament::getTenant()->id);
 
                             $set('old_shift', $posterShift != null ? $posterShift->shift : 0);
 
@@ -45,19 +45,19 @@ class PosterWizard
 
                             $set('terminal', $posterTodayShift['payed_card_sum'] / 100);
 
-                            $posterLocalExpense = (new LocalApiController)->getLocalExpenses($place->id);
+                            $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
                             $set('expense', (int) $posterLocalExpense);
 
                             $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
                             $set('income', (int) $posterLocalIncomes);
 
-                            $LocalWithdrawal = (new LocalApiController)->getLocalWithdrawal($place->id);
+                            $LocalWithdrawal = (new LocalApiController)->getLocalWithdrawal(Filament::getTenant()->id);
                             $set('withdrawal', $LocalWithdrawal);
 
-                            $localTips = (new LocalApiController)->getLocalTips($place->id);
+                            $localTips = (new LocalApiController)->getLocalTips(Filament::getTenant()->id);
                             $set('tips', $localTips);
 
-                            $posterTodayWorkshops = (new PosterApiController)->getTodayWorkshops($place->id);
+                            $posterTodayWorkshops = (new PosterApiController)->getTodayWorkshops(Filament::getTenant()->id);
 
                             foreach ($posterTodayWorkshops as $ws) {
 
