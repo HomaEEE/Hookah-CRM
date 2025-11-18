@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Place;
 use App\Models\Storage;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,16 +17,7 @@ return new class extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Storage::class);
-            $table->string('name'); // название инвентаря
-            $table->enum('ownership_type', ['own', 'rented', 'other']); // форма владения
-            $table->decimal('unit_price', 12, 2)->nullable(); // цена за единицу
-            $table->integer('quantity')->default(0); // текущее количество
-            $table->timestamps(); // дата добавления и обновления
-        });
-
-        Schema::create('inventory_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Storage::class);
+            $table->foreignIdFor(Place::class);
             $table->string('name'); // название инвентаря
             $table->enum('ownership_type', ['own', 'rented', 'other']); // форма владения
             $table->decimal('unit_price', 12, 2)->nullable(); // цена за единицу
@@ -44,9 +36,9 @@ return new class extends Migration
         Schema::create('inventory_audit_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('inventory_audit_id')->constrained('inventory_audits')->cascadeOnDelete();
-            $table->foreignId('inventory_item_id')->constrained('inventory_items')->cascadeOnDelete();
-            $table->integer('previous_quantity'); // до инвентаризации
-            $table->integer('current_quantity');  // после инвентаризации
+            $table->foreignId('inventory_id')->constrained('inventories')->cascadeOnDelete();
+            $table->integer('previous_qty'); // до инвентаризации
+            $table->integer('current_qty');  // после инвентаризации
             $table->decimal('loss_cost', 12, 2)->default(0); // стоимость недостачи
             $table->timestamps();
         });

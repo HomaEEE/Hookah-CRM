@@ -33,12 +33,12 @@ class InventoryResource extends Resource
 
     public static function getPluralModelLabel(): string
     {
-        return __('Supplies');
+        return __('Inventory');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Supplies');
+        return __('Inventory');
     }
 
     public static function form(Schema $schema): Schema

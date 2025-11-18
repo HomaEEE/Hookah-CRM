@@ -102,6 +102,11 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Storage::class);
     }
 
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
+
     public function workshops()
     {
         return $this->hasMany(Workshop::class);

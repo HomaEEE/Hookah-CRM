@@ -12,9 +12,9 @@ class InventoryForm
     {
         return $schema
             ->components([
-                TextInput::make('storage_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('storage_id')
+                    ->relationship('storage', 'name')
+                    ->required(),
                 TextInput::make('name')
                     ->required(),
                 Select::make('ownership_type')

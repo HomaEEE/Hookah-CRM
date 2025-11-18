@@ -15,17 +15,17 @@ class InventoriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('storage_id')
+                TextColumn::make('storage.name')->label(__('Storage'))
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('name')
+                TextColumn::make('name')->label(__('Title'))
                     ->searchable(),
-                TextColumn::make('ownership_type')
+                TextColumn::make('ownership_type')->label(__('Own'))
                     ->badge(),
-                TextColumn::make('unit_price')
+                TextColumn::make('unit_price')->label(__('Price'))
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('quantity')
+                TextColumn::make('quantity')->label(__('qty'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
