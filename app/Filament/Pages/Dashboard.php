@@ -20,7 +20,6 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Group;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -73,7 +72,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->slideOver()
-                    ->form(
+                    ->schema(
                         SupplyForm::schema(),
                     )
                     ->successNotification(
@@ -110,11 +109,10 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->modalWidth('xs')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->schema([
-                        Group::make(function (Schema $schema) {
-                            return IncomeForm::configure($schema)->getComponents();
-                        }),
-                    ])
+                    ->schema(
+                        IncomeForm::schema()
+                    )
+
                     ->successNotification(
                         Notification::make()
                             ->success()
@@ -130,11 +128,9 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->modalWidth('sm')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->schema([
-                        Group::make(function (Schema $schema) {
-                            return WithdrawalForm::configure($schema)->getComponents();
-                        }),
-                    ])
+                    ->schema(
+                        WithdrawalForm::schema(),
+                    )
                     ->successNotification(
                         Notification::make()
                             ->success()
