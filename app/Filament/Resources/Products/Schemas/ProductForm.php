@@ -62,8 +62,8 @@ class ProductForm
                 SpatieMediaLibraryFileUpload::make('media')
                     ->collection('products')
                     ->image()
-                    ->imagePreviewHeight('400')
-                    ->imageResizeTargetWidth('400')
+                    ->imagePreviewHeight('700')
+                    ->imageResizeTargetWidth('700')
                     ->imageResizeMode('contain'),
             ])->columns(1);
     }
