@@ -32,7 +32,8 @@ class ProductTable
                 SpatieMediaLibraryImageColumn::make('media')
                     ->collection('products')
                     ->simpleLightbox()
-                    ->size(50),
+                    ->circular()
+                    ->size(40),
 
                 TextColumn::make('product_name')->searchable()->wrap()
                     ->description(fn (Product $record): string => $record->frontend_name ?? '', position: 'before')
@@ -44,8 +45,8 @@ class ProductTable
                     ->visibleFrom('md')
                     ->sortable(),
 
-                TextColumn::make('rrc')->money('uah')->badge('info')->translateLabel(),
-                TextColumn::make('price')->money('uah')->badge('success')->translateLabel()
+                TextColumn::make('rrc')->money('uah')->color('info')->translateLabel(),
+                TextColumn::make('price')->money('uah')->color('success')->translateLabel()
                     ->searchable()
                     ->sortable(),
                 // IconColumn::make('visible')

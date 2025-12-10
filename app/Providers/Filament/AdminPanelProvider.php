@@ -18,7 +18,6 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -29,6 +28,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
+use Openplain\FilamentShadcnTheme\Color;
 use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -41,9 +41,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->authGuard('web')
             ->colors([
-                'primary' => Color::Slate,
+                'primary' => Color::Default,  // The Shadcn effect
             ])
-            ->spa()
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterPlace::class)

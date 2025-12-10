@@ -17,7 +17,7 @@ class ExpensesGraph extends ChartWidget
 
     // protected int|string|array $columnSpan = 'full';
 
-    protected ?string $maxHeight = '250px';
+    protected ?string $maxHeight = '350px';
 
     protected function getData(): array
     {
@@ -77,12 +77,12 @@ class ExpensesGraph extends ChartWidget
             'labels' => $months->toArray(),
             'datasets' => [
                 [
-                    'label' => 'Приход (грн)',
+                    'label' => 'Приход',
                     'data' => $cashIn,
                     'backgroundColor' => 'rgba(30, 181, 33, 0.4)',
                 ],
                 [
-                    'label' => 'Расход (грн)',
+                    'label' => 'Расход',
                     'data' => $cashOut,
                     'backgroundColor' => 'rgba(203, 27, 27, 0.4)',
                 ],

@@ -193,6 +193,7 @@ class SupplyResource extends Resource
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
             ])
+            ->deferFilters(false)
 
             ->recordActions([
                 ActionGroup::make([

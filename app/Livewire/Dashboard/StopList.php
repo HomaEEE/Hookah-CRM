@@ -2,23 +2,23 @@
 
 namespace App\Livewire\Dashboard;
 
-use Filament\Actions\Contracts\HasActions;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Support\Enums\IconSize;
-use Filament\Actions\BulkActionGroup;
 use App\Models\Product;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Tables;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class StopList extends Component implements HasForms, HasTable, HasActions
+class StopList extends Component implements HasActions, HasForms, HasTable
 {
     use InteractsWithActions;
     use InteractsWithForms;
@@ -46,8 +46,9 @@ class StopList extends Component implements HasForms, HasTable, HasActions
                     }),
             ])
             ->filters([
-                //
+                TernaryFilter::make('visible_menu')->label(__('Visible menu'))->default(0),
             ])
+            ->deferFilters(false)
             ->extremePaginationLinks()
 
             ->toolbarActions([
