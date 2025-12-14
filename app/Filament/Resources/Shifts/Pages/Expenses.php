@@ -72,7 +72,6 @@ class Expenses extends ManageRelatedRecords
 
             ])
             ->recordActions([
-
             ])
             ->toolbarActions([
 

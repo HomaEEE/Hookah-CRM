@@ -19,11 +19,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Schema;
 
 class ShiftWizard
 {
@@ -135,11 +133,9 @@ class ShiftWizard
                         ->modalWidth('sm')
                         ->keyBindings(['command+s', 'ctrl+s'])
                         ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->schema([
-                            Group::make(function (Schema $schema) {
-                                return WithdrawalForm::configure($schema)->getComponents();
-                            }),
-                        ])
+                        ->schema(
+                            WithdrawalForm::schema()
+                        )
                         ->action(
                             function (array $data, Set $set) {
 

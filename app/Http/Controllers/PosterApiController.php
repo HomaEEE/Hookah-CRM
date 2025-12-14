@@ -194,6 +194,15 @@ class PosterApiController extends Controller
         return (array) $getAllBills->json('response', []);
     }
 
+    public function getAllTables($place_id)
+    {
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+        $getAllTables = Http::get($this->urlApi.'spots.getTableHallTables?token='
+        .$place_api['api'].'&without_deleted=1');
+
+        return (array) $getAllTables->json('response', []);
+    }
+
     // Получение прошлой смены
     public function getShift($place_id)
     {

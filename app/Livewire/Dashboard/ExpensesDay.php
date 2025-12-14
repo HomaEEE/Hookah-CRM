@@ -5,6 +5,8 @@ namespace App\Livewire\Dashboard;
 use App\Models\Bill;
 use App\Models\Expense;
 use Carbon\Carbon;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
@@ -12,7 +14,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Tables\Actions;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -61,9 +62,6 @@ class ExpensesDay extends BaseWidget implements HasTable
                 ->whereDate('added_at', Carbon::today())->with('user', 'supply')->wherePay('1'))
 
             ->columns([
-                TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
-                    ->size('sm')
-                    ->description(fn (Expense $record): string => $record->user->name ?? ''),
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                     ->description(fn (Expense $record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
@@ -100,66 +98,67 @@ class ExpensesDay extends BaseWidget implements HasTable
                     }),
             ])
             ->recordActions([
-                //  Actions\ViewAction::make()->label(''),
-                EditAction::make()->label('')
-                    ->modalWidth('sm')
+                ActionGroup::make([
+                    EditAction::make()
+                        ->modalWidth('sm')
+                        ->schema([
+                            Tabs::make('Tabs')
+                                ->contained(false)
+                                ->tabs([
 
-                    ->schema([
+                                    Tab::make(__('Expense'))
+                                        ->schema([
+                                            TextInput::make('sum')->translateLabel(),
+                                            ToggleButtons::make('bill_id')->label(__('Type pay'))
+                                                ->options(Bill::get()->pluck('name', 'id'))
+                                                ->default(0)
+                                                ->required()
+                                                ->inline()
+                                                ->grouped()
+                                                ->extraAttributes(['style' => 'width: 100%'])
+                                                ->colors([
+                                                    0 => 'info',
+                                                    1 => 'success',
+                                                ])
+                                                ->reactive(),
 
-                        Tabs::make('Tabs')
-                            ->contained(false)
-                            ->tabs([
+                                            ToggleButtons::make('pay')->label(__('Pay'))
+                                                ->options(
+                                                    [
+                                                        0 => __('No pay'),
+                                                        1 => __('Paid'),
+                                                    ]
+                                                )
+                                                ->colors([
+                                                    0 => 'danger',
+                                                    1 => 'success',
+                                                ])
+                                                ->default(0)
+                                                ->inline()
+                                                ->live()
+                                                ->grouped()
+                                                ->extraAttributes(['style' => 'width: 100%'])
+                                                ->reactive(),
+                                        ]),
+                                    Tab::make(__('Photo'))
+                                        ->schema([
+                                            SpatieMediaLibraryFileUpload::make('invoice')
+                                                ->label(__('Photo'))
+                                                ->collection('supplies')
+                                                ->multiple()
+                                                ->imageResizeMode('cover')
+                                                ->imagePreviewHeight(250)
+                                                ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
+                                                ->openable(),
+                                            Textarea::make('comment')->label(__('Comment'))
+                                                ->rows(3),
+                                        ]),
 
-                                Tab::make(__('Expense'))
-                                    ->schema([
-                                        TextInput::make('sum')->translateLabel(),
-                                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                                            ->options(Bill::get()->pluck('name', 'id'))
-                                            ->default(0)
-                                            ->required()
-                                            ->inline()
-                                            ->grouped()
-                                            ->extraAttributes(['style' => 'width: 100%'])
-                                            ->colors([
-                                                0 => 'info',
-                                                1 => 'success',
-                                            ])
-                                            ->reactive(),
+                                ]),
+                        ]),
 
-                                        ToggleButtons::make('pay')->label(__('Pay'))
-                                            ->options(
-                                                [
-                                                    0 => __('No pay'),
-                                                    1 => __('Paid'),
-                                                ]
-                                            )
-                                            ->colors([
-                                                0 => 'danger',
-                                                1 => 'success',
-                                            ])
-                                            ->default(0)
-                                            ->inline()
-                                            ->live()
-                                            ->grouped()
-                                            ->extraAttributes(['style' => 'width: 100%'])
-                                            ->reactive(),
-                                    ]),
-                                Tab::make(__('Photo'))
-                                    ->schema([
-                                        SpatieMediaLibraryFileUpload::make('invoice')
-                                            ->label(__('Photo'))
-                                            ->collection('supplies')
-                                            ->multiple()
-                                            ->imageResizeMode('cover')
-                                            ->imagePreviewHeight(250)
-                                            ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
-                                            ->openable(),
-                                        Textarea::make('comment')->label(__('Comment'))
-                                            ->rows(3),
-                                    ]),
-
-                            ]),
-                    ]),
+                    DeleteAction::make(),
+                ]),
             ]);
     }
 }

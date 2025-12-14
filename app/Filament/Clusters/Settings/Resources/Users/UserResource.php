@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -76,6 +77,19 @@ class UserResource extends Resource
                         DatePicker::make('birth')->translateLabel()
                             ->native(false),
 
+                    ])->columns(3),
+
+                Section::make()
+                    ->compact()
+                    ->schema([
+                        Select::make('place_id')
+                            ->relationship('place', 'name')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', App::getLocale()))
+                            ->label(__('Places'))
+                            ->native(false)
+                            ->multiple()
+                            ->preload(),
+
                         Select::make('wage_id')->label(__('Post'))
                             ->options(
                                 Wage::where('place_id', Filament::getTenant()->id)
@@ -83,34 +97,16 @@ class UserResource extends Resource
                             )
                             ->native(false),
 
-                    ])->columns(2),
-
-                Select::make('place_id')
-                    ->relationship('place', 'name')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', App::getLocale()))
-                    ->label(__('Places'))
-                    ->native(false)
-                    ->multiple()
-                    ->searchable()
-                    ->preload()
-                    ->hintIcon('heroicon-o-question-mark-circle')
-                    ->hintColor('primary')
-                    ->hintIconTooltip(__('')),
-
-                // Select::make('roles')->translateLabel()
-                //     ->preload()
-                //     ->relationship('roles', 'name'),
-
-                Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->saveRelationshipsUsing(function (Model $record, $state) {
-                        $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
-                    })
-                    ->multiple()
-                    ->preload()
-                    ->searchable(),
-
-            ]);
+                        Select::make('roles')
+                            ->relationship('roles', 'name')
+                            ->saveRelationshipsUsing(function (Model $record, $state) {
+                                $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
+                            })
+                            ->multiple()
+                            ->preload()
+                            ->searchable(),
+                    ])->columns(3),
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -123,6 +119,16 @@ class UserResource extends Resource
                 //   TextColumn::make('places.name')->badge()->translateLabel(),
                 TextColumn::make('birth')->label(__('Birth'))->date('d M Y')->badge(),
                 TextColumn::make('shift_day')->label(__('Shift')),
+                IconColumn::make('enabled')->label(__('Visible'))
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check')
+                    ->falseIcon('heroicon-o-x-mark')
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
             ])
             ->filters([
                 //

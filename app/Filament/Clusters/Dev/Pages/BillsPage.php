@@ -32,8 +32,9 @@ class BillsPage extends Page implements HasTable
             ->records(fn (): array => (new PosterApiController)->getAllBills(Filament::getTenant()->id))
 
             ->columns([
-
                 TextColumn::make('transaction_id')->label(__('ID')),
+                TextColumn::make('table_id')->label(__('Table')),
+
                 IconColumn::make('print_fiscal')
                     ->label(__('Fiscal'))
                     ->icon(fn (string $state): Heroicon => match ($state) {

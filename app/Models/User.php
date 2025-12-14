@@ -101,4 +101,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return $this->hasMany(Task::class, 'user_id');
     }
+
+    public function scopeVisible($query, $value)
+    {
+        return $query->where('enabled', $value);
+    }
 }

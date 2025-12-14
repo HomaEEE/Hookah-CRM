@@ -31,12 +31,12 @@ class WagesWizard
                         ->options(
                             User::whereHas('place', function ($query) {
                                 $query->where('place_id', Filament::getTenant()->id);
-                            })->get()
+                            })->visible(true)->get()
                                 ->pluck('name', 'id')
                         )
                         ->required()
                         ->reactive()
-                        ->searchable()
+                        ->native(false)
                         ->live(onBlur: true)
                         ->afterStateUpdated(
                             function (callable $set, callable $get) {
