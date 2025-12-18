@@ -23,6 +23,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class InventoryResource extends Resource
 {
@@ -31,6 +32,28 @@ class InventoryResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?int $navigationSort = 10;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Place');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Inventory');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Inventory');
+    }
+
+    protected function getTableQuery(): Builder
+    {
+        return Inventory::query()->fastPaginate();
+    }
 
     public static function form(Schema $schema): Schema
     {

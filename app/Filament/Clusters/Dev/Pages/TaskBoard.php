@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Dev\Pages;
 
+use App\Filament\Clusters\Dev\DevCluster;
 use App\Filament\Components\Forms\TaskBoardForm;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
@@ -26,6 +27,8 @@ class TaskBoard extends BoardPage
     protected static ?string $navigationLabel = 'Task Board';
 
     protected static ?string $title = 'Task Board';
+
+    protected static ?string $cluster = DevCluster::class;
 
     protected static ?int $navigationSort = 10;
 

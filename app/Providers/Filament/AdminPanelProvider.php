@@ -4,7 +4,6 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditUserProfile;
 use App\Filament\Pages\Dashboard;
-use App\Filament\Pages\TaskBoard;
 use App\Filament\Pages\Tenancy\EditPlaceProfile;
 use App\Filament\Pages\Tenancy\RegisterPlace;
 use App\Http\Middleware\ApplyTenantScopes;
@@ -66,7 +65,6 @@ class AdminPanelProvider extends PanelProvider
 
             ->pages([
                 Dashboard::class,
-                TaskBoard::class,
             ])
 
             ->navigationGroups([
