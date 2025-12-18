@@ -19,12 +19,12 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Place::class);
-            $table->timestamp('date')->useCurrent();
             $table->integer('for_user_id')->nullable();
             $table->string('title');
-            $table->text('text');
-            $table->integer('status')->default(0);
-            $table->integer('sort_order')->nullable();
+            $table->text('text')->nullable();
+            $table->string('status');                        // Column identifier
+            $table->flowforgePositionColumn();               // Drag-and-drop ordering
+            $table->timestamp('due_date')->nullable();
             $table->timestamps();
         });
     }

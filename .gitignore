@@ -1,5 +1,4 @@
 # Laravel
-/vendor
 /node_modules
 /public/storage
 /storage/*.key
@@ -7,8 +6,7 @@
 .env.*
 Homestead.yaml
 Homestead.json
-/.idea
-/.vscode
+/.*
 .phpunit.result.cache
 .phpstorm.meta.php
 
@@ -26,11 +24,6 @@ storage/octane
 /storage/clockwork
 # Laravel Valet
 .valet
-
-# Composer & NPM dumps
-composer.lock
-package-lock.json
-yarn.lock
 
 # Ignored system files
 .DS_Store
@@ -53,7 +46,9 @@ coverage/
 /public/hot
 /public/build
 /public/mix-manifest.json
-
+/public/css/filament/
+/public/js/filament/
+/vendor/
 # Custom storage subfolders
 /storage/debugbar
 /storage/framework/cache/*
@@ -66,4 +61,10 @@ coverage/
 
 composer.lock
 package-lock.json
-config/insights.php
+/config/insights.php
+CLAUDE.md
+GEMINI.md
+boost.json
+.github/copilot-instructions.md
+.github/copilot-instructions.md
+.github/copilot-instructions.md

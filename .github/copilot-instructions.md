@@ -1,4 +1,250 @@
 <laravel-boost-guidelines>
+=== .ai/laravel-php-ai-guidelines rules ===
+
+# Laravel & PHP Guidelines for AI Code Assistants
+
+This file contains Laravel and PHP coding standards optimized for AI code assistants like Claude Code, GitHub Copilot, and Cursor. These guidelines are derived from Spatie's comprehensive Laravel & PHP standards.
+
+## Core Laravel Principle
+
+**Follow Laravel conventions first.** If Laravel has a documented way to do something, use it. Only deviate when you have a clear justification.
+
+## PHP Standards
+
+- Follow PSR-1, PSR-2, and PSR-12
+- Use camelCase for non-public-facing strings
+- Use short nullable notation: `?string` not `string|null`
+- Always specify `void` return types when methods return nothing
+
+## Class Structure
+- Use typed properties, not docblocks:
+- Constructor property promotion when all properties can be promoted:
+- One trait per line:
+
+## Type Declarations & Docblocks
+- Use typed properties over docblocks
+- Specify return types including `void`
+- Use short nullable syntax: `?Type` not `Type|null`
+- Document iterables with generics:
+  ```php
+  /** @return Collection<int, User> */
+  public function getUsers(): Collection
+  ```
+
+### Docblock Rules
+- Don't use docblocks for fully type-hinted methods (unless description needed)
+- **Always import classnames in docblocks** - never use fully qualified names:
+  ```php
+  use \Spatie\Url\Url;
+  /** @return Url */
+  ```
+- Use one-line docblocks when possible: `/** @var string */`
+- Most common type should be first in multi-type docblocks:
+  ```php
+  /** @var Collection|SomeWeirdVendor\Collection */
+  ```
+- If one parameter needs docblock, add docblocks for all parameters
+- For iterables, always specify key and value types:
+  ```php
+  /**
+   * @param array<int, MyObject> $myArray
+   * @param int $typedArgument 
+   */
+  function someFunction(array $myArray, int $typedArgument) {}
+  ```
+- Use array shape notation for fixed keys, put each key on it's own line:
+  ```php
+  /** @return array{
+     first: SomeClass, 
+     second: SomeClass
+  } */
+  ```
+
+## Control Flow
+- **Happy path last**: Handle error conditions first, success case last
+- **Avoid else**: Use early returns instead of nested conditions  
+- **Separate conditions**: Prefer multiple if statements over compound conditions
+- **Always use curly brackets** even for single statements
+- **Ternary operators**: Each part on own line unless very short
+
+```php
+// Happy path last
+if (! $user) {
+    return null;
+}
+
+if (! $user->isActive()) {
+    return null;
+}
+
+// Process active user...
+
+// Short ternary
+$name = $isFoo ? 'foo' : 'bar';
+
+// Multi-line ternary
+$result = $object instanceof Model ?
+    $object->name :
+    'A default value';
+
+// Ternary instead of else
+$condition
+    ? $this->doSomething()
+    : $this->doSomethingElse();
+```
+
+## Laravel Conventions
+
+### Routes
+- URLs: kebab-case (`/open-source`)
+- Route names: camelCase (`->name('openSource')`)
+- Parameters: camelCase (`{userId}`)
+- Use tuple notation: `[Controller::class, 'method']`
+
+### Controllers
+- Plural resource names (`PostsController`)
+- Stick to CRUD methods (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`)
+- Extract new controllers for non-CRUD actions
+
+### Configuration
+- Files: kebab-case (`pdf-generator.php`)
+- Keys: snake_case (`chrome_path`)
+- Add service configs to `config/services.php`, don't create new files
+- Use `config()` helper, avoid `env()` outside config files
+
+### Artisan Commands
+- Names: kebab-case (`delete-old-records`)
+- Always provide feedback (`$this->comment('All ok!')`)
+- Show progress for loops, summary at end
+- Put output BEFORE processing item (easier debugging):
+  ```php
+  $items->each(function(Item $item) {
+      $this->info("Processing item id `{$item->id}`...");
+      $this->processItem($item);
+  });
+  
+  $this->comment("Processed {$items->count()} items.");
+  ```
+
+## Strings & Formatting
+
+- **String interpolation** over concatenation:
+
+## Enums
+
+- Use PascalCase for enum values:
+
+## Comments
+
+- **Avoid comments** - write expressive code instead
+- When needed, use proper formatting:
+  ```php
+  // Single line with space after //
+  
+  /*
+   * Multi-line blocks start with single *
+   */
+  ```
+- Refactor comments into descriptive function names
+
+## Whitespace
+
+- Add blank lines between statements for readability
+- Exception: sequences of equivalent single-line operations
+- No extra empty lines between `{}` brackets
+- Let code "breathe" - avoid cramped formatting
+
+## Validation
+
+- Use array notation for multiple rules (easier for custom rule classes):
+  ```php
+  public function rules() {
+      return [
+          'email' => ['required', 'email'],
+      ];
+  }
+  ```
+- Custom validation rules use snake_case:
+  ```php
+  Validator::extend('organisation_type', function ($attribute, $value) {
+      return OrganisationType::isValid($value);
+  });
+  ```
+
+## Blade Templates
+
+- Indent with 4 spaces
+- No spaces after control structures:
+  ```blade
+  @if($condition)
+      Something
+  @endif
+  ```
+
+## Authorization
+
+- Policies use camelCase: `Gate::define('editPost', ...)`
+- Use CRUD words, but `view` instead of `show`
+
+## Translations
+
+- Use `__()` function over `@lang`:
+
+## API Routing
+
+- Use plural resource names: `/errors`
+- Use kebab-case: `/error-occurrences`
+- Limit deep nesting for simplicity:
+  ```
+  /error-occurrences/1
+  /errors/1/occurrences
+  ```
+
+## Testing
+
+- Keep test classes in same file when possible
+- Use descriptive test method names
+- Follow the arrange-act-assert pattern
+
+## Quick Reference
+
+### Naming Conventions
+- **Classes**: PascalCase (`UserController`, `OrderStatus`)
+- **Methods/Variables**: camelCase (`getUserName`, `$firstName`)
+- **Routes**: kebab-case (`/open-source`, `/user-profile`)
+- **Config files**: kebab-case (`pdf-generator.php`)
+- **Config keys**: snake_case (`chrome_path`)
+- **Artisan commands**: kebab-case (`php artisan delete-old-records`)
+
+### File Structure
+- Controllers: plural resource name + `Controller` (`PostsController`)
+- Views: camelCase (`openSource.blade.php`)  
+- Jobs: action-based (`CreateUser`, `SendEmailNotification`)
+- Events: tense-based (`UserRegistering`, `UserRegistered`)
+- Listeners: action + `Listener` suffix (`SendInvitationMailListener`)
+- Commands: action + `Command` suffix (`PublishScheduledPostsCommand`)
+- Mailables: purpose + `Mail` suffix (`AccountActivatedMail`)
+- Resources/Transformers: plural + `Resource`/`Transformer` (`UsersResource`)
+- Enums: descriptive name, no prefix (`OrderStatus`, `BookingType`)
+
+### Migrations
+- do not write down methods in migrations, only up methods
+
+### Code Quality Reminders
+
+#### PHP
+- Use typed properties over docblocks
+- Prefer early returns over nested if/else
+- Use constructor property promotion when all properties can be promoted
+- Avoid `else` statements when possible
+- Use string interpolation over concatenation
+- Always use curly braces for control structures
+
+---
+
+*These guidelines are maintained by [Spatie](https://spatie.be/guidelines) and optimized for AI code assistants.*
+
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
@@ -8,7 +254,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.4.12
+- php - 8.4.15
 - filament/filament (FILAMENT) - v4
 - laravel/framework (LARAVEL) - v12
 - laravel/prompts (PROMPTS) - v0
@@ -20,7 +266,6 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/sail (SAIL) - v1
 - phpunit/phpunit (PHPUNIT) - v11
 - tailwindcss (TAILWINDCSS) - v4
-
 
 ## Conventions
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, naming.
@@ -121,116 +366,12 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - You must not run any commands to make the site available via HTTP(s). It is _always_ available through Laravel Herd.
 
 
-=== filament/core rules ===
-
-## Filament
-- Filament is used by this application, check how and where to follow existing application conventions.
-- Filament is a Server-Driven UI (SDUI) framework for Laravel. It allows developers to define user interfaces in PHP using structured configuration objects. It is built on top of Livewire, Alpine.js, and Tailwind CSS.
-- You can use the `search-docs` tool to get information from the official Filament documentation when needed. This is very useful for Artisan command arguments, specific code examples, testing functionality, relationship management, and ensuring you're following idiomatic practices.
-- Utilize static `make()` methods for consistent component initialization.
-
-### Artisan
-- You must use the Filament specific Artisan commands to create new files or components for Filament. You can find these with the `list-artisan-commands` tool, or with `php artisan` and the `--help` option.
-- Inspect the required options, always pass `--no-interaction`, and valid arguments for other options when applicable.
-
-### Filament's Core Features
-- Actions: Handle doing something within the application, often with a button or link. Actions encapsulate the UI, the interactive modal window, and the logic that should be executed when the modal window is submitted. They can be used anywhere in the UI and are commonly used to perform one-time actions like deleting a record, sending an email, or updating data in the database based on modal form input.
-- Forms: Dynamic forms rendered within other features, such as resources, action modals, table filters, and more.
-- Infolists: Read-only lists of data.
-- Notifications: Flash notifications displayed to users within the application.
-- Panels: The top-level container in Filament that can include all other features like pages, resources, forms, tables, notifications, actions, infolists, and widgets.
-- Resources: Static classes that are used to build CRUD interfaces for Eloquent models. Typically live in `app/Filament/Resources`.
-- Schemas: Represent components that define the structure and behavior of the UI, such as forms, tables, or lists.
-- Tables: Interactive tables with filtering, sorting, pagination, and more.
-- Widgets: Small component included within dashboards, often used for displaying data in charts, tables, or as a stat.
-
-### Relationships
-- Determine if you can use the `relationship()` method on form components when you need `options` for a select, checkbox, repeater, or when building a `Fieldset`:
-
-<code-snippet name="Relationship example for Form Select" lang="php">
-Forms\Components\Select::make('user_id')
-    ->label('Author')
-    ->relationship('author')
-    ->required(),
-</code-snippet>
-
-
-## Testing
-- It's important to test Filament functionality for user satisfaction.
-- Ensure that you are authenticated to access the application within the test.
-- Filament uses Livewire, so start assertions with `livewire()` or `Livewire::test()`.
-
-### Example Tests
-
-<code-snippet name="Filament Table Test" lang="php">
-    livewire(ListUsers::class)
-        ->assertCanSeeTableRecords($users)
-        ->searchTable($users->first()->name)
-        ->assertCanSeeTableRecords($users->take(1))
-        ->assertCanNotSeeTableRecords($users->skip(1))
-        ->searchTable($users->last()->email)
-        ->assertCanSeeTableRecords($users->take(-1))
-        ->assertCanNotSeeTableRecords($users->take($users->count() - 1));
-</code-snippet>
-
-<code-snippet name="Filament Create Resource Test" lang="php">
-    livewire(CreateUser::class)
-        ->fillForm([
-            'name' => 'Howdy',
-            'email' => 'howdy@example.com',
-        ])
-        ->call('create')
-        ->assertNotified()
-        ->assertRedirect();
-
-    assertDatabaseHas(User::class, [
-        'name' => 'Howdy',
-        'email' => 'howdy@example.com',
-    ]);
-</code-snippet>
-
-<code-snippet name="Testing Multiple Panels (setup())" lang="php">
-    use Filament\Facades\Filament;
-
-    Filament::setCurrentPanel('app');
-</code-snippet>
-
-<code-snippet name="Calling an Action in a Test" lang="php">
-    livewire(EditInvoice::class, [
-        'invoice' => $invoice,
-    ])->callAction('send');
-
-    expect($invoice->refresh())->isSent()->toBeTrue();
-</code-snippet>
-
-
-=== filament/v4 rules ===
-
-## Filament 4
-
-### Important Version 4 Changes
-- File visibility is now `private` by default.
-- The `deferFilters` method from Filament v3 is now the default behavior in Filament v4, so users must click a button before the filters are applied to the table. To disable this behavior, you can use the `deferFilters(false)` method.
-- The `Grid`, `Section`, and `Fieldset` layout components no longer span all columns by default.
-- The `all` pagination page method is not available for tables by default.
-- All action classes extend `Filament\Actions\Action`. No action classes exist in `Filament\Tables\Actions`.
-- The `Form` & `Infolist` layout components have been moved to `Filament\Schemas\Components`, for example `Grid`, `Section`, `Fieldset`, `Tabs`, `Wizard`, etc.
-- A new `Repeater` component for Forms has been added.
-- Icons now use the `Filament\Support\Icons\Heroicon` Enum by default. Other options are available and documented.
-
-### Organize Component Classes Structure
-- Schema components: `Schemas/Components/`
-- Table columns: `Tables/Columns/`
-- Table filters: `Tables/Filters/`
-- Actions: `Actions/`
-
-
 === laravel/core rules ===
 
 ## Do Things the Laravel Way
 
 - Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using the `list-artisan-commands` tool.
-- If you're creating a generic PHP class, use `artisan make:class`.
+- If you're creating a generic PHP class, use `php artisan make:class`.
 - Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
 
 ### Database
@@ -265,7 +406,7 @@ Forms\Components\Select::make('user_id')
 ### Testing
 - When creating models for tests, use the factories for the models. Check if the factory has custom states that can be used before manually setting up the model.
 - Faker: Use methods such as `$this->faker->word()` or `fake()->randomDigit()`. Follow existing conventions whether to use `$this->faker` or `fake()`.
-- When creating tests, make use of `php artisan make:test [options] <name>` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
+- When creating tests, make use of `php artisan make:test [options] {name}` to create a feature test, and pass `--unit` to create a unit test. Most tests should be feature tests.
 
 ### Vite Error
 - If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
@@ -390,7 +531,7 @@ document.addEventListener('livewire:init', function () {
 
 ## PHPUnit Core
 
-- This application uses PHPUnit for testing. All tests must be written as PHPUnit classes. Use `php artisan make:test --phpunit <name>` to create a new test.
+- This application uses PHPUnit for testing. All tests must be written as PHPUnit classes. Use `php artisan make:test --phpunit {name}` to create a new test.
 - If you see a test using "Pest", convert it to PHPUnit.
 - Every time a test has been updated, run that singular test.
 - When the tests relating to your feature are passing, ask the user if they would like to also run the entire test suite to make sure everything is still passing.
@@ -435,6 +576,13 @@ document.addEventListener('livewire:init', function () {
 
 - Always use Tailwind CSS v4 - do not use the deprecated utilities.
 - `corePlugins` is not supported in Tailwind v4.
+- In Tailwind v4, configuration is CSS-first using the `@theme` directive — no separate `tailwind.config.js` file is needed.
+<code-snippet name="Extending Theme in CSS" lang="css">
+@theme {
+  --color-brand: oklch(0.72 0.11 178);
+}
+</code-snippet>
+
 - In Tailwind v4, you import Tailwind using a regular CSS `@import` statement, not using the `@tailwind` directives used in v3:
 
 <code-snippet name="Tailwind v4 Import Tailwind Diff" lang="diff">
@@ -462,4 +610,104 @@ document.addEventListener('livewire:init', function () {
 | overflow-ellipsis | text-ellipsis |
 | decoration-slice | box-decoration-slice |
 | decoration-clone | box-decoration-clone |
+
+
+=== filament/filament rules ===
+
+## Filament
+- Filament is used by this application, check how and where to follow existing application conventions.
+- Filament is a Server-Driven UI (SDUI) framework for Laravel. It allows developers to define user interfaces in PHP using structured configuration objects. It is built on top of Livewire, Alpine.js, and Tailwind CSS.
+- You can use the `search-docs` tool to get information from the official Filament documentation when needed. This is very useful for Artisan command arguments, specific code examples, testing functionality, relationship management, and ensuring you're following idiomatic practices.
+- Utilize static `make()` methods for consistent component initialization.
+
+### Artisan
+- You must use the Filament specific Artisan commands to create new files or components for Filament. You can find these with the `list-artisan-commands` tool, or with `php artisan` and the `--help` option.
+- Inspect the required options, always pass `--no-interaction`, and valid arguments for other options when applicable.
+
+### Filament's Core Features
+- Actions: Handle doing something within the application, often with a button or link. Actions encapsulate the UI, the interactive modal window, and the logic that should be executed when the modal window is submitted. They can be used anywhere in the UI and are commonly used to perform one-time actions like deleting a record, sending an email, or updating data in the database based on modal form input.
+- Forms: Dynamic forms rendered within other features, such as resources, action modals, table filters, and more.
+- Infolists: Read-only lists of data.
+- Notifications: Flash notifications displayed to users within the application.
+- Panels: The top-level container in Filament that can include all other features like pages, resources, forms, tables, notifications, actions, infolists, and widgets.
+- Resources: Static classes that are used to build CRUD interfaces for Eloquent models. Typically live in `app/Filament/Resources`.
+- Schemas: Represent components that define the structure and behavior of the UI, such as forms, tables, or lists.
+- Tables: Interactive tables with filtering, sorting, pagination, and more.
+- Widgets: Small component included within dashboards, often used for displaying data in charts, tables, or as a stat.
+
+### Relationships
+- Determine if you can use the `relationship()` method on form components when you need `options` for a select, checkbox, repeater, or when building a `Fieldset`:
+
+<code-snippet name="Relationship example for Form Select" lang="php">
+Forms\Components\Select::make('user_id')
+    ->label('Author')
+    ->relationship('author')
+    ->required(),
+</code-snippet>
+
+
+## Testing
+- It's important to test Filament functionality for user satisfaction.
+- Ensure that you are authenticated to access the application within the test.
+- Filament uses Livewire, so start assertions with `livewire()` or `Livewire::test()`.
+
+### Example Tests
+
+<code-snippet name="Filament Table Test" lang="php">
+    livewire(ListUsers::class)
+        ->assertCanSeeTableRecords($users)
+        ->searchTable($users->first()->name)
+        ->assertCanSeeTableRecords($users->take(1))
+        ->assertCanNotSeeTableRecords($users->skip(1))
+        ->searchTable($users->last()->email)
+        ->assertCanSeeTableRecords($users->take(-1))
+        ->assertCanNotSeeTableRecords($users->take($users->count() - 1));
+</code-snippet>
+
+<code-snippet name="Filament Create Resource Test" lang="php">
+    livewire(CreateUser::class)
+        ->fillForm([
+            'name' => 'Howdy',
+            'email' => 'howdy@example.com',
+        ])
+        ->call('create')
+        ->assertNotified()
+        ->assertRedirect();
+
+    assertDatabaseHas(User::class, [
+        'name' => 'Howdy',
+        'email' => 'howdy@example.com',
+    ]);
+</code-snippet>
+
+<code-snippet name="Testing Multiple Panels (setup())" lang="php">
+    use Filament\Facades\Filament;
+
+    Filament::setCurrentPanel('app');
+</code-snippet>
+
+<code-snippet name="Calling an Action in a Test" lang="php">
+    livewire(EditInvoice::class, [
+        'invoice' => $invoice,
+    ])->callAction('send');
+
+    expect($invoice->refresh())->isSent()->toBeTrue();
+</code-snippet>
+
+
+### Important Version 4 Changes
+- File visibility is now `private` by default.
+- The `deferFilters` method from Filament v3 is now the default behavior in Filament v4, so users must click a button before the filters are applied to the table. To disable this behavior, you can use the `deferFilters(false)` method.
+- The `Grid`, `Section`, and `Fieldset` layout components no longer span all columns by default.
+- The `all` pagination page method is not available for tables by default.
+- All action classes extend `Filament\Actions\Action`. No action classes exist in `Filament\Tables\Actions`.
+- The `Form` & `Infolist` layout components have been moved to `Filament\Schemas\Components`, for example `Grid`, `Section`, `Fieldset`, `Tabs`, `Wizard`, etc.
+- A new `Repeater` component for Forms has been added.
+- Icons now use the `Filament\Support\Icons\Heroicon` Enum by default. Other options are available and documented.
+
+### Organize Component Classes Structure
+- Schema components: `Schemas/Components/`
+- Table columns: `Tables/Columns/`
+- Table filters: `Tables/Filters/`
+- Actions: `Actions/`
 </laravel-boost-guidelines>

@@ -7,9 +7,10 @@
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.1.16",
-        "@tailwindcss/vite": "^4.1.16",
+        "@tailwindcss/vite": "^4.1.18",
         "@vitejs/plugin-vue": "^6.0.1",
         "laravel-vite-plugin": "^2.0.0",
+        "tailwindcss": "^4.1.18",
         "vite": "^7.0.6"
     },
     "dependencies": {
@@ -19,7 +20,6 @@
         "locomotive-scroll": "^4.1.4",
         "micromodal": "^0.6.1",
         "swiper": "^11.2.10",
-        "swup": "^4.8.2",
-        "tailwindcss": "^4.1.16"
+        "swup": "^4.8.2"
     }
 }

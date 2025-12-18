@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreignIdFor(Storage::class);
             $table->foreignIdFor(Place::class);
             $table->string('name'); // название инвентаря
-            $table->enum('ownership_type', ['own', 'rented', 'other']); // форма владения
+            $table->integer('ownership'); // форма владения
+            $table->string('serial_number'); // форма владения
             $table->decimal('unit_price', 12, 2)->nullable(); // цена за единицу
             $table->integer('quantity')->default(0); // текущее количество
             $table->timestamps(); // дата добавления и обновления
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Storage::class);
             $table->date('audit_date'); // дата проведения инвентаризации
-            $table->decimal('total_loss_cost', 12, 2)->default(0); // общая сумма недостачи
+            $table->decimal('loss_cost', 12, 2)->default(0); // общая сумма недостачи
             $table->timestamps();
         });
 

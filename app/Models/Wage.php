@@ -25,6 +25,11 @@ class Wage extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     public function workshops()
     {
         return $this->belongsTo(Workshop::class, 'workshop_id', 'workshop_id');

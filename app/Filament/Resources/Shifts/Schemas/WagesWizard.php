@@ -28,12 +28,41 @@ class WagesWizard
                 ->addActionLabel(__('Add'))
                 ->schema([
                     Select::make('user_id')->translateLabel()
-                        ->options(
-                            User::whereHas('place', function ($query) {
-                                $query->where('place_id', Filament::getTenant()->id);
-                            })->visible(true)->get()
-                                ->pluck('name', 'id')
-                        )
+                        ->options(function () {
+                            $options = [];
+
+                            $users = User::with('wage')->orderBy('name', 'asc')
+                                ->orderBy('id', 'desc')
+                                ->visible(true)
+                                ->get()
+                                ->groupBy(fn ($user) => $user->wage?->name ?? 'Без ставки');
+
+                            $options = $users->map(function ($group) {
+                                return $group->mapWithKeys(fn ($user) => [
+                                    $user->id => $user->name,
+                                ])->toArray();
+                            })->toArray();
+
+                            return $options;
+
+                            // $wages = Wage::with('users')->orderBy('wage', 'desc')->get();
+
+                            // foreach ($wages as $wage) {
+                            //     $options[$wage->name] = collect($wage->users)->mapWithKeys(function ($user) {
+                            //         return [$user->id => $user->name];
+                            //     })->toArray();
+                            // }
+
+                            // return $options;
+                        })
+
+                        // ->options(
+
+                        //     User::whereHas('place', function ($query) {
+                        //         $query->where('place_id', Filament::getTenant()->id);
+                        //     })->visible(true)->get()
+                        //         ->pluck('name', 'id')
+                        // )
                         ->required()
                         ->reactive()
                         ->native(false)
@@ -134,8 +163,7 @@ class WagesWizard
                 // )
                 ->itemLabel(fn (array $state): ?string => (User::find($state['user_id'] ?? null)?->name).' '.($state['cashout'] ?? '-')
                 ),
-            TextEntry::make('wages_text')
-                ->translateLabel()
+            TextEntry::make('wages_text')->label(__('Wages'))
                 ->state(function (Set $set, Get $get) {
                     $totalWage = collect($get('users'))
                         ->pluck('cashout')
@@ -150,7 +178,6 @@ class WagesWizard
             Hidden::make('wages')
                 ->inlineLabel()
                 ->reactive()
-                ->translateLabel()
                 ->default(
                     function (Set $set, $get) {
                         $totalWage = collect($get('users'))
