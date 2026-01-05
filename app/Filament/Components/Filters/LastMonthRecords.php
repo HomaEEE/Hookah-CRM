@@ -13,6 +13,7 @@ class LastMonthRecords extends Filter
             ->schema([
                 DateRangeFilter::make('created_at')->translateLabel()
                     ->defaultLast30Days(),
+
             ]);
     }
 }

@@ -193,7 +193,6 @@ class SupplyResource extends Resource
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
             ])
-            ->deferFilters(false)
 
             ->recordActions([
                 ActionGroup::make([
@@ -250,6 +249,7 @@ class SupplyResource extends Resource
                             ]),
                         Tab::make(__('Photo'))
                             ->schema([
+
                                 SpatieMediaLibraryImageEntry::make('invoice')
                                     ->collection('supplies')
                                     ->simpleLightbox()

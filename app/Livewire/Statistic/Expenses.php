@@ -58,7 +58,6 @@ class Expenses extends BaseWidget
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 
             ])
-            ->deferFilters(false)
             ->modifyQueryUsing(function ($query) {
                 $query->selectRaw('category_id as id, category_id, sum(sum) as total, count(*) as count')
                     ->groupBy('category_id')

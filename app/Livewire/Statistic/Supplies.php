@@ -55,7 +55,7 @@ class Supplies extends BaseWidget
                     ->defaultThisMonth()
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 
-            ])->deferFilters(false)
+            ])
 
             ->modifyQueryUsing(function ($query) {
 

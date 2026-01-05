@@ -48,7 +48,6 @@ class StopList extends Component implements HasActions, HasForms, HasTable
             ->filters([
                 TernaryFilter::make('visible_menu')->label(__('Visible menu'))->default(0),
             ])
-            ->deferFilters(false)
             ->extremePaginationLinks()
 
             ->toolbarActions([

@@ -5,7 +5,9 @@
         <div class="modal-{{$modal}} content">
             @if ($modal == 'item')
                 <div class="modal-img">
-                    <p class="sup" id="modal-sup"></p>
+                        @if(!empty($item['sup']))
+                            <p class="sup" id="modal-sup">{{ $item['sup'] }}</p>
+                        @endif
                      <img src=""  id="modal-image">
                     </div>
 

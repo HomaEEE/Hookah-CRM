@@ -92,7 +92,7 @@ class AdminPanelProvider extends PanelProvider
                     ->localizePermissionLabels()
                     ->scopeToTenant(true),
                 SimpleLightBoxPlugin::make(),
-                PhosphorIcons::make(),
+                PhosphorIcons::make()->regular(),
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,

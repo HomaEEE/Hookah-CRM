@@ -1,3 +1,6 @@
+#AI
+/.ai
+/.github
 # Laravel
 /node_modules
 /public/storage
@@ -65,6 +68,3 @@ package-lock.json
 CLAUDE.md
 GEMINI.md
 boost.json
-.github/copilot-instructions.md
-.github/copilot-instructions.md
-.github/copilot-instructions.md

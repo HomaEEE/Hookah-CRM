@@ -134,7 +134,6 @@ class ExpenseTable
                 //     ),
 
             ])
-            ->deferFilters(false)
 
             ->recordActions([
                 ActionGroup::make([

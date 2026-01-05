@@ -104,7 +104,7 @@ class ProductTable
                         false: fn (Builder $query) => $query->where('visible_menu', 0),
                         blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
                     ),
-            ])->deferFilters(false)
+            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
+use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
@@ -61,6 +62,9 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
         }
+
+        Table::configureUsing(fn (Table $table) => $table
+            ->deferFilters(false));
 
         // Принудительно устанавливаем локаль для Carbon
         Carbon::setLocale(config('app.locale')); // 'uk' или 'ru'

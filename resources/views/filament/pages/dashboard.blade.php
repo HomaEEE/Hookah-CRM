@@ -37,7 +37,7 @@
 
         </x-filament::tabs>
 
-        <div class="m-2">
+        <div class="mt-2">
             <div x-show="tab === 'expenses'">
                 @livewire(\App\Livewire\Dashboard\ExpensesDay::class)
             </div>

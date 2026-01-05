@@ -800,6 +800,27 @@ main {
       opacity 0.4s ease,
       transform 0.4s ease;
 
+    .image {
+      position: relative;
+
+      .sup {
+        font-size: 0.8em;
+        background: $red;
+        padding: 3px 5px;
+        color: $text;
+        position: absolute;
+        top: 0;
+        left: 0;
+        span {
+          .hot {
+            background-image: "assets/imgs/menu/hot.png";
+            height: 100%;
+            width: auto;
+          }
+        }
+      }
+    }
+
     h4 {
       font-size: 0.8rem;
       font-weight: 300;
@@ -897,6 +918,7 @@ main {
       width: 100%;
       border-radius: 1.25rem;
       .modal-img {
+        position: relative;
         width: 100%;
         position: relative;
         aspect-ratio: 1/1;
@@ -905,6 +927,7 @@ main {
         border-radius: 1rem;
         margin-bottom: 5px;
         .sup {
+          position: absolute;
           background: $red;
           color: $text;
           font-size: 0.8rem;
@@ -1170,6 +1193,7 @@ main {
   }
   .menu_item {
     margin: 10px auto;
+
     .item-title {
       padding: 0;
       margin: 0;
@@ -1210,18 +1234,6 @@ main {
         }
         @media (max-width: 320px) {
           font-size: 0.7em;
-        }
-      }
-      sup {
-        font-size: 0.6em;
-        color: $text;
-        margin-left: 10px;
-        span {
-          .hot {
-            background-image: "assets/imgs/menu/hot.png";
-            height: 100%;
-            width: auto;
-          }
         }
       }
     }

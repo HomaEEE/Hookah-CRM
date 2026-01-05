@@ -28,22 +28,23 @@ class WagesWizard
                 ->addActionLabel(__('Add'))
                 ->schema([
                     Select::make('user_id')->translateLabel()
-                        ->options(function () {
-                            $options = [];
+                        // список с разделением по ролям
+                        // ->options(function () {
+                        //     $options = [];
 
-                            $users = User::with('wage')->orderBy('name', 'asc')
-                                ->orderBy('id', 'desc')
-                                ->visible(true)
-                                ->get()
-                                ->groupBy(fn ($user) => $user->wage?->name ?? 'Без ставки');
+                        //     $users = User::with('wage')->orderBy('name', 'asc')
+                        //         ->orderBy('id', 'desc')
+                        //         ->visible(true)
+                        //         ->get()
+                        //         ->groupBy(fn ($user) => $user->wage?->name ?? 'Без ставки');
 
-                            $options = $users->map(function ($group) {
-                                return $group->mapWithKeys(fn ($user) => [
-                                    $user->id => $user->name,
-                                ])->toArray();
-                            })->toArray();
+                        //     $options = $users->map(function ($group) {
+                        //         return $group->mapWithKeys(fn ($user) => [
+                        //             $user->id => $user->name,
+                        //         ])->toArray();
+                        //     })->toArray();
 
-                            return $options;
+                        //     return $options;
 
                             // $wages = Wage::with('users')->orderBy('wage', 'desc')->get();
 
@@ -54,16 +55,16 @@ class WagesWizard
                             // }
 
                             // return $options;
-                        })
+                       // })
 
-                        // ->options(
-
-                        //     User::whereHas('place', function ($query) {
-                        //         $query->where('place_id', Filament::getTenant()->id);
-                        //     })->visible(true)->get()
-                        //         ->pluck('name', 'id')
-                        // )
+                        ->options(
+                            User::orderBy('id', 'asc')
+                                ->visible(true)
+                                ->get()
+                                ->pluck('name', 'id')
+                        )
                         ->required()
+                        ->preload()
                         ->reactive()
                         ->native(false)
                         ->live(onBlur: true)
@@ -223,6 +224,7 @@ class WagesWizard
                     $set('procent_day', $get('procent_day'));
                 }
             }
+
             $set('cashout', ($get('wage') * $get('days')) + $get('procent_day'));
         } else {
             $set('wage', 0);

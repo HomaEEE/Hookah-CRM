@@ -749,6 +749,23 @@ main .feedbacks .feedback {
   transform: translateY(20px);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
+.positions .menu-item .image {
+  position: relative;
+}
+.positions .menu-item .image .sup {
+  font-size: 0.8em;
+  background: #760000;
+  padding: 3px 5px;
+  color: #e1e1e1;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.positions .menu-item .image .sup span .hot {
+  background-image: "assets/imgs/menu/hot.png";
+  height: 100%;
+  width: auto;
+}
 .positions .menu-item h4 {
   font-size: 0.8rem;
   font-weight: 300;
@@ -837,6 +854,7 @@ main .feedbacks .feedback {
     border-radius: 1.25rem;
   }
   .modal-container .content .modal-img {
+    position: relative;
     width: 100%;
     position: relative;
     aspect-ratio: 1/1;
@@ -846,6 +864,7 @@ main .feedbacks .feedback {
     margin-bottom: 5px;
   }
   .modal-container .content .modal-img .sup {
+    position: absolute;
     background: #760000;
     color: #e1e1e1;
     font-size: 0.8rem;
@@ -1177,16 +1196,6 @@ main .feedbacks .feedback {
   .menu_category .menu_item .item-title p {
     font-size: 0.7em;
   }
-}
-.menu_category .menu_item .item-title sup {
-  font-size: 0.6em;
-  color: #e1e1e1;
-  margin-left: 10px;
-}
-.menu_category .menu_item .item-title sup span .hot {
-  background-image: "assets/imgs/menu/hot.png";
-  height: 100%;
-  width: auto;
 }
 .menu_category .menu_item .item-price {
   display: inline;

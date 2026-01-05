@@ -7,25 +7,24 @@
      data-sup="{{ $item['sup'] }}"
      data-desc="{{ $item['frontend_desc'] ? $item['frontend_desc'] : "" }}"
      data-price="{{ number_format($item['price'], 0) }} ₴"
-     {{-- Предполагаем, что у вас есть URL изображения --}}
+
      data-image-url="{{$item->getFirstMediaUrl('products')}}">
   <div class="flex">
-    <div class="shrink-0 rounded-xl">
+    <div class="shrink-0 rounded-xl image">
+    @if(!empty($item['sup']))
+        <p class="sup">{{ $item['sup'] }}</p>
+    @endif
       <img loading="lazy"
-        class="h-32 w-32 object-cover md:h-full md:w-38"
-        src="{{$item->getFirstMediaUrl('products')}}"
-        alt="{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}" />
-    </div>
-    <div class="p-2 md:px-4 w-full">
-      <div class="grid grid-cols-4 gap-4"">
-  <h4 class=" font-semibold inline col-span-3 tracking-wide uppercase">{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }} </h4>
-
-        <p class="text-right"> {{$item['sup']}}</p>
+          class="h-32 w-32 object-cover md:h-full md:w-38"
+          src="{{$item->getFirstMediaUrl('products')}}"
+          alt="{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }}" />
       </div>
-
-
+    <div class="p-2 md:px-2 w-full">
+      <div class="grid">
+  <h4 class=" font-semibold inline tracking-wide uppercase">{{$item['frontend_name'] ? $item['frontend_name'] : $item['product_name'] }} </h4>
+      </div>
          @if (!empty($item['frontend_desc']))
-         <p class="mt-2 description">
+         <p class="mt description">
               {{$item['frontend_desc'] ? $item['frontend_desc'] : ""}}
           </p>
             @endif
