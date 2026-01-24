@@ -25,7 +25,6 @@ class ExpenseTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->deferLoading()
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d-m-Y')
                     ->size('md')
@@ -72,9 +71,7 @@ class ExpenseTable
                     }),
 
             ])->defaultSort('added_at', 'desc')
-            ->deferLoading()
             ->defaultPaginationPageOption(10)
-            ->striped()
             ->filters([
                 DateRangeFilter::make('created_at')->translateLabel()
                     ->defaultLast30Days(),

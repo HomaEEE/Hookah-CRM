@@ -64,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Table::configureUsing(fn (Table $table) => $table
-            ->deferFilters(false));
+            ->deferFilters(false)->deferLoading()->striped());
 
         // Принудительно устанавливаем локаль для Carbon
         Carbon::setLocale(config('app.locale')); // 'uk' или 'ru'

@@ -55,9 +55,7 @@ class IncomeResource extends Resource
                 TextColumn::make('comment')->translateLabel(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->deferLoading()
             ->defaultPaginationPageOption(25)
-            ->striped()
             ->filters([
                 //
             ])

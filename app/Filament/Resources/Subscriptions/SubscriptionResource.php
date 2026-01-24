@@ -37,7 +37,7 @@ class SubscriptionResource extends Resource
     {
         return $schema
             ->components(
-                SubscriptionForm::schema()
+                SubscriptionForm::configure($schema)
             );
     }
 

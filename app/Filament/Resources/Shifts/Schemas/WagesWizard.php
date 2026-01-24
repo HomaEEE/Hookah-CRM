@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Shifts\Schemas;
 
+use App\DTO\WageCalculationDTO;
 use App\Models\User;
 use App\Models\Wage;
-use App\Models\Workshop;
+use App\Services\WageCalculator;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
@@ -192,54 +193,51 @@ class WagesWizard
         ];
     }
 
-    private static function WageCalc(Set $set, Get $get)
+    private static function WageCalc(Set $set, Get $get): void
     {
-        if ($get('user_id') !== null) {
-            $user = User::where('id', $get('user_id'))->first();
-            $set('wage_id', $user->wage_id);
-            $set('wage', $user->wage->wage);
-
-            if ($get('days') == null) {
-                $set('days', $user->shift_day);
-            } else {
-                $get('days');
-            }
-
-            if (isset($user->wage)) {
-
-                if ($get('procent_day') == 0) {
-                    $all_procent = 0;
-                    foreach ($user->wage->procent as $workshop) {
-                        $field = Workshop::where('workshop_id', $workshop['workshop_id'])->first()->toArray();
-                        $all_procent += $get('../../'.$field['field']) * $workshop['num'] / 1;
-                    }
-
-                    $round_procent = $all_procent % 1;
-
-                    if ($round_procent < 5 || $round_procent > 8) {
-                        $roundedToTen = round($all_procent, -1);
-                        $set('procent_day', $roundedToTen % 2 == 0 ? $roundedToTen : $roundedToTen + ($roundedToTen > 0 ? -10 : 10));
-                    }
-                } else {
-                    $set('procent_day', $get('procent_day'));
-                }
-            }
-
-            $set('cashout', ($get('wage') * $get('days')) + $get('procent_day'));
-        } else {
+        $userId = $get('user_id');
+        if (! $userId) {
             $set('wage', 0);
             $set('procent_day', 0);
             $set('cashout', 0);
+
+            return;
         }
+
+        $user = User::with('wage')->find($userId);
+        if (! $user || ! $user->wage) {
+            return;
+        }
+
+        $days = (float) ($get('days') ?? $user->shift_day);
+
+        $set('wage_id', $user->wage_id);
+        $set('wage', $user->wage->wage);
+        $set('days', $days);
+
+        $dto = new WageCalculationDTO(
+            baseWage: (float) $user->wage->wage,
+            days: $days,
+            manualProcent: (float) $get('procent_day'),
+            wageProcentRules: $user->wage->procent ?? [],
+            formValues: $get('../../') ?? []
+        );
+
+        $result = app(WageCalculator::class)->calculate($dto);
+
+        $set('procent_day', $result['procent_day']);
+        $set('cashout', $result['cashout']);
     }
 
-    private static function updateTotals(Get $get, Set $set)
+    private static function updateTotals(Get $get, Set $set): void
     {
-        $totalWage = collect($get('users'))
-            ->pluck('cashout')
-            ->sum();
-        $set('wages', $totalWage);
+        $users = $get('users') ?? [];
 
-        return $totalWage;
+        $total = collect($users)
+            ->pluck('cashout')
+            ->map(fn ($value) => (float) $value)
+            ->sum();
+
+        $set('wages', round($total, 2));
     }
 }

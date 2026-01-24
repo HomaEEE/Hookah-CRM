@@ -11,6 +11,7 @@ use App\Http\Middleware\SetLocale;
 use App\Models\Place;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use Coolsam\Modules\ModulesPlugin;
 use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -88,11 +89,13 @@ class AdminPanelProvider extends PanelProvider
             )
 
             ->plugins([
+
                 FilamentShieldPlugin::make()
                     ->localizePermissionLabels()
                     ->scopeToTenant(true),
                 SimpleLightBoxPlugin::make(),
                 PhosphorIcons::make()->regular(),
+                ModulesPlugin::make(),
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,

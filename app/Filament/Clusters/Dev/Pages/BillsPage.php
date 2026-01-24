@@ -28,7 +28,6 @@ class BillsPage extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->deferLoading()
             ->records(fn (): array => (new PosterApiController)->getAllBills(Filament::getTenant()->id))
 
             ->columns([

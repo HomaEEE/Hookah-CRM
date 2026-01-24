@@ -27,7 +27,6 @@ class SubscriptionTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->deferLoading()
             ->groups([
                 Group::make('next_date')
                     ->label(__('Date'))

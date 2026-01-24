@@ -79,7 +79,6 @@ class SupplyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->deferLoading()
             ->groups([
                 Group::make('created_at')->date()
                     ->label(__('Added at')),
@@ -140,9 +139,7 @@ class SupplyResource extends Resource
                     ->visibleFrom('md'),
 
             ])->defaultSort('added_at', 'desc')
-           // ->deferLoading()
             ->defaultPaginationPageOption(25)
-            ->striped()
             ->filters([
 
                 DateRangeFilter::make('created_at')->translateLabel()
