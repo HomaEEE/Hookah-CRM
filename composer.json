@@ -14,7 +14,7 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-language-switch": "^4.0",
         "bezhansalleh/filament-shield": "^4.0",
-        "coolsam/modules": "^5.0",
+        "coolsam/modules": "*",
         "defstudio/telegraph": "^1.59",
         "filafly/filament-phosphor-icons": "^1.0",
         "filament/filament": "^4.0",
