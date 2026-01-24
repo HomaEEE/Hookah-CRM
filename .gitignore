@@ -61,9 +61,6 @@ coverage/
 /pulbic/buld
 #Filament php
 /app/Policies
-
-composer.lock
-package-lock.json
 /config/insights.php
 CLAUDE.md
 GEMINI.md

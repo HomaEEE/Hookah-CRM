@@ -1,4 +1,4 @@
 {
-   // "Inventory": true,
-   // "TelegramBot": true
+    "Inventory": false,
+    "TelegramBot": false
 }
