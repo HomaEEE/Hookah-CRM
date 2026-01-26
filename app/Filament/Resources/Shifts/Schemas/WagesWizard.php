@@ -179,7 +179,7 @@ class WagesWizard
             baseWage: (float) $user->wage->wage,
             days: $days,
             manualProcent: (float) $get('procent_day'),
-            wageProcentRules: $user->wage->procent ?? [],
+            wageProcentRules: $user->wage->procent,
             formValues: $get('../../') ?? []
         );
 
