@@ -29,35 +29,6 @@ class WagesWizard
                 ->addActionLabel(__('Add'))
                 ->schema([
                     Select::make('user_id')->translateLabel()
-                        // список с разделением по ролям
-                        // ->options(function () {
-                        //     $options = [];
-
-                        //     $users = User::with('wage')->orderBy('name', 'asc')
-                        //         ->orderBy('id', 'desc')
-                        //         ->visible(true)
-                        //         ->get()
-                        //         ->groupBy(fn ($user) => $user->wage?->name ?? 'Без ставки');
-
-                        //     $options = $users->map(function ($group) {
-                        //         return $group->mapWithKeys(fn ($user) => [
-                        //             $user->id => $user->name,
-                        //         ])->toArray();
-                        //     })->toArray();
-
-                        //     return $options;
-
-                            // $wages = Wage::with('users')->orderBy('wage', 'desc')->get();
-
-                            // foreach ($wages as $wage) {
-                            //     $options[$wage->name] = collect($wage->users)->mapWithKeys(function ($user) {
-                            //         return [$user->id => $user->name];
-                            //     })->toArray();
-                            // }
-
-                            // return $options;
-                       // })
-
                         ->options(
                             User::orderBy('id', 'asc')
                                 ->visible(true)
@@ -94,18 +65,7 @@ class WagesWizard
                         ),
 
                     Select::make('days')->translateLabel()
-                        ->options(
-                            [
-                                '0' => '0',
-                                '0.5' => '0.5',
-                                '1' => '1',
-                                '2' => '2',
-                                '3' => '3',
-                                '4' => '4',
-                                '5' => '5',
-                                '6' => '6',
-                                '7' => '7',
-                            ]
+                        ->options(array_combine([0, 0.5, 1, 2, 3, 4, 5, 6, 7], [0, 0.5, 1, 2, 3, 4, 5, 6, 7])
                         )->default(0)
                         ->hidden(fn (Get $get) => $get('user_id') == null)
                         ->required()
