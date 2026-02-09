@@ -2,22 +2,22 @@
 
 namespace App\Filament\Resources\Indications;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Indications\Pages\ManageIndications;
-use App\Filament\Resources\IndicationResource\Pages;
-use App\Models\{Indication,Meter};
+use App\Models\Indication;
+use App\Models\Meter;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class IndicationResource extends Resource
 {
@@ -45,15 +45,15 @@ class IndicationResource extends Resource
         return $schema
             ->components([
                 TableRepeater::make('data')
-                ->headers(['Meter', 'Indication'])
-                ->emptyLabel('Add ingredients to techcard')
-                ->schema([
-                    Select::make('meter_id')->label(__('Meter'))
-                    ->options(
-                        Meter::where('place_id', Filament::getTenant()->id)->pluck('type', 'id')
-                    ),
-                    TextInput::make('indication')
-                ])->columnSpan('full')
+                    ->headers(['Meter', 'Indication'])
+                    ->emptyLabel('Add ingredients to techcard')
+                    ->schema([
+                        Select::make('meter_id')->label(__('Meter'))
+                            ->options(
+                                Meter::where('place_id', Filament::getTenant()->id)->pluck('type', 'id')
+                            ),
+                        TextInput::make('indication'),
+                    ])->columnSpan('full'),
 
             ]);
     }
@@ -68,8 +68,11 @@ class IndicationResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

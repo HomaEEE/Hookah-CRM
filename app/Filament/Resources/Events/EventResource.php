@@ -2,22 +2,22 @@
 
 namespace App\Filament\Resources\Events;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ReplicateAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Events\Pages\ManageEvents;
 use App\Enums\EventType;
-use App\Filament\Resources\EventResource\Pages;
-use App\Filament\Resources\EventResource\RelationManagers;
+use App\Filament\Resources\Events\Pages\ManageEvents;
 use App\Models\Event;
 use Carbon\Carbon;
-use Filament\Forms\Components\{DateTimePicker,TimePicker,Select,Textarea, TextInput};
-use Filament\Forms\{Set, Get, Form};
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -54,20 +54,21 @@ class EventResource extends Resource
                 TextInput::make('title')->translateLabel(),
                 Select::make('type')->options(EventType::class)->native(false),
                 DateTimePicker::make('datetime')->seconds(false)
-                ->native(false)
-                ->minDate(now())
-                ->default(now())
-                ->translateLabel()
-                ->reactive()->afterStateUpdated(
-                    function (\Filament\Schemas\Components\Utilities\Set $set, \Filament\Schemas\Components\Utilities\Get $get) {
-                        $set('end_time', $get('datetime'));
-                    }
-                ),
+                    ->native(false)
+                    ->minDate(now())
+                    ->default(now())
+                    ->translateLabel()
+                    ->live()
+                    ->afterStateUpdated(
+                        function (\Filament\Schemas\Components\Utilities\Set $set, \Filament\Schemas\Components\Utilities\Get $get) {
+                            $set('end_time', $get('datetime'));
+                        }
+                    ),
                 TimePicker::make('end_time')->seconds(false)
-                ->native(false)
-                ->default(now())
-                ->translateLabel(),
-                Textarea::make('comment')->translateLabel()->columns(1)
+                    ->native(false)
+                    ->default(now())
+                    ->translateLabel(),
+                Textarea::make('comment')->translateLabel()->columns(1),
             ]);
     }
 
@@ -76,26 +77,26 @@ class EventResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('type')->label(__('Type'))->badge()
-                ->description(fn (Event $record): string => $record->title, position: 'above'),
+                    ->description(fn (Event $record): string => $record->title, position: 'above'),
                 TextColumn::make('datetime')->label('Day')->since()
-                ->badge()
-                ->description(fn (Event $record): string => $record->eventTime, position: 'above'),
+                    ->badge()
+                    ->description(fn (Event $record): string => $record->eventTime, position: 'above'),
             ])->defaultSort('datetime', 'desc')
             ->filters([
                 //
             ])
             ->recordActions([
                 ReplicateAction::make()
-                ->schema([
-                    DateTimePicker::make('datetime')->seconds(false)
-                    ->native(false)
-                    ->minDate(now())->default(now())
-                    ->translateLabel(),
-                    TimePicker::make('end_time')->seconds(false)
-                    ->native(false)
-                    ->minDate(now())->default(now()->subHours(2))
-                    ->translateLabel(),
-                ]),
+                    ->schema([
+                        DateTimePicker::make('datetime')->seconds(false)
+                            ->native(false)
+                            ->minDate(now())->default(now())
+                            ->translateLabel(),
+                        TimePicker::make('end_time')->seconds(false)
+                            ->native(false)
+                            ->minDate(now())->default(now()->subHours(2))
+                            ->translateLabel(),
+                    ]),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -109,7 +110,7 @@ class EventResource extends Resource
     public static function getHeaderWidgets(): array
     {
         return [
-           // \App\Filament\Widgets\CalendarWidget::make()
+            // \App\Filament\Widgets\CalendarWidget::make()
         ];
     }
 

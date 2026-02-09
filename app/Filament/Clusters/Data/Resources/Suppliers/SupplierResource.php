@@ -2,18 +2,14 @@
 
 namespace App\Filament\Clusters\Data\Resources\Suppliers;
 
-use Filament\Schemas\Schema;
-use Filament\Support\Enums\IconSize;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Schemas\Components\Section;
-use App\Filament\Clusters\Data\Resources\Suppliers\Pages\ManageSuppliers;
 use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\SupplierResource\Pages;
+use App\Filament\Clusters\Data\Resources\Suppliers\Pages\ManageSuppliers;
 use App\Models\Supplier;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
@@ -23,9 +19,11 @@ use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\IconPosition;
+use Filament\Support\Enums\IconSize;
 use Filament\Support\RawJs;
-use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -40,7 +38,7 @@ class SupplierResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
     public static function getPluralModelLabel(): string
     {

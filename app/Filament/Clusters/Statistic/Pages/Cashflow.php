@@ -75,7 +75,7 @@ class Cashflow extends Page
                             ->placeholder(now()->startOfMonth())
                             ->defaultFocusedDate(now()->startOfMonth())->closeOnDateSelection()
                             ->maxDate(fn (Get $get) => $get('to') ?: now())
-                            ->reactive(),
+                            ->live(),
                         DatePicker::make('to')
                             ->translateLabel()
                             ->minDate(fn (Get $get) => $get('from') ?: now())
@@ -84,7 +84,7 @@ class Cashflow extends Page
                             ->default(now())
                             ->placeholder(now()->endOfMonth())
                             ->defaultFocusedDate(now())
-                            ->maxDate(now()),
+                            ->maxDate(now())->live(),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),

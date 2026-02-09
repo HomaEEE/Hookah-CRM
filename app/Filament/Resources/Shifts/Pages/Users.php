@@ -7,9 +7,11 @@ use App\Models\User;
 use App\Models\Wage;
 use App\Models\Workshop;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -168,8 +170,11 @@ class Users extends ManageRelatedRecords
                 CreateAction::make()->label(__('Add')),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
             ]);

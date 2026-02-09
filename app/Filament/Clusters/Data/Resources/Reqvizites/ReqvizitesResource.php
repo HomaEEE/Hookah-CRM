@@ -2,24 +2,23 @@
 
 namespace App\Filament\Clusters\Data\Resources\Reqvizites;
 
-use Filament\Pages\Enums\SubNavigationPosition;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Clusters\Data\Resources\Reqvizites\Pages\ManageReqvizites;
 use App\Filament\Clusters\Data\DataCluster;
-use App\Filament\Clusters\Data\Resources\ReqvizitesResource\Pages;
+use App\Filament\Clusters\Data\Resources\Reqvizites\Pages\ManageReqvizites;
 use App\Models\Reqvizite;
 use App\Models\Supplier;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -29,7 +28,7 @@ class ReqvizitesResource extends Resource
 
     protected static ?string $cluster = DataCluster::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-credit-card';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-credit-card';
 
     protected static ?int $navigationSort = 4;
 
@@ -91,9 +90,11 @@ class ReqvizitesResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make()->label(''),
-                EditAction::make()->label(''),
-                DeleteAction::make()->label(''),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

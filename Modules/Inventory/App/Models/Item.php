@@ -1,29 +1,25 @@
 <?php
 
-namespace Modules\Inventory\App\Models;
+namespace Modules\Inventory\Models;
 
-use App\Casts\MoneyCast;
 use App\Models\Place;
-use App\Models\Storage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Item extends Model
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory;
 
-    protected $fillable = ['name', 'price', 'qty', 'serial_number', 'storage_id'];
-
-    protected $casts = ['price' => MoneyCast::class];
-
-    public function storage()
-    {
-        return $this->belongsTo(Storage::class);
-    }
+    protected $fillable = ['place_id', 'user_id', 'name', 'count', 'price', 'comment', 'sn'];
 
     public function place()
     {
-        return $this->belongsTo(Place::class);
+        return $this->belongsTo(Place::class, 'place_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -2,26 +2,24 @@
 
 namespace App\Filament\Resources\Purchases;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Utilities\Get;
 use App\Enums\IngredientUnit;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Purchases\Pages\ManagePurchases;
-use App\Filament\Resources\PurchaseResource\Pages;
 use App\Models\Ingredient;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Auth;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -29,7 +27,7 @@ class PurchaseResource extends Resource
 {
     protected static ?string $model = Purchase::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Stocks';
+    protected static string|\UnitEnum|null $navigationGroup = 'Stocks';
 
     protected static ?int $navigationSort = 4;
 
@@ -76,13 +74,12 @@ class PurchaseResource extends Resource
                             ->native(false)
                             ->searchable()
                             ->columnSpan(7)
-                            ->reactive()
                             ->live()
                             ->options(
                                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
                             ),
                         TextInput::make('quantity')
-                            ->reactive()
+                            ->live()
                             ->columnSpan(5)
                             ->hiddenLabel()
                             ->suffix(static function (Get $get) {

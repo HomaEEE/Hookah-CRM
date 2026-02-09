@@ -7,9 +7,11 @@ use App\Models\Arrear;
 use App\Models\User;
 use Auth;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -87,8 +89,11 @@ class ArrearResource extends Resource
                         $record->save();
                     })->visible(fn (Arrear $record) => $record->refund == '0'),
 
-                EditAction::make()->iconButton(),
-                DeleteAction::make()->iconButton(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
 
             ])
             ->toolbarActions([

@@ -2,27 +2,22 @@
 
 namespace App\Filament\Resources\Bookings;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ReplicateAction;
+use App\Filament\Components\BookingForm;
+use App\Filament\Resources\Bookings\Pages\ManageBookings;
+use App\Models\Booking;
+use Carbon\Carbon;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Bookings\Pages\ManageBookings;
-use App\Filament\Components\BookingForm;
-use App\Filament\Resources\BookingResource\Pages;
-use Illuminate\Database\Eloquent\Model;
-
-use App\Models\{Booking};
-use Auth;
-use Carbon\Carbon;
+use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 class BookingResource extends Resource
@@ -93,17 +88,17 @@ class BookingResource extends Resource
                     ->query(fn (Builder $query): Builder => $query->whereDate('time', Carbon::today())),
             ])
             ->recordActions([
-                ReplicateAction::make(),
-                // ->form([
-                //     DateTimePicker::make('time')->seconds(false)
-                //     ->native(false)
-                //     ->minDate(now())->default(now())
-                //     ->translateLabel()
-                // ])->beforeSave(function (ReplicateAction $action, Event $record, array  $data) {
-                //     $record['time'] = $data['time'];
-                //     // Access and apply form data (e.g., $record->custom_field = $data['custom_field'])
-                // }),
                 ActionGroup::make([
+                    ReplicateAction::make(),
+                    // ->form([
+                    //     DateTimePicker::make('time')->seconds(false)
+                    //     ->native(false)
+                    //     ->minDate(now())->default(now())
+                    //     ->translateLabel()
+                    // ])->beforeSave(function (ReplicateAction $action, Event $record, array  $data) {
+                    //     $record['time'] = $data['time'];
+                    //     // Access and apply form data (e.g., $record->custom_field = $data['custom_field'])
+                    // }),
                     ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),

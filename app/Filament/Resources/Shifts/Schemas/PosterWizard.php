@@ -92,7 +92,7 @@ class PosterWizard
                     ->numeric()
                     ->readOnly()
                     ->default(0)
-                    ->reactive()
+                    ->live()
                     ->suffixAction(
                         Action::make('copy')
                             ->icon('heroicon-s-clipboard-document-check')
@@ -108,7 +108,7 @@ class PosterWizard
                     ->default(0)
                     ->readOnly()
                     ->numeric()
-                    ->reactive(),
+                    ->live(),
 
                 Hidden::make('old_shift')->label(__('Shift Poster'))
                     ->default(0),

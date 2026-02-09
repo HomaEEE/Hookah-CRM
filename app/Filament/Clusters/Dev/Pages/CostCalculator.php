@@ -2,11 +2,8 @@
 
 namespace App\Filament\Clusters\Dev\Pages;
 
-use App\Filament\Clusters\Dev\Widgets\CostCalcWidgets;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use App\Filament\Clusters\Dev\DevCluster;
+use App\Filament\Clusters\Dev\Widgets\CostCalcWidgets;
 use App\Models\ExpenseCategory;
 use App\Models\Ingredient;
 use App\Models\Wage;
@@ -17,13 +14,16 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CostCalculator extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-calculator';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calculator';
 
     protected string $view = 'filament.clusters.modules.pages.cost-calculator';
 
@@ -122,7 +122,7 @@ class CostCalculator extends Page implements HasForms
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('send-to-bot')->label('')->icon('heroicon-o-paper-airplane'),
+            Action::make('send-to-bot')->iconButton()->icon('heroicon-o-paper-airplane'),
         ];
     }
 

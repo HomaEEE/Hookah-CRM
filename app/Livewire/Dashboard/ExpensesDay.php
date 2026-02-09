@@ -5,7 +5,6 @@ namespace App\Livewire\Dashboard;
 use App\Models\Bill;
 use App\Models\Expense;
 use Carbon\Carbon;
-use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -98,67 +97,65 @@ class ExpensesDay extends BaseWidget implements HasTable
                     }),
             ])
             ->recordActions([
-                ActionGroup::make([
-                    EditAction::make()
-                        ->modalWidth('sm')
-                        ->schema([
-                            Tabs::make('Tabs')
-                                ->contained(false)
-                                ->tabs([
+                EditAction::make()
+                    ->modalWidth('sm')
+                    ->schema([
+                        Tabs::make('Tabs')
+                            ->contained(false)
+                            ->tabs([
 
-                                    Tab::make(__('Expense'))
-                                        ->schema([
-                                            TextInput::make('sum')->translateLabel(),
-                                            ToggleButtons::make('bill_id')->label(__('Type pay'))
-                                                ->options(Bill::get()->pluck('name', 'id'))
-                                                ->default(0)
-                                                ->required()
-                                                ->inline()
-                                                ->grouped()
-                                                ->extraAttributes(['style' => 'width: 100%'])
-                                                ->colors([
-                                                    0 => 'info',
-                                                    1 => 'success',
-                                                ])
-                                                ->reactive(),
+                                Tab::make(__('Expense'))
+                                    ->schema([
+                                        TextInput::make('sum')->translateLabel(),
+                                        ToggleButtons::make('bill_id')->label(__('Type pay'))
+                                            ->options(Bill::get()->pluck('name', 'id'))
+                                            ->default(0)
+                                            ->required()
+                                            ->inline()
+                                            ->grouped()
+                                            ->extraAttributes(['style' => 'width: 100%'])
+                                            ->colors([
+                                                0 => 'info',
+                                                1 => 'success',
+                                            ])
+                                            ->reactive(),
 
-                                            ToggleButtons::make('pay')->label(__('Pay'))
-                                                ->options(
-                                                    [
-                                                        0 => __('No pay'),
-                                                        1 => __('Paid'),
-                                                    ]
-                                                )
-                                                ->colors([
-                                                    0 => 'danger',
-                                                    1 => 'success',
-                                                ])
-                                                ->default(0)
-                                                ->inline()
-                                                ->live()
-                                                ->grouped()
-                                                ->extraAttributes(['style' => 'width: 100%'])
-                                                ->reactive(),
-                                        ]),
-                                    Tab::make(__('Photo'))
-                                        ->schema([
-                                            SpatieMediaLibraryFileUpload::make('invoice')
-                                                ->label(__('Photo'))
-                                                ->collection('supplies')
-                                                ->multiple()
-                                                ->imageResizeMode('cover')
-                                                ->imagePreviewHeight(250)
-                                                ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
-                                                ->openable(),
-                                            Textarea::make('comment')->label(__('Comment'))
-                                                ->rows(3),
-                                        ]),
+                                        ToggleButtons::make('pay')->label(__('Pay'))
+                                            ->options(
+                                                [
+                                                    0 => __('No pay'),
+                                                    1 => __('Paid'),
+                                                ]
+                                            )
+                                            ->colors([
+                                                0 => 'danger',
+                                                1 => 'success',
+                                            ])
+                                            ->default(0)
+                                            ->inline()
+                                            ->live()
+                                            ->grouped()
+                                            ->extraAttributes(['style' => 'width: 100%'])
+                                            ->reactive(),
+                                    ]),
+                                Tab::make(__('Photo'))
+                                    ->schema([
+                                        SpatieMediaLibraryFileUpload::make('invoice')
+                                            ->label(__('Photo'))
+                                            ->collection('supplies')
+                                            ->multiple()
+                                            ->imageResizeMode('cover')
+                                            ->imagePreviewHeight(250)
+                                            ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
+                                            ->openable(),
+                                        Textarea::make('comment')->label(__('Comment'))
+                                            ->rows(3),
+                                    ]),
 
-                                ]),
-                        ]),
+                            ]),
+                    ]),
 
-                    DeleteAction::make(),
-                ]),
+                DeleteAction::make(),
             ]);
     }
 }

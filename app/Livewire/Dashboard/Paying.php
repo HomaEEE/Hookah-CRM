@@ -96,7 +96,7 @@ class Paying extends BaseWidget implements HasTable
                     }),
             ])->defaultSort('created_at', 'desc')
             ->recordActions([
-                ViewAction::make()->label('')
+                ViewAction::make()->iconButton()
                     ->schema([
                         Section::make()->schema([
                             TextEntry::make('added_at')->label(__('Date Added'))->dateTime('d F Y')
@@ -158,7 +158,7 @@ class Paying extends BaseWidget implements HasTable
                         // ])->columns(1)->collapsed(),
                     ]),
 
-                EditAction::make()->label('')
+                EditAction::make()->iconButton()
                     ->modalWidth('sm')
 
                     ->schema([

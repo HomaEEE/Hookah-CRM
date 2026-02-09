@@ -40,7 +40,6 @@ class SubscriptionTable
                     ->label(__('Destination'))
                     ->searchable()
                     ->sortable()
-                    ->visibleFrom('xl')
                     ->description(fn (Subscription $record): string => $record->category->name ?? '', position: 'above')
                     ->toggleable(),
 
@@ -115,7 +114,7 @@ class SubscriptionTable
                     }),
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make(),
+                    EditAction::make()->slideOver(),
                     DeleteAction::make(),
                 ]),
             ])

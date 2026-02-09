@@ -2,28 +2,25 @@
 
 namespace App\Filament\Resources\Writeoffs;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Utilities\Get;
 use App\Enums\IngredientUnit;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Writeoffs\Pages\ManageWriteoffs;
-use App\Filament\Resources\WriteoffResource\Pages;
 use App\Models\Ingredient;
 use App\Models\Workshop;
 use App\Models\Writeoff;
 use Auth;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -58,7 +55,7 @@ class WriteoffResource extends Resource
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
 
                 Select::make('workshop_id')->label(__('Workshop'))
-                    ->reactive()
+                    ->live()
                     ->required()
                     ->native(false)
                     ->options(function (callable $get) {
@@ -77,13 +74,12 @@ class WriteoffResource extends Resource
                             ->native(false)
                             ->searchable()
                             ->columnSpan(6)
-                            ->reactive()
                             ->live()
                             ->options(
                                 Ingredient::where('place_id', Filament::getTenant()->id)->pluck('ingredient', 'id')
                             ),
                         TextInput::make('quantity')->label(__('Quantity'))
-                            ->reactive()
+                            ->live()
                             ->columnSpan(6)
                             ->suffix(static function (Get $get) {
 
@@ -127,11 +123,9 @@ class WriteoffResource extends Resource
                         $record->save();
                     })->visible(fn (Writeoff $record) => $record->approve == 0),
 
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ]),
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
 
             ->toolbarActions([

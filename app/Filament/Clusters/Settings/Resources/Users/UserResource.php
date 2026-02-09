@@ -134,8 +134,11 @@ class UserResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make()->label(''),
-                DeleteAction::make()->label(''),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

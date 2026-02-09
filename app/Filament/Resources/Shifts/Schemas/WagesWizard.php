@@ -37,7 +37,6 @@ class WagesWizard
                         )
                         ->required()
                         ->preload()
-                        ->reactive()
                         ->native(false)
                         ->live(onBlur: true)
                         ->afterStateUpdated(
@@ -54,7 +53,6 @@ class WagesWizard
                         )
                         ->preload()
                         ->required()
-                        ->reactive()
                         ->live(onBlur: true)
                         ->searchable()
                         ->hidden(fn (Get $get) => $get('user_id') == null)
@@ -69,18 +67,14 @@ class WagesWizard
                         )->default(0)
                         ->hidden(fn (Get $get) => $get('user_id') == null)
                         ->required()
-                        ->reactive()
                         ->live(onBlur: true)
-
                         ->afterStateUpdated(
                             function (callable $set, callable $get) {
                                 self::WageCalc($set, $get);
                             }
-                        )
-                        ->reactive(),
+                        ),
                     TextInput::make('wage')->translateLabel()->numeric()
                         ->live(onBlur: true)
-                        ->reactive()
                         ->readOnly()
                         ->hidden(fn (Get $get) => $get('wage_id') == null)
                         ->columns(2),
@@ -106,12 +100,10 @@ class WagesWizard
                             function (callable $set, callable $get) {
                                 self::WageCalc($set, $get);
                             }
-                        )
-                        ->reactive(),
+                        ),
                     TextInput::make('cashout')->translateLabel()
                         ->readOnly()
-                        ->reactive()
-
+                        ->live()
                         ->afterStateUpdated(function (Get $get, Set $set) {
                             self::updateTotals($get, $set);
                         })
@@ -135,11 +127,11 @@ class WagesWizard
 
                     return $totalWage;
                 })
-                ->reactive(),
+                ->live(),
 
             Hidden::make('wages')
                 ->inlineLabel()
-                ->reactive()
+                ->live()
                 ->default(
                     function (Set $set, $get) {
                         $totalWage = collect($get('users'))

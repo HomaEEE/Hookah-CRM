@@ -4,10 +4,12 @@ namespace App\Filament\Resources\Products\Tables;
 
 use App\Models\Category;
 use App\Models\Product;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
@@ -106,8 +108,11 @@ class ProductTable
                     ),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

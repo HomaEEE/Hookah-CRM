@@ -5,9 +5,12 @@ namespace App\Filament\Resources\Incomes;
 use App\Filament\Components\Forms\IncomeForm;
 use App\Filament\Resources\Incomes\Pages\ManageIncomes;
 use App\Models\Income;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -60,7 +63,11 @@ class IncomeResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -154,7 +154,7 @@ class ShiftWizard
                 TextInput::make('income')->translateLabel()
                     ->numeric()
                     ->readOnly()
-                    ->reactive()
+                    ->live()
                     ->default(0)
                     ->suffixAction(
                         Action::make('update_incomes')
@@ -207,7 +207,7 @@ class ShiftWizard
                     ->numeric()
                     ->readOnly()
                     ->default(0)
-                    ->reactive()
+                    ->live()
                     ->suffixAction(
                         Action::make('update_withdrawal')
                             ->translateLabel()
@@ -252,7 +252,7 @@ class ShiftWizard
                 TextInput::make('shift')->translateLabel()
                     ->numeric()
                     ->required()
-                    ->reactive()
+                    ->live()
                     ->live(onBlur: true)
                     ->suffixAction(
                         Action::make('aproove')

@@ -135,7 +135,7 @@ class ExpenseTable
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make(),
+                    EditAction::make()->slideOver(),
                     DeleteAction::make(),
                 ]),
             ])

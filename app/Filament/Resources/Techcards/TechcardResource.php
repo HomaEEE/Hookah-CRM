@@ -2,42 +2,28 @@
 
 namespace App\Filament\Resources\Techcards;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\Techcards\Pages\ManageTechcards;
+use App\Filament\Resources\Techcards\RelationManagers\IngredientRelationManager;
+use App\Models\Ingredient;
+use App\Models\Product;
+use App\Models\Techcard;
+use App\Models\Workshop;
+use Awcodes\TableRepeater\Components\TableRepeater;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Techcards\RelationManagers\IngredientRelationManager;
-use App\Filament\Resources\Techcards\Pages\ManageTechcards;
-use App\Filament\Resources\TechcardResource\Pages;
-use App\Filament\Resources\TechcardResource\RelationManagers;
-use App\Models\{Ingredient, Product, Techcard, Workshop};
-
-use Auth;
-use Awcodes\TableRepeater\Components\TableRepeater;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Table;
 use Marvinosswald\FilamentInputSelectAffix\TextInputSelectAffix;
 
 class TechcardResource extends Resource
@@ -117,7 +103,6 @@ class TechcardResource extends Resource
                 // ->defaultItems(3)
                 // ->columnSpan('full'),
 
-
             ]);
     }
 
@@ -130,11 +115,9 @@ class TechcardResource extends Resource
             ])
             ->filters([])
             ->recordActions([
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ])
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 DeleteBulkAction::make(),
@@ -150,13 +133,12 @@ class TechcardResource extends Resource
                     ->schema([
                         TextEntry::make('ingredient.ingredient')->hiddenLabel(),
                         TextEntry::make('heft')->hiddenLabel()->badge(),
-                        TextEntry::make('weight_unit')->hiddenLabel()
+                        TextEntry::make('weight_unit')->hiddenLabel(),
                     ])
                     ->grid(3)
-                    ->columns(3)
+                    ->columns(3),
             ]);
     }
-
 
     public static function getRelations(): array
     {

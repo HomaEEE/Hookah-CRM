@@ -193,18 +193,8 @@ class SupplyResource extends Resource
 
             ->recordActions([
                 ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make()
-                        ->mutateRecordDataUsing(function (array $data): array {
-                            $data['sum'] = $data['sum'] / 100;
-
-                            return $data;
-                        })
-                        ->mutateDataUsing(function (array $data): array {
-                            $data['sum'] = $data['sum'] * 100;
-
-                            return $data;
-                        }),
+                    ViewAction::make()->slideOver(),
+                    EditAction::make()->slideOver(),
                     DeleteAction::make(),
                 ]),
             ])
@@ -296,7 +286,7 @@ class SupplyResource extends Resource
                     ->searchable(['ingredient', 'barcode'])
                     ->required()
                     ->native(false)
-                    ->reactive()
+                    ->live()
                     ->afterStateUpdated(fn ($state, Set $set) => $set('unit_price', Ingredient::find($state)?->price / 100 ?? 0))
                     ->distinct()
                     ->disableOptionsWhenSelectedInSiblingRepeaterItems()

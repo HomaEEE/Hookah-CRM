@@ -125,7 +125,7 @@ class ExciseResource extends Resource
 
             ])
             ->recordActions([
-                Action::make('approve')->button()->label('')
+                Action::make('approve')->iconButton()
                     ->icon('heroicon-o-arrow-uturn-up')
                     ->color('success')
                     ->action(function (Excise $record): void {
@@ -175,6 +175,7 @@ class ExciseResource extends Resource
                         $record->increment('portions', $data['portions']);
                     })
                     ->visible(fn (Excise $record) => $record->volume * 1000 / 40 - $record->portions != 0),
+
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make()->slideOver(),

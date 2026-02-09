@@ -2,34 +2,33 @@
 
 namespace App\Filament\Clusters\Settings\Resources\Places;
 
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\CreateAction;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\StorageRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\WagesRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\ExpenseCategoryRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\WorkshopsRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\BillsRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\SeetsRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\RoomsRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\MetersRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\Pages\ListPlaces;
 use App\Filament\Clusters\Settings\Resources\Places\Pages\CreatePlace;
 use App\Filament\Clusters\Settings\Resources\Places\Pages\EditPlace;
+use App\Filament\Clusters\Settings\Resources\Places\Pages\ListPlaces;
 use App\Filament\Clusters\Settings\Resources\Places\Pages\ViewPlace;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\BillsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\ExpenseCategoryRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\MetersRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\RoomsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\SeetsRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\StorageRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\WagesRelationManager;
+use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\WorkshopsRelationManager;
 use App\Filament\Clusters\Settings\SettingsCluster;
-use App\Filament\Clusters\Settings\Resources\PlaceResource\Pages;
-use App\Filament\Clusters\Settings\Resources\PlaceResource\RelationManagers;
 use App\Models\Place;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -40,7 +39,7 @@ class PlaceResource extends Resource
 
     protected static ?string $tenantOwnershipRelationshipName = 'users';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home-modern';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-home-modern';
 
     protected static ?string $model = Place::class;
 
@@ -85,8 +84,11 @@ class PlaceResource extends Resource
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

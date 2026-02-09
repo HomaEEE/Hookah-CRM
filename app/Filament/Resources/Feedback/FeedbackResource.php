@@ -2,25 +2,20 @@
 
 namespace App\Filament\Resources\Feedback;
 
-use Filament\Schemas\Schema;
-use Filament\Support\Enums\IconSize;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\Feedback\Pages\ManageFeedback;
+use App\Models\Feedback;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Feedback\Pages\ManageFeedback;
-use App\Filament\Resources\FeedbackResource\Pages;
-use App\Models\Feedback;
-
-use Filament\Forms;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\TextColumn;
-use Archilex\ToggleIconColumn\Columns\ToggleIconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class FeedbackResource extends Resource
 {
@@ -63,31 +58,34 @@ class FeedbackResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->translateLabel()
-                ->description(fn (Feedback $record): string => $record->contact  ? : ''),
+                    ->description(fn (Feedback $record): string => $record->contact ?: ''),
                 TextColumn::make('created_at')->translateLabel()->dateTime('d-m-Y')
-                ->size('md')
-                ->badge(),
+                    ->size('md')
+                    ->badge(),
                 TextColumn::make('text')->wrap(),
 
                 IconColumn::make('approve')
-                ->translateLabel()
-                ->size(IconSize::Large)
-                 ->boolean()
-                 ->trueIcon('heroicon-o-eye')
-                 ->falseIcon('heroicon-o-eye-slash')
-                  ->action(function ($record, $column) {
-                      $name = $column->getName();
-                      $record->update([
-                          $name => ! $record->$name,
-                      ]);
-                  }),
+                    ->translateLabel()
+                    ->size(IconSize::Large)
+                    ->boolean()
+                    ->trueIcon('heroicon-o-eye')
+                    ->falseIcon('heroicon-o-eye-slash')
+                    ->action(function ($record, $column) {
+                        $name = $column->getName();
+                        $record->update([
+                            $name => ! $record->$name,
+                        ]);
+                    }),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 DeleteBulkAction::make(),

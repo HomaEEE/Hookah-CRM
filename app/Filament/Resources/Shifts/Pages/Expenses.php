@@ -3,6 +3,10 @@
 namespace App\Filament\Resources\Shifts\Pages;
 
 use App\Filament\Resources\Shifts\ShiftResource;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Schemas\Schema;
@@ -72,6 +76,11 @@ class Expenses extends ManageRelatedRecords
 
             ])
             ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make()->slideOver(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
 
