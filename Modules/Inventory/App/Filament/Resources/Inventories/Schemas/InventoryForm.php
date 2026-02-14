@@ -15,14 +15,13 @@ class InventoryForm
         return $schema
             ->components([
                 Fieldset::make('Item')->schema([
-
                     TextInput::make('name')->translateLabel()->required(),
                     TextInput::make('count')->translateLabel(),
-                    TextInput::make('price')->translateLabel(),   
-                    TextInput::make('sn')->translateLabel(),   
-                                        Textarea::make('comment')->translateLabel(),   
+                    TextInput::make('price')->translateLabel(),
+                    TextInput::make('sn')->translateLabel(),
+                    Textarea::make('comment')->translateLabel(),
 
-                    ])->columns(1),
+                ])->columns(1),
                 SpatieMediaLibraryFileUpload::make('photo')
                     ->label(__('Photo'))
                     ->collection('inventories')

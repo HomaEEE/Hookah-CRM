@@ -16,6 +16,8 @@
     "dependencies": {
         "@splidejs/splide": "^4.1.4",
         "@swup/head-plugin": "^2.3.1",
+        "@tma.js/sdk-vue": "^1.0.15",
+        "axios": "^1.13.5",
         "jquery": "^3.7.1",
         "locomotive-scroll": "^4.1.4",
         "micromodal": "^0.6.1",

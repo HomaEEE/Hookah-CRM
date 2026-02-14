@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import laravel, { refreshPaths } from 'laravel-vite-plugin'
 import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
@@ -26,6 +27,8 @@ export default defineConfig({
             detectTls: 'hookah4.test',
 
         }),
+        vue(),
+
        tailwindcss({
             theme: {
                 container: {

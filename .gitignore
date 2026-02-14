@@ -59,9 +59,14 @@ coverage/
 /storage/framework/views/*
 /storage/logs/*
 /pulbic/buld
+/bootstrap/cache/*
 #Filament php
 /app/Policies
 /config/insights.php
 CLAUDE.md
 GEMINI.md
 boost.json
+
+**/caddy
+frankenphp
+frankenphp-worker.php
