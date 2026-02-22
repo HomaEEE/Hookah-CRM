@@ -5,7 +5,7 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum PurchaseStatus: string implements HasLabel, HasColor
+enum PurchaseStatus: string implements HasColor, HasLabel
 {
     case new = '1';
     case in_process = '2';
@@ -15,15 +15,16 @@ enum PurchaseStatus: string implements HasLabel, HasColor
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::new => __('New'),
+            self::new => __('Added'),
             self::in_process => __('In Process'),
             self::delivery => __('Delivery'),
             self::complete => __('Complete'),
         };
     }
 
-    public function getColor(): ?string {
-        return match($this) {
+    public function getColor(): ?string
+    {
+        return match ($this) {
             self::new => 'info',
             self::in_process => 'warning',
             self::delivery => 'warning',

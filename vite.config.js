@@ -10,7 +10,6 @@ export default defineConfig({
                     'resources/js/app.js',
                     "resources/css/filament/admin/theme.css",
                     'resources/js/swiper.js',
-                    'resources/js/tab-menu.js',
                     'resources/js/modal.js'],
 
             refresh: [

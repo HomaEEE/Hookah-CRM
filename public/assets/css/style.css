@@ -129,6 +129,7 @@
 html {
   max-width: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -351,7 +352,7 @@ main .container h2.title {
 }
 @media (max-width: 575px) {
   main .container h2.title {
-    padding: 40px 0 0 0;
+    padding: 0;
   }
 }
 main .container .hero {
@@ -554,11 +555,8 @@ main .about h2 {
     font-size: 1.25rem;
   }
 }
-main .feedbacks {
-  box-sizing: content-box;
-}
-main .feedbacks .feedback {
-  border: 1px solid #535353;
+main .feedback {
+  border: 1px solid #eee;
   border-radius: 17px;
   padding: 20px;
   margin: 10px auto;
@@ -689,71 +687,111 @@ main .feedbacks .feedback {
 }
 
 .tabs {
-  width: 100%;
-  overflow-y: scroll;
+  width: auto;
+  margin: 0 auto;
+  text-align: center;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
-@media (min-width: 640px) {
+.tabs a {
+  color: #151515;
+}
+@media (max-width: 768px) {
   .tabs {
-    font-size: 1.65rem;
-    flex: content;
+    bottom: 50px;
+    width: 90%;
+    max-width: 300px;
   }
 }
-.tabs::-webkit-scrollbar {
+.tabs .menu-toggle {
   display: none;
+}
+@media (max-width: 768px) {
+  .tabs .menu-toggle {
+    display: block;
+    width: 100%;
+    background: #a3a3a3;
+    color: #202020;
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+  }
 }
 .tabs ul {
   display: flex;
+  background-color: #a3a3a3;
+  color: #202020;
+  border-radius: 6px;
+}
+@media (max-width: 768px) {
+  .tabs ul {
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    margin-bottom: 5px;
+    max-height: 60vh;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+    transition: all 0.3s cubic-bezier();
+  }
+  .tabs ul.open {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 .tabs ul li {
   display: inline-block;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding: 7px 15px;
+  padding: 7px 25px;
   margin: 0px 10px 0 0;
   cursor: pointer;
-  border-radius: 27px;
-  transition: all 0.3s ease;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
-.tabs ul li.active {
-  background: #a3a3a3;
-  color: #202020;
-  border-radius: 37px;
+.tabs ul li:last-child {
+  border-right: none;
 }
-@media (max-width: 617px) {
-  .tabs ul li.active {
-    border-radius: 27px;
-    margin: 0px 5px 0 0;
-    padding: 7px 10px;
+@media (max-width: 768px) {
+  .tabs ul li {
+    display: block;
+    margin: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+  }
+  .tabs ul li:last-child {
+    border-bottom: none;
   }
 }
 
-.positions {
-  display: none;
-  transition: opacity 0.5s ease-in-out;
-}
-.positions.active {
-  display: block;
-  opacity: 1;
-}
-.positions h3 {
-  text-transform: uppercase;
+.menu-item {
   font-family: "Unbounded", sans-serif;
+  position: relative;
+  cursor: pointer;
+}
+.menu-item .h3 {
+  color: #e1e1e1;
+  text-transform: uppercase;
   font-weight: 400;
 }
-.positions .menu-item {
-  background: #151515;
-  color: white;
-  font-family: "Unbounded", sans-serif;
-  opacity: 0;
-  position: relative;
-  transform: translateY(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-.positions .menu-item .image {
+.menu-item .image {
   position: relative;
 }
-.positions .menu-item .image .sup {
-  font-size: 0.8em;
+.menu-item .image .sup {
+  font-size: 9px;
   background: #760000;
   padding: 3px 5px;
   color: #e1e1e1;
@@ -761,20 +799,7 @@ main .feedbacks .feedback {
   top: 0;
   left: 0;
 }
-.positions .menu-item .image .sup span .hot {
-  background-image: "assets/imgs/menu/hot.png";
-  height: 100%;
-  width: auto;
-}
-.positions .menu-item h4 {
-  font-size: 0.8rem;
-  font-weight: 300;
-  margin-bottom: 5px;
-}
-.positions .menu-item .description {
-  font-size: 0.7rem;
-  margin-bottom: 10px;
-  letter-spacing: 0.5px;
+.menu-item .description {
   color: #ccc;
   display: -webkit-box; /* Required for -webkit-line-clamp */
   -webkit-line-clamp: 3; /* Limit to 3 lines (adjust as needed) */
@@ -782,17 +807,13 @@ main .feedbacks .feedback {
   overflow: hidden; /* Hide overflowing content */
   text-overflow: ellipsis; /* Add ellipsis for truncated text */
 }
-.positions .menu-item .property {
+.menu-item .property {
   gap: 10vw;
   border-top: 1px solid #535353;
   font-family: 0.7rem;
   font-weight: 200;
 }
-.positions .menu-item.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.positions .menu-item .image-overlay {
+.menu-item .image-overlay {
   position: absolute;
   inset: 0;
   width: 25%;
@@ -823,22 +844,30 @@ main .feedbacks .feedback {
 
 .modal-container {
   position: fixed;
-  bottom: 0;
+  top: 50%;
   left: 50%;
   width: 50vw;
-  transform: translateX(-50%);
+  max-height: 400px;
+  transform: translate(-50%, -50%);
   height: auto;
   display: grid;
   padding: 1em 1em;
-  background: #e1e1e1;
-  align-items: flex-end;
+  background: #151515;
+  align-items: flex-start;
   overflow: hidden;
-  color: #535353;
+  color: #a3a3a3;
   transition: all 0.3s;
-  border-radius: 37px 37px 0 0;
   z-index: 301;
   opacity: 0;
   visibility: hidden;
+}
+.modal-container .modal-img {
+  position: relative;
+  width: 30%;
+  position: relative;
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden;
 }
 .modal-container.active {
   opacity: 1;
@@ -847,11 +876,12 @@ main .feedbacks .feedback {
 @media screen and (max-width: 576px) {
   .modal-container {
     width: 90vw;
+    left: 50%;
+    position: absolute;
   }
   .modal-container .content {
     margin: auto;
     width: 100%;
-    border-radius: 1.25rem;
   }
   .modal-container .content .modal-img {
     position: relative;
@@ -860,16 +890,16 @@ main .feedbacks .feedback {
     aspect-ratio: 1/1;
     position: relative;
     overflow: hidden;
-    border-radius: 1rem;
+    border-radius: 6px;
     margin-bottom: 5px;
   }
   .modal-container .content .modal-img .sup {
     position: absolute;
     background: #760000;
     color: #e1e1e1;
-    font-size: 0.8rem;
+    font-size: 12px;
     top: 0;
-    right: 0;
+    left: 0;
     width: 15vw;
     text-align: center;
     padding: 3px 10px;
@@ -1022,7 +1052,7 @@ main .feedbacks .feedback {
   height: 100%;
   top: 0%;
   left: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   transition: all 0.5s ease-in-out;
   backdrop-filter: blur(5px); /* Apply blur effect */

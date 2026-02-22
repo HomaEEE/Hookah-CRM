@@ -27,7 +27,7 @@ class ProductForm
                         'xl' => 3,
                     ])
                     ->schema([
-                        ToggleButtons::make('visible')->label(__('Visible'))->inline()->boolean()->grouped()->columns(1),
+                        ToggleButtons::make('new')->label(__('New'))->inline()->boolean()->grouped()->columns(1),
                         ToggleButtons::make('visible_menu')->label(__('Visible menu'))->inline()->boolean()->grouped()->columns(1),
                     ]),
 

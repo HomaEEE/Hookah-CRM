@@ -6,7 +6,7 @@ $(document).ready(function () {
         // Анимируем появление позиций внутри
         $targetSection.find(".menu-item").each(function (index) {
             $(this)
-                .css({ opacity: 0, transform: "translateY(20px)" })
+                .css({ opacity: 0})
                 .delay(index * 50)
                 .animate({ opacity: 1, top: 0 }, 200);
         });

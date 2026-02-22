@@ -10,14 +10,11 @@
         <h2>{{__('Feedbacks')}}</h2>
         @include('site.partials.advice', ['address' => 1, 'wifi' => 0, 'feedback'=> 1])
 
-        <div class="flex flex-row">
+        <div class="grid grid-cols-3 xs:grid-cols-1 gap-4">
         @foreach ($feedbacks as $f)
-            <div class="">
             <div class="feedback">
-                <h4>{{ $f->name}} </h4>
-                <p>{{ $f->text}} </p>
-            </div>
-
+                <h4>{{ $f->name}}</h4>
+                <p>{{ $f->text}}</p>
             </div>
         @endforeach
         </div>

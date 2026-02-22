@@ -169,6 +169,7 @@ $icomoon-font-path: "../fonts" !default;
 html {
   max-width: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -417,7 +418,7 @@ main {
     h2.title {
       padding: 20px 0;
       @media (max-width: 575px) {
-        padding: 40px 0 0 0;
+        padding: 0;
       }
     }
 
@@ -621,14 +622,11 @@ main {
     }
   }
 
-  .feedbacks {
-    box-sizing: content-box;
-    .feedback {
-      border: 1px solid $text-dark-grey;
-      border-radius: 17px;
-      padding: 20px;
-      margin: 10px auto;
-    }
+  .feedback {
+    border: 1px solid #eee;
+    border-radius: 17px;
+    padding: 20px;
+    margin: 10px auto;
   }
 }
 
@@ -740,124 +738,143 @@ main {
 }
 
 .tabs {
-  width: 100%;
-  overflow-y: scroll;
-  @media (min-width: 640px) {
-    font-size: 1.65rem;
-    flex: content;
+  width: auto;
+  margin: 0 auto;
+  text-align: center;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  a {
+    color: $black;
+  }
+  @media (max-width: 768px) {
+    bottom: 50px;
+    width: 90%;
+    max-width: 300px;
   }
 
-  &::-webkit-scrollbar {
+  .menu-toggle {
     display: none;
+    @media (max-width: 768px) {
+      display: block;
+      width: 100%;
+      background: $text-grey;
+      color: $grey;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      font-family: "Unbounded", sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+    }
   }
+
   ul {
     display: flex;
+    background-color: $text-grey;
+    color: $grey;
+    border-radius: 6px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      width: 100%;
+      margin-bottom: 5px;
+      max-height: 60vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.5s,
+        visibility 0.5s;
+      transition: all 0.3s cubic-bezier();
+
+      &.open {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
     li {
       display: inline-block;
       white-space: nowrap;
       text-overflow: ellipsis;
-      padding: 7px 15px;
+      padding: 7px 25px;
       margin: 0px 10px 0 0;
       cursor: pointer;
-      border-radius: 27px;
+      border-right: 1px solid rgba(0, 0, 0, 0.2);
 
-      transition: all 0.3s ease;
-      &.active {
-        background: $text-grey;
-        color: $grey;
-        border-radius: 37px;
-        @media (max-width: 617px) {
-          border-radius: 27px;
-          margin: 0px 5px 0 0;
-          padding: 7px 10px;
+      &:last-child {
+        border-right: none;
+      }
+
+      @media (max-width: 768px) {
+        display: block;
+        margin: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 15px 20px;
+
+        &:last-child {
+          border-bottom: none;
         }
       }
     }
   }
 }
 
-.positions {
-  display: none;
-  transition: opacity 0.5s ease-in-out;
-  //    opacity: 0;
-  &.active {
-    display: block;
-    opacity: 1;
-  }
-  h3 {
+.menu-item {
+  font-family: "Unbounded", sans-serif;
+  position: relative;
+  cursor: pointer;
+  .h3 {
+    color: $text;
     text-transform: uppercase;
-    font-family: "Unbounded", sans-serif;
     font-weight: 400;
   }
-  .menu-item {
-    background: $black;
-    color: white;
-    font-family: "Unbounded", sans-serif;
-    opacity: 0;
+
+  .image {
     position: relative;
-    transform: translateY(20px);
-    transition:
-      opacity 0.4s ease,
-      transform 0.4s ease;
 
-    .image {
-      position: relative;
-
-      .sup {
-        font-size: 0.8em;
-        background: $red;
-        padding: 3px 5px;
-        color: $text;
-        position: absolute;
-        top: 0;
-        left: 0;
-        span {
-          .hot {
-            background-image: "assets/imgs/menu/hot.png";
-            height: 100%;
-            width: auto;
-          }
-        }
-      }
-    }
-
-    h4 {
-      font-size: 0.8rem;
-      font-weight: 300;
-      margin-bottom: 5px;
-    }
-    // border: 1px solid $text-dark-grey;
-
-    .description {
-      font-size: 0.7rem;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-      color: #ccc;
-      display: -webkit-box; /* Required for -webkit-line-clamp */
-      -webkit-line-clamp: 3; /* Limit to 3 lines (adjust as needed) */
-      -webkit-box-orient: vertical; /* Required for -webkit-line-clamp */
-      overflow: hidden; /* Hide overflowing content */
-      text-overflow: ellipsis; /* Add ellipsis for truncated text */
-    }
-
-    .property {
-      gap: 10vw;
-      border-top: 1px solid $text-dark-grey;
-      font-family: 0.7rem;
-      font-weight: 200;
-    }
-
-    &.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .image-overlay {
+    .sup {
+      font-size: 9px;
+      background: $red;
+      padding: 3px 5px;
+      color: $text;
       position: absolute;
-      inset: 0;
-      width: 25%;
-      background: linear-gradient(to left, transparent, $black);
+      top: 0;
+      left: 0;
     }
+  }
+
+  .description {
+    color: #ccc;
+    display: -webkit-box; /* Required for -webkit-line-clamp */
+    -webkit-line-clamp: 3; /* Limit to 3 lines (adjust as needed) */
+    -webkit-box-orient: vertical; /* Required for -webkit-line-clamp */
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+  }
+
+  .property {
+    gap: 10vw;
+    border-top: 1px solid $text-dark-grey;
+    font-family: 0.7rem;
+    font-weight: 200;
+  }
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    width: 25%;
+    background: linear-gradient(to left, transparent, $black);
   }
 }
 
@@ -889,22 +906,31 @@ main {
 
 .modal-container {
   position: fixed;
-  bottom: 0;
+  top: 50%;
   left: 50%;
   width: 50vw;
-  transform: translateX(-50%);
+  max-height: 400px;
+  transform: translate(-50%, -50%);
   height: auto;
   display: grid;
   padding: 1em 1em;
-  background: $text;
-  align-items: flex-end;
+  background: $black;
+  align-items: flex-start;
   overflow: hidden;
-  color: $text-dark-grey;
+  color: $text-grey;
   transition: all 0.3s;
-  border-radius: 37px 37px 0 0;
   z-index: 301;
   opacity: 0;
   visibility: hidden;
+
+  .modal-img {
+    position: relative;
+    width: 30%;
+    position: relative;
+    aspect-ratio: 1/1;
+    position: relative;
+    overflow: hidden;
+  }
 
   &.active {
     opacity: 1;
@@ -913,10 +939,11 @@ main {
 
   @media screen and (max-width: 576px) {
     width: 90vw;
+    left: 50%;
+    position: absolute;
     .content {
       margin: auto;
       width: 100%;
-      border-radius: 1.25rem;
       .modal-img {
         position: relative;
         width: 100%;
@@ -924,15 +951,15 @@ main {
         aspect-ratio: 1/1;
         position: relative;
         overflow: hidden;
-        border-radius: 1rem;
+        border-radius: 6px;
         margin-bottom: 5px;
         .sup {
           position: absolute;
           background: $red;
           color: $text;
-          font-size: 0.8rem;
+          font-size: 12px;
           top: 0;
-          right: 0;
+          left: 0;
           width: 15vw;
           text-align: center;
           padding: 3px 10px;
@@ -1076,7 +1103,7 @@ main {
   height: 100%;
   top: 0%;
   left: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.6);
   visibility: hidden;
   transition: all 0.5s ease-in-out;
   backdrop-filter: blur(5px); /* Apply blur effect */

@@ -10,4 +10,10 @@ $(document).ready(function () {
         $('.menu-header').toggleClass('active');
     });
 
+    $('.menu-toggle').click(function () {
+        console.log('click menu-toggle');
+        $('.menu-toggle').toggleClass('nav-active');
+        $('.tabs ul').toggleClass('open');
+    });
+
 });
