@@ -9,12 +9,9 @@
     <div class="container">
 
         <h2 class="divider line razor title">{{__('Booking')}}</h2>
-        <div class="grid grid-cols-2">
-        <div>
-        <div class="reserve-message hidden">
-            <h3>{{__('reserve-message')}}</h3>
-            <h4>{{__('reserve-message-content')}}</h4>
-        </div>
+        <div class="flex flex-column sm:flex-row items-center">
+        <div  class="basis-256">
+
         <form data-action="/sendReserve" method="POST" id="reserve" class="form">
             @csrf
             <input type="hidden" name="place_id" value="{{ $place->id }}" id="place_id">
@@ -48,15 +45,16 @@
 
         </form>
         </div>
-        <div>
+        <div class="basis-32">
             <h3 class="divider line razor rotate">{{__('OR')}}</h3>
         </div>
 
-        <div class="col-xs-12 col-md-5">
-        <h2>{{$place->phone}}</h2>
+        <div  class="basis-256">
+        <span>{{$place->city}}</span>
+        <span><a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}" target="_blank"><span>{{$place->address}}</span></a> </span>
+        <span>{{$place->time['day']}}</span>
+        <span><a href="tel:{{$place->phone}}">{{$place->phone}}</a><span>
 
-        <h3> <a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}" target="_blank"><span>{{$place->address}}</span></a> </h3>
-        <h3>{{$place->time['day']}}</h3>
         </div>
     </div>
 

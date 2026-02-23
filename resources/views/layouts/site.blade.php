@@ -48,19 +48,21 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRZVZTD"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-<div class="w-full h-screen">
-        @include('site.partials.nav')
+        <div class="w-full min-h-screen">
+            @include('site.partials.nav')
 
-        <main>
-            @yield('content')
-        </main>
+            <main>
+                @yield('content')
+            </main>
 
-         <footer class="mt-8">
+        </div>
+
+         <footer class="mt-12">
             <div class="block dev">{{__('Created by')}}
                 <a href="https://black-design.pw" rel="noopener noreferrer"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
             </div>
         </footer>
-        </div>
+
         @stack('scripts')
     </div>
     </body>

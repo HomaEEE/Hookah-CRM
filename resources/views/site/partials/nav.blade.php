@@ -1,22 +1,24 @@
-<header class="container mx-auto py-4 px-8 md:p-2">
-    <div class="flex flex-row justify-between items-center relative">
+<header class="container mx-auto py-8 px-4 md:p-4">
+    <div class="flex flex-row ">
         <!-- ЛОГО -->
-        <div class="flex-auto">
-            <h1>
+        <div class="basis-256">
+                <h1>
                 <a href="/">
                     <img class="w-32" src="/assets/imgs/logo.svg" alt="Noire hookah Lounge">
                 </a>
             </h1>
         </div>
 
+
+
         <!-- БУРГЕР -->
-   <div class="absolute top-2 right-0 size-12">
-        <div class="menu-icon">
+        <div class="basis-32">
+        <div class=" menu-icon">
             <span class="menu-icon__line menu-icon__line-left"></span>
             <span class="menu-icon__line"></span>
             <span class="menu-icon__line menu-icon__line-right"></span>
         </div>
-    </div>
+        </div>
 
         <!-- НАВИГАЦИЯ -->
         <div class="menu-header block md:flex flex-row items-center">
@@ -32,7 +34,7 @@
             </ul>
 
             <!-- Адрес + телефон -->
-            <div class="text-sm mt-4 md:mt-0 md:px-4 text-center md:text-left">
+            <div class="text-sm mt-4 md:mt-0 md:px-4 text-left">
                 <a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}" class="block">
                     <span>{{ $place->address }}</span>
                 </a>

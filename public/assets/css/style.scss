@@ -293,7 +293,7 @@ header {
 
   @media (max-width: 640px) {
     .menu-icon {
-      height: 30px;
+      height: 100%;
       width: 30px;
       cursor: pointer;
       z-index: 200;
@@ -352,15 +352,17 @@ header {
       ul.menu {
         display: block;
         padding: 0;
-        margin: 0;
+        margin: 0 30px;
         li {
-          font-size: 2rem;
-          margin: 15px auto;
+          font-size: 1.5rem;
+          margin: 20px auto;
+          text-align: left;
         }
       }
 
       .address {
         margin-top: 20px;
+
         .phone {
           display: block;
           padding: 20px 0;
@@ -379,6 +381,14 @@ header {
             color: $grey;
           }
         }
+      }
+
+      .booking {
+        width: 100%;
+        height: 25px;
+        border: 1px solid $text-grey;
+        color: $text-grey;
+        border-radius: 6px;
       }
     }
 
@@ -627,6 +637,35 @@ main {
     border-radius: 17px;
     padding: 20px;
     margin: 10px auto;
+    width: 100%;
+    p {
+      font-size: 12px;
+    }
+    span {
+      text-align: right;
+      &.name {
+        font-size: 14px;
+      }
+      &.date {
+        font-size: 10px;
+      }
+    }
+  }
+
+  .h2 {
+  }
+
+  .h3 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin: 20px 0;
+    text-align: justify;
+  }
+
+  .h4 {
+    margin: 10px 0;
+    font-size: 1.25rem;
+    text-transform: uppercase;
   }
 }
 
@@ -742,7 +781,7 @@ main {
   margin: 0 auto;
   text-align: center;
   position: fixed;
-  bottom: 50px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -802,11 +841,11 @@ main {
       }
     }
 
-    li {
+    a {
       display: inline-block;
       white-space: nowrap;
       text-overflow: ellipsis;
-      padding: 7px 25px;
+      padding: 10px 25px;
       margin: 0px 10px 0 0;
       cursor: pointer;
       border-right: 1px solid rgba(0, 0, 0, 0.2);
@@ -834,6 +873,14 @@ main {
   font-family: "Unbounded", sans-serif;
   position: relative;
   cursor: pointer;
+
+  border: 1px solid $text-dark-grey;
+  @media (max-width: 640px) {
+    border: none;
+    border-bottom: 1px solid $text-dark-grey;
+    border-top: 1px solid $text-dark-grey;
+  }
+
   .h3 {
     color: $text;
     text-transform: uppercase;
@@ -909,7 +956,7 @@ main {
   top: 50%;
   left: 50%;
   width: 50vw;
-  max-height: 400px;
+  height: 400px;
   transform: translate(-50%, -50%);
   height: auto;
   display: grid;
@@ -940,10 +987,23 @@ main {
   @media screen and (max-width: 576px) {
     width: 90vw;
     left: 50%;
-    position: absolute;
+    height: auto;
+    position: fixed;
+    .modal-menu-close {
+      position: absolute;
+      top: -30px;
+      right: 0;
+      content: "X";
+      width: 30px;
+      height: 30px;
+      background: $text;
+      color: $grey;
+    }
+
     .content {
       margin: auto;
       width: 100%;
+
       .modal-img {
         position: relative;
         width: 100%;
@@ -980,8 +1040,14 @@ main {
         }
       }
 
+      .modal-menu-title {
+        margin: 10px 0;
+        font-size: 13px;
+      }
+
       .modal-menu-description {
-        margin: 10px auto;
+        margin: 10px 0;
+        font-size: 11px;
       }
     }
   }

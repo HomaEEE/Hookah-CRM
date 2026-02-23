@@ -7,14 +7,17 @@
 
 @section('content')
     <div class="container">
-        <h2>{{__('Feedbacks')}}</h2>
+        <h2 class="divider line razor title">{{__('Feedbacks')}}</h2>
+
         @include('site.partials.advice', ['address' => 1, 'wifi' => 0, 'feedback'=> 1])
 
-        <div class="grid grid-cols-3 xs:grid-cols-1 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4">
         @foreach ($feedbacks as $f)
             <div class="feedback">
-                <h4>{{ $f->name}}</h4>
                 <p>{{ $f->text}}</p>
+                <span class="name">{{ $f->name}}</span>
+                <span class="date">{{ $f->created_at->format('d.m.Y')}}</span>
+
             </div>
         @endforeach
         </div>

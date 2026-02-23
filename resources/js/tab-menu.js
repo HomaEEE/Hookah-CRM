@@ -1,51 +1,20 @@
-$(document).ready(function () {
-    function showCategory($targetSection) {
-        // Показываем блок категории
-        $targetSection.fadeIn(300).addClass("active");
+const navEl = document.querySelector(".menu-toggle");
 
-        // Анимируем появление позиций внутри
-        $targetSection.find(".menu-item").each(function (index) {
-            $(this)
-                .css({ opacity: 0})
-                .delay(index * 50)
-                .animate({ opacity: 1, top: 0 }, 200);
-        });
-    }
+const handleScroll = () => {
+  // Check the vertical scroll position of the document
+  // window.scrollY is widely supported, or use document.documentElement.scrollTop
+  const scrollPosition = window.scrollY || document.documentElement.scrollTop;
 
-    // Обработчик клика по табам
-    $(".tab-item").on("click", function (e) {
-        e.preventDefault();
+  // Define the scroll threshold (e.g., 100 pixels, or window.innerHeight for 100vh)
+  const scrollThreshold = 100;
 
-        const target = $(this).data("target");
+  // Use classList.toggle() with a boolean argument
+  // If the second argument is true, the class is added. If false, it's removed.
+  navEl.classList.toggle("nav-active", scrollPosition > scrollThreshold);
+};
 
-        // Меняем активную вкладку
-        $(".tab-item").removeClass("active");
-        $(this).addClass("active");
+// Listen for the 'scroll' event on the window
+window.addEventListener("scroll", handleScroll);
 
-        // Скрываем все секции
-        $(".positions").removeClass("active").hide();
-
-        // Показываем новую категорию
-        const $targetSection = $("#" + target);
-        showCategory($targetSection);
-
-        var containerWidth = $('.tabs').width();
-        var activeItemPosition = $(this).position().left;
-        var activeItemWidth = $(this).outerWidth();
-        var scrollOffset = activeItemPosition - containerWidth / 2 + activeItemWidth / 2;
-        $('.tabs').animate({ scrollLeft: "+=" + scrollOffset }, 1000);
-
-            // Плавный скролл к секции
-            $("html, body").animate({
-                scrollTop: $(".list").offset().top - $(".tabs").outerHeight() - 10
-            }, 600);
-        });
-
-    // === Автооткрытие первой категории при загрузке ===
-    const $firstTab = $(".tab-item").first();
-    const firstTarget = $firstTab.data("target");
-    const $firstSection = $("#" + firstTarget);
-
-    $firstTab.addClass("active");
-    showCategory($firstSection);
-});
+// Optional: call the function on load to set the initial state
+handleScroll();

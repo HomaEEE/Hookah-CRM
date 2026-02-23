@@ -243,7 +243,7 @@ header .menu-icon {
 }
 @media (max-width: 640px) {
   header .menu-icon {
-    height: 30px;
+    height: 100%;
     width: 30px;
     cursor: pointer;
     z-index: 200;
@@ -296,11 +296,12 @@ header .menu-icon {
   header .menu-header ul.menu {
     display: block;
     padding: 0;
-    margin: 0;
+    margin: 0 30px;
   }
   header .menu-header ul.menu li {
-    font-size: 2rem;
-    margin: 15px auto;
+    font-size: 1.5rem;
+    margin: 20px auto;
+    text-align: left;
   }
   header .menu-header .address {
     margin-top: 20px;
@@ -320,6 +321,13 @@ header .menu-icon {
     left: 0px;
     background: #a3a3a3;
     color: #202020;
+  }
+  header .menu-header .booking {
+    width: 100%;
+    height: 25px;
+    border: 1px solid #a3a3a3;
+    color: #a3a3a3;
+    border-radius: 6px;
   }
 }
 header .menu-header .menu {
@@ -560,6 +568,30 @@ main .feedback {
   border-radius: 17px;
   padding: 20px;
   margin: 10px auto;
+  width: 100%;
+}
+main .feedback p {
+  font-size: 12px;
+}
+main .feedback span {
+  text-align: right;
+}
+main .feedback span.name {
+  font-size: 14px;
+}
+main .feedback span.date {
+  font-size: 10px;
+}
+main .h3 {
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin: 20px 0;
+  text-align: justify;
+}
+main .h4 {
+  margin: 10px 0;
+  font-size: 1.25rem;
+  text-transform: uppercase;
 }
 
 .reserve-message.hidden {
@@ -691,7 +723,7 @@ main .feedback {
   margin: 0 auto;
   text-align: center;
   position: fixed;
-  bottom: 50px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -752,27 +784,27 @@ main .feedback {
     visibility: visible;
   }
 }
-.tabs ul li {
+.tabs ul a {
   display: inline-block;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding: 7px 25px;
+  padding: 10px 25px;
   margin: 0px 10px 0 0;
   cursor: pointer;
   border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
-.tabs ul li:last-child {
+.tabs ul a:last-child {
   border-right: none;
 }
 @media (max-width: 768px) {
-  .tabs ul li {
+  .tabs ul a {
     display: block;
     margin: 0;
     border-right: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding: 15px 20px;
   }
-  .tabs ul li:last-child {
+  .tabs ul a:last-child {
     border-bottom: none;
   }
 }
@@ -781,6 +813,14 @@ main .feedback {
   font-family: "Unbounded", sans-serif;
   position: relative;
   cursor: pointer;
+  border: 1px solid #535353;
+}
+@media (max-width: 640px) {
+  .menu-item {
+    border: none;
+    border-bottom: 1px solid #535353;
+    border-top: 1px solid #535353;
+  }
 }
 .menu-item .h3 {
   color: #e1e1e1;
@@ -847,7 +887,7 @@ main .feedback {
   top: 50%;
   left: 50%;
   width: 50vw;
-  max-height: 400px;
+  height: 400px;
   transform: translate(-50%, -50%);
   height: auto;
   display: grid;
@@ -877,7 +917,18 @@ main .feedback {
   .modal-container {
     width: 90vw;
     left: 50%;
+    height: auto;
+    position: fixed;
+  }
+  .modal-container .modal-menu-close {
     position: absolute;
+    top: -30px;
+    right: 0;
+    content: "X";
+    width: 30px;
+    height: 30px;
+    background: #e1e1e1;
+    color: #202020;
   }
   .modal-container .content {
     margin: auto;
@@ -919,8 +970,13 @@ main .feedback {
        object-fit: cover;
     z-index: -1;
   }
+  .modal-container .content .modal-menu-title {
+    margin: 10px 0;
+    font-size: 13px;
+  }
   .modal-container .content .modal-menu-description {
-    margin: 10px auto;
+    margin: 10px 0;
+    font-size: 11px;
   }
 }
 .modal-container .bottom-sheet-handle {
