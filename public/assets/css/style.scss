@@ -874,13 +874,6 @@ main {
   position: relative;
   cursor: pointer;
 
-  border: 1px solid $text-dark-grey;
-  @media (max-width: 640px) {
-    border: none;
-    border-bottom: 1px solid $text-dark-grey;
-    border-top: 1px solid $text-dark-grey;
-  }
-
   .h3 {
     color: $text;
     text-transform: uppercase;

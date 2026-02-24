@@ -208,45 +208,45 @@ class SupplyForm
                                 ->openable(),
 
                         ])->columns(1),
-                    Tabs\Tab::make(__('List'))
-                        ->schema([
-                            Repeater::make('items')
-                                ->schema([
-                                    TextInput::make('name')
-                                        ->label(__('Имя из накладной'))
-                                        ->disabled()
-                                        ->dehydrated(),
-                                    Select::make('ingredient_id')
-                                        ->label(__('Ingredient'))
-                                        ->searchable()
-                                        ->quickAdd()
-                                        ->preload()
-                                        ->options(Ingredient::get()->pluck('ingredient', 'id'))
-                                        ->required(fn (Get $get) => empty($get('ingredient_id')))
-                                        ->reactive()
-                                        ->afterStateUpdated(function ($state, callable $get) {
-                                            $name = $get('name');
-                                            if (!empty($name) && !empty($state)) {
-                                                // Create alias if it doesn't exist
-                                                \App\Models\IngredientAlias::firstOrCreate(
-                                                    ['name' => $name, 'place_id' => Filament::getTenant()->id],
-                                                    ['ingredient_id' => $state]
-                                                );
-                                            }
-                                        }),
-                                        // ->visible(fn (Get $get) => empty($get('ingredient_id'))), // Logic might be circular if we want to change it
-                                    TextInput::make('qty')->translateLabel()
-                                        ->reactive(),
-                                    TextInput::make('price')->translateLabel()->suffix('')
-                                        ->numeric()
-                                        ->autocomplete(false)
-                                        ->inputMode('decimal')
-                                        ->stripCharacters(',')
-                                        ->required()
-                                        ->prefix('₴'),
+                    // Tabs\Tab::make(__('List'))
+                    //     ->schema([
+                    //         Repeater::make('items')
+                    //             ->schema([
+                    //                 TextInput::make('name')
+                    //                     ->label(__('Имя из накладной'))
+                    //                     ->disabled()
+                    //                     ->dehydrated(),
+                    //                 Select::make('ingredient_id')
+                    //                     ->label(__('Ingredient'))
+                    //                     ->searchable()
+                    //                     ->quickAdd()
+                    //                     ->preload()
+                    //                     ->options(Ingredient::get()->pluck('ingredient', 'id'))
+                    //                     ->required(fn (Get $get) => empty($get('ingredient_id')))
+                    //                     ->reactive()
+                    //                     ->afterStateUpdated(function ($state, callable $get) {
+                    //                         $name = $get('name');
+                    //                         if (!empty($name) && !empty($state)) {
+                    //                             // Create alias if it doesn't exist
+                    //                             \App\Models\IngredientAlias::firstOrCreate(
+                    //                                 ['name' => $name, 'place_id' => Filament::getTenant()->id],
+                    //                                 ['ingredient_id' => $state]
+                    //                             );
+                    //                         }
+                    //                     }),
+                    //                     // ->visible(fn (Get $get) => empty($get('ingredient_id'))), // Logic might be circular if we want to change it
+                    //                 TextInput::make('qty')->translateLabel()
+                    //                     ->reactive(),
+                    //                 TextInput::make('price')->translateLabel()->suffix('')
+                    //                     ->numeric()
+                    //                     ->autocomplete(false)
+                    //                     ->inputMode('decimal')
+                    //                     ->stripCharacters(',')
+                    //                     ->required()
+                    //                     ->prefix('₴'),
 
-                                ]),
-                        ]),
+                    //             ]),
+                    //     ]),
 
                 ]),
 

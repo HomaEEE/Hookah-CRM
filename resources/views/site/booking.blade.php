@@ -50,10 +50,9 @@
         </div>
 
         <div  class="basis-256">
-        <span>{{$place->city}}</span>
-        <span><a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}" target="_blank"><span>{{$place->address}}</span></a> </span>
-        <span>{{$place->time['day']}}</span>
-        <span><a href="tel:{{$place->phone}}">{{$place->phone}}</a><span>
+        <div class="h4"><a href="https://www.google.com.ua/maps/place/{{$place->address}},{{$place->city}}" target="_blank"><span>{{$place->city}}, {{$place->address}}</span></a> </div>
+        <div class="h4">{{$place->time['day']}}</span>
+        <div class="h4"><a href="tel:{{$place->phone}}">{{$place->phone}}</a><span>
 
         </div>
     </div>

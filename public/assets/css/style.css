@@ -813,14 +813,6 @@ main .h4 {
   font-family: "Unbounded", sans-serif;
   position: relative;
   cursor: pointer;
-  border: 1px solid #535353;
-}
-@media (max-width: 640px) {
-  .menu-item {
-    border: none;
-    border-bottom: 1px solid #535353;
-    border-top: 1px solid #535353;
-  }
 }
 .menu-item .h3 {
   color: #e1e1e1;

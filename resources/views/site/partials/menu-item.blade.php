@@ -6,7 +6,7 @@
     $description = $item['frontend_desc'] ?? '';
 @endphp
 
-<div class="flex p-4 gap-4 menu-item"
+<div class="flex p-4 gap-4 menu-item border-b md:odd:border-r border-zinc-500"
     @if ($imageUrl)
         data-id="{{ $item->id }}"
         data-title="{{ $title }}"
