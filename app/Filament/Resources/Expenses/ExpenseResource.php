@@ -70,7 +70,7 @@ class ExpenseResource extends Resource
                 TextEntry::make('comment')->translateLabel()->badge(),
                 SpatieMediaLibraryImageEntry::make('invoice')
                     ->collection('supplies')
-                    ->simpleLightbox()
+                    ->lightbox()
                     ->hiddenLabel(),
                 // ImageEntry::make('invoice')
                 // ->simpleLightbox(fn ($record) =>  $record?->image ?? "Your Image Url address", defaultDisplayUrl: true)

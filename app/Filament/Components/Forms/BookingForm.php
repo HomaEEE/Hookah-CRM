@@ -59,7 +59,7 @@ class BookingForm
                     Seet::where('place_id', Filament::getTenant()->id)->pluck('number', 'id')
                 )->multiple(),
                 DateTimePicker::make('time')->label(__('Booking Time'))
-                    ->reactive()->required()->native(false)
+                    ->live()->required()->native(false)
                     ->seconds(false)
                     ->minDate(now())->default(now()),
                 TextInput::make('person')->label(__('Person'))->numeric()->default(3)

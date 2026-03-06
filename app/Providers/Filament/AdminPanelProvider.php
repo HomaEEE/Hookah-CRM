@@ -12,6 +12,7 @@ use App\Models\Place;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
 use Coolsam\Modules\ModulesPlugin;
+use Daikazu\FilamentLightbox\LightBoxPlugin;
 use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,7 +31,6 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
 use Openplain\FilamentShadcnTheme\Color;
-use SolutionForest\FilamentSimpleLightBox\SimpleLightBoxPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -93,8 +93,8 @@ class AdminPanelProvider extends PanelProvider
                 FilamentShieldPlugin::make()
                     ->localizePermissionLabels()
                     ->scopeToTenant(true),
-                SimpleLightBoxPlugin::make(),
                 PhosphorIcons::make()->regular(),
+                LightBoxPlugin::make(),
                 ModulesPlugin::make(),
             ])
             ->tenantMiddleware([

@@ -13,7 +13,6 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -46,11 +45,6 @@ class SupplierResource extends Resource
         return __('Suppliers');
     }
 
-    // public static function getNavigationGroup(): ?string
-    // {
-    //     return __('Data');
-    // }
-
     public static function getNavigationLabel(): string
     {
         return __('Suppliers');
@@ -78,9 +72,6 @@ class SupplierResource extends Resource
                         1 => __('Alcohol'),
                         2 => __('Tabacco'),
                     ]),
-                KeyValue::make('data')
-                    ->keyLabel(__('Rekvizites'))
-                    ->valueLabel(__('Value')),
             ]);
     }
 
@@ -133,7 +124,7 @@ class SupplierResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Contacts')
+                Section::make()
                     ->schema([
                         TextEntry::make('company')->translateLabel(),
                         TextEntry::make('name')->translateLabel(),
@@ -146,20 +137,18 @@ class SupplierResource extends Resource
                         TextEntry::make('email')
                             ->icon('heroicon-m-mail')
                             ->iconPosition(IconPosition::Before),
-                    ])->columns(2)->collapsible(),
-                Section::make('Reqvizites')
+                    ])->columns(2),
+                Section::make()
                     ->schema([
-                        RepeatableEntry::make('reqvizites')
-                            ->contained(false)
-
+                        RepeatableEntry::make('reqvizites')->hiddenLabel()
                             ->schema([
-                                TextEntry::make('own')->translateLabel()->copyable(),
-                                TextEntry::make('IBAN')->translateLabel()
+                                TextEntry::make('own')->label(__('FOP'))->copyable(),
+                                TextEntry::make('IBAN')->label(__('IBAN'))
                                     ->formatStateUsing(fn (string $state): string => "UA {$state}")
                                     ->badge()->copyable(),
-                                TextEntry::make('INN')->translateLabel()->copyable(),
+                                TextEntry::make('INN')->label(__('INN'))->copyable(),
                             ])->columns(3),
-                    ])->columns(1)->collapsible(),
+                    ])->columns(1),
             ])->columns(1);
 
     }

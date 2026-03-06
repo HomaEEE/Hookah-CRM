@@ -65,7 +65,7 @@ class Users extends ManageRelatedRecords
                             ->pluck('name', 'id')
                     )
                     ->required()
-                    ->reactive()
+                    ->live()
                     ->searchable(),
 
                 Select::make('wage_id')->translateLabel()
@@ -107,7 +107,7 @@ class Users extends ManageRelatedRecords
                             self::WageCalc($set, $get);
                         }
                     )
-                    ->reactive(),
+                    ->live(),
                 TextInput::make('wage')->translateLabel()->numeric()
                     ->hidden(fn (Get $get) => $get('wage_id') == null)
                     ->columns(2)

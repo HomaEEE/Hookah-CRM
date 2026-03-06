@@ -75,7 +75,7 @@ class ExpensesDay extends BaseWidget implements HasTable
                         return $record->supply_id ? $record->supply->getFirstMediaUrl('images') : 'invoice'; // Или путь к заглушке
                     })
                     ->collection('supplies')
-                    ->simpleLightbox()
+                    ->lightbox()
                     ->circular()
                     ->stacked()
                     ->limit(3)

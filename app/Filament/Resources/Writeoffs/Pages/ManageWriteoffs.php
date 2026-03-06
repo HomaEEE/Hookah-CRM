@@ -28,9 +28,9 @@ class ManageWriteoffs extends ManageRecords
             ->components([
                 Section::make()
                     ->schema([
-                        TextEntry::make('workshop.name')->label(''),
-                        TextEntry::make('user.name')->label(''),
-                        TextEntry::make('created_at')->label('')->badge()->dateTime('d/m/Y'),
+                        TextEntry::make('workshop.name')->hiddenLabel(),
+                        TextEntry::make('user.name')->hiddenLabel(),
+                        TextEntry::make('created_at')->hiddenLabel()->badge()->dateTime('d/m/Y'),
                     ])->columns(3),
                 RepeatableEntry::make('whiteoff')
                     ->schema([

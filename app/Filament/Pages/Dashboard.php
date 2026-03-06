@@ -197,7 +197,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->schema([
                         Hidden::make('place_id')->default(Filament::getTenant()->id)
                             ->required()
-                            ->reactive(),
+                            ->live(),
                         TextInput::make('receipt_id')->numeric()->label(__('#'))->required(),
                     ])
                     ->action(function (array $data): void {

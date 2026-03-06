@@ -207,7 +207,7 @@ class ExciseResource extends Resource
 
                 SpatieMediaLibraryImageEntry::make('excises')
                     ->collection('excises')
-                    ->simpleLightbox(),
+                    ->lightbox(),
                 ImageEntry::make('excises'),
                 //  ->simpleLightbox(fn ($record) => $record->getMedia()->first()->getUrl() ?? $record->getMedia('excises')->first()->getUrl()),
 

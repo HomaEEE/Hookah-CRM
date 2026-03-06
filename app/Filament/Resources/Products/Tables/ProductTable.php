@@ -33,7 +33,7 @@ class ProductTable
             ->columns([
                 SpatieMediaLibraryImageColumn::make('media')
                     ->collection('products')
-                    ->simpleLightbox()
+                    ->lightbox()
                     ->circular()
                     ->size(40),
 

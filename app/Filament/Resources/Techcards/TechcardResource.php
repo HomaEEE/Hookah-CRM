@@ -56,7 +56,7 @@ class TechcardResource extends Resource
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
                 Select::make('workshop_id')->label(__('Workshop'))
                     ->options(Workshop::where('place_id', Filament::getTenant()->id)->get()->pluck('name', 'id'))
-                    ->reactive()
+                    ->live()
                     ->required(),
                 Select::make('techcard')
                     ->searchable()

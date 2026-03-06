@@ -74,7 +74,7 @@ class Paying extends BaseWidget implements HasTable
 
                 SpatieMediaLibraryImageColumn::make('invoice')->label(__('Invoice'))
                     ->collection('supplies')
-                    ->simpleLightbox()
+                    ->lightbox()
                     ->circular()
                     ->stacked()
                     ->limitedRemainingText()
@@ -134,7 +134,7 @@ class Paying extends BaseWidget implements HasTable
                                     ->schema([
                                         SpatieMediaLibraryImageEntry::make('invoice')
                                             ->collection('supplies')
-                                            ->simpleLightbox()
+                                            ->lightbox()
                                             ->hiddenLabel(),
                                     ]),
                                 Tab::make(__('Supply'))

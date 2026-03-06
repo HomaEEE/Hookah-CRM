@@ -1,3 +1,4 @@
+
 @extends('layouts.site') @push('css') @endpush @section('page', __('Home page'))
 @section('title', __('Home page')) @section('description', 'Описание страницы')
 @push('scripts') @vite('resources/js/swiper.js') @endpush @section('content')
