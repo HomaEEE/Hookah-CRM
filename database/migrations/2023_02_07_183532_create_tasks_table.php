@@ -22,8 +22,9 @@ return new class extends Migration
             $table->integer('for_user_id')->nullable();
             $table->string('title');
             $table->text('text')->nullable();
-            $table->string('status');                        // Column identifier
-            $table->flowforgePositionColumn();               // Drag-and-drop ordering
+            $table->string('status');
+            $table->flowforgePositionColumn();
+            $table->string('priority')->nullable();
             $table->timestamp('due_date')->nullable();
             $table->timestamps();
         });

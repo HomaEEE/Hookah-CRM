@@ -2,11 +2,11 @@
 
 namespace App\Filament\Components\Forms;
 
+use App\Filament\Actions\OCRAction;
 use App\Models\Bill;
 use App\Models\Ingredient;
 use App\Models\Reqvizite;
 use App\Models\Supplier;
-use Auth;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
@@ -18,14 +18,13 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\Size;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 class SupplyForm
 {
@@ -180,195 +179,13 @@ class SupplyForm
                                 ->label(__('Photo'))
                                 ->collection('supplies')
                                 ->multiple()
-                                ->imageResizeMode('cover')
+                                ->automaticallyResizeImagesMode('cover')
                                 ->imagePreviewHeight(350)
                                 ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
                                 ->openable()
                                 ->preserveFilenames()
                                 ->live()
-                                ->hintAction(
-                                    Action::make('recognize')
-                                        ->label(__('OCR Photo'))
-                                        ->icon('heroicon-o-sparkles')
-                                        ->color('primary')
-
-                                        ->action(function (Get $get, Set $set, $state) {
-                                            if (empty($state)) {
-                                                Notification::make()
-                                                    ->warning()
-                                                    ->title('Файл не найден')
-                                                    ->body('Пожалуйста, загрузите файл перед распознаванием.')
-                                                    ->send();
-
-                                                return;
-                                            }
-
-                                            // The file is stored in Livewire's temporary directory before being saved
-                                            $firstFileState = is_array($state) ? reset($state) : $state;
-
-                                            // Handle cases where the image is a newly uploaded TemporaryUploadedFile
-                                            // or an already saved Spatie Media ID.
-                                            $filePath = null;
-                                            $imageUrl = null;
-                                            if ($firstFileState instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                                                $filePath = $firstFileState->getRealPath();
-                                                $imageUrl = $firstFileState->temporaryUrl();
-                                            } elseif (is_string($firstFileState) && \Str::isUuid($firstFileState)) {
-                                                // It's a media UUID from Spatie Media Library
-                                                $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::findByUuid($firstFileState);
-                                                if ($media) {
-                                                    $filePath = $media->getPath();
-                                                    $imageUrl = $media->getUrl();
-                                                }
-                                            } else {
-                                                // Try to see if $firstFileState is an ID for Spatie
-                                                $media = \Spatie\MediaLibrary\MediaCollections\Models\Media::find($firstFileState);
-                                                if ($media) {
-                                                    $filePath = $media->getPath();
-                                                    $imageUrl = $media->getUrl();
-                                                }
-                                            }
-
-                                            if ($imageUrl && str_starts_with($imageUrl, '/')) {
-                                                // If relative path, try to make it absolute
-                                                $imageUrl = url($imageUrl);
-                                            }
-
-                                            if (! $filePath || ! file_exists($filePath)) {
-                                                Notification::make()
-                                                    ->danger()
-                                                    ->title('Ошибка')
-                                                    ->body('Не удалось получить доступ к файлу изображения.')
-                                                    ->send();
-
-                                                return;
-                                            }
-
-                                            // Read and encode the image
-                                            // Upload file to Mistral
-                                            $apiKey = env('MISTRAL_API_KEY');
-                                            if (! $apiKey) {
-                                                Notification::make()
-                                                    ->danger()
-                                                    ->title('Ошибка API')
-                                                    ->body('В конфигурации отсутствует MISTRAL_API_KEY.')
-                                                    ->send();
-
-                                                return;
-                                            }
-
-                                            try {
-                                                // Make API call to Mistral
-                                                $response = Http::withToken($apiKey)
-                                                    ->timeout(120) // Increase timeout for image processing
-                                                    ->post('https://api.mistral.ai/v1/chat/completions', [
-                                                        'model' => 'pixtral-large-latest',
-                                                        'response_format' => ['type' => 'json_object'],
-                                                        'messages' => [
-                                                            [
-                                                                'role' => 'user',
-                                                                'content' => [
-                                                                    [
-                                                                        'type' => 'text',
-                                                                        'text' => 'Извлеките данные из этой накладной (invoice). Верните валидный JSON объект со следующей структурой: { "supplier_iban": "string, номер IBAN поставщика, если есть, иначе null или пустая строка",
-                                                                        "invoice_number": "string, номер накладной, если есть, иначе null или пустая строка",
-                                                                        "total_sum": "float, сумма накладной, если есть, иначе null или пустая строка",
-                                                                        "items": [ { "name": "string, точное наименование товара", "qty": float, количество, "price": float, цена за единицу, "sum": float, сумма } ] }',
-                                                                    ],
-                                                                    [
-                                                                        'type' => 'image_url',
-                                                                        'image_url' => $imageUrl,
-                                                                    ],
-                                                                ],
-                                                            ],
-                                                        ],
-                                                    ]);
-
-                                                if ($response->successful()) {
-                                                    $result = $response->json();
-                                                    $content = $result['choices'][0]['message']['content'] ?? null;
-
-                                                    if ($content) {
-                                                        $parsedData = json_decode($content, true);
-
-                                                        if (json_last_error() === JSON_ERROR_NONE) {
-
-                                                            $rawIban = $parsedData['supplier_iban'] ?? '';
-
-                                                            $iban = strtoupper(preg_replace('/[^A-Z0-9]/', '', $rawIban));
-
-                                                            if (! empty($iban)) {
-                                                                $ibanWithoutUA = preg_replace('/^UA/', '', $iban);
-
-                                                                $reqvizite = \App\Models\Reqvizite::where('IBAN', $ibanWithoutUA)
-                                                                    ->whereNotNull('supplier_id')
-                                                                    ->first();
-                                                                if ($reqvizite) {
-                                                                    $set('supplier_id', $reqvizite->supplier_id);
-                                                                    $set('reqvizite_id', $reqvizite->id);
-                                                                }
-
-                                                                $invoiceNumber = $parsedData['invoice_number'] ?? '';
-                                                                if (! empty($invoiceNumber)) {
-                                                                    $set('invoice_number', $invoiceNumber);
-                                                                }
-
-                                                                $totalSum = $parsedData['total_sum'] ?? '';
-                                                                if (! empty($totalSum)) {
-                                                                    $set('sum', $totalSum);
-                                                                }
-                                                            }
-                                                            // 2. Populate Items
-                                                            $items = $parsedData['items'] ?? [];
-                                                            $repeaterItems = [];
-
-                                                            foreach ($items as $item) {
-                                                                $name = $item['name'] ?? '';
-                                                                if (empty($name)) {
-                                                                    continue;
-                                                                }
-
-                                                                $alias = \App\Models\IngredientAlias::where('alias', $name)->first();
-
-                                                                $ingredientId = $alias ? $alias->ingredient_id : null;
-
-                                                                $repeaterItems[(string) \Illuminate\Support\Str::uuid()] = [
-                                                                    'name' => $name,
-                                                                    'ingredient_id' => $ingredientId,
-                                                                    'qty' => $item['qty'] ?? 1,
-                                                                    'price' => $item['price'] ?? 0,
-                                                                    'sum' => number_format(($item['price'] ?? 0) * ($item['qty'] ?? 0), 2, '.', '')];
-                                                            }
-
-                                                            if (! empty($repeaterItems)) {
-                                                                $set('items', $repeaterItems);
-                                                            }
-
-                                                            Notification::make()
-                                                                ->success()
-                                                                ->title('Успех')
-                                                                ->body('Накладная успешно распознана!')
-                                                                ->send();
-
-                                                        } else {
-                                                            throw new \Exception('Не удалось разобрать JSON: '.json_last_error_msg());
-                                                        }
-                                                    } else {
-                                                        throw new \Exception('Ответ от Mistral не содержит ожидаемого содержимого.');
-                                                    }
-                                                } else {
-                                                    throw new \Exception('Ошибка API: '.$response->status().' - '.$response->body());
-                                                }
-                                            } catch (\Exception $e) {
-                                                \Illuminate\Support\Facades\Log::error('OCR Error: '.$e->getMessage());
-                                                Notification::make()
-                                                    ->danger()
-                                                    ->title('Ошибка при распознавании')
-                                                    ->body($e->getMessage())
-                                                    ->send();
-                                            }
-                                        })
-                                ),
+                                ->hintAction(OCRAction::make()),
 
                             Textarea::make('comment')->label(__('Comment'))
                                 ->rows(3),
@@ -381,9 +198,9 @@ class SupplyForm
                                 ->label(__('Receipt'))
                                 ->multiple()
                                 ->imagePreviewHeight(450)
-                                ->imageResizeMode('cover')
+                                ->automaticallyResizeImagesMode('cover')
                                 ->imagePreviewHeight(350)
-                                ->imageResizeTargetWidth('1800')
+                                ->automaticallyResizeImagesToWidth('1800')
                                 ->imageEditor()
                                 ->imageEditorAspectRatios([
                                     null,
@@ -407,7 +224,9 @@ class SupplyForm
                                     Select::make('ingredient_id')
                                         ->label(__('Ingredient'))
                                         ->searchable()
-                                        ->options(Ingredient::get()->pluck('ingredient', 'id'))
+                                        ->getSearchResultsUsing(fn (string $search): array => Ingredient::where('place_id', Filament::getTenant()?->id)->where('ingredient', 'like', "%{$search}%")->limit(50)->pluck('ingredient', 'id')->toArray())
+                                        ->getOptionLabelUsing(fn ($value): ?string => Ingredient::find($value)?->ingredient)
+                                        ->preload()
                                         ->required(fn (Get $get) => empty($get('ingredient_id')))
                                         ->reactive()
                                         ->afterStateUpdated(function ($state, callable $get) {

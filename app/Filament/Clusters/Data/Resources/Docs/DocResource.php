@@ -5,6 +5,8 @@ namespace App\Filament\Clusters\Data\Resources\Docs;
 use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\DocResource\Pages;
 use App\Filament\Clusters\Data\Resources\Docs\Pages\ManageDocs;
+use App\Filament\Clusters\Data\Resources\Docs\Tables\DocTable;
+use App\Filament\Resources\Docs\Schemas\DocForm;
 use App\Models\Doc;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
@@ -46,66 +48,12 @@ class DocResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Hidden::make('place_id')->default(Filament::getTenant()->id),
-                TextInput::make('name')->label(__('Name'))->required(),
-                Select::make('type')->label(__('Type'))
-                    ->options([
-                        '1' => __('Pass'),
-                        '2' => __('License'),
-                        '3' => __('EDR'),
-                        '4' => __('Key'),
-                        '5' => __('Contract'),
-                    ])->required(),
-                DatePicker::make('date')->label(__('Date Expired'))->native(false),
-                SpatieMediaLibraryFileUpload::make('files')->translateLabel()
-                    ->collection('docs')
-                    ->multiple()
-                    ->imageResizeTargetWidth('1600')
-                    ->imageResizeMode('cover')
-                    ->reorderable()
-                    ->openable()
-                    ->imagePreviewHeight('250')
-                    ->loadingIndicatorPosition('left')
-                    ->removeUploadedFileButtonPosition('right')
-                    ->uploadButtonPosition('left')
-                    ->uploadProgressIndicatorPosition('left'),
-            ])->columns(1);
+        return DocForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('name')->translateLabel(),
-                TextColumn::make('type')->translateLabel()
-                    ->formatStateUsing(
-                        fn (string $state): string => match ($state) {
-                            '1' => __('Pass'),
-                            '2' => __('License'),
-                            '3' => __('EDR'),
-                            '4' => __('Key'),
-                            '5' => __('Contract'),
-                        }),
-                TextColumn::make('date')->dateTime('d/m/Y')->label(__('Date Expired'))->badge(),
-
-            ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ]),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+        return DocTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -117,12 +65,7 @@ class DocResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextEntry::make('name')->translateLabel(),
-                TextEntry::make('type')->translateLabel(),
-                TextEntry::make('date')->label(__('Date Expired'))->badge(),
-            ]);
+        return DocInfolist::configure($schema);
     }
 
     public static function getPages(): array

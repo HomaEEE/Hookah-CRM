@@ -63,8 +63,8 @@ class ProductForm
                     ->collection('products')
                     ->image()
                     ->imagePreviewHeight('700')
-                    ->imageResizeTargetWidth('700')
-                    ->imageResizeMode('contain'),
+                    ->automaticallyResizeImagesToWidth('700')
+                    ->automaticallyResizeImagesMode('contain'),
             ])->columns(1);
     }
 }

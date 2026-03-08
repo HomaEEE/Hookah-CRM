@@ -65,8 +65,8 @@ class TechcardResource extends Resource
                 SpatieMediaLibraryFileUpload::make('photo')
                     ->collection('techcard')
                     ->multiple()
-                    ->imageResizeTargetWidth('1200')
-                    ->imageResizeMode('cover')
+                    ->automaticallyResizeImagesToWidth('1200')
+                    ->automaticallyResizeImagesMode('cover')
                     ->imagePreviewHeight(350)
                     ->openable(),
 

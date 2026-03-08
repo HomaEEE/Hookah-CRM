@@ -9,6 +9,8 @@ use Filament\Facades\Filament;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -31,11 +33,8 @@ class BillsPage extends Page implements HasTable
             ->records(fn (): array => (new PosterApiController)->getAllBills(Filament::getTenant()->id))
 
             ->columns([
-                TextColumn::make('transaction_id')->label(__('ID')),
-                TextColumn::make('table_id')->label(__('Table')),
-
-                IconColumn::make('print_fiscal')
-                    ->label(__('Fiscal'))
+                 IconColumn::make('print_fiscal')
+                    ->label(__(''))
                     ->icon(fn (string $state): Heroicon => match ($state) {
                         '1' => Heroicon::CheckCircle,
                         '0' => Heroicon::XCircle,
@@ -46,13 +45,17 @@ class BillsPage extends Page implements HasTable
                         '2' => 'danger',
                         default => 'info',
                     }),
+                TextColumn::make('transaction_id')->label(__('ID')),
+                TextColumn::make('table_id')->label(__('Table')),
+
+
 
                 IconColumn::make('status')
                     ->label(__('Status'))
                     ->icon(fn (string $state): Phosphor => match ($state) {
-                        '1' => Phosphor::CaretDoubleRight,
-                        '2' => Phosphor::CaretLineRight,
-                        '3' => Phosphor::LineVertical,
+                        '1' => Phosphor::PlusSquare,
+                        '2' => Phosphor::FlagBannerFold,
+                        '3' => Phosphor::TrashSimple,
                         '4' => Phosphor::Truck,
 
                     })
@@ -65,9 +68,9 @@ class BillsPage extends Page implements HasTable
                     }),
 
                 TextColumn::make('date_start')->label(__('Created at'))
-                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')),
+                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('d-m H:i')),
                 TextColumn::make('date_close')
-                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')),
+                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('d.m H:i')),
 
                 IconColumn::make('pay_type')
                     ->translateLabel(__('Pay type'))
@@ -85,7 +88,14 @@ class BillsPage extends Page implements HasTable
                         default => 'gray',
                     }),
 
-                TextColumn::make('sum')->money('UAH', divideBy: 100)->translateLabel(),
+                TextColumn::make('sum')->money('UAH', divideBy: 100)
+                    ->summarize(Summarizer::make('sum')
+                        ->money()
+                        ->using(function (self $livewire): int {
+                            return $livewire->getTableRecords()->where('pay_type', '!=', '0')->whereNotIn('status', ['3', '4'])->sum('sum') / 100;
+                        })
+                    )
+                    ->translateLabel(),
 
             ]);
     }

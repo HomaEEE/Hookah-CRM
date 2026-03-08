@@ -86,7 +86,7 @@ class ExciseResource extends Resource
                                     ->collection('excises')
                                     ->label(__('Photo'))
                                     ->imagePreviewHeight('350')
-                                    ->imageResizeMode('cover')
+                                    ->automaticallyResizeImagesMode('cover')
                                     ->imageEditor()
                                     //                 ->optimize('webp')                                    ->resize(70)
                                     ->imageEditorAspectRatios([

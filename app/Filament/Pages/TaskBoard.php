@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
 use Relaticle\Flowforge\Column;
+use Relaticle\Flowforge\Components\CardFlex;
 
 class TaskBoard extends BoardPage
 {
@@ -57,28 +58,26 @@ class TaskBoard extends BoardPage
             ->columnIdentifier('status')
             ->positionIdentifier('position')
             // ->searchable(['title', 'text'])
+
             ->cardSchema(fn (Schema $schema) => $schema->components([
 
-                // TextEntry::make('priority')->badge()->color(fn ($state) => match ($state) {
-                //     '1' => 'danger',
-                //     '2' => 'warning',
-                //     '3' => 'success',
-                //     default => 'gray'
-                // }),
-                // TextEntry::make('text')
-                //     ->hiddenLabel()
-                //     ->limit(50, end: ' ...'),
-                Grid::make(1)->schema([
+                TextEntry::make('text')
+                    ->limit(100)
+                    ->hiddenLabel()
+                    ->color('gray'),
+                CardFlex::make([
                     TextEntry::make('due_date')
+                        ->badge()
+                        ->hiddenLabel()
                         ->date('j F')
-                        ->icon('heroicon-o-calendar')
-                        ->hiddenLabel(),
+                        ->icon('heroicon-o-calendar'),
                     TextEntry::make('forUser.name')
+                        ->badge()
                         ->hiddenLabel()
                         ->icon('heroicon-o-user'),
-                ]),
-
+                ])->wrap()->justify('start'),
             ]))
+
             ->cardActions([
                 ViewAction::make()
                     ->model(Task::class)
