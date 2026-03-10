@@ -53,7 +53,7 @@ class BillsPage extends Page implements HasTable
                 IconColumn::make('status')
                     ->label(__('Status'))
                     ->icon(fn (string $state): Phosphor => match ($state) {
-                        '1' => Phosphor::PlusSquare,
+                        '1' => Phosphor::Plus,
                         '2' => Phosphor::FlagBannerFold,
                         '3' => Phosphor::TrashSimple,
                         '4' => Phosphor::Truck,
@@ -68,9 +68,9 @@ class BillsPage extends Page implements HasTable
                     }),
 
                 TextColumn::make('date_start')->label(__('Created at'))
-                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('d-m H:i')),
-                TextColumn::make('date_close')
-                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('d.m H:i')),
+                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('H:i')),
+                TextColumn::make('date_close')->label(__('Closed at'))
+                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('H:i')),
 
                 IconColumn::make('pay_type')
                     ->translateLabel(__('Pay type'))

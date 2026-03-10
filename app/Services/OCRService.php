@@ -11,7 +11,8 @@ class OCRService
 {
     public function recognizeInvoice(string $imageUrl): ?array
     {
-        $apiKey = env('MISTRAL_API_KEY');
+        $apiKey = config('ai.mistral.key');
+
         if (! $apiKey) {
             throw new \Exception('В конфигурации отсутствует MISTRAL_API_KEY.');
         }
