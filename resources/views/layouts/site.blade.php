@@ -8,13 +8,14 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no,  user-scalable=no">
-        <title>{{ config('site') }} - @yield('page') - {{$place->city}}</title>
+        <title>{{ config('app.site') }} - @yield('page') - {{$place->city}}</title>
+        <meta name="description" content="@yield('description', 'They don\'t chase the air here for nothing')">
+
         <link rel="preload" href="/assets/fonts/PhonkSans-Light.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="/assets/fonts/PhonkSans-LightItalic.woff2" as="font" type="font/woff2" crossorigin>
         @vite(['resources/js/app.js' , 'resources/css/app.css'])
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
-        <meta name="description" content="@yield('description', 'Описание по умолчанию')">
 
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -22,11 +23,11 @@
         <meta name="apple-mobile-web-app-title" content="Noire Smoke Different" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Noire Smoke Different"/>
-        <meta property="og:description" content=""/>
-        <meta property="og:site_name" content="{{ config('site.name') }}"/>
+        <meta property="og:title" content="{{ config('app.site') }} - @yield('page')"/>
+        <meta property="og:description" content="@yield('description', 'They don\'t chase the air here for nothing')"/>
+        <meta property="og:site_name" content="{{ config('app.site') }}"/>
 
-        <meta property="og:type" content="page" />
+        <meta property="og:type" content="website" />
         <meta property="og:url" content="{{ url()->current() }}/" />
         <meta property="og:image" content="https://noire.ee/assets/imgs/pwa/1200x600.jpg"/>
         <meta property="og:image:width" content="1200"/>

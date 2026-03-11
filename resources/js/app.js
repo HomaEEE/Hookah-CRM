@@ -1,5 +1,5 @@
 import Lenis from 'lenis';
-import { animate, stagger } from "motion";
+import { animate, stagger, createTimeline } from "animejs";
 
 import $ from "jquery";
 window.$ = $;
@@ -58,69 +58,118 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!menuEl) return;
 
     function resetMenuState() {
-
         const isMobile = window.innerWidth <= 617;
         if (isMobile) {
-            animate("#cross-col", { y: "100%", opacity: 0 }, { duration: 0 });
-            animate(menuEl, { y: "100%", opacity: 0 }, { duration: 0 });
+            animate("#cross-col", { translateY: "65px", translateX: 0, opacity: 0, duration: 0 });
+            animate(menuEl, { translateY: "100%", translateX: 0, opacity: 0, duration: 0 });
+            animate(".reserve", { translateY: "100%", translateX: 0, opacity: 0, duration: 0 });
         } else {
-            animate("#cross-col", { x: "100%", opacity: 0 }, { duration: 0 });
-            animate(menuEl, { x: "100%", opacity: 0 }, { duration: 0 });
-            animate("li", { opacity: 0, x: 30 }, { duration: 0 });
-            animate(".line-vertical", { scaleY: 0 }, { duration: 0 });
-            animate(".line-horizontal", { scaleX: 0 }, { duration: 0 });
-            animate(".line-horizontal-short", { scaleX: 0 }, { duration: 0 });
-            animate(".content-fade", { opacity: 0, y: 20 }, { duration: 0 });
-            animate("form", { opacity: 0, y: 20 }, { duration: 0 });
+            animate("#cross-col", { translateX: "-65px", translateY: 0, opacity: 0, duration: 0 });
+            animate(menuEl, { translateX: "100%", translateY: 0, opacity: 0, duration: 0 });
+            animate(".nav-menu-item", { opacity: 0, translateX: 30, duration: 0 });
+            animate(".line-vertical", { scaleY: 0, duration: 0 });
+            animate(".line-horizontal", { scaleX: 0, duration: 0 });
+            animate(".line-horizontal-short", { scaleX: 0, duration: 0 });
+            animate(".content-fade", { opacity: 0, translateY: 20, duration: 0 });
+            animate(".nav-form", { opacity: 0, translateY: 20, duration: 0 });
         }
     }
+
+    // Первоначальный сброс состояния
+    resetMenuState();
 
     function openMenu() {
         menuEl.classList.remove('hidden');
         resetMenuState();
 
-        const sequence = [
-            [menuEl,
-                window.innerWidth <= 617 ? { y: 0, opacity: 1 } : { x: 0, opacity: 1 },
-                { duration: 0.3, ease: [0.22, 1, 0.36, 1] }],
+        const isMobile = window.innerWidth <= 617;
+        const tl = createTimeline();
 
-            ["li", { opacity: 1, x: 0 }, {
-                duration: 0.4,
-                delay: 0.3,
-                ease: "easeOut",
-                at: "<"
-            }],
-            [".line-vertical", { scaleY: 1 }, { duration: 0.6, ease: "easeOut", at: "<" }],
-            [".line-horizontal", { scaleX: 1 }, { duration: 0.6, ease: "easeOut", at: "<" }],
-            [".line-horizontal-short", { scaleX: 1 }, { duration: 0.5, ease: "easeOut", at: "<0.1" }],
+        tl.add(menuEl, {
+            ...(isMobile ? { translateY: 0, opacity: 1 } : { translateX: 0, opacity: 1 }),
+            duration: 300,
+            ease: "outExpo"
+        });
 
-            // 3. Форма и блоки (Контакты и Адрес)
-            [".content-fade", { opacity: 1, y: 0 }, {
-                duration: 0.4,
-                delay: stagger(0.1),
-                ease: "easeOut",
-                at: "-0.2"
-            }],
-            ["form", { opacity: 1, y: 0 }, { duration: 0.4, ease: "easeOut", at: "<" }],
+        tl.add(".nav-menu-item", {
+            opacity: 1,
+            translateX: 0,
+            duration: 400,
+            ease: "outExpo",
+            delay: stagger(100),
+        }, "<<+=300");
 
-            // 4. В конце выезжает кнопка закрытия (колонка)
-            ["#cross-col",
-                window.innerWidth <= 617 ? { y: 0, opacity: 1 } : { x: 0, opacity: 1 },
-                { duration: 0.5, ease: "easeOut", at: "<" }
-            ]
-        ];
+        tl.add(".line-vertical", { scaleY: 1, duration: 600, ease: "outExpo" }, "<<");
+        tl.add(".line-horizontal", { scaleX: 1, duration: 600, ease: "outExpo" }, "<<");
+        tl.add(".line-horizontal-short", { scaleX: 1, duration: 500, ease: "outExpo" }, "<<+=100");
 
-        animate(sequence);
+        // 3. Форма и блоки (Контакты и Адрес)
+        tl.add(".content-fade", {
+            opacity: 1,
+            translateY: 0,
+            duration: 400,
+            delay: stagger(100),
+            ease: "outExpo"
+        }, "-=200");
+        tl.add("form", { opacity: 1, translateY: 0, duration: 400, ease: "outExpo" }, "<<");
+
+        tl.add(".reserve", {
+            ...(isMobile ? { translateY: -40, opacity: 1 } : null ),
+            duration: 300,
+            ease: "outExpo"
+        }, "<<");
+
+        tl.add("#cross-col", {
+            ...(isMobile ? { translateY: 0, opacity: 1 } : { translateX: "", opacity: 1 }),
+            duration: 300,
+            ease: "outExpo"
+        }, "<<-500");
     }
 
     function closeMenu() {
         const isMobile = window.innerWidth <= 617;
-        const closeSequence = [
-            ["#cross-col", isMobile ? { y: "100%", opacity: 0 } : { x: "100%", opacity: 0 }, { duration: 0.3 }],
-            [menuEl, { y: "100%", opacity: 0 }, { duration: 0.5, ease: "easeIn", at: "<0.1" }]
-        ];
+        const tl = createTimeline();
 
-        animate(closeSequence).finished.then(() => {
+        tl.add(".nav-menu-item", {
+            opacity: 0,
+            translateX: 30,
+            duration: 200,
+            ease: "outExpo",
+            delay: stagger(100),
+        }, "<<+=300");
+
+        tl.add(".line-vertical", { scaleY: 0, duration: 200, ease: "outExpo" }, "<<-100");
+        tl.add(".line-horizontal", { scaleX: 0, duration: 200, ease: "outExpo" }, "<<-100");
+        tl.add(".line-horizontal-short", { scaleX: 0, duration: 200, ease: "outExpo" }, "<<-100");
+
+        // 3. Форма и блоки (Контакты и Адрес)
+        tl.add(".content-fade", {
+            opacity: 0,
+            translateY: 20,
+            duration: 200,
+            delay: stagger(100),
+            ease: "outExpo"
+        }, "-=200");
+        tl.add(".nav-form", { opacity: 0, translateY: 20, duration: 200, ease: "outExpo" }, "<<-200");
+
+        tl.add(".reserve", {
+            ...(isMobile ? { translateY: 100, opacity: 0 } : null ),
+            duration: 300,
+            ease: "outExpo"
+        }, "<<");
+
+        tl.add("#cross-col", {
+            ...(isMobile ? { translateY: "100%", opacity: 0 } : { translateX: "100%", opacity: 0 }),
+            duration: 300
+        });
+
+        tl.add(menuEl, {
+            ...(isMobile ? { translateY: "100%", opacity: 0 } : { translateX: "100%", opacity: 0 }),
+            duration: 500,
+            ease: "inExpo"
+        }, "<<+=100");
+
+        tl.then(() => {
             menuEl.classList.add('hidden');
         });
     }

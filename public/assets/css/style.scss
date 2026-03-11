@@ -331,6 +331,81 @@ header {
   }
 }
 
+form {
+  .input-group {
+    position: relative;
+    margin: 15px 0;
+
+    label {
+      padding: 0 4px;
+      background-color: $marquee;
+      color: $text;
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+
+      @media (max-width: 320px) {
+        font-size: 0.75rem;
+      }
+    }
+
+    input {
+      padding: 12px 16px;
+      width: 100%;
+      border: 1px solid $text;
+      outline: none;
+      color: $text;
+      font-size: 0.875rem;
+      background-color: transparent;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+
+      @media (max-width: 320px) {
+        font-size: 0.75rem;
+      }
+
+      &::placeholder {
+        color: transparent;
+      }
+      &:focus {
+        border-color: #ffffff;
+      }
+    }
+
+    /* Логика движения лейбла вверх */
+    input:focus + label,
+    input:not(:placeholder-shown) + label {
+      top: 0;
+      font-size: 0.75rem;
+      color: #ffffff; /* Подсвечиваем лейбл при фокусе */
+
+      @media (max-width: 320px) {
+        font-size: 0.65rem;
+      }
+    }
+  }
+
+  button {
+    width: 100%;
+    height: 3rem;
+    background-color: $text;
+    color: $black;
+    border: 1px solid $text;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: $black;
+      color: $text;
+    }
+  }
+}
+
 #full-menu {
   background: $marquee;
   color: $text;
@@ -346,16 +421,16 @@ header {
   }
 
   #cross-col {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
-    left: 0;
     width: 65px;
     height: 100vh;
     background: $text;
-    span {
-      content: "X";
-      font-size: 1, 5rem;
+    cursor: pointer;
+    span::after {
+      content: "×";
+      font-size: 4rem;
       color: $black;
       top: 50%;
       left: 50%;
@@ -371,7 +446,7 @@ header {
     }
   }
 
-  li.menu-item {
+  li.nav-menu-item {
     list-style: none;
     font-size: 3rem;
     @media (max-width: 617px) {
@@ -532,80 +607,6 @@ main {
           }
         }
       }
-
-      .swiper {
-        height: 55vh;
-        overflow-y: hidden;
-        position: relative;
-
-        @media (max-width: 575px) {
-          height: 50vh;
-        }
-        &::before {
-          content: "";
-          width: 50%;
-          height: 90%;
-          background: $red;
-          position: absolute;
-          z-index: -1;
-          top: 20px;
-          border-radius: 37px;
-          @media (max-width: 575px) {
-            width: 70vw;
-            border-radius: 0 23px 23px 0;
-          }
-        }
-        .swiper-slide {
-          display: flex;
-          .text {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 60%;
-            padding: 30px;
-            @media (max-width: 575px) {
-              top: 35vw;
-            }
-          }
-          img {
-            position: absolute;
-            bottom: 10px;
-            height: 95%;
-            left: 50%;
-            transform: translateX(-60%);
-            @media (max-width: 575px) {
-              transform: translateX(-10%);
-              width: 40vw;
-              bottom: 0;
-              height: auto;
-            }
-          }
-        }
-      }
-    }
-    .swiper-pagination {
-      position: absolute;
-      bottom: 50px;
-      .swiper-pagination-bullet {
-        background-color: #ccc; // Inactive bullet color
-        opacity: 0.8;
-        width: 10px;
-        height: 10px;
-        margin: 0 5px; // Adjust spacing
-      }
-
-      .swiper-pagination-bullet-active {
-        background-color: #007aff; // Active bullet color
-        opacity: 1;
-      }
-
-      .swiper-pagination-progressbar {
-        background-color: #eee;
-      }
-
-      .swiper-pagination-progressbar-fill {
-        background-color: #007aff;
-      }
     }
   }
 
@@ -675,105 +676,11 @@ main {
     visibility: hidden;
     display: none;
   }
-}
-.form {
-  margin: auto;
-  box-sizing: content-box;
-  position: relative;
-  padding: 0;
 
-  &#reserve {
-    margin: 60px auto;
-    padding: 0 20px;
-    @media (max-width: 617px) {
-      margin: 20px auto;
+  .booking-contact {
+    iframe {
+      height: 250px;
     }
-  }
-  @media (max-width: 617px) {
-    padding: 0px;
-  }
-  .input-group {
-    position: relative;
-    margin: 15px 0;
-    label {
-      padding: 0 10px;
-      background-color: $grey;
-      color: #fff;
-      position: absolute;
-      top: 50%;
-      left: 15px;
-      transform: translateY(-50%);
-      text-transform: capitalize;
-      pointer-events: none;
-      font-size: 1rem;
-      transition: all 0.3s;
-
-      @media (max-width: 320px) {
-        font-size: 0.8rem;
-      }
-    }
-
-    input {
-      padding: 10px;
-      width: 100%;
-      border: 2px solid #fff;
-      outline: none;
-      color: #fff;
-      font-size: 1rem;
-      font-family: inherit;
-      background-color: transparent;
-      border-radius: 10px;
-      @media (max-width: 320px) {
-        font-size: 0.8rem;
-      }
-      &::placeholder {
-        color: transparent;
-      }
-    }
-
-    textarea {
-      padding: 15px;
-      width: 100%;
-      border: 3px solid #fff;
-      outline: none;
-      color: #fff;
-
-      font-size: 1rem;
-      font-family: inherit;
-      background-color: transparent;
-      border-radius: 10px;
-    }
-    input:focus::placeholder {
-      color: $text-dark-grey;
-    }
-    input:focus + label,
-    input:not(:placeholder-shown) + label {
-      top: 0;
-      font-size: 0.8rem;
-
-      @media (max-width: 320px) {
-        font-size: 0.8rem;
-      }
-    }
-
-    textarea:focus + label {
-      top: 0;
-      font-size: 0.8rem;
-      @media (max-width: 320px) {
-        font-size: 0.8rem;
-      }
-    }
-  }
-
-  button {
-    width: 100%;
-    height: 3.5rem;
-    background: $red;
-    color: $text;
-    border: none;
-    border-radius: $radius;
-    font-size: 1.25rem;
-    cursor: grab;
   }
 }
 
