@@ -17,21 +17,27 @@ class OCRService
             throw new \Exception('В конфигурации отсутствует MISTRAL_API_KEY.');
         }
 
-        $prompt = 'Extract invoice data from image.
+        $prompt = 'Extract data from invoice image.
+
+                    Text language: Ukrainian or Russian.
+                    Do NOT translate text. Keep original spelling.
+
                     Return JSON only:
+
                     {
                     "supplier_iban":string|null,
                     "invoice_number":string|null,
                     "total_sum":number|null,
                     "items":[
-                     {"name":string,"qty":number,"price":number,"sum":number}
+                    {"name":string,"qty":number,"price":number,"sum":number}
                     ]
                     }
+
                     Rules:
                     missing→null
                     decimal="."
-                    items = invoice rows
-                    pack size in name allowed';
+                    items = table rows
+                    qty/price/sum → numbers';
 
         $response = Http::withToken($apiKey)
             ->timeout(20)
