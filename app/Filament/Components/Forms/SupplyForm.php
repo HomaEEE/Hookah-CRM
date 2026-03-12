@@ -211,62 +211,62 @@ class SupplyForm
                                 ->openable(),
 
                         ])->columns(1),
-                    // Tabs\Tab::make(__('List'))
-                    //     ->schema([
-                    //         Repeater::make('items')
-                    //             ->schema([
-                    //                 TextInput::make('name')
-                    //                     ->label(__('Invoice name'))
-                    //                     ->disabled()
-                    //                     ->dehydrated()
-                    //                     ->visible(fn (Get $get) => empty($get('ingredient_id'))),
+                    Tabs\Tab::make(__('List'))
+                        ->schema([
+                            Repeater::make('items')
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->label(__('Invoice name'))
+                                        ->disabled()
+                                        ->dehydrated()
+                                        ->visible(fn (Get $get) => empty($get('ingredient_id'))),
 
-                    //                 Select::make('ingredient_id')
-                    //                     ->label(__('Ingredient'))
-                    //                     ->searchable()
-                    //                     ->getSearchResultsUsing(fn (string $search): array => Ingredient::where('place_id', Filament::getTenant()?->id)->where('ingredient', 'like', "%{$search}%")->limit(50)->pluck('ingredient', 'id')->toArray())
-                    //                     ->getOptionLabelUsing(fn ($value): ?string => Ingredient::find($value)?->ingredient)
-                    //                     ->preload()
-                    //                     // ->required(fn (Get $get) => empty($get('ingredient_id')))
-                    //                     ->reactive()
-                    //                     ->afterStateUpdated(function ($state, callable $get) {
-                    //                         $name = $get('name');
-                    //                         if (! empty($name) && ! empty($state)) {
-                    //                             // Create alias if it doesn't exist
-                    //                             \App\Models\IngredientAlias::firstOrCreate(
-                    //                                 ['alias' => $name],
-                    //                                 ['ingredient_id' => $state]
-                    //                             );
-                    //                         }
-                    //                     }),
-                    //                 TextInput::make('qty')->translateLabel()
-                    //                     ->reactive(),
-                    //                 TextInput::make('price')->translateLabel()->suffix('')
-                    //                     ->numeric()
-                    //                     ->autocomplete(false)
-                    //                     ->inputMode('decimal')
-                    //                     ->stripCharacters(',')
-                    //                     // ->required()
-                    //                     ->prefix('₴'),
-                    //                 TextInput::make('sum')->translateLabel()->suffix('')
-                    //                     ->numeric()
-                    //                     ->autocomplete(false)
-                    //                     ->inputMode('decimal')
-                    //                     ->stripCharacters(',')
-                    //                     ->prefix('₴'),
-                    //             ]),
-                    //         TextEntry::make('invoice_sum')->label(__('Invoice sum'))->prefix('₴')->disabled()
-                    //             ->state(function (Set $set, Get $get) {
-                    //                 $totalInvoiceSum = collect($get('items'))
-                    //                     ->pluck('sum')
-                    //                     ->sum();
+                                    Select::make('ingredient_id')
+                                        ->label(__('Ingredient'))
+                                        ->searchable()
+                                        ->getSearchResultsUsing(fn (string $search): array => Ingredient::where('place_id', Filament::getTenant()?->id)->where('ingredient', 'like', "%{$search}%")->limit(50)->pluck('ingredient', 'id')->toArray())
+                                        ->getOptionLabelUsing(fn ($value): ?string => Ingredient::find($value)?->ingredient)
+                                        ->preload()
+                                        // ->required(fn (Get $get) => empty($get('ingredient_id')))
+                                        ->reactive()
+                                        ->afterStateUpdated(function ($state, callable $get) {
+                                            $name = $get('name');
+                                            if (! empty($name) && ! empty($state)) {
+                                                // Create alias if it doesn't exist
+                                                \App\Models\IngredientAlias::firstOrCreate(
+                                                    ['alias' => $name],
+                                                    ['ingredient_id' => $state]
+                                                );
+                                            }
+                                        }),
+                                    TextInput::make('qty')->translateLabel()
+                                        ->reactive(),
+                                    TextInput::make('price')->translateLabel()->suffix('')
+                                        ->numeric()
+                                        ->autocomplete(false)
+                                        ->inputMode('decimal')
+                                        ->stripCharacters(',')
+                                        // ->required()
+                                        ->prefix('₴'),
+                                    TextInput::make('sum')->translateLabel()->suffix('')
+                                        ->numeric()
+                                        ->autocomplete(false)
+                                        ->inputMode('decimal')
+                                        ->stripCharacters(',')
+                                        ->prefix('₴'),
+                                ]),
+                            TextEntry::make('invoice_sum')->label(__('Invoice sum'))->prefix('₴')->disabled()
+                                ->state(function (Set $set, Get $get) {
+                                    $totalInvoiceSum = collect($get('items'))
+                                        ->pluck('sum')
+                                        ->sum();
 
-                    //                 $set('invoice_sum', $totalInvoiceSum);
+                                    $set('invoice_sum', $totalInvoiceSum);
 
-                    //                 return $totalInvoiceSum;
-                    //             })
-                    //             ->live(),
-                    //     ]),
+                                    return $totalInvoiceSum;
+                                })
+                                ->live(),
+                        ]),
 
                 ]),
 
