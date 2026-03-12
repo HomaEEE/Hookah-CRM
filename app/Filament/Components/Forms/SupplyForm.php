@@ -253,7 +253,6 @@ class SupplyForm
                                         ->autocomplete(false)
                                         ->inputMode('decimal')
                                         ->stripCharacters(',')
-                                        ->required()
                                         ->prefix('₴'),
                                 ]),
                             TextEntry::make('invoice_sum')->label(__('Invoice sum'))->prefix('₴')->disabled()

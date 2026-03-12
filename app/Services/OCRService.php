@@ -19,28 +19,28 @@ class OCRService
 
         $prompt = 'Extract data from invoice image.
 
-                    Text language: Ukrainian or Russian.
-                    Do NOT translate text. Keep original spelling.
+                Text language: Ukrainian or Russian.
+                Do NOT translate text. Keep original spelling.
 
-                    Return JSON only:
+                Return JSON only:
 
-                    {
+                {
                     "supplier_iban":string|null,
                     "invoice_number":string|null,
                     "total_sum":number|null,
                     "items":[
-                    {"name":string,"qty":number,"price":number,"sum":number}
+                      {"name":string,"qty":number,"price":number,"sum":number}
                     ]
-                    }
+                }
 
-                    Rules:
-                    missing→null
-                    decimal="."
-                    items = table rows
-                    qty/price/sum → numbers';
+                Rules:
+                missing→null
+                decimal="."
+                items = table rows
+                qty/price/sum → numbers';
 
         $response = Http::withToken($apiKey)
-            ->timeout(20)
+            ->timeout(1500)
             ->post('https://api.mistral.ai/v1/chat/completions', [
                 'model' => 'pixtral-large-latest',
                 'response_format' => ['type' => 'json_object'],

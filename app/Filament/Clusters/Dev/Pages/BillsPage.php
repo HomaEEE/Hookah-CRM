@@ -9,7 +9,6 @@ use Filament\Facades\Filament;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -33,7 +32,15 @@ class BillsPage extends Page implements HasTable
             ->records(fn (): array => (new PosterApiController)->getAllBills(Filament::getTenant()->id))
 
             ->columns([
-                 IconColumn::make('print_fiscal')
+                TextColumn::make('transaction_id')->label(__('ID')),
+                TextColumn::make('table_id')->label(__('Table')),
+
+                TextColumn::make('date_start')->label(__('Created at'))
+                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('H:i')),
+                TextColumn::make('date_close')->label(__('Closed at'))
+                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('H:i')),
+
+                IconColumn::make('print_fiscal')
                     ->label(__(''))
                     ->icon(fn (string $state): Heroicon => match ($state) {
                         '1' => Heroicon::CheckCircle,
@@ -45,11 +52,6 @@ class BillsPage extends Page implements HasTable
                         '2' => 'danger',
                         default => 'info',
                     }),
-                TextColumn::make('transaction_id')->label(__('ID')),
-                TextColumn::make('table_id')->label(__('Table')),
-
-
-
                 IconColumn::make('status')
                     ->label(__('Status'))
                     ->icon(fn (string $state): Phosphor => match ($state) {
@@ -66,12 +68,6 @@ class BillsPage extends Page implements HasTable
                         '4' => 'success',
 
                     }),
-
-                TextColumn::make('date_start')->label(__('Created at'))
-                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('H:i')),
-                TextColumn::make('date_close')->label(__('Closed at'))
-                    ->formatStateUsing(fn ($state) => Carbon::createFromTimestamp($state / 1000, 'Europe/Kyiv')->format('H:i')),
-
                 IconColumn::make('pay_type')
                     ->translateLabel(__('Pay type'))
                     ->icon(fn (string $state): Phosphor => match ($state) {
@@ -82,7 +78,7 @@ class BillsPage extends Page implements HasTable
 
                     })
                     ->color(fn (string $state): string => match ($state) {
-                        '0' => 'warning',
+                        '0' => 'danger',
                         '1' => 'info',
                         '2' => 'success',
                         default => 'gray',
@@ -92,7 +88,7 @@ class BillsPage extends Page implements HasTable
                     ->summarize(Summarizer::make('sum')
                         ->money()
                         ->using(function (self $livewire): int {
-                            return $livewire->getTableRecords()->where('pay_type', '!=', '0')->whereNotIn('status', ['3', '4'])->sum('sum') / 100;
+                            return $livewire->getTableRecords()->whereNotIn('status', ['3', '4'])->sum('sum') / 100;
                         })
                     )
                     ->translateLabel(),
