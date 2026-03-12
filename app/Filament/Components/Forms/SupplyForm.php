@@ -227,7 +227,7 @@ class SupplyForm
                                         ->getSearchResultsUsing(fn (string $search): array => Ingredient::where('place_id', Filament::getTenant()?->id)->where('ingredient', 'like', "%{$search}%")->limit(50)->pluck('ingredient', 'id')->toArray())
                                         ->getOptionLabelUsing(fn ($value): ?string => Ingredient::find($value)?->ingredient)
                                         ->preload()
-                                        ->required(fn (Get $get) => empty($get('ingredient_id')))
+                                        // ->required(fn (Get $get) => empty($get('ingredient_id')))
                                         ->reactive()
                                         ->afterStateUpdated(function ($state, callable $get) {
                                             $name = $get('name');
@@ -246,7 +246,7 @@ class SupplyForm
                                         ->autocomplete(false)
                                         ->inputMode('decimal')
                                         ->stripCharacters(',')
-                                        ->required()
+                                        // ->required()
                                         ->prefix('₴'),
                                     TextInput::make('sum')->translateLabel()->suffix('')
                                         ->numeric()
