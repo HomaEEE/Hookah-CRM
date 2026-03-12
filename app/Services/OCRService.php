@@ -17,8 +17,24 @@ class OCRService
             throw new \Exception('В конфигурации отсутствует MISTRAL_API_KEY.');
         }
 
+        $prompt = 'Extract invoice data from image.
+                    Return JSON only:
+                    {
+                    "supplier_iban":string|null,
+                    "invoice_number":string|null,
+                    "total_sum":number|null,
+                    "items":[
+                     {"name":string,"qty":number,"price":number,"sum":number}
+                    ]
+                    }
+                    Rules:
+                    missing→null
+                    decimal="."
+                    items = invoice rows
+                    pack size in name allowed';
+
         $response = Http::withToken($apiKey)
-            ->timeout(120) // Increase timeout for image processing
+            ->timeout(20)
             ->post('https://api.mistral.ai/v1/chat/completions', [
                 'model' => 'pixtral-large-latest',
                 'response_format' => ['type' => 'json_object'],
@@ -28,7 +44,7 @@ class OCRService
                         'content' => [
                             [
                                 'type' => 'text',
-                                'text' => 'Извлеките данные из этой накладной (invoice). Верните валидный JSON объект со следующей структурой: { "supplier_iban": "string, номер IBAN поставщика, если есть, иначе null или пустая строка", "invoice_number": "string, номер накладной, если есть, иначе null или пустая строка", "total_sum": "float, сумма накладной, если есть, иначе null или пустая строка", "items": [ { "name": "string, точное наименование товара", "qty": float, количество, также может быть указано в названии количество в упаковке, например "10шт", "price": float, цена за единицу или штуку если в названии указано количество в упаковке, "sum": float, сумма } ] }',
+                                'text' => $prompt,
                             ],
                             [
                                 'type' => 'image_url',
