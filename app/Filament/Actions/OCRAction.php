@@ -2,7 +2,6 @@
 
 namespace App\Filament\Actions;
 
-use App\Enums\IngredientUnit;
 use App\Models\Ingredient;
 use App\Models\IngredientAlias;
 use App\Models\Reqvizite;
@@ -13,6 +12,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use ToneGabes\Filament\Icons\Enums\Phosphor;
 
 class OCRAction
 {
@@ -31,6 +31,7 @@ class OCRAction
                 if (empty($state)) {
                     Notification::make()
                         ->warning()
+                        ->icon(Phosphor::FileX)
                         ->title('Файл не найден')
                         ->body('Пожалуйста, загрузите файл перед распознаванием.')
                         ->send();
@@ -44,6 +45,7 @@ class OCRAction
                     if (! $imageUrl) {
                         Notification::make()
                             ->danger()
+                            ->icon(Phosphor::ImageBroken)
                             ->title('Ошибка')
                             ->body('Не удалось получить доступ к файлу изображения.')
                             ->send();
@@ -58,7 +60,8 @@ class OCRAction
 
                         Notification::make()
                             ->success()
-                            ->title('Успех')
+                            ->icon(Phosphor::ListChecks)
+                            ->title('Готово')
                             ->body('Накладная успешно распознана!')
                             ->send();
                     }
@@ -120,20 +123,11 @@ class OCRAction
                     ->first();
 
                 if (! $ingredient) {
-                    $ingredient = Ingredient::create([
-                        'ingredient' => $name,
-                        'unit' => IngredientUnit::kg,
-                        'place_id' => Filament::getTenant()?->id,
-                        'price' => $item['price'] ?? 0,
+                    IngredientAlias::firstOrCreate([
+                        'alias' => $name,
+                        'ingredient_id' => $ingredientId,
                     ]);
                 }
-
-                $ingredientId = $ingredient->id;
-
-                IngredientAlias::firstOrCreate([
-                    'alias' => $name,
-                    'ingredient_id' => $ingredientId,
-                ]);
             }
 
             $repeaterItems[(string) Str::uuid()] = [
@@ -141,7 +135,6 @@ class OCRAction
                 'ingredient_id' => $ingredientId,
                 'qty' => $item['qty'] ?? 1,
                 'price' => $item['price'] ?? 0,
-                'sum' => number_format(($item['price'] ?? 0) * ($item['qty'] ?? 0), 2, '.', ''),
             ];
         }
 
