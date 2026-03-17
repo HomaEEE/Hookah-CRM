@@ -22,7 +22,7 @@
 @foreach ($categories as $category)
     <div class="flex flex-col md:flex-row h-auto border-y border-zinc-500 @isset($category->class['gram-hidden']) gram-hidden @endisset" id="{{ $category['slug'] }}">
 
-        <aside class="w-full md:w-[30%] border-b md:border-r border-zinc-500 flex justify-center p-8 xs:p-8 relative">
+        <aside class="w-full md:w-[30%] border-b md:border-r border-zinc-500 flex justify-center p-4 sm:p-8 relative">
             <div class="sticky top-10 bottom-12 h-fit">
                 <div class="h3" id="{{ $category['slug'] }}">
                     {{ $category['frontend_name'] }}

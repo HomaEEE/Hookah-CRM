@@ -8,7 +8,7 @@ class WageCalculationDTO
         public readonly float $baseWage,
         public readonly float $days,
         public readonly float $manualProcent,
-        public readonly array $wageProcentRules, // wage->procent
-        public readonly array $formValues,        // данные формы
+        public readonly array $wageProcentRules,
+        public readonly array $formValues,
     ) {}
 }

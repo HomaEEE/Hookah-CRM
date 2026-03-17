@@ -61,7 +61,7 @@
 
          <footer class="mt-12">
             <div class="block dev">{{__('Created by')}}
-                <a href="https://black-design.pw" rel="noopener noreferrer"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
+                <a href="https://black-design.pw" target="_blank"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
             </div>
         </footer>
 
