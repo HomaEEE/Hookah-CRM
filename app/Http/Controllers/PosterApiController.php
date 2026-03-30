@@ -194,6 +194,7 @@ class PosterApiController extends Controller
         return (array) $getAllBills->json('response', []);
     }
 
+    // Получить столы
     public function getAllTables($place_id)
     {
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
@@ -201,6 +202,53 @@ class PosterApiController extends Controller
         .$place_api['api'].'&without_deleted=1');
 
         return (array) $getAllTables->json('response', []);
+    }
+
+    // Оптимизированный метод получения чеков и столов
+    public function getBillsWithTableNames($place_id)
+    {
+        // 1. Получаем токен один раз для обоих запросов
+        $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
+
+        if (! $place_api) {
+            return []; // Или выбросьте исключение, если токен обязателен
+        }
+
+        $today = Carbon::today()->format('Ymd');
+
+        // 2. Получаем чеки (передаем параметры массивом для безопасного построения URL)
+        $billsResponse = Http::get($this->urlApi.'dash.getTransactions?token='
+             .$place_api['api']
+             .'&dateFrom='.Carbon::today()->format('Ymd')
+             .'&dateTo='.Carbon::today()->format('Ymd'));
+
+        // 3. Получаем столы
+        $tablesResponse = Http::get($this->urlApi.'spots.getTableHallTables?token='
+        .$place_api['api'].'&without_deleted=1');
+
+        $bills = $billsResponse->json('response', []);
+        $tables = $tablesResponse->json('response', []);
+
+        // 4. Создаем карту столов: [table_id => table_name]
+        // Это обеспечивает поиск за O(1) вместо вложенных циклов.
+        $tablesMap = collect($tables)->mapWithKeys(function ($table) {
+            $displayName = ! empty($table['table_title'])
+                ? $table['table_title']
+                : $table['table_num'];
+
+            return [$table['table_id'] => $displayName];
+        })->toArray();
+
+        // 5. Подменяем ID стола на его имя в чеках
+        return collect($bills)->map(function ($bill) use ($tablesMap) {
+            $tableId = $bill['table_id'] ?? null;
+
+            // Создаем новое поле table_name.
+            // Если id стола отсутствует в чеке или не найден в карте, указываем fallback-значение.
+            $bill['table_name'] = $tablesMap[$tableId] ?? 'Без стола / Навынос';
+
+            return $bill;
+        })->toArray();
     }
 
     // Получение прошлой смены

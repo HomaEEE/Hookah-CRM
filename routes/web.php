@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrintController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,10 +45,12 @@ Route::prefix('bot')->group(function () {
 Route::get('lang/{lang}',
     ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\SiteController@switchLang']);
 
+Route::passkeys();
+
 Route::middleware(['web'])
     ->prefix('admin')
     ->group(function () {
-        Route::get('/reports/cashflow/download', [\App\Http\Controllers\PrintController::class, 'ReportCashflow'])
+        Route::get('/reports/cashflow/download', [PrintController::class, 'ReportCashflow'])
             ->name('cashflow.report.pdf');
     });
 

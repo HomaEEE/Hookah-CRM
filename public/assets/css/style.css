@@ -716,6 +716,8 @@ main .h4 {
   font-family: "Unbounded", sans-serif;
   position: relative;
   cursor: pointer;
+  background: rgba(32, 32, 32, 0.2509803922);
+  backdrop-filter: blur(10px);
 }
 .menu-item .h3 {
   color: #e1e1e1;

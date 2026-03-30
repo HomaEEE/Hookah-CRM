@@ -781,6 +781,8 @@ main {
   font-family: "Unbounded", sans-serif;
   position: relative;
   cursor: pointer;
+  background: #20202040;
+  backdrop-filter: blur(10px);
 
   .h3 {
     color: $text;

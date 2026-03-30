@@ -30,6 +30,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
+use MarcelWeidum\Passkeys\PasskeysPlugin;
 use Openplain\FilamentShadcnTheme\Color;
 
 class AdminPanelProvider extends PanelProvider
@@ -89,7 +90,7 @@ class AdminPanelProvider extends PanelProvider
             )
 
             ->plugins([
-
+                PasskeysPlugin::make(),
                 FilamentShieldPlugin::make()
                     ->localizePermissionLabels()
                     ->scopeToTenant(true),
