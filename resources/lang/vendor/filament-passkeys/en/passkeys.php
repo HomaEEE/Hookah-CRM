@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 return [
     'authenticate_using_passkey' => __('passkeys::passkeys.authenticate_using_passkey'),
     'create' => __('passkeys::passkeys.create'),

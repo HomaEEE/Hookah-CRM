@@ -11,13 +11,11 @@ use App\Http\Middleware\SetLocale;
 use App\Models\Place;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use Coolsam\Modules\ModulesPlugin;
 use Daikazu\FilamentLightbox\LightBoxPlugin;
 use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Enums\Width;
@@ -30,6 +28,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
+use JibayMcs\Tabbed\TabbedPlugin;
 use MarcelWeidum\Passkeys\PasskeysPlugin;
 use Openplain\FilamentShadcnTheme\Color;
 
@@ -45,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Default,  // The Shadcn effect
             ])
+
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->sidebarCollapsibleOnDesktop()
             ->tenant(Place::class, slugAttribute: 'slug')
@@ -69,21 +69,6 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
 
-            ->navigationGroups([
-
-                NavigationGroup::make()
-                    ->label(__('Menu'))
-                    ->icon('heroicon-o-qr-code'),
-
-                NavigationGroup::make()
-                    ->label(__('Manage'))
-                    ->icon('heroicon-o-arrow-down-on-square-stack'),
-
-                NavigationGroup::make()
-                    ->label(__('Finance'))
-                    ->icon('heroicon-o-banknotes'),
-            ])
-
             ->renderHook(
                 PanelsRenderHook::USER_MENU_PROFILE_AFTER,
                 fn (): View => view('filament.hooks.lang-switcher'),
@@ -96,7 +81,10 @@ class AdminPanelProvider extends PanelProvider
                     ->scopeToTenant(true),
                 PhosphorIcons::make()->regular(),
                 LightBoxPlugin::make(),
-                ModulesPlugin::make(),
+                TabbedPlugin::make()
+                    ->defaultPage('view')
+                    ->confirmClose()
+                    ->lazyLoad(),
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,

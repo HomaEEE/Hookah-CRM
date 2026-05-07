@@ -5,3 +5,4 @@
 
 @source "../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php";
 @source '../../../../vendor/bezhansalleh/filament-panel-switch/resources/views/**/*.blade.php';
+@source '../../../../vendor/jibaymcs/tabbed/resources/**/*.blade.php';

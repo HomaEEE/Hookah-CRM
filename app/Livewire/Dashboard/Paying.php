@@ -119,7 +119,7 @@ class Paying extends BaseWidget implements HasTable
 
                         Tabs::make('Tabs')
                             ->tabs([
-                                Tab::make(__('Rekvizites'))
+                                Tab::make(__('Reqvizites'))
                                     ->schema([
                                         TextEntry::make('reqvizite.own')->label(__('FOP'))->badge()->copyable(),
                                         TextEntry::make('reqvizite.IBAN')->label(__('IBAN'))->badge()->copyable(),

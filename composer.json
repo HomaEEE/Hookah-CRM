@@ -15,7 +15,6 @@
         "bezhansalleh/filament-panel-switch": "^3.0",
         "bezhansalleh/filament-shield": "^4.0",
         "cocosmos/filament-quick-add-select": "^1.1",
-        "coolsam/modules": "^5.0",
         "daikazu/filament-lightbox": "^2.1",
         "defstudio/telegraph": "^1.59",
         "filafly/filament-phosphor-icons": "^2.0",
@@ -25,6 +24,7 @@
         "flowframe/laravel-trend": "^0.4.0",
         "guava/filament-modal-relation-managers": "^3.0",
         "guzzlehttp/guzzle": "^7.8",
+        "jibaymcs/tabbed": "^1.0",
         "lara-zeus/spatie-translatable": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -32,6 +32,7 @@
         "livewire/livewire": "^4.0",
         "malzariey/filament-daterangepicker-filter": "^4.0",
         "marcelweidum/filament-passkeys": "^3.0",
+        "mozex/laravel-modules": "^3.3",
         "openplain/filament-shadcn-theme": "^1.0",
         "relaticle/flowforge": "^4.0",
         "spatie/image": "^3.8",
@@ -39,6 +40,7 @@
         "tonegabes/filament-phosphor-icons": "^1.0"
     },
     "require-dev": {
+        "akrista/laravel-extra-boost": "^2.1",
         "fakerphp/faker": "^1.23",
         "filament/upgrade": "^5.0",
         "icanhazstring/composer-unused": "^0.9.4",
@@ -91,11 +93,6 @@
     "extra": {
         "laravel": {
             "dont-discover": []
-        },
-        "merge-plugin": {
-            "include": [
-                "Modules/*/composer.json"
-            ]
         }
     },
     "config": {

@@ -45,7 +45,7 @@
                 @livewire(\App\Livewire\Dashboard\Paying::class)
             </div>
             <div x-show="tab === 'booking'">
-                @livewire(\App\Livewire\Dashboard\Bookings::class)
+                @livewire(\Modules\Booking\Livewire\Bookings::class)
             </div>
 
             <div x-show="tab === 'menu'">

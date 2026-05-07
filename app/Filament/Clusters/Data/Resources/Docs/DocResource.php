@@ -8,26 +8,15 @@ use App\Filament\Clusters\Data\Resources\Docs\Pages\ManageDocs;
 use App\Filament\Clusters\Data\Resources\Docs\Tables\DocTable;
 use App\Filament\Resources\Docs\Schemas\DocForm;
 use App\Models\Doc;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Facades\Filament;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use JibayMcs\Tabbed\Traits\HasTabbedActions;
 
 class DocResource extends Resource
 {
+    use HasTabbedActions;
+
     protected static ?string $model = Doc::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';

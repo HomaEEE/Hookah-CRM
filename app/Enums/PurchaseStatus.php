@@ -18,7 +18,7 @@ enum PurchaseStatus: string implements HasColor, HasLabel
             self::new => __('Added'),
             self::in_process => __('In Process'),
             self::delivery => __('Delivery'),
-            self::complete => __('Complete'),
+            self::complete => __('Completed'),
         };
     }
 

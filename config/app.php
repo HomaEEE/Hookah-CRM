@@ -1,5 +1,11 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\Filament\CmsPanelProvider;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -171,17 +177,16 @@ return [
         /*
          * Package Service Providers...
          */
-        App\Providers\Filament\AdminPanelProvider::class,
-
+        AdminPanelProvider::class,
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\Filament\CmsPanelProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        EventServiceProvider::class,
+        CmsPanelProvider::class,
+        RouteServiceProvider::class,
     ])->toArray(),
 
     /*

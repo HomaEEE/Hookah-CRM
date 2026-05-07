@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PurchaseStatus;
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,9 +11,12 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'place_id', 'ingredients', 'supplier_id'];
+    protected $fillable = ['user_id', 'place_id', 'supplier_id', 'status', 'total_sum', 'comment'];
 
-    protected $casts = ['ingredients' => 'array'];
+    protected $casts = [
+        'status' => PurchaseStatus::class,
+        'total_sum' => MoneyCast::class,
+    ];
 
     public function place()
     {
@@ -28,8 +33,8 @@ class Purchase extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function ingredient()
+    public function items()
     {
-        return $this->belongsTo(Ingredient::class);
+        return $this->hasMany(PurchaseItem::class);
     }
 }

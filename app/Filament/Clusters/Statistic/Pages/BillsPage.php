@@ -30,17 +30,17 @@ class BillsPage extends Page implements HasTable
 
     public static function getPluralModelLabel(): string
     {
-        return __('Bills Page');
+        return __('Bills');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Bills Page');
+        return __('Bills');
     }
 
     public function getTitle(): string|Htmlable
     {
-        return __('Bills Page');
+        return __('Bills');
     }
 
     public function table(Table $table): Table
