@@ -4,31 +4,21 @@ namespace Modules\Menu\Livewire;
 
 use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
 use Filament\Facades\Filament;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use Illuminate\Contracts\View\View;
+use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
-use Livewire\Component;
 use Modules\Menu\Models\Category;
 use Modules\Menu\Models\Product;
 
-class StopList extends Component implements HasActions, HasForms, HasTable
+class StopList extends BaseWidget implements HasTable
 {
-    use InteractsWithActions;
-    use InteractsWithForms;
-    use InteractsWithTable;
-
     public function table(Table $table): Table
     {
         return $table
@@ -93,10 +83,5 @@ class StopList extends Component implements HasActions, HasForms, HasTable
                     //
                 ]),
             ]);
-    }
-
-    public function render(): View
-    {
-        return view('menu::livewire.stop-list');
     }
 }
