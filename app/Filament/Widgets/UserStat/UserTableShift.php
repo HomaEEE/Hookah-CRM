@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\UserStat;
+namespace Modules\Finance\Filament\Admin\Widgets\UserStat;
 
 use App\Models\User;
 use Filament\Tables\Columns\Summarizers\Sum;

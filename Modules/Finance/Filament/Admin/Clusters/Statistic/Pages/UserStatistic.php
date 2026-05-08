@@ -6,6 +6,8 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Modules\Finance\Filament\Admin\Clusters\Statistic\StatisticCluster;
+use Modules\Finance\Filament\Admin\Widgets\UserStat\UserStatShift;
+use Modules\Finance\Filament\Admin\Widgets\UserStat\UserTableShift;
 
 class UserStatistic extends Page
 {
@@ -15,7 +17,7 @@ class UserStatistic extends Page
 
     protected static ?string $cluster = StatisticCluster::class;
 
-    protected string $view = 'filament.pages.user-statistic';
+    protected string $view = 'finance::pages.user-statistic';
 
     protected static ?int $navigationSort = 2;
 

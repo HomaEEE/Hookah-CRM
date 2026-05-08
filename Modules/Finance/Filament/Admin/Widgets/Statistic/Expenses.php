@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Livewire\Statistic;
+namespace Modules\Finance\Filament\Admin\Widgets\Statistic;
 
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
-use Filament\Widgets\TableWidget as BaseWidget;
+use Filament\Widgets\TableWidget;
 use Malzariey\FilamentDaterangepickerFilter\Enums\OpenDirection;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Modules\Finance\Models\Expense;
 use Modules\Finance\Models\ExpenseCategory;
 
-class Expenses extends BaseWidget
+class Expenses extends TableWidget
 {
     use InteractsWithPageFilters;
 

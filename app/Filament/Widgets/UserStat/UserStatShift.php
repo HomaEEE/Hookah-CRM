@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\UserStat;
+namespace Modules\Finance\Filament\Admin\Widgets\UserStat;
 
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
