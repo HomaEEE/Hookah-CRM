@@ -2,17 +2,8 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Components\Forms\ExpenseForm;
-use App\Filament\Components\Forms\IncomeForm;
-use App\Filament\Components\Forms\SupplyForm;
-use App\Filament\Components\Forms\WithdrawalForm;
 use App\Filament\Widgets\Dashboard\PosterShift;
-use App\Filament\Widgets\Dashboard\TodayShift;
 use App\Http\Controllers\PosterApiController;
-use App\Models\Expense;
-use App\Models\Income;
-use App\Models\Supply;
-use App\Models\Withdrawal;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
@@ -22,8 +13,18 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
+use Modules\Finance\Filament\Admin\Resources\Expenses\Schemas\ExpenseForm;
+use Modules\Finance\Filament\Admin\Resources\Incomes\Schemas\IncomeForm;
+use Modules\Finance\Filament\Admin\Resources\Shifts\ShiftResource;
+use Modules\Finance\Filament\Admin\Resources\Withdrawals\Schemas\WithdrawalForm;
+use Modules\Finance\Filament\Admin\Widgets\TodayShift;
+use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Income;
+use Modules\Finance\Models\Withdrawal;
+use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyForm;
+use Modules\Manage\Models\Supply;
 
-class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermissions
+class Dashboard extends \Filament\Pages\Dashboard
 {
     // // use HasPageShield;
 
@@ -41,8 +42,6 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
     protected string $view = 'filament.pages.dashboard';
 
     protected static ?string $slug = 'dashboard';
-
-    protected static ?int $navigationSort = 1;
 
     public function getTitle(): string|Htmlable
     {
@@ -67,14 +66,11 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->model(Supply::class)
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
-                    ->createAnother(false)
                     ->modalWidth('md')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
                     ->slideOver()
-                    ->schema(
-                        SupplyForm::schema(),
-                    )
+                    ->form(SupplyForm::configure(...))
                     ->successNotification(
                         Notification::make()
                             ->success()
@@ -84,16 +80,14 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
 
                 CreateAction::make('add_expense')->label(__('Expense'))
                     ->model(Expense::class)
-                    ->createAnother(false)
+
                     ->icon('heroicon-o-document-minus')
                     ->modalHeading(__('Add Expense'))
                     ->modalWidth('md')
                     ->slideOver()
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
-                    ->schema(
-                        ExpenseForm::schema(),
-                    )
+                    ->form(ExpenseForm::configure(...))
                     ->successNotification(
                         Notification::make()
                             ->success()
@@ -109,10 +103,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->modalWidth('xs')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->schema(
-                        IncomeForm::schema()
-                    )
-
+                    ->form(IncomeForm::configure(...))
                     ->successNotification(
                         Notification::make()
                             ->success()
@@ -128,9 +119,7 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                     ->modalWidth('sm')
                     ->keyBindings(['command+s', 'ctrl+s'])
                     ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->schema(
-                        WithdrawalForm::schema(),
-                    )
+                    ->form(WithdrawalForm::configure(...))
                     ->successNotification(
                         Notification::make()
                             ->success()
@@ -207,8 +196,13 @@ class Dashboard extends \Filament\Pages\Dashboard  // implements HasShieldPermis
                 Action::make('closeShift')
                     ->label(__('Close Shift'))
                     ->icon('heroicon-o-lock-closed')
-                    ->url(fn (): string => route('filament.admin.resources.shifts.create', Filament::getTenant())),
-
+                    ->url(fn (): string => ShiftResource::getUrl(
+                        'create',
+                        [
+                            'tenant' => Filament::getTenant(),
+                        ],
+                        panel: 'admin',
+                    )),
                 // Action::make('onShift')
                 //     ->label(__('On Shift'))
                 //     ->color('info')

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets\UserStat;
 
-use App\Models\ShiftUser;
 use App\Models\User;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -11,6 +10,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Modules\Finance\Models\ShiftUser;
 
 class UserTableShift extends BaseWidget
 {

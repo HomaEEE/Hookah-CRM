@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Livewire\Statistic;
+namespace Modules\Finance\Filament\Admin\Widgets\Statistic;
 
 use App\Models\Supplier;
-use App\Models\Supply;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -11,6 +10,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Malzariey\FilamentDaterangepickerFilter\Enums\OpenDirection;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Modules\Manage\Models\Supply;
 
 class Supplies extends BaseWidget
 {

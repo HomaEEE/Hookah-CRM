@@ -2,16 +2,16 @@
 
 namespace App\Observers;
 
-use App\Models\Bill;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Finance\Models\Bill;
 
 class WithdrawalBill
 {
     public function created(Model $model)
     {
-            Bill::updateOrCreate(
-                ['id' => $model->bill_id]
-            )->decrement('balance', $model->sum );
+        Bill::updateOrCreate(
+            ['id' => $model->bill_id]
+        )->decrement('balance', $model->sum);
     }
 
     public function updated(Model $model)
@@ -20,11 +20,11 @@ class WithdrawalBill
             Bill::updateOrCreate(
                 ['id' => $model->getOriginal('bill_id')]
             )
-            ->increment('balance', $model->getOriginal('sum') );
+                ->increment('balance', $model->getOriginal('sum'));
             Bill::updateOrCreate(
                 ['id' => $model->bill_id]
             )
-            ->decrement('balance', $model->sum );
+                ->decrement('balance', $model->sum);
         }
     }
 
@@ -33,6 +33,6 @@ class WithdrawalBill
         Bill::updateOrCreate(
             ['id' => $model->bill_id]
         )
-        ->increment('balance', $model->sum );
+            ->increment('balance', $model->sum);
     }
 }

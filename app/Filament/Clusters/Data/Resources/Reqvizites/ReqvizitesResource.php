@@ -39,7 +39,7 @@ class ReqvizitesResource extends Resource
 
     public static ?string $navigationParentItem = 'Service Contacts';
 
-    protected static ?\Filament\Pages\Enums\SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Start;
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Start;
     // public static function getNavigationGroup(): ?string
     // {
     //     return __('Data');

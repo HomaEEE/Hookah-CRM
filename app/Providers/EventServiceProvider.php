@@ -3,16 +3,15 @@
 namespace App\Providers;
 
 use App\Listeners\ConvertMediaToWebp;
-use App\Models\Expense;
-use App\Models\Supply;
-use App\Models\Withdrawal;
 use App\Observers\SupplyToExpense;
 use App\Observers\UpdateBill;
 use App\Observers\WithdrawalBill;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Withdrawal;
+use Modules\Manage\Models\Supply;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
 
 class EventServiceProvider extends ServiceProvider

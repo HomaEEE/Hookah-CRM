@@ -11,8 +11,6 @@ class DataCluster extends Cluster
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    protected static ?int $navigationSort = 5;
-
     protected static ?string $slug = 'data';
 
     public static function getNavigationLabel(): string

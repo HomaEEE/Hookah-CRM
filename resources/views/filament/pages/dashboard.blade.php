@@ -39,17 +39,17 @@
 
         <div class="mt-2">
             <div x-show="tab === 'expenses'">
-                @livewire(\App\Livewire\Dashboard\ExpensesDay::class)
+                @livewire(\Modules\Finance\Livewire\ExpensesDay::class)
             </div>
             <div x-show="tab === 'paying'">
-                @livewire(\App\Livewire\Dashboard\Paying::class)
+                @livewire(\Modules\Finance\Livewire\Paying::class)
             </div>
             <div x-show="tab === 'booking'">
-                @livewire(\Modules\Booking\Livewire\Bookings::class)
+                @livewire(\Modules\Place\Livewire\Bookings::class)
             </div>
 
             <div x-show="tab === 'menu'">
-                @livewire(\App\Livewire\Dashboard\StopList::class)
+                @livewire(\Modules\Menu\Livewire\StopList::class)
             </div>
 
              {{-- <div x-show="tab === 'tab4'">

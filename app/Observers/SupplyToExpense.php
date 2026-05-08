@@ -3,13 +3,12 @@
 namespace App\Observers;
 
 use App\Casts\MoneyCast;
-use App\Models\Expense;
-use App\Models\ExpenseCategory;
-use App\Models\Ingredient;
-use App\Models\IngredientHistory;
-use App\Models\Supply;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
+use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\ExpenseCategory;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\Supply;
 
 class SupplyToExpense
 {
@@ -71,33 +70,33 @@ class SupplyToExpense
             return;
         }
 
-        foreach ($items as $item) {
-            $ingredientId = $item['ingredient_id'] ?? null;
-            $newPrice = $item['price'] ?? null;
+        // foreach ($items as $item) {
+        //     $ingredientId = $item['ingredient_id'] ?? null;
+        //     $newPrice = $item['price'] ?? null;
 
-            if (! $ingredientId || $newPrice === null) {
-                continue;
-            }
+        //     if (! $ingredientId || $newPrice === null) {
+        //         continue;
+        //     }
 
-            $ingredient = Ingredient::find($ingredientId);
+        //     $ingredient = Ingredient::find($ingredientId);
 
-            if (! $ingredient) {
-                continue;
-            }
+        //     if (! $ingredient) {
+        //         continue;
+        //     }
 
-            $moneyCast = new MoneyCast;
-            $newPrice = (int) $moneyCast->set($ingredient, 'price', $newPrice, []);
+        //     $moneyCast = new MoneyCast;
+        //     $newPrice = (int) $moneyCast->set($ingredient, 'price', $newPrice, []);
 
-            $currentPrice = (int) $ingredient->getRawOriginal('price');
+        //     $currentPrice = (int) $ingredient->getRawOriginal('price');
 
-            if ($newPrice !== $currentPrice) {
-                $ingredient->update(['price' => $newPrice]);
+        //     if ($newPrice !== $currentPrice) {
+        //         $ingredient->update(['price' => $newPrice]);
 
-                IngredientHistory::create([
-                    'ingredient_id' => $ingredientId,
-                    'price' => $newPrice,
-                ]);
-            }
-        }
+        //         IngredientHistory::create([
+        //             'ingredient_id' => $ingredientId,
+        //             'price' => $newPrice,
+        //         ]);
+        //     }
+        // }
     }
 }

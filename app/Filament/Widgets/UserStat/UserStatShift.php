@@ -2,10 +2,10 @@
 
 namespace App\Filament\Widgets\UserStat;
 
-use App\Models\ShiftUser;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Modules\Finance\Models\ShiftUser;
 
 class UserStatShift extends BaseWidget
 {

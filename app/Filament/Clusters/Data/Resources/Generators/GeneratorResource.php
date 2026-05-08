@@ -2,21 +2,19 @@
 
 namespace App\Filament\Clusters\Data\Resources\Generators;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Clusters\Data\Resources\Generators\Pages\ManageGenerators;
 use App\Filament\Clusters\Data\DataCluster;
-use App\Filament\Clusters\Data\Resources\GeneratorResource\Pages;
+use App\Filament\Clusters\Data\Resources\Generators\Pages\ManageGenerators;
 use App\Models\Generator;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -26,9 +24,7 @@ class GeneratorResource extends Resource
 
     protected static ?string $cluster = DataCluster::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
-
-    protected static ?int $navigationSort = 999;
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bolt';
 
     public static function getPluralModelLabel(): string
     {

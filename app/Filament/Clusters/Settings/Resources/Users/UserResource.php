@@ -5,7 +5,6 @@ namespace App\Filament\Clusters\Settings\Resources\Users;
 use App\Filament\Clusters\Settings\Resources\Users\Pages\ManageUsers;
 use App\Filament\Clusters\Settings\SettingsCluster;
 use App\Models\User;
-use App\Models\Wage;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -27,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+use Modules\Finance\Models\Wage;
 
 class UserResource extends Resource
 {

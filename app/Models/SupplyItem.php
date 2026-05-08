@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Awobaz\Compoships\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\Supply;
 
 class SupplyItem extends Pivot
 {
-    public function supply(): BelongsTo
+    public function supply()
     {
         return $this->belongsTo(Supply::class);
     }
 
-    public function item(): BelongsTo
+    public function item()
     {
         return $this->belongsTo(Ingredient::class);
     }

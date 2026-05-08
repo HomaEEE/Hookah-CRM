@@ -2,9 +2,7 @@
 
 namespace Modules\Dev\Filament\Admin\Clusters\Dev\Pages;
 
-use App\Models\ExpenseCategory;
 use App\Models\Ingredient;
-use App\Models\Wage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -18,6 +16,8 @@ use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Modules\Dev\Filament\Admin\Clusters\Dev\DevCluster;
 use Modules\Dev\Filament\Admin\Clusters\Dev\Widgets\CostCalcWidgets;
+use Modules\Finance\Models\ExpenseCategory;
+use Modules\Finance\Models\Wage;
 
 class CostCalculator extends Page implements HasForms
 {

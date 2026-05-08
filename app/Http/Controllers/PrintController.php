@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use App\Models\Shift;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Shift;
 
 class PrintController extends Controller
 {

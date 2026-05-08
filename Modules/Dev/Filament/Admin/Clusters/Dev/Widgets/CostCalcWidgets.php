@@ -2,10 +2,10 @@
 
 namespace Modules\Dev\Filament\Admin\Clusters\Dev\Widgets;
 
-use App\Models\Expense;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Modules\Finance\Models\Expense;
 
 class CostCalcWidgets extends BaseWidget
 {

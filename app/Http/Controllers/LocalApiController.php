@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use App\Models\Income;
-use App\Models\Shift;
-use App\Models\ShiftUser;
 use App\Models\Tip;
-use App\Models\Withdrawal;
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Income;
+use Modules\Finance\Models\Shift;
+use Modules\Finance\Models\ShiftUser;
+use Modules\Finance\Models\Withdrawal;
 
 class LocalApiController extends Controller
 {

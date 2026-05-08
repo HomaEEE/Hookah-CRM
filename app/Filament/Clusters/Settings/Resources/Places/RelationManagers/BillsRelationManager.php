@@ -2,7 +2,6 @@
 
 namespace App\Filament\Clusters\Settings\Resources\Places\RelationManagers;
 
-use App\Enums\Bill as BillEnum;
 use App\Enums\Currency;
 use App\Http\Controllers\PosterApiController;
 use Filament\Actions\Action;

@@ -2,17 +2,17 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
+use App\Models\Permission;
 use App\Models\Place;
 use App\Models\Role;
-use App\Models\Permission;
-use App\Models\ShiftUser;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Modules\Finance\Models\ShiftUser;
 use ReflectionClass;
 
 class ApplyTenantScopes

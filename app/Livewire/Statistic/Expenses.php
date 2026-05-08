@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Statistic;
 
-use App\Models\Expense;
-use App\Models\ExpenseCategory;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -12,6 +10,8 @@ use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Malzariey\FilamentDaterangepickerFilter\Enums\OpenDirection;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\ExpenseCategory;
 
 class Expenses extends BaseWidget
 {

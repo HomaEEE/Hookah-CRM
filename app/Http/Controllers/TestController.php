@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Place;
-use App\Models\Shift;
 use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Modules\Finance\Models\Shift;
 
 class TestController extends Controller
 {
@@ -40,8 +40,8 @@ class TestController extends Controller
             'type' => 0,
             'category' => 3,
             'user_id' => 1,
-            'amount_from' => 100, //сумма
-            'account_from' => 2, //счет
+            'amount_from' => 100, // сумма
+            'account_from' => 2, // счет
             'date' => '2023-04-16 22:15:32',
             'comment' => 'My test finance transaction',
         ]);

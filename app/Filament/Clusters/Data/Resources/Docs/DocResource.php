@@ -23,8 +23,6 @@ class DocResource extends Resource
 
     protected static ?string $cluster = DataCluster::class;
 
-    protected static ?int $navigationSort = 1;
-
     public static function getPluralModelLabel(): string
     {
         return __('Docs');

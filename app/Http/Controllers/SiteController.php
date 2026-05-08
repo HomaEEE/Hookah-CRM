@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\Category;
-use App\Models\Feedback;
 use App\Models\Place;
-use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Modules\Menu\Models\Category;
+use Modules\Menu\Models\Product;
+use Modules\Place\Models\Booking;
+use Modules\Place\Models\Feedback;
 
 class SiteController extends Controller
 {
