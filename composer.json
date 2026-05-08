@@ -47,7 +47,6 @@
         "itsgoingd/clockwork": "^5.2",
         "larastan/larastan": "^3.0",
         "laravel/boost": "^2.3",
-        "laravel/octane": "^2.13",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.27",
         "laraveldaily/filacheck": "^0.1.7",
