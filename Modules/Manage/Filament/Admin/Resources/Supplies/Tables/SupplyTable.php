@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Supplies\Tables;
+namespace Modules\Manage\Filament\Admin\Resources\Supplies\Tables;
 
 use App\Filament\Components\Bulks\CheckAsPaidAction;
 use App\Filament\Components\Bulks\CheckPosterAction;
-use App\Models\Bill;
 use App\Models\Supplier;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
@@ -22,6 +21,7 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Modules\Finance\Models\Bill;
 use Modules\Manage\Models\Supply;
 
 class SupplyTable

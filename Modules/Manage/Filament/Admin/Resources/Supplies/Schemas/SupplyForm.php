@@ -34,7 +34,7 @@ class SupplyForm
         return $schema
             ->components([
                 Hidden::make('user_id')->default(Auth::user()->id),
-                //  Hidden::make('place_id')->default(Filament::getTenant()->id),
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
                 DateTimePicker::make('added_at')
                     ->label(__('Date Added'))
                     ->native(false)

@@ -3,12 +3,15 @@
 namespace Modules\Manage\Filament\Admin\Resources\Supplies;
 
 use App\Enums\NavigationGroup;
-use App\Filament\Components\Forms\SupplyForm;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Manage\Filament\Admin\Resources\Supplies\Pages\ManageSupplies;
+use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyForm;
+use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyInfolist;
+use Modules\Manage\Filament\Admin\Resources\Supplies\Tables\SupplyTable;
+use Modules\Manage\Models\Supply;
 use UnitEnum;
 
 class SupplyResource extends Resource
@@ -36,10 +39,7 @@ class SupplyResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema
-            ->components(
-                SupplyForm::configure($schema)
-            );
+        return SupplyForm::configure($schema);
     }
 
     public static function table(Table $table): Table

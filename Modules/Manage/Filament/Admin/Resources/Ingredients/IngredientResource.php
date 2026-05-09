@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\Ingredients;
+namespace Modules\Manage\Filament\Admin\Resources\Ingredients;
 
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Ingredients\Pages\ManageIngredients;
-use App\Models\Ingredient;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -18,6 +16,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Modules\Manage\Filament\Admin\Resources\Ingredients\Pages\ManageIngredients;
+use Modules\Manage\Models\Ingredient;
 use UnitEnum;
 
 class IngredientResource extends Resource

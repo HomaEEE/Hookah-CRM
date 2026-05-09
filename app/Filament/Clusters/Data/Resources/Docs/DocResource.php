@@ -5,8 +5,9 @@ namespace App\Filament\Clusters\Data\Resources\Docs;
 use App\Filament\Clusters\Data\DataCluster;
 use App\Filament\Clusters\Data\Resources\DocResource\Pages;
 use App\Filament\Clusters\Data\Resources\Docs\Pages\ManageDocs;
+use App\Filament\Clusters\Data\Resources\Docs\Schemas\DocForm;
+use App\Filament\Clusters\Data\Resources\Docs\Schemas\DocInfolist;
 use App\Filament\Clusters\Data\Resources\Docs\Tables\DocTable;
-use App\Filament\Resources\Docs\Schemas\DocForm;
 use App\Models\Doc;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -41,13 +42,6 @@ class DocResource extends Resource
     public static function table(Table $table): Table
     {
         return DocTable::configure($table);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function infolist(Schema $schema): Schema
