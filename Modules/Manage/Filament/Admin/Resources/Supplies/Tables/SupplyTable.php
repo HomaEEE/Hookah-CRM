@@ -141,6 +141,7 @@ class SupplyTable
             ])
             ->recordActions([
                 ActionGroup::make([
+
                     ViewAction::make()->slideOver(),
                     EditAction::make()->slideOver(),
                     DeleteAction::make(),

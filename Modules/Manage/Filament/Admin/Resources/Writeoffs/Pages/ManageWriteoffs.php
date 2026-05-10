@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Writeoffs\Pages;
+namespace Modules\Manage\Filament\Admin\Resources\Writeoffs\Pages;
 
 use Filament\Actions\CreateAction;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use App\Filament\Resources\Writeoffs\WriteoffResource;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Modules\Manage\Filament\Admin\Resources\Writeoffs\WriteoffResource;
 
 class ManageWriteoffs extends ManageRecords
 {

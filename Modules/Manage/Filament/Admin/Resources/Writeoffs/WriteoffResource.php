@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\Writeoffs;
+namespace Modules\Manage\Filament\Admin\Resources\Writeoffs;
 
 use App\Enums\IngredientUnit;
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Writeoffs\Pages\ManageWriteoffs;
-use App\Models\Ingredient;
 use App\Models\Workshop;
-use App\Models\Writeoff;
 use Auth;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -24,6 +21,9 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Modules\Manage\Filament\Admin\Resources\Writeoffs\Pages\ManageWriteoffs;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\Writeoff;
 use UnitEnum;
 
 class WriteoffResource extends Resource

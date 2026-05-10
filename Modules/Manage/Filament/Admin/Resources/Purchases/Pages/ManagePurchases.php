@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\Purchases\Pages;
+namespace Modules\Manage\Filament\Admin\Resources\Purchases\Pages;
 
 use Filament\Actions\CreateAction;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use App\Filament\Resources\Purchases\PurchaseResource;
-use Filament\Actions;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ManageRecords;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Modules\Manage\Filament\Admin\Resources\Purchases\PurchaseResource;
 
 class ManagePurchases extends ManageRecords
 {

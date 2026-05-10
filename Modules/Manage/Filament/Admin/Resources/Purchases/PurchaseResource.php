@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Purchases;
+namespace Modules\Manage\Filament\Admin\Resources\Purchases;
 
 use App\Enums\IngredientUnit;
 use App\Enums\NavigationGroup;
-use App\Filament\Resources\Purchases\Pages\ManagePurchases;
-use App\Models\Ingredient;
-use App\Models\Purchase;
 use App\Models\Supplier;
 use Auth;
 use Filament\Actions\BulkActionGroup;
@@ -23,6 +20,9 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Modules\Manage\Filament\Admin\Resources\Purchases\Pages\ManagePurchases;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\Purchase;
 use UnitEnum;
 
 class PurchaseResource extends Resource
