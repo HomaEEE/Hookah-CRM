@@ -17,7 +17,7 @@ class UserStatistic extends Page
 
     protected static ?string $cluster = StatisticCluster::class;
 
-    protected string $view = 'finance::pages.user-statistic';
+    protected string $view = 'filament.pages.user-statistic';
 
     protected static ?int $navigationSort = 2;
 

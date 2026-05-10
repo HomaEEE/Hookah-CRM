@@ -22,7 +22,7 @@ class Cashflow extends Page
 
     protected static ?string $cluster = StatisticCluster::class;
 
-    protected string $view = 'finance::pages.cashflow';
+    protected string $view = 'filament.pages.cashflow';
 
     protected static ?int $navigationSort = 2;
 

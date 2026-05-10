@@ -13,8 +13,6 @@ class StatisticCluster extends Cluster
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    protected static ?int $navigationSort = 3;
-
     public static function getPluralModelLabel(): string
     {
         return __('Statistic');
