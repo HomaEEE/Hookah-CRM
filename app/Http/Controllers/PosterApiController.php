@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bill;
-use App\Models\Category;
-use App\Models\Ingredient;
 use App\Models\Place;
-use App\Models\Product;
 use App\Models\Workshop;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
+use Modules\Finance\Models\Bill;
 use Modules\Finance\Models\ExpenseCategory;
 use Modules\Finance\Models\Shift;
+use Modules\Manage\Models\Ingredient;
+use Modules\Menu\Models\Category;
 
 class PosterApiController extends Controller
 {
