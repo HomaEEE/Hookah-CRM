@@ -12,6 +12,7 @@ use Modules\Finance\Models\ExpenseCategory;
 use Modules\Finance\Models\Shift;
 use Modules\Manage\Models\Ingredient;
 use Modules\Menu\Models\Category;
+use Modules\Menu\Models\Product;
 
 class PosterApiController extends Controller
 {
