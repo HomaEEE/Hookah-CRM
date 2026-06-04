@@ -2,6 +2,7 @@
 
 namespace Modules\Finance\Filament\Admin\Resources\Shifts\Pages;
 
+use App\Models\User;
 use App\Models\Workshop;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -24,7 +25,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Finance\Filament\Admin\Resources\Shifts\ShiftResource;
 use Modules\Finance\Models\Wage;
-use Modules\User\Models\User;
 
 class Users extends ManageRelatedRecords
 {

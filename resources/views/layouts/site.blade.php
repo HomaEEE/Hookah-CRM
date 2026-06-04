@@ -11,11 +11,8 @@
         <title>{{ config('app.site') }} - @yield('page') - {{$place->city}}</title>
         <meta name="description" content="@yield('description', 'They don\'t chase the air here for nothing')">
 
-        <link rel="preload" href="/assets/fonts/PhonkSans-Light.woff2" as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="/assets/fonts/PhonkSans-LightItalic.woff2" as="font" type="font/woff2" crossorigin>
-        @vite(['resources/js/app.js' , 'resources/css/app.css'])
-        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-
+        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+        @vite(['resources/js/app.js', 'resources/css/frontend/app.css'])
 
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,8 +31,6 @@
         <meta property="og:image:height" content="600"/>
         <link rel="canonical" href="{{ url()->current() }}">
 
-
-        @stack('css')
 
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -59,9 +54,16 @@
 
         </div>
 
-         <footer class="mt-12">
-            <div class="block dev">{{__('Created by')}}
-                <a href="https://black-design.pw" target="_blank"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
+        <footer>
+            <div class="container mx-auto px-4">
+                <div class="flex">
+                    <div class="text-left flex-1"> {{__('All rights reserved')}}</div>
+                    <div class="text-center flex-1">{{ __('Smoking is harmful to your health') }}</div>
+                    <div class="text-right flex-1 ">
+                        {{__('Created by')}}
+                        <a href="https://black-design.pw" target="_blank"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
+                    </div>
+                </div>
             </div>
         </footer>
 

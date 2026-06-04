@@ -2,10 +2,6 @@
 
 namespace Modules\Manage\Filament\Admin\Resources\Supplies\Schemas;
 
-use App\Filament\Actions\OCRAction;
-use App\Models\Ingredient;
-use App\Models\Reqvizite;
-use App\Models\Supplier;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
@@ -26,6 +22,9 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\Size;
 use Illuminate\Support\Facades\Auth;
 use Modules\Finance\Models\Bill;
+use Modules\Manage\Filament\Actions\OCRAction;
+use Modules\Place\Models\Reqvizite;
+use Modules\Place\Models\Supplier;
 
 class SupplyForm
 {
@@ -213,7 +212,7 @@ class SupplyForm
                                     ->openable(),
 
                             ])->columns(1),
-                        // Tabs\Tab::make(__('List'))
+                        // Tab::make(__('List'))
                         //     ->schema([
                         //         Repeater::make('items')
                         //             ->schema([
@@ -235,7 +234,7 @@ class SupplyForm
                         //                         $name = $get('name');
                         //                         if (! empty($name) && ! empty($state)) {
                         //                             // Create alias if it doesn't exist
-                        //                             \App\Models\IngredientAlias::firstOrCreate(
+                        //                             IngredientAlias::firstOrCreate(
                         //                                 ['alias' => $name],
                         //                                 ['ingredient_id' => $state]
                         //                             );

@@ -5,9 +5,10 @@
     <div class="modal-{{$modal}} content w-full">
         @if ($modal == 'item')
             <div class="flex flex-col w-full gap-5">
+
                 <div class="flex flex-col md:flex-row gap-4">
 
-                    <div class="w-full md:w-32 md:h-32 shrink-0 overflow-hidden relative">
+                      <div class="w-full md:w-42 md:h-42 shrink-0 overflow-hidden relative">
                         @if(!empty($item['new']))
                             <p class="sup">NEW</p>
                         @endif
@@ -22,12 +23,15 @@
                             <div class="modal-menu-price" id="modal-price"></div>
                             <div class="text-xs" id="modal-out"></div>
                         </div>
-                    </div>
-                </div>
 
-                <button class="w-full py-3 modal-buttom-close" id="close-modal" title="Close">
+                           <button class="w-full py-3 modal-buttom-close" id="close-modal" title="Close">
                     {{ __('Close') }}
                 </button>
+                    </div>
+
+                </div>
+
+
             </div>
         @endif
 

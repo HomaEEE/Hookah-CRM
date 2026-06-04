@@ -2,7 +2,7 @@
 
 namespace Modules\Place\Filament\Admin\Resources\Guests;
 
-use App\Filament\Clusters\Data\DataCluster;
+use App\Enums\NavigationGroup;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -21,12 +21,13 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Modules\Place\Filament\Admin\Resources\Guests\Pages\ManageGuests;
 use Modules\Place\Models\Guest;
+use UnitEnum;
 
 class GuestResource extends Resource
 {
     protected static ?string $model = Guest::class;
 
-    protected static ?string $cluster = DataCluster::class;
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Data;
 
     protected static ?string $recordTitleAttribute = 'name';
 

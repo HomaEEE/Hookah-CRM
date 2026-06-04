@@ -169,13 +169,18 @@ class PosterApiController extends Controller
     }
 
     // Получение Кассы и терминала за день
-    public function getTodayShift($place_id)
+    public function getTodayShift($place_id, $date = null)
     {
+
+        if (is_null($date)) {
+            $date = Carbon::today()->format('Ymd');
+        }
+
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
         $posterShift = Http::get($this->urlApi.'dash.getPaymentsReport?token='
             .$place_api['api']
-            .'&dateFrom='.Carbon::today()->format('Ymd')
-            .'&dateTo='.Carbon::today()->format('Ymd'))
+            .'&dateFrom='.Carbon::parse($date)->format('Ymd')
+            .'&dateTo='.Carbon::parse($date)->format('Ymd'))
             ->json('response');
 
         return $posterShift['total'];
@@ -290,17 +295,19 @@ class PosterApiController extends Controller
     }
 
     // Получение данных по цехам
-    public function getTodayWorkshops($place_id)
+    public function getTodayWorkshops($place_id, $date = null)
     {
+        if (is_null($date)) {
+            $date = Carbon::today()->format('Ymd');
+        }
         $place_api = Place::whereId($place_id)->select('settings->Poster_api  as api')->first();
         $posterWorkshops = Http::get($this->urlApi.'dash.getAnalytics?format=json&token='
             .$place_api['api']
             .'&interpolate=day&type=workshops'
-            .'&dateFrom='.Carbon::today()->format('Ymd')
-            .'&dateTo='.Carbon::today()->format('Ymd')
+            .'&dateFrom='.Carbon::parse($date)->format('Ymd')
+            .'&dateTo='.Carbon::parse($date)->format('Ymd')
         )->json('response');
 
-        // dd($posterWorkshops);
         return $posterWorkshops;
     }
 

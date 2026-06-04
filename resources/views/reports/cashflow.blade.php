@@ -146,7 +146,7 @@
             <tbody>
                 @foreach($expensesCategory as $tx)
                     <tr>
-                        <td>{{ $tx->category_id }}</td>
+                        <td>{{ $tx->expense_category_id }}</td>
                         <td>{{ $tx->count}} </td>
                         <td>{{ $tx->amount }} грн</td>
                     </tr>

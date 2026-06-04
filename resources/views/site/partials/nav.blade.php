@@ -1,6 +1,6 @@
-<header class="container mx-auto p-8 md:p-8">
-<div class="flex justify-between">
-        <!-- ЛОГО -->
+<header class="absolute inset-x-0 top-0 z-50">
+
+<div class="container mx-auto px-4 flex items-center justify-between p-8">
         <div class="flex-1 logo">
                 <h1>
                 <a href="/">
@@ -10,11 +10,11 @@
         </div>
 
         <div class="burger">
-        <div class="menu-icon" id="menu-btn">
-            <span class="menu-icon__line menu-icon__line-left"></span>
-            <span class="menu-icon__line"></span>
-            <span class="menu-icon__line menu-icon__line-right"></span>
-        </div>
+            <div class="menu-icon" id="menu-btn">
+                <span class="menu-icon__line menu-icon__line-left"></span>
+                <span class="menu-icon__line"></span>
+                <span class="menu-icon__line menu-icon__line-right"></span>
+            </div>
         </div>
     </div>
 </header>
@@ -56,7 +56,7 @@
                 <form class="nav-form space-y-4 pt-12 pr-24 max-w-md w-full content-fade">
                    <div class="input-group">
                         <label for="name">{{ __('Name') }}</label>
-                            <input type="text" placeholder="{{ __('Name') }}" id="name" autocomplete="on"/>
+                        <input type="text" placeholder="{{ __('Name') }}" id="name" autocomplete="on"/>
                     </div>
 
                     <div class="input-group">

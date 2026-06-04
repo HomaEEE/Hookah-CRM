@@ -1,9 +1,9 @@
 {
-  "name": "Noire CRM",
+  "name": "Noire Lounge Bar",
   "short_name": "NOIRE",
   "start_url": "https://noire.ee/",
   "display": "fullscreen",
-  "description": "Noire Smoke Different",
+  "description": "Lounge Bar in Odessa",
   "lang": "uk",
   "dir": "auto",
   "orientation": "any",
@@ -68,14 +68,19 @@
   "prefer_related_applications": "false",
   "shortcuts": [
     {
-      "name": "Menu Odessa",
-      "url": "/od/menu",
-      "description": "Меню Одесса"
+      "name": "Menu",
+      "url": "/menu",
+      "description": "Меню"
     },
     {
-      "name": "Menu Mykolayiv",
-      "url": "/mk/menu",
-      "description": "Меню Николаев"
-    }
+      "name": "Booking",
+      "url": "/booking",
+      "description": "Бронювання"
+    },
+    {
+      "name": "Contacts",
+      "url": "/contacts",
+      "description": "Контакти"
+    },
   ]
 }

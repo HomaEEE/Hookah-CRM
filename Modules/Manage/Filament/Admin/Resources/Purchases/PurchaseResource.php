@@ -4,7 +4,6 @@ namespace Modules\Manage\Filament\Admin\Resources\Purchases;
 
 use App\Enums\IngredientUnit;
 use App\Enums\NavigationGroup;
-use App\Models\Supplier;
 use Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -23,6 +22,7 @@ use Filament\Tables\Table;
 use Modules\Manage\Filament\Admin\Resources\Purchases\Pages\ManagePurchases;
 use Modules\Manage\Models\Ingredient;
 use Modules\Manage\Models\Purchase;
+use Modules\Place\Models\Supplier;
 use UnitEnum;
 
 class PurchaseResource extends Resource

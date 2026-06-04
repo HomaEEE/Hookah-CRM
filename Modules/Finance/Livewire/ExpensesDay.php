@@ -21,8 +21,9 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
+use Modules\Finance\Enums\TransactionType;
 use Modules\Finance\Models\Bill;
-use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Transaction;
 
 class ExpensesDay extends BaseWidget implements HasTable
 {
@@ -36,7 +37,7 @@ class ExpensesDay extends BaseWidget implements HasTable
 
     public static function badge(): ?string
     {
-        return Expense::query()->with('supplies')->whereDate('added_at', '>=', Carbon::today())->count();
+        return Transaction::query()->with('supplies')->whereDate('added_at', '=', Carbon::today())->count();
     }
 
     protected function getTableHeading(): string|Htmlable
@@ -56,13 +57,12 @@ class ExpensesDay extends BaseWidget implements HasTable
                     ->titlePrefixedWithLabel(false),
             ])
             ->groupingSettingsInDropdownOnDesktop()
-            ->query(Expense::query()
-
-                ->whereDate('added_at', Carbon::today())->with('user', 'supply')->wherePay('1'))
+            ->query(Transaction::query()->where('type', TransactionType::Expense->value)
+                ->whereDate('added_at', Carbon::today())->with('user', 'supply'))
 
             ->columns([
                 TextColumn::make('category.name')->label(__('Category'))->badge()
-                    ->description(fn (Expense $record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
+                    ->description(fn (Transaction $record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
                 IconColumn::make('bill.type')->label(__('Bill'))
                     ->action(function ($record) {
@@ -71,7 +71,7 @@ class ExpensesDay extends BaseWidget implements HasTable
                         ]);
                     }),
                 SpatieMediaLibraryImageColumn::make('supply.media')->label(__('Invoice'))
-                    ->state(function (Expense $record) {
+                    ->state(function (Transaction $record) {
                         return $record->supply_id ? $record->supply->getFirstMediaUrl('images') : 'invoice'; // Или путь к заглушке
                     })
                     ->collection('supplies')
@@ -84,26 +84,14 @@ class ExpensesDay extends BaseWidget implements HasTable
                     ->defaultImageUrl(url('/assets/imgs/app/no-photo.png'))
                     ->visibleFrom('sm'),
 
-                IconColumn::make('pay')
-                    ->translateLabel()
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check')
-                    ->falseIcon('heroicon-o-x-mark')
-                    ->action(function ($record, $column) {
-                        $name = $column->getName();
-                        $record->update([
-                            $name => ! $record->$name,
-                        ]);
-                    }),
             ])
             ->recordActions([
-                EditAction::make()
+                EditAction::make()->label('')
                     ->modalWidth('sm')
                     ->schema([
                         Tabs::make('Tabs')
                             ->contained(false)
                             ->tabs([
-
                                 Tab::make(__('Expense'))
                                     ->schema([
                                         TextInput::make('sum')->translateLabel(),
@@ -120,23 +108,6 @@ class ExpensesDay extends BaseWidget implements HasTable
                                             ])
                                             ->reactive(),
 
-                                        ToggleButtons::make('pay')->label(__('Pay'))
-                                            ->options(
-                                                [
-                                                    0 => __('No pay'),
-                                                    1 => __('Paid'),
-                                                ]
-                                            )
-                                            ->colors([
-                                                0 => 'danger',
-                                                1 => 'success',
-                                            ])
-                                            ->default(0)
-                                            ->inline()
-                                            ->live()
-                                            ->grouped()
-                                            ->extraAttributes(['style' => 'width: 100%'])
-                                            ->reactive(),
                                     ]),
                                 Tab::make(__('Photo'))
                                     ->schema([

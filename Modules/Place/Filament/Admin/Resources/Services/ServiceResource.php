@@ -1,0 +1,128 @@
+<?php
+
+namespace Modules\Place\Filament\Admin\Resources\Services;
+
+use App\Enums\NavigationGroup;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\IconPosition;
+use Filament\Support\RawJs;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Modules\Place\Filament\Admin\Resources\Services\Pages\ManageServices;
+use Modules\Place\Models\Service;
+use UnitEnum;
+
+class ServiceResource extends Resource
+{
+    protected static ?string $model = Service::class;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Data;
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?int $navigationSort = 5;
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-exclamation-triangle';
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Service Contacts');
+    }
+
+    // public static function getNavigationGroup(): ?string
+    // {
+    //     return __('Data');
+    // }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Service Contacts');
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Hidden::make('place_id')->default(Filament::getTenant()->id),
+                TextInput::make('name')->label(__('Name')),
+                TextInput::make('phone')->label(__('Phone'))
+                    ->tel()
+                    ->mask(RawJs::make(<<<'JS'
+                        $input.length >= 13 ? '(999)999-99-99' : '(999)999-99-99'
+                    JS))
+                    ->translateLabel(),
+                TextInput::make('company')->label(__('Company')),
+                TextInput::make('comment')->translateLabel(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')->label(__('Name'))
+                    ->searchable()
+                    ->alignLeft()
+                    ->description(fn (Service $record): string => $record->company ?? '', position: 'below'),
+                TextColumn::make('phone')
+                    ->icon('heroicon-o-phone')
+                    ->label(__('Phone'))
+                    ->copyable()
+                    ->searchable()
+                    ->copyMessage(__('Phone copied'))
+                    ->copyMessageDuration(1500)
+                    ->alignLeft(),
+            ])
+            ->filters([
+                //
+            ])
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ])
+            ->emptyStateActions([
+                CreateAction::make(),
+            ]);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextEntry::make('place.city')->translateLabel(),
+                TextEntry::make('company')->translateLabel(),
+                TextEntry::make('name')->translateLabel(),
+                TextEntry::make('phone')->translateLabel()
+                    ->icon('heroicon-m-phone')
+                    ->iconPosition(IconPosition::Before),
+            ]);
+
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ManageServices::route('/'),
+        ];
+    }
+}

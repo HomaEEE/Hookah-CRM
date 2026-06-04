@@ -14,7 +14,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Modules\Finance\Filament\Admin\Resources\Incomes\Pages\ManageIncomes;
 use Modules\Finance\Filament\Admin\Resources\Incomes\Schemas\IncomeForm;
-use Modules\Finance\Models\Income;
 
 class IncomeResource extends Resource
 {

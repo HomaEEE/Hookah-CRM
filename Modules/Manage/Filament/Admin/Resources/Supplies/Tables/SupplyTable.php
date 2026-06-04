@@ -4,7 +4,6 @@ namespace Modules\Manage\Filament\Admin\Resources\Supplies\Tables;
 
 use App\Filament\Components\Bulks\CheckAsPaidAction;
 use App\Filament\Components\Bulks\CheckPosterAction;
-use App\Models\Supplier;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -23,6 +22,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Modules\Finance\Models\Bill;
 use Modules\Manage\Models\Supply;
+use Modules\Place\Models\Supplier;
 
 class SupplyTable
 {

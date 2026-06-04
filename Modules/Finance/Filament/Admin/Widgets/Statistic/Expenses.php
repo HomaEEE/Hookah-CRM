@@ -10,8 +10,9 @@ use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget;
 use Malzariey\FilamentDaterangepickerFilter\Enums\OpenDirection;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
-use Modules\Finance\Models\Expense;
+use Modules\Finance\Enums\TransactionType;
 use Modules\Finance\Models\ExpenseCategory;
+use Modules\Finance\Models\Transaction;
 
 class Expenses extends TableWidget
 {
@@ -26,7 +27,7 @@ class Expenses extends TableWidget
     {
         return $table
             ->query(
-                Expense::query()
+                Transaction::query()->where('type', TransactionType::Expense)
             )
             ->columns([
 
@@ -44,7 +45,7 @@ class Expenses extends TableWidget
             ])
 
             ->filters([
-                SelectFilter::make('category_id')
+                SelectFilter::make('expense_category_id')
                     ->label('Категория')
                     ->native(false)
                     ->options(
@@ -59,8 +60,8 @@ class Expenses extends TableWidget
 
             ])
             ->modifyQueryUsing(function ($query) {
-                $query->selectRaw('category_id as id, category_id, sum(sum) as total, count(*) as count')
-                    ->groupBy('category_id')
+                $query->selectRaw('expense_category_id as id, expense_category_id, sum(sum) as total, count(*) as count')
+                    ->groupBy('expense_category_id')
                     ->orderBy('sum', 'desc');
             });
     }

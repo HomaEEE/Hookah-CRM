@@ -69,7 +69,3 @@
 <div class="modal-overlay"></div>
 
 @endsection
-
-@push('scripts')
-    @vite(['resources/js/modal.js'])
-@endpush

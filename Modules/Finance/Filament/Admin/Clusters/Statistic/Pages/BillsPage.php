@@ -7,7 +7,6 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Pages\Page;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
@@ -63,9 +62,10 @@ class BillsPage extends Page implements HasTable
                     }),
                 IconColumn::make('print_fiscal')
                     ->label(__(''))
-                    ->icon(fn (string $state): Heroicon => match ($state) {
-                        '1' => Heroicon::CheckCircle,
-                        '0' => Heroicon::XCircle,
+                    ->icon(fn (string $state): Phosphor => match ($state) {
+                        '2' => Phosphor::ArrowBendUpLeft,
+                        '1' => Phosphor::CheckCircle,
+                        '0' => Phosphor::XCircle,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         '0' => 'warning',
@@ -106,10 +106,11 @@ class BillsPage extends Page implements HasTable
                     }),
 
                 TextColumn::make('sum')->money('UAH', divideBy: 100)
+                    ->size('xl')
                     ->summarize(Summarizer::make('sum')
                         ->money('UAH')
                         ->using(function (self $livewire): int {
-                            return $livewire->getTableRecords()->whereNotIn('status', ['3', '4'])->sum('sum') / 100;
+                            return $livewire->getTableRecords()->whereNotIn('status', ['3', '4'])->whereNotIn('pay_type', ['0'])->whereNotIn('print_fiscal', ['2'])->sum('sum') / 100;
                         })
                     )
                     ->translateLabel(),

@@ -15,13 +15,14 @@ use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Finance\Models\Shift;
 use Modules\Finance\Models\Wage;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
 use Spatie\LaravelPasskeys\Models\Concerns\InteractsWithPasskeys;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser, HasPasskeys, HasTenants
 {
-    use HasApiTokens, HasFactory, HasRoles, InteractsWithPasskeys, Notifiable;
+    use HasApiTokens, HasFactory, HasPushSubscriptions, HasRoles, InteractsWithPasskeys, Notifiable;
 
     /**
      * The attributes that are mass assignable.

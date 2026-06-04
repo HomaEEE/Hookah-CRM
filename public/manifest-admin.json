@@ -2,7 +2,7 @@
   "name": "Noire CRM",
   "short_name": "NOIRE CRM",
   "start_url": "https://noire.ee/admin/",
-  "display": "fullscreen",
+  "display": "standalone",
   "description": "Учет финансов Noire",
   "lang": "ru",
   "dir": "auto",

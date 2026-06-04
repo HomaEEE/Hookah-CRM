@@ -2,10 +2,10 @@
 [x] Filamnet 4 update
 [ ] Mistral Supply OCR HIGH PRIORITY
 [ ] Web Push Api
-[ ] Menu frontend
+[x] Menu frontend
 [ ] Modal for items and feedback
 
-[ ] Фильтр по дате/ппериоду в Движение средств
-
-Исправить загрузку taiwind на фронте
-переписать разметку под таилвинд
+[ ] Фильтр по дате/периоду в Движение средств
+[ ] Исправить загрузку taiwind на фронте
+[x] Переписать разметку под таилвинд
+[ ] Автоматическое открытие терминала смены в POSTER API

@@ -13,14 +13,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
-use Modules\Finance\Filament\Admin\Resources\Expenses\Schemas\ExpenseForm;
-use Modules\Finance\Filament\Admin\Resources\Incomes\Schemas\IncomeForm;
 use Modules\Finance\Filament\Admin\Resources\Shifts\ShiftResource;
-use Modules\Finance\Filament\Admin\Resources\Withdrawals\Schemas\WithdrawalForm;
+use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionForm;
 use Modules\Finance\Filament\Admin\Widgets\TodayShift;
-use Modules\Finance\Models\Expense;
-use Modules\Finance\Models\Income;
-use Modules\Finance\Models\Withdrawal;
+use Modules\Finance\Models\Transaction;
 use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyForm;
 use Modules\Manage\Models\Supply;
 
@@ -78,53 +74,21 @@ class Dashboard extends \Filament\Pages\Dashboard
                             ->title(__('Supply added'))
                     ),
 
-                CreateAction::make('add_expense')->label(__('Expense'))
-                    ->model(Expense::class)
+                CreateAction::make('add_transaction')->label(__('Transaction'))
+                    ->model(Transaction::class)
 
                     ->icon('heroicon-o-document-minus')
-                    ->modalHeading(__('Add Expense'))
+                    ->modalHeading(__('Add Transaction'))
                     ->modalWidth('md')
                     ->slideOver()
                     ->modalIcon('heroicon-o-document-minus')
                     ->keyBindings(['command+s', 'ctrl+s'])
-                    ->form(ExpenseForm::configure(...))
+                    ->form(TransactionForm::configure(...))
                     ->successNotification(
                         Notification::make()
                             ->success()
-                            ->title(__('Expense added'))
+                            ->title(__('Transaction added'))
                             ->icon('heroicon-o-document-minus')
-                    ),
-
-                CreateAction::make('addIncome')->label(__('Income'))
-                    ->model(Income::class)
-                    ->icon('heroicon-o-plus')
-                    ->modalHeading(__('Add Income'))
-                    ->createAnother(false)
-                    ->modalWidth('xs')
-                    ->keyBindings(['command+s', 'ctrl+s'])
-                    ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->form(IncomeForm::configure(...))
-                    ->successNotification(
-                        Notification::make()
-                            ->success()
-                            ->icon('heroicon-o-plus-circle')
-                            ->title(__('Income added'))
-                    ),
-
-                CreateAction::make('addWithdrawal')->label(__('Withdrawal'))
-                    ->model(Withdrawal::class)
-                    ->icon('heroicon-o-minus')
-                    ->modalHeading(__('Add Withdrawal'))
-                    ->createAnother(false)
-                    ->modalWidth('sm')
-                    ->keyBindings(['command+s', 'ctrl+s'])
-                    ->modalIcon('heroicon-o-inbox-arrow-down')
-                    ->form(WithdrawalForm::configure(...))
-                    ->successNotification(
-                        Notification::make()
-                            ->success()
-                            ->icon('heroicon-o-minus')
-                            ->title(__('Withdrawal added'))
                     ),
 
             ])->button()->label(__('Add'))->color('success')->icon('heroicon-o-squares-plus'),

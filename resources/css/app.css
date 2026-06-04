@@ -60,7 +60,6 @@
 		padding-inline: 2rem;
 		width: 100%;
 
-		/* Важно! Устанавливаем max-width вручную */
-		max-width: 1280px; /* или 80rem, если используете шкалу Tailwind */
+		max-width: 80rem;
 	}
 }

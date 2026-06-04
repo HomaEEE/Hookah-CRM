@@ -2,7 +2,6 @@
 
 namespace Modules\Finance\Filament\Admin\Widgets\Statistic;
 
-use App\Models\Supplier;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -11,6 +10,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Malzariey\FilamentDaterangepickerFilter\Enums\OpenDirection;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Modules\Manage\Models\Supply;
+use Modules\Place\Models\Supplier;
 
 class Supplies extends BaseWidget
 {

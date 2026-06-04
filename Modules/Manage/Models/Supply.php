@@ -4,14 +4,14 @@ namespace Modules\Manage\Models;
 
 use App\Casts\MoneyCast;
 use App\Models\Place;
-use App\Models\Reqvizite;
-use App\Models\Supplier;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Finance\Models\Bill;
-use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Transaction;
+use Modules\Place\Models\Reqvizite;
+use Modules\Place\Models\Supplier;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -65,9 +65,9 @@ class Supply extends Model implements HasMedia
         return $this->belongsTo(Ingredient::class, 'id', 'ingredient_id');
     }
 
-    public function expense()
+    public function transaction()
     {
-        return $this->belongsTo(Expense::class);
+        return $this->hasOne(Transaction::class);
     }
 
     public function bill()

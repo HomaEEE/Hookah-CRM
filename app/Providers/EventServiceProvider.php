@@ -3,14 +3,10 @@
 namespace App\Providers;
 
 use App\Listeners\ConvertMediaToWebp;
-use App\Observers\SupplyToExpense;
-use App\Observers\UpdateBill;
-use App\Observers\WithdrawalBill;
+use App\Observers\SupplyObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Finance\Models\Expense;
-use Modules\Finance\Models\Withdrawal;
 use Modules\Manage\Models\Supply;
 use Spatie\MediaLibrary\MediaCollections\Events\MediaHasBeenAddedEvent;
 
@@ -36,10 +32,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Supply::observe(SupplyToExpense::class);
-        Supply::observe(UpdateBill::class);
-        Expense::observe(UpdateBill::class);
-        Withdrawal::observe(WithdrawalBill::class);
+        Supply::observe(SupplyObserver::class);
     }
 
     /**

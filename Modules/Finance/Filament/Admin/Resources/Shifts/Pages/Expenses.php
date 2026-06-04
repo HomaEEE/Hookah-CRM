@@ -49,6 +49,7 @@ class Expenses extends ManageRelatedRecords
                 TextInput::make('Expenses')
                     ->required()
                     ->maxLength(255),
+
             ]);
     }
 

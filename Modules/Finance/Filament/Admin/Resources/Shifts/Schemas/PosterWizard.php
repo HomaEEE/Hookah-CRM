@@ -9,6 +9,7 @@ use App\Models\Workshop;
 use Auth;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -27,15 +28,21 @@ class PosterWizard
             Hidden::make('user_id')->default(Auth::user()->id),
             Section::make()->schema([
                 Hidden::make('place_id')->default(Filament::getTenant()->id),
+                DatePicker::make('date')->default(now())
+                    ->maxDate(now())
+                    ->required()->columns(1)
+                    ->hiddenLabel()
+                    ->native(false),
+
                 Actions::make([
                     Action::make('load_poster')->translateLabel()
                         ->icon('heroicon-s-cloud-arrow-down')
-                        ->color('success')
+                        ->color('info')
                         ->action(function (Get $get, Set $set) {
                             $place = Place::where('id', Filament::getTenant()->id)->first();
                             //  $posterShift =  (new PosterApi())->getCurrentShift($poster_api->id);  API
                             $posterShift = Shift::where('place_id', $place->id)->select('shift')->latest()->first();
-                            $posterTodayShift = (new PosterApiController)->getTodayShift(Filament::getTenant()->id);
+                            $posterTodayShift = (new PosterApiController)->getTodayShift(Filament::getTenant()->id, $get('date'));
 
                             $set('old_shift', $posterShift != null ? $posterShift->shift : 0);
 
@@ -57,7 +64,7 @@ class PosterWizard
                             $localTips = (new LocalApiController)->getLocalTips(Filament::getTenant()->id);
                             $set('tips', $localTips);
 
-                            $posterTodayWorkshops = (new PosterApiController)->getTodayWorkshops(Filament::getTenant()->id);
+                            $posterTodayWorkshops = (new PosterApiController)->getTodayWorkshops(Filament::getTenant()->id, $get('date'));
 
                             foreach ($posterTodayWorkshops as $ws) {
 
@@ -79,7 +86,7 @@ class PosterWizard
                                 ->send();
                         }),
                 ])->fullWidth(),
-            ]),
+            ])->columns(2),
 
             Fieldset::make(__('Poster'))->schema([
 

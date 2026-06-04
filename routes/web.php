@@ -14,26 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\SiteController@index')->name('home');
-// Route::get('/api/shift/{place_id}', 'App\Http\Controllers\PosterApiController@getCurrentShift');
-
-// Route::get('/getSpot/{place_id}', 'App\Http\Controllers\TestController@getSpot');
-
-//   Route::prefix('{suffix?}')->group(function () {
-// Route::get('/menu', 'App\Http\Controllers\SiteController@menu');
-Route::get('/seet/{seet?}', 'App\Http\Controllers\SiteController@seet')->name('seet');
-
-Route::get('/menu/{seet?}', 'App\Http\Controllers\SiteController@menu')->name('menu');
-Route::get('/vacancy', 'App\Http\Controllers\SiteController@vacancy')->name('vacancy');
-Route::get('/rules', 'App\Http\Controllers\SiteController@rules')->name('rules');
-Route::get('/booking', 'App\Http\Controllers\SiteController@booking')->name('booking');
-Route::get('/feedbacks', 'App\Http\Controllers\SiteController@feedbacks')->name('feedbacks');
-Route::get('/contacts', 'App\Http\Controllers\SiteController@contacts')->name('contacts');
-// });
-
-Route::post('/sendFeedback', 'App\Http\Controllers\SiteController@sendFeedback');
-Route::post('/sendReserve', 'App\Http\Controllers\SiteController@sendReserve');
-
 Route::prefix('bot')->group(function () {
     Route::get('/', 'App\Http\Controllers\TelegramBotController@index')->name('bot.index');
     Route::get('hookah', 'App\Http\Controllers\TelegramBotController@hookah')->name('bot.hookah');
@@ -41,9 +21,6 @@ Route::prefix('bot')->group(function () {
     Route::get('bill', 'App\Http\Controllers\TelegramBotController@bill')->name('bot.bill');
     Route::post('order', 'App\Http\Controllers\TelegramBotController@order')->name('bot.order');
 });
-
-Route::get('lang/{lang}',
-    ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\SiteController@switchLang']);
 
 Route::passkeys();
 

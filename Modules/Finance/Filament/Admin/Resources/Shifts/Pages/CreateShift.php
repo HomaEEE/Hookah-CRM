@@ -14,7 +14,7 @@ use Modules\Finance\Filament\Admin\Resources\Shifts\Schemas\ShiftWizard;
 use Modules\Finance\Filament\Admin\Resources\Shifts\Schemas\WagesWizard;
 use Modules\Finance\Filament\Admin\Resources\Shifts\ShiftResource;
 use Modules\Finance\Models\Bill;
-use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Transaction;
 
 class CreateShift extends CreateRecord
 {
@@ -42,11 +42,11 @@ class CreateShift extends CreateRecord
 
         (new PosterApiController)->closeShift($shift);
 
-        Expense::create(
+        Transaction::create(
             [
                 'user_id' => Auth::user()->id,
                 'place_id' => $shift->place_id,
-                'category_id' => $wage->expense,
+                'expense_category_id' => $wage->expense,
                 'sum' => $shift->wages,
                 'bill_id' => '0',
                 'comment' => 'Зарплаты',

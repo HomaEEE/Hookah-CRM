@@ -19,8 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Modules\Finance\Models\Bill;
-use Modules\Finance\Models\Expense;
 use Modules\Finance\Models\Subscription;
+use Modules\Finance\Models\Transaction;
 
 class SubscriptionTable
 {
@@ -101,11 +101,11 @@ class SubscriptionTable
                             ]
                         );
                         $record->save();
-                        Expense::create(
+                        Transaction::create(
                             [
                                 'place_id' => $record->place_id,
                                 'user_id' => Auth::user()->id,
-                                'category_id' => $record->category_id,
+                                'expense_category_id' => $record->category_id,
                                 'sum' => $data['sum'],
                                 'bill_id' => $data['bill_id'],
                                 'comment' => $record->name,

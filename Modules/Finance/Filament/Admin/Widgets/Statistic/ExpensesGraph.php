@@ -5,8 +5,8 @@ namespace Modules\Finance\Filament\Admin\Widgets\Statistic;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
-use Modules\Finance\Models\Expense;
-use Modules\Finance\Models\Shift;
+use Modules\Finance\Enums\TransactionType;
+use Modules\Finance\Models\Transaction;
 
 class ExpensesGraph extends ChartWidget
 {
@@ -24,67 +24,51 @@ class ExpensesGraph extends ChartWidget
         $start = now()->subMonths(11)->startOfMonth();
         $end = now()->endOfMonth();
 
-        // Собираем список всех месяцев за период
-        $months = collect(Carbon::parse($start)->monthsUntil($end))->map(fn ($date) => $date->format('Y-m'));
+        // 1. Создаем шаблонный массив месяцев с нулевыми значениями: ['2025-06' => 0, '2025-07' => 0, ...]
+        $months = collect(Carbon::parse($start)->monthsUntil($end))
+            ->mapWithKeys(fn ($date) => [$date->format('Y-m') => 0]);
 
-        // Расходы
-        $expenses = Trend::model(Expense::class)
-            ->between($start, $end)
-            ->perMonth()
-            ->sum('sum');
+        // 2. Вспомогательная функция (Closure), чтобы не дублировать код запросов Trend
+        $getTrendData = function (TransactionType $type) use ($start, $end, $months) {
+            $trend = Trend::query(Transaction::where('type', $type->value))
+                ->between($start, $end)
+                ->perMonth()
+                ->sum('sum');
 
-        $expenseData = collect($expenses)->mapWithKeys(fn ($item) => [
-            Carbon::parse($item->date)->format('Y-m') => round($item->aggregate / 100, 2),
-        ]);
+            // Копируем базовый массив с нулями
+            $data = $months->toArray();
 
-        // Приход - cash
-        $cashData = Trend::model(Shift::class)
-            ->between($start, $end)
-            ->perMonth()
-            ->sum('cash');
+            // Заполняем реальными данными из БД
+            foreach ($trend as $item) {
+                $monthKey = Carbon::parse($item->date)->format('Y-m');
+                if (isset($data[$monthKey])) {
+                    // Делим на 100, если суммы хранятся в БД в копейках/центах
+                    $data[$monthKey] = round($item->aggregate / 100, 2);
+                }
+            }
 
-        $cash = collect($cashData)->mapWithKeys(fn ($item) => [
-            Carbon::parse($item->date)->format('Y-m') => $item->aggregate,
-        ]);
+            // Возвращаем только массив значений строго по порядку для графика
+            return array_values($data);
+        };
 
-        // Приход - terminal
-        $terminalData = Trend::model(Shift::class)
-            ->between($start, $end)
-            ->perMonth()
-            ->sum('terminal');
-
-        $terminal = collect($terminalData)->mapWithKeys(fn ($item) => [
-            Carbon::parse($item->date)->format('Y-m') => $item->aggregate,
-        ]);
-
-        // Складываем cash и terminal
-        $incomes = [];
-
-        foreach ($months as $month) {
-            $incomes[$month] = round((($cash[$month] ?? 0) + ($terminal[$month] ?? 0)) / 100, 2);
-        }
-
-        // Собираем приход и расход по месяцам
-        $cashIn = [];
-        $cashOut = [];
-
-        foreach ($months as $month) {
-            $cashIn[] = $incomes[$month] ?? 0;
-            $cashOut[] = $expenseData[$month] ?? 0;
-        }
-
+        // 3. Формируем финальный массив для Chart.js
         return [
-            'labels' => $months->toArray(),
+            'labels' => array_keys($months->toArray()), // Ось X: '2025-06', '2025-07' и т.д.
             'datasets' => [
                 [
                     'label' => 'Приход',
-                    'data' => $cashIn,
-                    'backgroundColor' => 'rgba(30, 181, 33, 0.4)',
+                    'data' => $getTrendData(TransactionType::Income),
+                    'backgroundColor' => 'rgba(30, 181, 33, 0.6)', // Зеленый
                 ],
                 [
                     'label' => 'Расход',
-                    'data' => $cashOut,
-                    'backgroundColor' => 'rgba(203, 27, 27, 0.4)',
+                    'data' => $getTrendData(TransactionType::Expense),
+                    'backgroundColor' => 'rgba(203, 27, 27, 0.6)', // Красный
+                ],
+                [
+                    'label' => 'Инкассация',
+                    'data' => $getTrendData(TransactionType::Withdrawal),
+                    'backgroundColor' => 'rgba(245, 158, 11, 0.6)', // Оранжевый
                 ],
             ],
         ];
