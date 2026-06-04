@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\Docs\Pages;
+namespace Modules\Place\Filament\Admin\Resources\Docs\Pages;
 
 use Filament\Actions\CreateAction;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;

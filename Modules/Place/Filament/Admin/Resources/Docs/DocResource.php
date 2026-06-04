@@ -3,12 +3,12 @@
 namespace Modules\Place\Filament\Admin\Resources\Docs;
 
 use App\Enums\NavigationGroup;
-use App\Filament\Clusters\Data\Resources\Docs\Pages\ManageDocs;
-use App\Filament\Clusters\Data\Resources\Docs\Schemas\DocForm;
-use App\Filament\Clusters\Data\Resources\Docs\Schemas\DocInfolist;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Modules\Place\Filament\Admin\Resources\Docs\Pages\ManageDocs;
+use Modules\Place\Filament\Admin\Resources\Docs\Schemas\DocForm;
+use Modules\Place\Filament\Admin\Resources\Docs\Schemas\DocInfolist;
 use Modules\Place\Filament\Admin\Resources\Docs\Tables\DocTable;
 use Modules\Place\Models\Doc;
 use UnitEnum;

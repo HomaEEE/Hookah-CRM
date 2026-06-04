@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\Docs\Schemas;
+namespace Modules\Place\Filament\Admin\Resources\Docs\Schemas;
 
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;

@@ -43,13 +43,11 @@
         "tonegabes/filament-phosphor-icons": "^1.0"
     },
     "require-dev": {
-        "akrista/laravel-extra-boost": "^2.1",
         "fakerphp/faker": "^1.23",
         "filament/upgrade": "^5.0",
         "icanhazstring/composer-unused": "^0.9.4",
         "itsgoingd/clockwork": "^5.2",
         "larastan/larastan": "^3.0",
-        "laravel/boost": "^2.3",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.27",
         "laraveldaily/filacheck": "^0.1.7",
