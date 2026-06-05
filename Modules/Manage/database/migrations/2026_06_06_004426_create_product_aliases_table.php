@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Ingredient;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Modules\Manage\Models\Ingredient;
 
 return new class extends Migration
 {
@@ -14,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('ingredient_aliases', function (Blueprint $table) {
             $table->id();
-            $table->string('alias');
-            $table->foreignIdFor(Ingredient::class);
+            $table->foreignIdFor(Ingredient::class)->cascadeOnDelete();
+            $table->string('alias')->unique()->index();
             $table->timestamps();
         });
 
@@ -32,7 +32,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ingredient_alias');
+        Schema::dropIfExists('ingredient_aliases');
         Schema::dropIfExists('ingredient_history');
     }
 };

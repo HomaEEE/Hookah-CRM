@@ -9,7 +9,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class OCRService
 {
-    public function recognizeInvoice(string $imageUrl): ?array
+    public function recognizeInvoice(string $imageDataUrl): ?array
     {
         $apiKey = config('services.mistral.api_key');
 
@@ -17,30 +17,29 @@ class OCRService
             throw new \Exception('В конфигурации отсутствует MISTRAL_API_KEY.');
         }
 
-        $prompt = 'Extract data from invoice image.
+        $prompt = 'Extract data from invoice/receipt image.
+Text language: Ukrainian, English, Russian.
+Do NOT translate text. Keep original spelling.
+Return JSON only:
+{
+    "supplier_name": string|null,
+    "supplier_iban": string|null,
+    "invoice_number": string|null,
+    "total_sum": number|null,
+    "items": [
+        {"name": string, "qty": number, "unit": string|null, "price": number, "sum": number}
+    ]
+}
+Rules:
+- missing → null
+- decimal = "."
+- items = table rows
+- qty/price/sum → numbers
+- VAT included in total_sum and sum.';
 
-                Text language: Ukrainian, English, Russian.
-                Do NOT translate text. Keep original spelling.
-
-                Return JSON only:
-
-                {
-                    "supplier_iban":string|null,
-                    "invoice_number":string|null,
-                    "total_sum":number|null,
-                    "items":[
-                      {"name":string,"qty":number,"price":number,"sum":number}
-                    ]
-                }
-
-                Rules:
-                missing→null
-                decimal="."
-                items = table rows
-                qty/price/sum → numbers';
-
+        // Отправляем запрос к Mistral (URL строго прописан)
         $response = Http::withToken($apiKey)
-            ->timeout(1500)
+            ->timeout(60)
             ->post('https://api.mistral.ai/v1/chat/completions', [
                 'model' => 'pixtral-large-latest',
                 'response_format' => ['type' => 'json_object'],
@@ -54,7 +53,10 @@ class OCRService
                             ],
                             [
                                 'type' => 'image_url',
-                                'image_url' => $imageUrl,
+                                // ВАЖНО: Для Mistral это должен быть объект с ключом 'url'
+                                'image_url' => [
+                                    'url' => $imageDataUrl,
+                                ],
                             ],
                         ],
                     ],
@@ -62,56 +64,63 @@ class OCRService
             ]);
 
         if ($response->successful()) {
-            $result = $response->json();
-            $content = $result['choices'][0]['message']['content'] ?? null;
+            $content = $response->json('choices.0.message.content');
 
             if ($content) {
+                // Очищаем от случайных markdown-тегов
+                $content = trim(str_replace(['```json', '```'], '', $content));
+
                 $parsedData = json_decode($content, true);
                 if (json_last_error() === JSON_ERROR_NONE) {
                     return $parsedData;
-                } else {
-                    throw new \Exception('Не удалось разобрать JSON: '.json_last_error_msg());
                 }
-            } else {
-                throw new \Exception('Ответ от Mistral не содержит ожидаемого содержимого.');
+
+                throw new \Exception('Не удалось разобрать JSON от ИИ: '.json_last_error_msg());
             }
-        } else {
-            throw new \Exception('Ошибка API: '.$response->status().' - '.$response->body());
+
+            throw new \Exception('Ответ от Mistral пуст.');
         }
+
+        throw new \Exception('Ошибка API Mistral: '.$response->status().' - '.$response->body());
     }
 
-    public function getImageUrlFromState($state): ?string
+    /**
+     * Безопасное получение Base64 без обращения к HTTP-клиентам.
+     * Работает одинаково надежно и с локальным диском, и с S3.
+     */
+    public function getBase64ImageFromState($state): ?string
     {
         $firstFileState = is_array($state) ? reset($state) : $state;
 
-        $filePath = null;
-        $imageUrl = null;
+        $content = null;
+        $mimeType = 'image/jpeg';
 
         if ($firstFileState instanceof TemporaryUploadedFile) {
-            $filePath = $firstFileState->getRealPath();
-            $imageUrl = $firstFileState->temporaryUrl();
-        } elseif (is_string($firstFileState) && Str::isUuid($firstFileState)) {
-            $media = Media::findByUuid($firstFileState);
-            if ($media) {
-                $filePath = $media->getPath();
-                $imageUrl = $media->getUrl();
-            }
+            // Livewire: безопасно читаем сырые данные файла (работает даже если диск S3)
+            $content = $firstFileState->get();
+            $mimeType = $firstFileState->getMimeType();
         } else {
-            $media = Media::find($firstFileState);
+            // Spatie Media Library
+            $media = null;
+            if (is_string($firstFileState) && Str::isUuid($firstFileState)) {
+                $media = Media::findByUuid($firstFileState);
+            } else {
+                $media = Media::find($firstFileState);
+            }
+
             if ($media) {
-                $filePath = $media->getPath();
-                $imageUrl = $media->getUrl();
+                // Spatie: безопасно читаем через потоки (абсолютно надежно для S3/FTP/Local)
+                $content = stream_get_contents($media->stream());
+                $mimeType = $media->mime_type;
             }
         }
 
-        if ($imageUrl && str_starts_with($imageUrl, '/')) {
-            $imageUrl = url($imageUrl);
-        }
-
-        if (! $filePath || ! file_exists($filePath)) {
+        if (! $content) {
             return null;
         }
 
-        return $imageUrl;
+        $base64Data = base64_encode($content);
+
+        return "data:{$mimeType};base64,{$base64Data}";
     }
 }

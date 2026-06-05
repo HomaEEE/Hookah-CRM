@@ -23,7 +23,7 @@ class TransactionTable
                 Group::make('bill.type')->label(__('Bill')),
             ])
             ->defaultGroup('added_at')
-            ->defaultSort('added_at', direction: 'desc')
+            ->defaultSort('created_at', direction: 'asc')
             ->columns([
 
                 TextColumn::make('added_at')->label(__('Date'))->dateTime('d-m-Y')

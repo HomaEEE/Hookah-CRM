@@ -13,8 +13,9 @@ return new class extends Migration
         $output = new ConsoleOutput; //
 
         // 1. Перенос Расходов (Expenses) -> TransactionType::Expense
+        $output->writeln('<info>Starting Expenses migration...</info>'); //
+
         if (Schema::hasTable('expenses')) {
-            $output->writeln('<info>Starting Expenses migration...</info>'); //
 
             DB::table('expenses')->orderBy('id')->chunk(500, function ($expenses) {
                 $transactions = [];
@@ -39,8 +40,9 @@ return new class extends Migration
         }
 
         // 2. Перенос Приходов (Incomes) -> TransactionType::Income
+        $output->writeln('<info>Starting Incomes migration...</info>'); //
+
         if (Schema::hasTable('incomes')) {
-            $output->writeln('<info>Starting Incomes migration...</info>'); //
 
             DB::table('incomes')->orderBy('id')->chunk(500, function ($incomes) {
                 $transactions = [];
@@ -61,8 +63,9 @@ return new class extends Migration
         }
 
         // 3. Перенос Инкассаций (Withdrawals) -> TransactionType::Withdrawal
+        $output->writeln('<info>Starting withdrawals migration...</info>'); //
+
         if (Schema::hasTable('withdrawals')) {
-            $output->writeln('<info>Starting withdrawals migration...</info>'); //
 
             DB::table('withdrawals')->orderBy('id')->chunk(500, function ($withdrawals) {
                 $transactions = [];

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/assets/css/style.css" />
 @endpush @section('page', __('Menu page')) @section('content')
 
-<div class="container mx-auto px-4 flex items-center justify-between p-8">
+<div class="container mx-auto px-4 mt-24 mb-10">
         <h2 class="divider line razor title">{{__('Menu')}}</h2>
         <div class="flex flex-row items-center">
             <div class="tabs">

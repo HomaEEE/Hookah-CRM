@@ -16,7 +16,6 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
-use Modules\Finance\Models\Bill;
 use Modules\Finance\Models\Expense;
 use Modules\Finance\Models\ExpenseCategory;
 
@@ -82,8 +81,7 @@ class ExpenseTable
                         ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id')
                     ),
                 SelectFilter::make('bill')->translateLabel()
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->native(false)
+                    ->options(BillType::class)->native(false)
                     ->attribute('bill_id'),
 
                 TernaryFilter::make('pay')

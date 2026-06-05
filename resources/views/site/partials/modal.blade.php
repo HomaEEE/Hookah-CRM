@@ -16,11 +16,11 @@
                     </div>
 
                     <div class="flex flex-col flex-1">
-                        <div class="modal-menu-title" id="modal-title"></div>
-                        <div class="modal-menu-description" id="modal-description"></div>
+                        <div class="" id="modal-title"></div>
+                        <div class="" id="modal-description"></div>
 
                         <div class="mt-auto">
-                            <div class="modal-menu-price" id="modal-price"></div>
+                            <div class="" id="modal-price"></div>
                             <div class="text-xs" id="modal-out"></div>
                         </div>
 

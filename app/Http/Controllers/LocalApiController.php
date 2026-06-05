@@ -6,18 +6,21 @@ use App\Models\Tip;
 use Auth;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
-use Modules\Finance\Models\Expense;
-use Modules\Finance\Models\Income;
+use Modules\Finance\Enums\BillType;
+use Modules\Finance\Enums\TransactionType;
 use Modules\Finance\Models\Shift;
 use Modules\Finance\Models\ShiftUser;
-use Modules\Finance\Models\Withdrawal;
+use Modules\Finance\Models\Transaction;
 
 class LocalApiController extends Controller
 {
     public function getLocalWithdrawal($place_id)
     {
-        $withdrawal = Withdrawal::select('sum')
-            ->where('place_id', $place_id)->where('bill_id', 0)
+        $withdrawal = Transaction::select('sum')->where(
+            ['type', TransactionType::Withdrawal],
+            // ['place_id', $place_id],
+            ['bill_id', BillType::CASH]
+        )
             ->whereDate('created_at', Carbon::today());
 
         return $withdrawal->sum('sum') / 100;
@@ -25,34 +28,34 @@ class LocalApiController extends Controller
 
     public function getLocalTips($place_id)
     {
-        $tips = Tip::select('tips')
-            ->where('place_id', $place_id)
-            ->whereDate('created_at', Carbon::today());
-        $TOTAL = $tips->sum('tips') / 100;
+        $tips = Tip::select('tips')->where([
+            ['created_at', Carbon::today()],
+        ])->sum('tips') / 100;
 
-        return $TOTAL;
+        return $tips;
     }
 
     public function getLocalExpenses($place_id)
     {
-        $cash_expense = Expense::select('sum')->where(
+        $cash_expense = Transaction::select('sum')->where(
             [
-                ['bill_id', 0],
-                ['place_id', $place_id],
+                ['bill_id', BillType::CASH],
+                ['type', TransactionType::Expense],
             ]
         )
             ->whereDate('added_at', Carbon::today());
 
-        return $cash_expense->sum('sum') / 100;
+        return $cash_expense->sum('sum');
     }
 
     public function getLocalIncomes($place_id)
     {
-        $cash_incomes = Income::select('sum')
-            ->where('place_id', $place_id)
-            ->whereDate('created_at', Carbon::today());
+        $cash_incomes = Transaction::select('sum')->where(
+            ['bill_id', BillType::CASH],
+            ['type', TransactionType::Income],
+            ['added_at', Carbon::today()]);
 
-        return $cash_incomes->sum('sum') / 100;
+        return 0;
     }
 
     public function openShift($data)

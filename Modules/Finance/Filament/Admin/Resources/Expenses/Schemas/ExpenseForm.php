@@ -12,7 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
-use Modules\Finance\Models\Bill;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Models\ExpenseCategory;
 
 class ExpenseForm
@@ -48,7 +48,7 @@ class ExpenseForm
                     ->downloadable()
                     ->deletable(),
                 ToggleButtons::make('bill_id')->label(__('Type pay'))
-                    ->options(Bill::get()->pluck('name', 'id'))
+                    ->options(BillType::class)
                     ->default(0)
                     ->required()
                     ->inline()

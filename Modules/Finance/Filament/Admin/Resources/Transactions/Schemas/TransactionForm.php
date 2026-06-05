@@ -11,8 +11,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Enums\TransactionType;
-use Modules\Finance\Models\Bill;
 use Modules\Finance\Models\ExpenseCategory;
 
 class TransactionForm
@@ -46,8 +46,7 @@ class TransactionForm
                     ->inputMode('decimal'),
 
                 ToggleButtons::make('bill_id')->label(__('Bill'))
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->default(0)
+                    ->options(BillType::class)->default(1)
                     ->required()
                     ->inline()
                     ->grouped()

@@ -15,7 +15,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Modules\Finance\Models\Bill;
 use Modules\Finance\Models\Withdrawal;
 
 class WithdrawalTable
@@ -63,7 +62,7 @@ class WithdrawalTable
                         return $indicators;
                     }),
                 SelectFilter::make('bill_id')
-                    ->options(Bill::get()->pluck('name', 'id')),
+                    ->options(BillType::get()->pluck('name', 'id')),
             ])
             ->recordActions([
                 ActionGroup::make([

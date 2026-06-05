@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('external_api_id')->nullable();
 
-            $table->enum('type', ['1', '2', '3', '4'])->index();
+            $table->enum('type', ['1', '2', '3', '4', '5', '6'])->index();
 
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Place::class);
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('sum');
             $table->tinyInteger('is_reviewed')->default(1);
 
-            $table->foreignIdFor(ExpenseCategory::class);
+            $table->foreignIdFor(ExpenseCategory::class)->nullable();
             $table->foreignIdFor(Supply::class)->nullable();
             $table->foreignIdFor(Bill::class);
 

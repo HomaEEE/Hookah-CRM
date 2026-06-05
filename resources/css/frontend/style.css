@@ -835,6 +835,19 @@ main .h4 {
   position: relative;
   overflow: hidden;
 }
+.modal-container #modal-title {
+  margin: 5px 0;
+  color: #efefef;
+  font-size: 14px;
+}
+.modal-container #modal-description {
+  margin: 5px 0;
+  font-size: 12px;
+}
+.modal-container #modal-price {
+  margin: 5px 0;
+  font-size: 12px;
+}
 .modal-container.active {
   opacity: 1;
   top: 50%;
@@ -899,7 +912,7 @@ main .h4 {
   }
   .modal-container .content #modal-title {
     margin: 5px 0;
-    color: #858585;
+    color: #efefef;
     font-size: 12px;
   }
   .modal-container .content #modal-description {
@@ -928,9 +941,9 @@ main .h4 {
   margin: 10px auto;
   text-align: center;
   padding: 7px 10px;
-  border-radius: 7px;
-  background: #760000;
-  color: #efefef;
+  border-radius: 4px;
+  background: #858585;
+  color: #201f22;
 }
 .modal-container .modal-feedback form {
   margin: auto;

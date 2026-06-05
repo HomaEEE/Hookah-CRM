@@ -2,7 +2,6 @@
 
 namespace Modules\Finance\Livewire;
 
-use App\Models\Reqvizite;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
@@ -27,6 +26,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Modules\Finance\Models\Bill;
 use Modules\Manage\Models\Supply;
+use Modules\Place\Models\Reqvizite;
 
 class Paying extends BaseWidget implements HasTable
 {

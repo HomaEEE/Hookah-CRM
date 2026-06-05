@@ -2,14 +2,15 @@
 
 namespace Modules\Manage\Filament\Actions;
 
-use App\Models\Reqvizite;
 use Filament\Actions\Action;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\IngredientAlias;
 use Modules\Manage\Services\OCRService;
+use Modules\Place\Models\Reqvizite;
 use ToneGabes\Filament\Icons\Enums\Phosphor;
 
 class OCRAction
@@ -38,9 +39,10 @@ class OCRAction
                 }
 
                 try {
-                    $imageUrl = $ocrService > getImageUrlFromState($state);
+                    // ИСПРАВЛЕНО: Заменили ">" на "->"
+                    $imageBase64 = $ocrService->getBase64ImageFromState($state);
 
-                    if (! $imageUrl) {
+                    if (! $imageBase64) {
                         Notification::make()
                             ->danger()
                             ->icon(Phosphor::ImageBroken)
@@ -51,7 +53,7 @@ class OCRAction
                         return;
                     }
 
-                    $parsedData = $ocrService->recognizeInvoice($imageUrl);
+                    $parsedData = $ocrService->recognizeInvoice($imageBase64);
 
                     if ($parsedData) {
                         static::populateForm($set, $get, $parsedData);
@@ -59,15 +61,15 @@ class OCRAction
                         Notification::make()
                             ->success()
                             ->icon(Phosphor::ListChecks)
-                            ->title('Готово')
-                            ->body('Накладная успешно распознана!')
+                            ->title(__('Done'))
+                            ->body(__('Invoice successfully recognized!'))
                             ->send();
                     }
                 } catch (\Exception $e) {
                     Log::error('OCR Error: '.$e->getMessage());
                     Notification::make()
                         ->danger()
-                        ->title('Ошибка при распознавании')
+                        ->title(__('Error'))
                         ->body($e->getMessage())
                         ->send();
                 }
@@ -76,6 +78,7 @@ class OCRAction
 
     protected static function populateForm($set, $get, array $parsedData): void
     {
+        // 1. Заполнение IBAN / Поставщика
         $rawIban = $parsedData['supplier_iban'] ?? '';
         $iban = strtoupper(preg_replace('/[^A-Z0-9]/', '', $rawIban));
 
@@ -92,17 +95,19 @@ class OCRAction
             }
         }
 
+        // 2. Номер накладной
         $invoiceNumber = $parsedData['invoice_number'] ?? '';
         if (! empty($invoiceNumber)) {
             $set('invoice_number', $invoiceNumber);
         }
 
+        // 3. Общая сумма
         $totalSum = $parsedData['total_sum'] ?? '';
         if (! empty($totalSum)) {
             $set('sum', $totalSum);
         }
 
-        // Populate Items
+        // 4. Товары (Repeater)
         $items = $parsedData['items'] ?? [];
         $repeaterItems = [];
 
@@ -112,25 +117,31 @@ class OCRAction
                 continue;
             }
 
+            // Пытаемся найти алиас
             $alias = IngredientAlias::where('alias', $name)->first();
             $ingredientId = $alias ? $alias->ingredient_id : null;
 
+            // ИСПРАВЛЕННАЯ ЛОГИКА АЛИАСОВ
             if (! $ingredientId) {
-                $ingredient = Ingredient::where('place_id', Filament::getTenant()?->id)
-                    ->where('ingredient', $name)
-                    ->first();
+                // Если алиас не найден, ищем точное совпадение в базовой таблице
+                $ingredient = Ingredient::where('ingredient', $name)->first();
 
-                if (! $ingredient) {
+                if ($ingredient) {
+                    $ingredientId = $ingredient->id;
+
+                    // Автоматически создаем алиас, чтобы в следующий раз было быстрее
                     IngredientAlias::firstOrCreate([
                         'alias' => $name,
                         'ingredient_id' => $ingredientId,
                     ]);
                 }
+                // Если $ingredient не найден, $ingredientId остается null.
+                // В форме это поле будет пустым, и менеджер должен будет выбрать товар вручную.
             }
 
             $repeaterItems[(string) Str::uuid()] = [
                 'name' => $name,
-                'ingredient_id' => $ingredientId,
+                'ingredient_id' => $ingredientId, // Будет ID если нашли, и null если не нашли
                 'qty' => $item['qty'] ?? 1,
                 'price' => $item['price'] ?? 0,
             ];

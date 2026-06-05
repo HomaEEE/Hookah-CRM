@@ -17,7 +17,7 @@ class ManageIngredients extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->slideOver(),
             Action::make('update')
                 ->label(__('Update ingredients'))
                 ->icon('heroicon-o-arrow-path')

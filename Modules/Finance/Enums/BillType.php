@@ -6,7 +6,7 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum Bill: string implements HasColor, HasIcon, HasLabel
+enum BillType: string implements HasColor, HasIcon, HasLabel
 {
     case CASH = '1';
     case CARD = '2';

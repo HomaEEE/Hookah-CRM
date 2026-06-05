@@ -927,6 +927,22 @@ main {
     overflow: hidden;
   }
 
+  #modal-title {
+    margin: 5px 0;
+    color: $text;
+    font-size: 14px;
+  }
+
+  #modal-description {
+    margin: 5px 0;
+    font-size: 12px;
+  }
+
+  #modal-price {
+    margin: 5px 0;
+    font-size: 12px;
+  }
+
   &.active {
     opacity: 1;
     top: 50%;
@@ -994,7 +1010,7 @@ main {
 
       #modal-title {
         margin: 5px 0;
-        color: $text-grey;
+        color: $text;
         font-size: 12px;
       }
 
@@ -1029,9 +1045,9 @@ main {
     margin: 10px auto;
     text-align: center;
     padding: 7px 10px;
-    border-radius: 7px;
-    background: $red;
-    color: $text;
+    border-radius: 4px;
+    background: $text-grey;
+    color: $black;
   }
 
   .modal-feedback {

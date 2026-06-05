@@ -17,6 +17,7 @@ use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Modules\Manage\Filament\Admin\Resources\Ingredients\Pages\ManageIngredients;
+use Modules\Manage\Filament\Admin\Resources\Ingredients\Schemas\IngredientInfolist;
 use Modules\Manage\Models\Ingredient;
 use UnitEnum;
 
@@ -55,14 +56,19 @@ class IngredientResource extends Resource
             ]);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return IngredientInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('ingredient')->translateLabel()
+                    ->description(fn (Ingredient $record): string => $record->barcode ?? '', position: 'above')
                     ->searchable(['ingredient', 'barcode'])
-                    ->size('sm')
-                    ->description(fn (Ingredient $record): string => $record->barcode ?? ''),
+                    ->size('md'),
                 TextColumn::make('unit')->translateLabel()->badge(),
                 TextColumn::make('price')->translateLabel()->money('UAH', 100),
             ])

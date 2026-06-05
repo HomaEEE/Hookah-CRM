@@ -20,7 +20,6 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
-use Modules\Finance\Models\Bill;
 use Modules\Manage\Models\Supply;
 use Modules\Place\Models\Supplier;
 
@@ -111,8 +110,7 @@ class SupplyTable
 
                 SelectFilter::make('bill')->translateLabel()
                     ->native(false)
-                    ->options(Bill::get()->pluck('name', 'id'))
-                    ->attribute('bill_id'),
+                    ->options(BillType::class)->attribute('bill_id'),
 
                 TernaryFilter::make('pay')
                     ->translateLabel()

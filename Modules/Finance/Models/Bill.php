@@ -7,7 +7,7 @@ use App\Enums\Currency;
 use App\Models\Place;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Finance\Enums\Bill as EnumsBill;
+use Modules\Finance\Enums\BillType;
 use Modules\Manage\Models\Supply;
 
 class Bill extends Model
@@ -19,7 +19,7 @@ class Bill extends Model
     protected $casts = [
         'balance' => MoneyCast::class,
         'currency' => Currency::class,
-        'type' => EnumsBill::class,
+        'type' => BillType::class,
     ];
 
     public function place()
