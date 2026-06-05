@@ -2,6 +2,7 @@
 
 namespace Modules\Finance\Filament\Admin\Resources\Transactions;
 
+use App\Enums\NavigationGroup;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -13,12 +14,15 @@ use Modules\Finance\Filament\Admin\Resources\Transactions\Pages\ManageTransactio
 use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionForm;
 use Modules\Finance\Filament\Admin\Resources\Transactions\Tables\TransactionTable;
 use Modules\Finance\Models\Transaction;
+use UnitEnum;
 
 class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Finance;
 
     protected static ?string $recordTitleAttribute = 'id';
 

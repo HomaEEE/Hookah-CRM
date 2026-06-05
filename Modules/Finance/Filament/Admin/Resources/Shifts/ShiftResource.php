@@ -2,6 +2,7 @@
 
 namespace Modules\Finance\Filament\Admin\Resources\Shifts;
 
+use App\Enums\NavigationGroup;
 use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -17,6 +18,7 @@ use Modules\Finance\Filament\Admin\Resources\Shifts\Pages\ViewShift;
 use Modules\Finance\Filament\Admin\Resources\Shifts\Tables\ShiftInfolist;
 use Modules\Finance\Filament\Admin\Resources\Shifts\Tables\ShiftTable;
 use Modules\Finance\Models\Shift;
+use UnitEnum;
 
 class ShiftResource extends Resource
 {
@@ -26,10 +28,7 @@ class ShiftResource extends Resource
 
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Finance');
-    }
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Finance;
 
     public static function getPluralModelLabel(): string
     {

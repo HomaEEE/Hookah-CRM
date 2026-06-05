@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\Reqvizites\Pages;
+namespace Modules\Place\Filament\Admin\Resources\Reqvizites\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Infolists\Components\TextEntry;

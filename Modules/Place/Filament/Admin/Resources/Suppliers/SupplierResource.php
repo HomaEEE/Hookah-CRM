@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\Suppliers;
+namespace Modules\Place\Filament\Admin\Resources\Suppliers;
 
-use App\Filament\Clusters\Data\DataCluster;
-use App\Filament\Clusters\Data\Resources\Suppliers\Pages\ManageSuppliers;
+use App\Enums\NavigationGroup;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -25,19 +24,21 @@ use Filament\Support\RawJs;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Modules\Place\Filament\Admin\Resources\Suppliers\Pages\ManageSuppliers;
 use Modules\Place\Models\Supplier;
+use UnitEnum;
 
 class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
-
-    protected static ?string $cluster = DataCluster::class;
 
     protected static ?string $recordTitleAttribute = 'company';
 
     protected static ?int $navigationSort = 3;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Data;
 
     public static function getPluralModelLabel(): string
     {

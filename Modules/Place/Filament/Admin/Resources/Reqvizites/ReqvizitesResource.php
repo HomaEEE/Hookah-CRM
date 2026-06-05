@@ -2,8 +2,7 @@
 
 namespace Modules\Place\Filament\Admin\Resources\Reqvizites;
 
-use App\Filament\Clusters\Data\DataCluster;
-use App\Filament\Clusters\Data\Resources\Reqvizites\Pages\ManageReqvizites;
+use App\Enums\NavigationGroup;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -19,16 +18,18 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Modules\Place\Filament\Admin\Resources\Reqvizites\Pages\ManageReqvizites;
 use Modules\Place\Models\Reqvizite;
 use Modules\Place\Models\Supplier;
+use UnitEnum;
 
 class ReqvizitesResource extends Resource
 {
     protected static ?string $model = Reqvizite::class;
 
-    protected static ?string $cluster = DataCluster::class;
-
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-credit-card';
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Data;
 
     protected static ?int $navigationSort = 4;
 

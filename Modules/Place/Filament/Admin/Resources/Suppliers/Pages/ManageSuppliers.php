@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Data\Resources\Suppliers\Pages;
+namespace Modules\Place\Filament\Admin\Resources\Suppliers\Pages;
 
 use App\Enums\SupplierType;
-use App\Filament\Clusters\Data\Resources\Suppliers\SupplierResource;
 use App\Http\Controllers\PosterApiController;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -11,6 +10,7 @@ use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Schemas\Components\Tabs\Tab;
+use Modules\Place\Filament\Admin\Resources\Suppliers\SupplierResource;
 
 class ManageSuppliers extends ManageRecords
 {
