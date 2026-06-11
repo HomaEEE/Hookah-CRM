@@ -14,12 +14,8 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Modules\Finance\Filament\Admin\Resources\Expenses\Schemas\ExpenseForm;
-use Modules\Finance\Filament\Admin\Resources\Incomes\Schemas\IncomeForm;
-use Modules\Finance\Filament\Admin\Resources\Withdrawals\Schemas\WithdrawalForm;
-use Modules\Finance\Models\Expense;
-use Modules\Finance\Models\Income;
-use Modules\Finance\Models\Withdrawal;
+use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionForm;
+use Modules\Finance\Models\Transaction;
 use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyForm;
 use Modules\Manage\Models\Supply;
 
@@ -30,7 +26,7 @@ class ShiftWizard
         return [
 
             Section::make()
-                ->columns(5)
+                ->columns(3)
                 ->schema([
 
                     Action::make('expenses_list')
@@ -69,22 +65,22 @@ class ShiftWizard
                                 ->title(__('Supply added'))
                         ),
 
-                    Action::make('add_expense')->label(__('Expense'))
-                        ->model(Expense::class)
-                        ->color('danger')
-                        ->icon('heroicon-o-document-minus')
+                    Action::make('add_transaction')->label(__('Transaction'))
+                        ->model(Transaction::class)
+                        ->color('warning')
+                        ->icon('heroicon-o-currency-dollar')
                         ->extraAttributes(['style' => 'width: 100%'])
 
-                        ->modalHeading(__('Add Expense'))
+                        ->modalHeading(__('Add Transaction'))
                         ->modalWidth('md')
                         ->slideOver()
                         ->modalIcon('heroicon-o-document-minus')
                         ->keyBindings(['command+s', 'ctrl+s'])
                         ->form(
-                            ExpenseForm::configure(...)
+                            TransactionForm::configure(...)
                         )
                         ->action(function (array $data, Set $set) {
-                            Expense::create($data);
+                            Transaction::create($data);
 
                             $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
                             $set('expense', (int) $posterLocalExpense);
@@ -95,59 +91,6 @@ class ShiftWizard
                                 ->title(__('Expense added'))
                                 ->icon('heroicon-o-document-minus')
                         ),
-
-                    Action::make('addIncome')->label(__('Income'))
-                        ->model(Income::class)
-                        ->color('info')
-                        ->icon('heroicon-o-plus')
-                        ->extraAttributes(['style' => 'width: 100%'])
-
-                        ->modalHeading(__('Add Income'))
-                        ->modalWidth('xs')
-                        ->keyBindings(['command+s', 'ctrl+s'])
-                        ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->form(
-                            IncomeForm::configure(...)
-                        )
-                        ->action(function (array $data, Set $set) {
-                            Income::create($data);
-
-                            $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
-                            $set('income', (int) $posterLocalIncomes);
-                        })
-
-                        ->successNotification(
-                            Notification::make()
-                                ->success()
-                                ->icon('heroicon-o-plus-circle')
-                                ->title(__('Income added'))
-                        ),
-
-                    Action::make('addWithdrawal')->label(__('Withdrawal'))
-                        ->model(Withdrawal::class)
-                        ->color('warning')
-                        ->extraAttributes(['style' => 'width: 100%'])
-
-                        ->icon('heroicon-o-minus')
-                        ->modalHeading(__('Add Withdrawal'))
-                        ->modalWidth('sm')
-                        ->keyBindings(['command+s', 'ctrl+s'])
-                        ->modalIcon('heroicon-o-inbox-arrow-down')
-                        ->form(
-                            WithdrawalForm::configure(...)
-                        )
-                        ->action(
-                            function (array $data, Set $set) {
-
-                                Withdrawal::create($data);
-
-                                $LocalWithdrawal = (new LocalApiController)->getLocalWithdrawal(Filament::getTenant()->id);
-                                $set('withdrawal', $LocalWithdrawal);
-                                Notification::make()
-                                    ->success()
-                                    ->icon('heroicon-o-minus')
-                                    ->title(__('Withdrawal added'));
-                            }),
                 ]),
 
             Fieldset::make(__('Expenses & Income'))->schema([
@@ -213,11 +156,11 @@ class ShiftWizard
                             ->translateLabel()
                             ->icon('heroicon-o-arrow-path')
                             ->action(function (Set $set) {
-                                $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
-                                $set('expense', (int) $posterLocalExpense);
+                                $posterLocalWithdrawal = (new LocalApiController)->getLocalWithdrawal(Filament::getTenant()->id);
+                                $set('withdrawal', (int) $posterLocalWithdrawal);
 
                                 Notification::make()
-                                    ->title(__('Expenses updated'))
+                                    ->title(__('Withdrawals updated'))
                                     ->send();
                             })
                     ),

@@ -1,4 +1,4 @@
-@extends('layouts.site') @push('css')
+@extends('cms::layouts.site') @push('css')
 <link rel="stylesheet" href="/assets/css/style.css" />
 @endpush @section('page', __('Menu page')) @section('content')
 
@@ -35,7 +35,7 @@
             @if($category->products->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 divide-y-4 divide-solid divide-zinc-500">
                     @foreach ($category->products as $item)
-                        @include('site.partials.menu-item', ['item' => $item])
+                        @include('cms::site.partials.menu-item', ['item' => $item])
                     @endforeach
                 </div>
             @endif
@@ -51,7 +51,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 border-none md:border-b border-zinc-500">
                         @foreach ($subcategory->products as $item)
-                            @include('site.partials.menu-item', ['item' => $item])
+                            @include('cms::site.partials.menu-item', ['item' => $item])
                         @endforeach
                     </div>
 
@@ -63,8 +63,8 @@
 @endforeach
 
 
-@include('site.partials.modal' , ['modal'=> 'item'] )
-@include('site.partials.modal' , ['modal'=> 'feedback'] )
+@include('cms::site.partials.modal' , ['modal'=> 'item'] )
+@include('cms::site.partials.modal' , ['modal'=> 'feedback'] )
 
 <div class="modal-overlay"></div>
 

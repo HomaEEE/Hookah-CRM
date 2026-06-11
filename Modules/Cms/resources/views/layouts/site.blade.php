@@ -46,7 +46,7 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
         <div class="w-full min-h-screen">
-            @include('site.partials.nav')
+            @include('cms::site.partials.nav')
 
             <main>
                 @yield('content')

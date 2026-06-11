@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('cms::layouts.site')
 @push('css')
     <link rel="stylesheet" href="/assets/css/style.css">
 @endpush
@@ -8,7 +8,7 @@
 @section('content')
 <div class="page-container">
 
-    @include('site.nav')
+    @include('cms::site.nav')
 
     <div class="container">
         <div class="row middle-xs">

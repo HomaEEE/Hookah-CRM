@@ -57,6 +57,7 @@
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.0",
         "pxlrbt/filament-environment-indicator": "^3.0",
+        "recca0120/laravel-erd": "^0.6.0",
         "spatie/laravel-ignition": "^2.4"
     },
     "autoload": {

@@ -248,6 +248,7 @@ class SupplyForm
                                             }),
                                         FusedGroup::make([
                                             TextInput::make('qty')
+                                                ->label(__('qty'))
                                                 ->translateLabel()
                                                 ->numeric()
                                                 ->required()

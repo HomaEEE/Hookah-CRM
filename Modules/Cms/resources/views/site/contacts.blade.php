@@ -1,15 +1,16 @@
-@extends('layouts.site')
+@extends('cms::layouts.site')
 @push('css')
     <link rel="stylesheet" href="/assets/css/style.css">
 @endpush
 
-@section('page', __('Vacancy page'))
+@section('page', __('Contact page'))
 
 @section('content')
-<div class="page-container container">
+<div class="page-container">
+
+    @include('cms::site.nav')
 
     <h2>{{__('Page in develop')}}</h2>
-
 
 @endsection
 

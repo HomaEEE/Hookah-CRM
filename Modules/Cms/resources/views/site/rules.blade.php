@@ -1,4 +1,4 @@
-@extends('layouts.site')
+@extends('cms::layouts.site')
 @push('css')
     <link rel="stylesheet" href="/assets/css/style.css">
 @endpush

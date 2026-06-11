@@ -1,10 +1,10 @@
 <?php
 
+use App\Models\Place;
+use App\Models\Workshop;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
-use App\Models\{Ingredient, Place, Techcard, Workshop};
 
 return new class extends Migration
 {
@@ -30,11 +30,9 @@ return new class extends Migration
             $table->foreignIdFor(Place::class);
             $table->foreignIdFor(Workshop::class);
             $table->string('product_name')->index();
-            $table->integer('barcode')->nullable();
+            $table->string('barcode')->nullable();
             $table->integer('cost')->nullable();
-            $table->integer('workshop_id')->nullable();
-            $table->integer('product_id');
-            $table->integer('cost')->nullable();
+            $table->integer('product_id')->nullable();
             $table->integer('type');
             $table->string('unit');
             $table->string('price');
@@ -51,5 +49,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('techcards');
         Schema::dropIfExists('ingredients');
-}
+    }
 };

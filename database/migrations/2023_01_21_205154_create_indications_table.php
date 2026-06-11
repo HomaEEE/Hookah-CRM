@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Meter;
 use App\Models\Place;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -18,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('indications', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Meter::class);
+            //  $table->foreignIdFor(Meter::class);
             $table->foreignIdFor(Place::class);
             $table->foreignIdFor(User::class);
             $table->integer('type_id');

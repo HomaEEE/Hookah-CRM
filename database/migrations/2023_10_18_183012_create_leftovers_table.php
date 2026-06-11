@@ -1,9 +1,12 @@
 <?php
 
-use App\Models\{Ingredient, Place, Supply, Workshop};
+use App\Models\Place;
+use App\Models\Workshop;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\Supply;
 
 return new class extends Migration
 {

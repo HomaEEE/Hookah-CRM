@@ -4,7 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Cms\Http\Controllers\SiteController;
 
-Route::get('/', [SiteController::class, 'index'])->name('home');
+Route::get('/', [SiteController::class, 'index'])->name('index');
 // Route::prefix('{suffix?}')->group(function () {
 
 Route::get('/seet/{seet?}', [SiteController::class, 'seet'])->name('seet');

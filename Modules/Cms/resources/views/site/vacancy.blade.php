@@ -1,27 +1,15 @@
-@extends('layouts.site')
+@extends('cms::layouts.site')
 @push('css')
     <link rel="stylesheet" href="/assets/css/style.css">
 @endpush
 
-@section('page', __('Feedbacks'))
+@section('page', __('Vacancy page'))
 
 @section('content')
-    <div class="container">
-        <h2 class="divider line razor title">{{__('Feedbacks')}}</h2>
+<div class="page-container container">
 
-        @include('site.partials.advice', ['address' => 1, 'wifi' => 0, 'feedback'=> 1])
+    <h2>{{__('Page in develop')}}</h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4">
-        @foreach ($feedbacks as $f)
-            <div class="feedback">
-                <p>{{ $f->text}}</p>
-                <span class="name">{{ $f->name}}</span>
-                <span class="date">{{ $f->created_at->format('d.m.Y')}}</span>
-
-            </div>
-        @endforeach
-        </div>
-    </div>
 
 @endsection
 

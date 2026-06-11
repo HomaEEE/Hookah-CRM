@@ -1,6 +1,6 @@
 {{-- resources/views/errors/404.blade.php --}}
 
-@extends('layouts.site')
+@extends('cms::layouts.site')
 
 @section('page', __('Page not found'))
 @section('title', __('Page not found'))

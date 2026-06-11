@@ -31,7 +31,7 @@ class SiteController extends Controller
         $place = Place::where('slug', $slug)->first();
         $feedbacks = Feedback::where('place_id', $place->id)->Approve(1)->get();
 
-        return view('site.home', compact('place', 'feedbacks'));
+        return view('cms::site.home', compact('place', 'feedbacks'));
     }
 
     public function seet(?int $table_number = null)
@@ -45,7 +45,7 @@ class SiteController extends Controller
             Session::put('table', $table_number);
         }
 
-        return view('site.seet', compact('place', 'table_number'));
+        return view('cms::site.seet', compact('place', 'table_number'));
 
     }
 
@@ -83,7 +83,7 @@ class SiteController extends Controller
             })->toJson();
         });
 
-        return view('site.menu', compact('place', 'categories', 'table_number', 'productsJson'));
+        return view('cms::site.menu', compact('place', 'categories', 'table_number', 'productsJson'));
     }
 
     public function getProduct($id)
@@ -107,7 +107,7 @@ class SiteController extends Controller
     {
         $place = Place::where('slug', $slug)->first();
 
-        return view('site.booking', compact('place'));
+        return view('cms::site.booking', compact('place'));
     }
 
     public function feedbacks($slug = 'od')
@@ -116,7 +116,7 @@ class SiteController extends Controller
         $place = Place::where('slug', $slug)->first();
         $feedbacks = Feedback::where('place_id', $place->id)->Approve(1)->get();
 
-        return view('site.feedbacks', compact('place', 'feedbacks'));
+        return view('cms::site.feedbacks', compact('place', 'feedbacks'));
     }
 
     public function vacancy($slug = 'od')
@@ -125,21 +125,21 @@ class SiteController extends Controller
         $place = Place::where('slug', $slug)->first();
         $vacancies = Feedback::where('place_id', $place->id)->Approve(1)->get();
 
-        return view('site.vacancy', compact('place', 'vacancies'));
+        return view('cms::site.vacancy', compact('place', 'vacancies'));
     }
 
     public function rules($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
 
-        return view('site.rules', compact('place'));
+        return view('cms::site.rules', compact('place'));
     }
 
     public function contacts($slug = 'od')
     {
         $place = Place::where('slug', $slug)->first();
 
-        return view('site.contacts', compact('place'));
+        return view('cms::site.contacts', compact('place'));
     }
 
     public function sendFeedback(Request $request)
