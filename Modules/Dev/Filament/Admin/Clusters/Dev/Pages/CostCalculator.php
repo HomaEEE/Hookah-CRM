@@ -2,7 +2,7 @@
 
 namespace Modules\Dev\Filament\Admin\Clusters\Dev\Pages;
 
-use App\Models\Ingredient;
+use App\Enums\IngredientUnit;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -10,6 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\FusedGroup;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -18,6 +19,7 @@ use Modules\Dev\Filament\Admin\Clusters\Dev\DevCluster;
 use Modules\Dev\Filament\Admin\Clusters\Dev\Widgets\CostCalcWidgets;
 use Modules\Finance\Models\ExpenseCategory;
 use Modules\Finance\Models\Wage;
+use Modules\Manage\Models\Ingredient;
 
 class CostCalculator extends Page implements HasForms
 {
@@ -54,48 +56,51 @@ class CostCalculator extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            // Repeater::make('ingredients')->label(__('Ingredients'))
-            //     ->columns(12)
-            //     ->addActionLabel(__('Add'))
-            //     ->schema([
-            //         Select::make('ingredient_id')
-            //            // ->hiddenLabel()
-            //             ->preload()
-            //             ->native(false)
-            //             ->searchable()
-            //             ->reactive()
-            //             ->options(
-            //                 Ingredient::get()->pluck('ingredient', 'id')
-            //             ),
+            Repeater::make('ingredients')->label(__('Ingredients'))
+                ->columns(12)
+                ->addActionLabel(__('Add'))
+                ->schema([
+                    Select::make('ingredient_id')
+                       // ->hiddenLabel()
+                        ->preload()
+                        ->native(false)
+                        ->searchable()
+                        ->reactive()
+                        ->options(
+                            Ingredient::get()->pluck('ingredient', 'id')
+                        )
+                        ->afterStateUpdated(function ($state, callable $get, $set) {
+                            $set('unit', $state ? Ingredient::find($state)->unit : IngredientUnit::kg);
+                        }),
 
-            //         TextInput::make('quantity')
-            //             ->reactive()
-            //             ->live()
-            //             ->suffix(static function (Get $get) {
+                    FusedGroup::make([
+                        TextInput::make('qty')
+                            ->label(__('qty'))
+                            ->translateLabel()
+                            ->numeric()
+                            ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(
+                                function (callable $set, callable $get) {
+                                    self::updateIngredientCost($get, $set);
+                                }
+                            )
+                            ->columnSpan(2),
 
-            //                 if ($get('./ingredient_id') != null) {
-            //                     $ingredient = Ingredient::find($get('./ingredient_id'));
-            //                     if ($ingredient && $ingredient->unit instanceof \App\Enums\IngredientUnit) {
-            //                         return $ingredient->unit->getLabel();
-            //                     }
-            //                 }
+                        Select::make('unit')
+                            ->translateLabel()
+                            ->live()
+                            ->options(IngredientUnit::class),
+                        // ->default(IngredientUnit::kg),
+                    ])->columns(3),
 
-            //                 return null;
-
-            //             })
-            //             ->default(1)
-            //             ->afterStateUpdated(
-            //                 function (callable $set, callable $get) {
-            //                     self::updateIngredientCost($get, $set);
-            //                 }
-            //             ),
-            //         TextInput::make('ingredient_cost')->translateLabel()
-            //             ->reactive(),
-            //     ])
-            //     ->afterStateUpdated(function (callable $set, callable $get) {
-            //         self::updateTotalIngredients($get, $set);
-            //     })
-            //     ->columns(3),
+                    TextInput::make('ingredient_cost')->translateLabel()
+                        ->reactive(),
+                ])
+                ->afterStateUpdated(function (callable $set, callable $get) {
+                    self::updateTotalIngredients($get, $set);
+                })
+                ->columns(3),
             TextInput::make('cost_item')->label('Food Cost')->numeric(),
 
             Section::make('')->schema([

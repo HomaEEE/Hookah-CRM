@@ -5,17 +5,17 @@ namespace Modules\Dev\Filament\Admin\Clusters\Dev\Widgets;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Modules\Finance\Models\Expense;
+use Modules\Finance\Models\Transaction;
 
 class CostCalcWidgets extends BaseWidget
 {
     protected function getStats(): array
     {
 
-        $rent = Expense::where('comment', 'Аренда помещения')->latest()->first();
-        $services = Expense::where('category_id', '3')
+        $rent = Transaction::where('comment', 'Аренда помещения')->latest()->first();
+        $services = Transaction::where('expense_category_id', '3')
             ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->sum('sum');
-        $other = Expense::whereIn('category_id', ['4', ''])
+        $other = Transaction::whereIn('expense_category_id', ['4', ''])
             ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->sum('sum');
 
         return [
