@@ -20,7 +20,6 @@ class MonobankWebhookController extends Controller
             return response()->json(['status' => 'ignored']);
         }
 
-        // --- 1. АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ РЕКВИЗИТОВ ---
         $counterIban = $data['counterIban'] ?? null;
         $counterName = $data['counterName'] ?? null;
 
@@ -29,13 +28,8 @@ class MonobankWebhookController extends Controller
                 ? Str::substr($counterIban, 2)
                 : $counterIban;
 
-            // ModelsReqvizite::where('IBAN', $cleanIban)->update([
-            //     'own' => $counterName
-            // ]);
-
             Reqvizite::where('IBAN', $cleanIban)->whereNull('own')->update(['own' => $counterName]);
         }
-        // ----------------------------------------------
 
         $rawAmount = $data['amount'];
         $type = $rawAmount > 0 ? TransactionType::Income : TransactionType::Expense;

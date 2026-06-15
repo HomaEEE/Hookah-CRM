@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('bot')->group(function () {
-    Route::get('/', 'App\Http\Controllers\TelegramBotController@index')->name('bot.index');
-    Route::get('hookah', 'App\Http\Controllers\TelegramBotController@hookah')->name('bot.hookah');
-    Route::get('waiter', 'App\Http\Controllers\TelegramBotController@waiter')->name('bot.waiter');
-    Route::get('bill', 'App\Http\Controllers\TelegramBotController@bill')->name('bot.bill');
-    Route::post('order', 'App\Http\Controllers\TelegramBotController@order')->name('bot.order');
-});
+// Route::prefix('bot')->group(function () {
+//     Route::get('/', 'App\Http\Controllers\TelegramBotController@index')->name('bot.index');
+//     Route::get('hookah', 'App\Http\Controllers\TelegramBotController@hookah')->name('bot.hookah');
+//     Route::get('waiter', 'App\Http\Controllers\TelegramBotController@waiter')->name('bot.waiter');
+//     Route::get('bill', 'App\Http\Controllers\TelegramBotController@bill')->name('bot.bill');
+//     Route::post('order', 'App\Http\Controllers\TelegramBotController@order')->name('bot.order');
+// });
 
 Route::passkeys();
 
