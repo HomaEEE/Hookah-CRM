@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Cms\App\Http\Controllers;
+namespace Modules\Cms\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Place;

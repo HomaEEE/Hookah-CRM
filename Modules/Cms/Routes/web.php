@@ -2,7 +2,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Cms\App\Http\Controllers\SiteController;
+use Modules\Cms\app\Http\Controllers\SiteController;
 
 Route::get('/', [SiteController::class, 'index'])->name('index');
 // Route::prefix('{suffix?}')->group(function () {
