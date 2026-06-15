@@ -37,6 +37,9 @@ return new class extends Migration
                 }
                 DB::table('transactions')->insert($transactions);
             });
+
+            $output->writeln('<info>Finish Expenses migration...</info>'); //
+
         }
 
         // 2. Перенос Приходов (Incomes) -> TransactionType::Income
@@ -53,13 +56,14 @@ return new class extends Migration
                         'user_id' => $income->user_id,
                         'place_id' => $income->place_id,
                         'bill_id' => 0,
-                        'added_at' => $income->created_at ?? now(), // У incomes нет поля added_at
+                        'added_at' => $income->added_at ?? $income->created_at ?? now(), // У incomes нет поля added_at
                         'created_at' => $income->created_at ?? now(),
                         'updated_at' => $income->updated_at ?? now(),
                     ];
                 }
                 DB::table('transactions')->insert($transactions);
             });
+            $output->writeln('<info>Finish Incomes migration...</info>'); //
         }
 
         // 3. Перенос Инкассаций (Withdrawals) -> TransactionType::Withdrawal
@@ -76,7 +80,7 @@ return new class extends Migration
                         'bill_id' => $withdrawal->bill_id,
                         'user_id' => $withdrawal->user_id,
                         'place_id' => $withdrawal->place_id,
-                        'added_at' => $withdrawal->created_at ?? now(),
+                        'added_at' => $withdrawal->added_at ?? $withdrawal->created_at ?? now(),
                         'created_at' => $withdrawal->created_at ?? now(),
                         'updated_at' => $withdrawal->updated_at ?? now(),
                     ];
@@ -90,8 +94,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        // Откат миграции: просто очищаем таблицу транзакций
-        // ВНИМАНИЕ: Если ты планируешь откатываться, лучше не удалять старые таблицы в up()
         DB::table('transactions')->truncate();
     }
 };
