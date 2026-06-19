@@ -602,9 +602,9 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 30px 50px;
+    padding: 60px;
     @media screen and (max-width: 617px) {
-      padding: 20px;
+      padding: 40px;
       aspect-ratio: 10/16;
     }
     .bg-img {
@@ -614,6 +614,8 @@ main {
       top: 0;
       left: 0;
       z-index: -1;
+      box-shadow: inset 0px 0px 20px rgba(0, 0, 0, 0.6);
+
       &::after {
         content: "";
         width: 100%;
@@ -635,7 +637,117 @@ main {
       bottom: 30px;
       margin-top: auto;
       width: 100%;
-      form {
+      @media screen and (max-width: 617px) {
+        height: 50vh;
+      }
+      .reservation-form {
+        display: flex;
+        flex-direction: column;
+        padding: 30px 50px;
+
+        &__error {
+          margin-bottom: 24px;
+          padding: 12px;
+          background: rgba(239, 68, 68, 0.2);
+          border: 1px solid rgba(239, 68, 68, 0.5);
+          color: white;
+          text-align: center;
+          border-radius: 8px;
+        }
+
+        &__step {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 24px;
+
+          @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 16px;
+          }
+        }
+
+        &__field {
+          flex: 1;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          @media screen and (max-width: 617px) {
+            margin-bottom: 20px;
+          }
+
+          label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+          }
+
+          input,
+          select {
+            background: transparent;
+            color: white;
+            font-size: 18px;
+            outline: none;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 8px;
+            cursor: pointer;
+
+            option {
+              color: black;
+            }
+          }
+        }
+
+        &__custom-date {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          input {
+            border-bottom: none;
+          }
+          button {
+            color: #9ca3af;
+            &:hover {
+              color: white;
+            }
+          }
+        }
+
+        &__actions {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        &__btn {
+          padding: 16px 32px;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: 0.3s;
+          border: none;
+          background: transparent;
+          color: rgba(255, 255, 255, 0.7);
+
+          &:hover {
+            color: white;
+          }
+
+          &--primary {
+            background: #f4f4f5;
+            color: black;
+            &:hover {
+              background: white;
+            }
+            &:disabled {
+              opacity: 0.5;
+            }
+          }
+        }
       }
     }
   }

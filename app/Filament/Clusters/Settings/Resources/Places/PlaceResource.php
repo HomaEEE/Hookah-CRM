@@ -8,7 +8,6 @@ use App\Filament\Clusters\Settings\Resources\Places\Pages\ListPlaces;
 use App\Filament\Clusters\Settings\Resources\Places\Pages\ViewPlace;
 use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\BillsRelationManager;
 use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\ExpenseCategoryRelationManager;
-use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\MetersRelationManager;
 use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\RoomsRelationManager;
 use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\SeetsRelationManager;
 use App\Filament\Clusters\Settings\Resources\Places\RelationManagers\StorageRelationManager;
@@ -131,7 +130,6 @@ class PlaceResource extends Resource
                 SeetsRelationManager::class,
                 RoomsRelationManager::class,
             ]),
-            MetersRelationManager::class,
         ];
     }
 

@@ -10,15 +10,16 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\RestoreAction;
-use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Modules\Finance\Enums\BillType;
+use Override;
 
 class BillsRelationManager extends RelationManager
 {
@@ -44,8 +45,21 @@ class BillsRelationManager extends RelationManager
                 Select::make('currency')->label(__('Currency'))
                     ->options(Currency::class),
                 Select::make('type')->label(__('Type bill'))
-                    ->options(BillEnum::class),
+                    ->options(BillType::class),
                 TextInput::make('balance')->label(__('Bill balance')),
+            ])->columns(1);
+    }
+
+    #[Override]
+    public function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextEntry::make('name')->hiddenLabel(),
+                TextEntry::make('type')->hiddenLabel()->badge(),
+                TextEntry::make('balance')->hiddenLabel(),
+                TextEntry::make('currency')->hiddenLabel()->badge(),
+
             ]);
     }
 
@@ -75,16 +89,14 @@ class BillsRelationManager extends RelationManager
             ])
             ->recordActions([
                 ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
+                    ViewAction::make()->slideOver(),
+                    EditAction::make()->slideOver(),
                     DeleteAction::make(),
-                    RestoreAction::make(),
                 ]),
 
             ])
             ->toolbarActions([
                 DeleteBulkAction::make(),
-                RestoreBulkAction::make(),
             ]);
     }
 }

@@ -17,8 +17,6 @@
 </div>
 
 
-
-
 @foreach ($categories as $category)
     <div class="flex flex-col md:flex-row h-auto border-y border-zinc-500 @isset($category->class['gram-hidden']) gram-hidden @endisset" id="{{ $category['slug'] }}">
 
@@ -63,8 +61,7 @@
 @endforeach
 
 
-@include('cms::site.partials.modal' , ['modal'=> 'item'] )
-@include('cms::site.partials.modal' , ['modal'=> 'feedback'] )
+@include('cms::site.partials.modal-item' , ['modal'=> 'item'] )
 
 <div class="modal-overlay"></div>
 

@@ -33,7 +33,7 @@ class StorageRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('title'),
             ])
             ->filters([
             ])

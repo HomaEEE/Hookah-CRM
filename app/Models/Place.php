@@ -7,6 +7,30 @@ use Filament\Models\Contracts\HasCurrentTenantLabel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Arrears\Models\Arrear;
+use Modules\Finance\Models\Bill;
+use Modules\Finance\Models\ExpenseCategory;
+use Modules\Finance\Models\Shift;
+use Modules\Finance\Models\Subscription;
+use Modules\Finance\Models\Wage;
+use Modules\Manage\Models\Excise;
+use Modules\Manage\Models\Ingredient;
+use Modules\Manage\Models\Purchase;
+use Modules\Manage\Models\Supply;
+use Modules\Manage\Models\Writeoff;
+use Modules\Menu\Models\Category;
+use Modules\Menu\Models\Menu;
+use Modules\Menu\Models\Product;
+use Modules\Menu\Models\Techcard;
+use Modules\Place\Models\Booking;
+use Modules\Place\Models\Doc;
+use Modules\Place\Models\Event;
+use Modules\Place\Models\Feedback;
+use Modules\Place\Models\Generator;
+use Modules\Place\Models\Guest;
+use Modules\Place\Models\Reqvizite;
+use Modules\Place\Models\Service;
+use Modules\Place\Models\Supplier;
 use Spatie\Translatable\HasTranslations;
 
 class Place extends Model implements HasAvatar, HasCurrentTenantLabel
@@ -24,11 +48,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
     public function getCurrentTenantLabel(): string
     {
         return __('Current place');
-    }
-
-    public function meters()
-    {
-        return $this->hasMany(Meter::class);
     }
 
     public function arrears()
@@ -51,11 +70,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Booking::class);
     }
 
-    public function bots()
-    {
-        return $this->hasMany(Bot::class);
-    }
-
     public function guests()
     {
         return $this->hasMany(Guest::class);
@@ -69,12 +83,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
     public function services()
     {
         return $this->hasMany(Service::class);
-    }
-
-    // Показания счетчиков
-    public function indications()
-    {
-        return $this->hasMany(Indication::class);
     }
 
     public function rooms()
@@ -102,11 +110,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Storage::class);
     }
 
-    public function inventories()
-    {
-        return $this->hasMany(Inventory::class);
-    }
-
     public function workshops()
     {
         return $this->hasMany(Workshop::class);
@@ -115,16 +118,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
     public function wages()
     {
         return $this->hasMany(Wage::class);
-    }
-
-    public function expenses()
-    {
-        return $this->hasMany(Expense::class);
-    }
-
-    public function incomes()
-    {
-        return $this->hasMany(Income::class);
     }
 
     public function purchases()
@@ -172,11 +165,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
         return $this->hasMany(Supply::class);
     }
 
-    public function leftovers()
-    {
-        return $this->hasMany(Leftover::class);
-    }
-
     public function tasks()
     {
         return $this->hasMany(Task::class);
@@ -190,11 +178,6 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
     public function techcards()
     {
         return $this->hasMany(Techcard::class);
-    }
-
-    public function withdrawals()
-    {
-        return $this->hasMany(Withdrawal::class);
     }
 
     public function roles(): HasMany

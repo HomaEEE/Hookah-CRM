@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Finance\Models\Wage;
+use Modules\Manage\Models\Writeoff;
 
 class Workshop extends Model
 {

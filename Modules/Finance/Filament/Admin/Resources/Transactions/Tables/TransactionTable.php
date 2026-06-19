@@ -2,7 +2,9 @@
 
 namespace Modules\Finance\Filament\Admin\Resources\Transactions\Tables;
 
-use Carbon\Carbon;
+use App\Filament\Components\Filters\LastMonthRecordsFilter;
+use Filament\Actions;
+use Filament\Actions\ActionGroup;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -17,15 +19,13 @@ class TransactionTable
 
         return $table
             ->groups([
-                Group::make('added_at')->label(__('Date'))
-                    ->getTitleFromRecordUsing(fn ($record) => Carbon::parse($record->added_at)->translatedFormat('d F Y'))
-                    ->orderQueryUsing(fn ($query, $direction) => $query->orderByRaw("YEAR(added_at) $direction, MONTH(added_at) $direction")),
-                Group::make('bill.type')->label(__('Bill')),
+                Group::make('added_at')
+                    ->date(),
             ])
-            ->defaultGroup('added_at')
-            ->defaultSort('created_at', direction: 'asc')
+            ->filters([
+                LastMonthRecordsFilter::make('created_at'),
+            ])
             ->columns([
-
                 TextColumn::make('added_at')->label(__('Date'))->dateTime('d-m-Y')
                     ->size('md')
                     ->badge()
@@ -34,7 +34,7 @@ class TransactionTable
                 TextColumn::make('type')->label(__('Type'))->badge(),
                 TextColumn::make('category.name')->label(__('Category'))
                     ->badge()
-                    ->description(fn (Transaction $record): string => $record->supply->company ?? ''),
+                    ->description(fn (Transaction $record): string => $record->supply?->supplier?->name ?? $record->comment ?? ''),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
@@ -56,6 +56,13 @@ class TransactionTable
                             $name => ! $record->$name,
                         ]);
                     }),
+            ])
+            ->actions([
+                ActionGroup::make([
+                    Actions\ViewAction::make(),
+                    Actions\EditAction::make(),
+                    Actions\DeleteAction::make(),
+                ]),
             ]);
     }
 }

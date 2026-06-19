@@ -12,8 +12,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Modules\Finance\Filament\Admin\Resources\Transactions\Pages\ManageTransactions;
 use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionForm;
+use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionInfolist;
 use Modules\Finance\Filament\Admin\Resources\Transactions\Tables\TransactionTable;
 use Modules\Finance\Models\Transaction;
+use Override;
 use UnitEnum;
 
 class TransactionResource extends Resource
@@ -34,6 +36,12 @@ class TransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return TransactionTable::configure($table);
+    }
+
+    #[Override]
+    public static function infolist(Schema $schema): Schema
+    {
+        return TransactionInfolist::configure($schema);
     }
 
     public static function getPages(): array

@@ -9,7 +9,7 @@
 		</div>
 
 	<div class="bento-ui grid grid-cols-1 md:grid-cols-3 grid-rows-2 md:grid-rows-3 gap-4">
-		<div class="col-span-1 md:col-span-2 row-span-1 md:row-span-3 bento title-box">
+		<div class="col-span-1 md:col-span-2 row-span-2 md:row-span-3 bento title-box">
 			<p class="whitespace-pre-line">Тут
 				<b>не ганяють</b>
 				повітря даремно</p>

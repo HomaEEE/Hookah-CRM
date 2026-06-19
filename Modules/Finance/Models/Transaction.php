@@ -62,11 +62,22 @@ class Transaction extends Model implements HasMedia
 
     public function supply()
     {
-        return $this->belongsTo(Supply::class); // ID поставки
+        return $this->HasOne(Supply::class, 'id', 'supply_id');
+    }
+
+    public function supplyPhoto()
+    {
+        return $this->hasOne(Supply::class, 'id', 'supply_id');
     }
 
     public function bill()
     {
-        return $this->belongsTo(Bill::class); // ID счета
+        return $this->belongsTo(Bill::class);
+    }
+
+    public function getInvoiceAttribute()
+    {
+        return $this->supply_id ?
+            $this->supply->getFirstMediaUrl('supplies') : $this->getFirstMediaUrl('supplies');
     }
 }

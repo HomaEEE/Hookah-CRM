@@ -544,11 +544,11 @@ main .reserve {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 30px 50px;
+  padding: 60px;
 }
 @media screen and (max-width: 617px) {
   main .reserve {
-    padding: 20px;
+    padding: 40px;
     aspect-ratio: 10/16;
   }
 }
@@ -559,6 +559,7 @@ main .reserve .bg-img {
   top: 0;
   left: 0;
   z-index: -1;
+  box-shadow: inset 0px 0px 20px rgba(0, 0, 0, 0.6);
 }
 main .reserve .bg-img::after {
   content: "";
@@ -579,6 +580,113 @@ main .reserve .glass {
   bottom: 30px;
   margin-top: auto;
   width: 100%;
+}
+@media screen and (max-width: 617px) {
+  main .reserve .glass {
+    height: 50vh;
+  }
+}
+main .reserve .glass .reservation-form {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 50px;
+}
+main .reserve .glass .reservation-form__error {
+  margin-bottom: 24px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+}
+main .reserve .glass .reservation-form__step {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+@media (max-width: 768px) {
+  main .reserve .glass .reservation-form__step {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+main .reserve .glass .reservation-form__field {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 617px) {
+  main .reserve .glass .reservation-form__field {
+    margin-bottom: 20px;
+  }
+}
+main .reserve .glass .reservation-form__field label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #9ca3af;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+main .reserve .glass .reservation-form__field input,
+main .reserve .glass .reservation-form__field select {
+  background: transparent;
+  color: white;
+  font-size: 18px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+main .reserve .glass .reservation-form__field input option,
+main .reserve .glass .reservation-form__field select option {
+  color: black;
+}
+main .reserve .glass .reservation-form__custom-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+main .reserve .glass .reservation-form__custom-date input {
+  border-bottom: none;
+}
+main .reserve .glass .reservation-form__custom-date button {
+  color: #9ca3af;
+}
+main .reserve .glass .reservation-form__custom-date button:hover {
+  color: white;
+}
+main .reserve .glass .reservation-form__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+main .reserve .glass .reservation-form__btn {
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+}
+main .reserve .glass .reservation-form__btn:hover {
+  color: white;
+}
+main .reserve .glass .reservation-form__btn--primary {
+  background: #f4f4f5;
+  color: black;
+}
+main .reserve .glass .reservation-form__btn--primary:hover {
+  background: white;
+}
+main .reserve .glass .reservation-form__btn--primary:disabled {
+  opacity: 0.5;
 }
 main .feedbacks .feedback-item {
   background-color: #111111;
