@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Cms\App\Http\Controllers\ApiController;
+use Modules\Cms\app\Http\Controllers\ApiController;
 
 Route::prefix('v1')->group(function () {
     // Маршрут для создания резерва
