@@ -1,6 +1,11 @@
-@extends('cms::layouts.site') @push('css')
-<link rel="stylesheet" href="/assets/css/style.css" />
-@endpush @section('page', __('Menu page')) @section('content')
+@extends('cms::layouts.site')
+
+@section('page', __('Menu page'))
+
+@section('description', 'Ознайомтеся з меню Noire Lounge Bar. Великий вибір - авторська барна карта, смачна кухня. Ідеальний додаток до вашого вечора.')
+@section('keywords', 'кальянна, Одеса, центр, Ніни Строкатої, 27, преміальні кальяни, авторські коктейлі, кухня, відпочинок, Noire, бронювання столика')
+
+@section('content')
 
 <div class="container mx-auto px-4 mt-24 mb-10">
         <h2 class="divider line razor title">{{__('Menu')}}</h2>

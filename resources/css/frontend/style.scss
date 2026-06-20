@@ -390,7 +390,7 @@ main {
     position: relative;
 
     @media screen and (max-width: 617px) {
-      min-height: 95vh;
+      min-height: 85svh;
     }
 
     .bg {
@@ -550,9 +550,13 @@ main {
 
     .marquee {
       background: $marquee;
-      margin-bottom: 20px;
+      margin-bottom: 50px;
       padding: 10px 0;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
+
+      span {
+        margin-right: 50px;
+      }
 
       @media screen and (max-width: 617px) {
         padding: 10px 0;
@@ -1587,6 +1591,12 @@ main {
 .home-footer {
   border-top: 1px solid $text-grey;
   border-bottom: 1px solid $text-grey;
+  .logo {
+    p {
+      font-size: 0.8rem;
+      white-space: pre-line;
+    }
+  }
 }
 footer {
   font-size: 0.8rem;

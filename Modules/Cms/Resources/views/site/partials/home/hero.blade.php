@@ -13,7 +13,7 @@
 			<p class="whitespace-pre-line">Тут
 				<b>не ганяють</b>
 				повітря даремно</p>
-			<span >{{ __('Reserve') }} <div class="arrow"></div></span>
+			<span ><a href="/reserve">{{ __('Reserve') }} <div class="arrow"></div></a></span>
 		</div>
 		<div class="row-span-2 bento menu-box">
 			<a href="/menu">

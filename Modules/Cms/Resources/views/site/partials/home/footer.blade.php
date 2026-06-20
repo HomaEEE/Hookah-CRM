@@ -1,19 +1,30 @@
-<section class="home-footer pt-4">
+<section class="home-footer p-4">
     <div class="container mx-auto px-4">
-        <div class="top pb-20">
-            <div class="flex">
+
+        <div class="logo p-8 flex items-top gap-10">
+        <div class="flex-1">
+            <img src="{{ asset('assets/imgs/new-logo.svg') }}" alt="{{ __('Logo') }}">
+        </div>
+
+        <div class="flex-1">
+            <p>Noire Lounge Bar — це не просто кальян, це простір, де висока якість зустрічається з бездоганним сервісом.
+                Ми звели приготування кальяну в ранг мистецтва: у нашій колекції зібрано найкращі бренди тютюну та авторські мікси.
+                Доповніть ваш вечір авторськими коктейлями від нашого бармена та вишуканими стравами.
+                Шукаєте ідеальне місце для зустрічі з друзями, романтичного побачення чи відпочинку в Одесі?
+                Ласкаво просимо до Noire. Зручна локація, стильний інтер'єр та правильний вайб
+            </p>
+        </div>
+
+    </div>
+
+        {{-- <div class="top pb-20">
+            <div class="flex items-stretch">
                 <div class="flex-1">{{ $place->time['day'] ?? '12:00 - 22:30' }}</div>
                 <div class="flex-1 text-center">{{ $place->address ?? 'Nina Pestroy. 27' }}, {{ $place->city }}</div>
                 <div class="flex-1 text-center"><a href="tel:{{ $place->phone }}" >{{ $place->phone }}</a></div>
 
-            <div class="flex-1 text-right social">
-                <a href=""><i class="icon-instagram"></i></a>
-                <a href=""><i class="icon-facebook-squared"></i></a>
-                <a href=""><i class="icon-wifi"></i></a>
-            </div>
-            </div>
+
+            </div> --}}
     </div>
-    <div class="logo pb-8">
-        <img src="{{ asset('assets/imgs/logo.svg') }}" alt="{{ __('Logo') }}">
-    </div>
+
 </section>

@@ -4,7 +4,7 @@
         <div class="flex-1 logo">
                 <h1>
                 <a href="/">
-                    <img class="w-32" src="/assets/imgs/logo.svg" alt="Noire hookah Lounge">
+                    <img class="w-32" src="{{asset ('assets/imgs/new-logo.svg')}}" alt="{{ config('app.site') }}">
                 </a>
             </h1>
         </div>

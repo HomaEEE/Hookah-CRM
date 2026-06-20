@@ -6,7 +6,7 @@
                     </div>
                   <div class="content-start md:content-end" x-data>
     <button @click="$dispatch('open-feedback-modal')" class="cursor-pointer">
-        <p class="place-content-start md:place-self-end">{{ __('Send feedback') }}</p>
+        <p class="place-content-start md:place-self-end">{{ __('Feedback button') }}</p>
     </button>
 </div>
 

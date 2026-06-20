@@ -1,4 +1,4 @@
-<section class=" mx-auto p-4 md:p-8 mb-24">
+<section class=" mx-auto p-4 md:p-8 mb-24" id="reserve-section">
 <div class="reserve relative fade-up"
          x-data="reservationForm">
          <div class="bg-img ">
@@ -9,7 +9,7 @@
 
             <div class="flex items-center gap-6 w-full">
                 <h2 class="text-2xl md:text-3xl text-white font-light uppercase tracking-wide whitespace-nowrap">
-                    {{ __('Reserve') }}
+                    {{ __('Reserve a table') }}
                 </h2>
                 <div class="flex-grow h-[1px] bg-white/30"></div>
             </div>
