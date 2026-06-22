@@ -44,7 +44,6 @@ class ApiController extends Controller
                 ]
             );
 
-            // 4. Создание резерва с полученным guest_id
             $reservation = Booking::create([
                 'user_id' => 1,
                 'guest_id' => $guest->id,

@@ -17,7 +17,7 @@ enum TransactionType: string implements HasColor, HasIcon, HasLabel
     case Withdrawal = '4';
 
     case Loan = '5';          // Взнос личных средств (бизнес берет в долг)
-    case LoanRepayment = '6'; // Возврат долга (бизнес отдает долг)
+    case Repayment = '6'; // Возврат долга (бизнес отдает долг)
 
     public function getLabel(): ?string
     {
@@ -27,7 +27,7 @@ enum TransactionType: string implements HasColor, HasIcon, HasLabel
             self::Transfer => __('Transfer'),
             self::Withdrawal => __('Withdrawal'),
             self::Loan => __('Loan'),
-            self::LoanRepayment => __('Repayment'),
+            self::Repayment => __('Repayment'),
         };
     }
 
@@ -39,7 +39,7 @@ enum TransactionType: string implements HasColor, HasIcon, HasLabel
             self::Transfer => Phosphor::ArrowsLeftRight,
             self::Withdrawal => Phosphor::Wallet,
             self::Loan => Phosphor::ArrowElbowRightDown,
-            self::LoanRepayment => Phosphor::ArrowElbowUpRight,
+            self::Repayment => Phosphor::ArrowElbowUpRight,
         };
     }
 
@@ -51,7 +51,7 @@ enum TransactionType: string implements HasColor, HasIcon, HasLabel
             self::Transfer => 'info',
             self::Withdrawal => 'warning',
             self::Loan => 'warning',
-            self::LoanRepayment => 'success',
+            self::Repayment => 'success',
         };
     }
 }

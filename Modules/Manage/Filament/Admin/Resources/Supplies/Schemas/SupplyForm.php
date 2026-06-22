@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\FusedGroup;
@@ -192,111 +193,120 @@ class SupplyForm
                                     ->live()
                                     ->hintAction(OCRAction::make()),
 
-                                Textarea::make('comment')->label(__('Comment'))
-                                    ->rows(3),
-                            ]),
-
-                        Tab::make(__('Receipt'))
-                            ->schema([
                                 SpatieMediaLibraryFileUpload::make('receipt')
                                     ->collection('receipts')
                                     ->label(__('Receipt'))
                                     ->multiple()
-                                    ->imagePreviewHeight(450)
                                     ->automaticallyResizeImagesMode('cover')
                                     ->imagePreviewHeight(350)
-                                    ->automaticallyResizeImagesToWidth('1800')
-                                    ->imageEditor()
-                                    ->imageEditorAspectRatios([
-                                        null,
-                                        '16:9',
-                                        '4:3',
-                                        '1:1',
-                                    ])
-                                    ->openable(),
+                                    ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
+                                    ->openable()
+                                    ->preserveFilenames(),
 
-                            ])->columns(1),
-                        Tab::make(__('List'))
-                            ->schema([
-                                Repeater::make('items')
-                                    ->schema([
-                                        TextInput::make('name')
-                                            ->label(__('Invoice name'))
-                                            ->disabled()
-                                            ->dehydrated()
-                                            ->visible(fn (Get $get) => empty($get('ingredient_id'))),
-
-                                        Select::make('ingredient_id')
-                                            ->label(__('Ingredient'))
-                                            ->searchable()
-                                            ->getSearchResultsUsing(fn (string $search): array => Ingredient::where('ingredient', 'like', "%{$search}%")->limit(10)->pluck('ingredient', 'id')->toArray())
-                                            ->getOptionLabelUsing(fn ($value): ?string => Ingredient::find($value)?->ingredient)
-                                            ->preload()
-                                            // ->required(fn (Get $get) => empty($get('ingredient_id')))
-                                            ->reactive()
-                                            ->afterStateUpdated(function ($state, callable $get, $set) {
-                                                $name = $get('name');
-                                                if (! empty($name) && ! empty($state)) {
-                                                    // Create alias if it doesn't exist
-                                                    IngredientAlias::firstOrCreate(
-                                                        ['alias' => $name],
-                                                        ['ingredient_id' => $state]
-                                                    );
-                                                }
-
-                                                $set('unit', $state ? Ingredient::find($state)->unit : IngredientUnit::kg);
-                                            }),
-                                        FusedGroup::make([
-                                            TextInput::make('qty')
-                                                ->label(__('qty'))
-                                                ->translateLabel()
-                                                ->numeric()
-                                                ->required()
-                                                ->live(onBlur: true)
-                                                ->afterStateUpdated(function (Set $set, Get $get) {
-                                                    $sum = (float) $get('qty') * (float) $get('price');
-                                                    $set('sum', round($sum, 2));
-                                                })
-                                                ->columnSpan(2),
-
-                                            Select::make('unit')
-                                                ->translateLabel()
-                                                ->live()
-                                                ->options(IngredientUnit::class),
-                                            // ->default(IngredientUnit::kg),
-                                        ])->columns(3),
-                                        FusedGroup::make([
-                                            TextInput::make('price')
-                                                ->translateLabel()
-                                                ->numeric()
-                                                ->inputMode('decimal')
-                                                ->live(onBlur: true)
-                                                ->afterStateUpdated(function (Set $set, Get $get) {
-                                                    $sum = (float) $get('qty') * (float) $get('price');
-                                                    $set('sum', round($sum, 2));
-                                                })
-                                                ->prefix('₴'),
-
-                                            TextInput::make('sum')
-                                                ->translateLabel()
-                                                ->numeric()
-                                                ->inputMode('decimal')
-                                                ->live(onBlur: true)
-                                                ->prefix('₴'),
-                                        ])->columns(2),
-                                    ]),
-                                TextEntry::make('invoice_sum')->label(__('Invoice sum'))->prefix('₴')->disabled()
-                                    ->state(function (Set $set, Get $get) {
-                                        $totalInvoiceSum = collect($get('items'))
-                                            ->pluck('sum')
-                                            ->sum();
-
-                                        $set('invoice_sum', $totalInvoiceSum);
-
-                                        return $totalInvoiceSum;
-                                    })
-                                    ->live(),
+                                Textarea::make('comment')->label(__('Comment'))
+                                    ->rows(3),
                             ]),
+
+                        // Tab::make(__('List'))
+                        //     ->columns(2)
+                        //     ->schema([
+                        //         Repeater::make('items')
+                        //             ->columnSpanFull()
+                        //             ->schema([
+                        //                 TextInput::make('name')
+                        //                     ->label(__('Invoice name'))
+                        //                     ->disabled()
+                        //                     ->dehydrated()
+                        //                     ->visible(fn (Get $get) => empty($get('ingredient_id'))),
+
+                        //                 Select::make('ingredient_id')
+                        //                     ->label(__('Ingredient'))
+                        //                     ->searchable()
+                        //                     ->getSearchResultsUsing(fn (string $search): array => Ingredient::where('ingredient', 'like', "%{$search}%")->limit(10)->pluck('ingredient', 'id')->toArray())
+                        //                     ->getOptionLabelUsing(fn ($value): ?string => Ingredient::find($value)?->ingredient)
+                        //                     ->preload()
+                        //                     // ->required(fn (Get $get) => empty($get('ingredient_id')))
+                        //                     ->reactive()
+                        //                     ->afterStateUpdated(function ($state, callable $get, $set) {
+                        //                         $name = $get('name');
+                        //                         if (! empty($name) && ! empty($state)) {
+                        //                             // Create alias if it doesn't exist
+                        //                             IngredientAlias::firstOrCreate(
+                        //                                 ['alias' => $name],
+                        //                                 ['ingredient_id' => $state]
+                        //                             );
+                        //                         }
+
+                        //                         $set('unit', $state ? Ingredient::find($state)->unit : IngredientUnit::kg);
+                        //                     }),
+                        //                 FusedGroup::make([
+                        //                     TextInput::make('qty')
+                        //                         ->label(__('qty'))
+                        //                         ->translateLabel()
+                        //                         ->numeric()
+                        //                         ->required()
+                        //                         ->live(onBlur: true)
+                        //                         ->afterStateUpdated(function (Set $set, Get $get) {
+                        //                             $sum = (float) $get('qty') * (float) $get('price');
+                        //                             $set('sum', round($sum, 2));
+                        //                         })
+                        //                         ->columnSpan(2),
+
+                        //                     Select::make('unit')
+                        //                         ->translateLabel()
+                        //                         ->live()
+                        //                         ->options(IngredientUnit::class),
+                        //                     // ->default(IngredientUnit::kg),
+                        //                 ])->columns(3),
+                        //                 FusedGroup::make([
+                        //                     TextInput::make('price')
+                        //                         ->translateLabel()
+                        //                         ->numeric()
+                        //                         ->inputMode('decimal')
+                        //                         ->live(onBlur: true)
+                        //                         ->afterStateUpdated(function (Set $set, Get $get) {
+                        //                             $sum = (float) $get('qty') * (float) $get('price');
+                        //                             $set('sum', round($sum, 2));
+                        //                         })
+                        //                         ->prefix('₴'),
+
+                        //                     TextInput::make('sum')
+                        //                         ->translateLabel()
+                        //                         ->numeric()
+                        //                         ->inputMode('decimal')
+                        //                         ->live(onBlur: true)
+                        //                         ->afterStateUpdated(function (Set $set, Get $get) {
+                        //                             $price = (float) $get('sum') / (float) $get('qty');
+                        //                             $set('price', round($price, 2));
+                        //                         })
+                        //                         ->prefix('₴'),
+                        //                 ])->columns(2),
+                        //             ]),
+                        //         Toggle::make('VAT')->label(__('VAT'))->live(onBlur: true)->inline()
+                        //             ->onIcon('heroicon-m-calculator')
+                        //             ->offIcon('heroicon-m-x-mark'),
+                        //         TextEntry::make('invoice_sum')->hiddenLabel()->prefix('₴')
+
+                        //             ->state(function (Set $set, Get $get) {
+                        //                 if (! empty($get('VAT'))) {
+                        //                     $totalInvoiceSum = collect($get('items'))
+                        //                         ->pluck('sum')
+                        //                         ->sum();
+                        //                     $totalInvoiceSum = $totalInvoiceSum * 1.20;
+                        //                 } else {
+                        //                     $totalInvoiceSum = collect($get('items'))
+                        //                         ->pluck('sum')
+                        //                         ->sum();
+                        //                 }
+
+                        //                 return $totalInvoiceSum;
+                        //                 $set('sum', $totalInvoiceSum);
+                        //                 $set('invoice_sum', $totalInvoiceSum);
+
+                        //                 return $totalInvoiceSum;
+                        //             })
+                        //             ->live(),
+                        //     ]),
 
                     ]),
 

@@ -34,7 +34,7 @@ class TransactionTable
                 TextColumn::make('type')->label(__('Type'))->badge(),
                 TextColumn::make('category.name')->label(__('Category'))
                     ->badge()
-                    ->description(fn (Transaction $record): string => $record->supply?->supplier?->name ?? $record->comment ?? ''),
+                    ->description(fn (Transaction $record): string => $record->supply?->supplier?->company ?? $record->comment ?? ''),
 
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),

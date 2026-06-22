@@ -210,6 +210,7 @@ header {
 #full-menu {
   background: $marquee;
   color: $text;
+  overscroll-behavior: contain;
 
   .nav-form {
     .input-group {
@@ -390,7 +391,7 @@ main {
     position: relative;
 
     @media screen and (max-width: 617px) {
-      min-height: 85svh;
+      min-height: 80svh;
     }
 
     .bg {
@@ -416,7 +417,7 @@ main {
       font-size: 2.25rem;
       padding: 50px 0;
       @media screen and (max-width: 617px) {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         padding: 100px 0 50px 0;
       }
       @media screen and (min-width: 1920px) {
@@ -438,15 +439,17 @@ main {
       padding: 25px;
       border-radius: 20px;
       box-sizing: border-box;
+      border: 1px solid $grey;
 
       &.title-box {
         height: 100%;
-        display: block; // Убрал лишний align-items, он не работает с block
+        display: block;
         cursor: pointer;
         box-sizing: border-box;
 
         @media screen and (max-width: 617px) {
           padding: 25px;
+          min-height: 20vh;
         }
 
         p {
@@ -455,11 +458,10 @@ main {
 
         span {
           font-size: 1.5rem;
-          display: flex; // Flex лучше отцентрирует элементы внутри
+          display: flex;
           align-items: center;
           position: absolute;
           bottom: 30px;
-          // ВМЕСТО width: 100% привязываем к краям с учетом padding 30px
           left: 30px;
           right: 30px;
         }
@@ -487,8 +489,6 @@ main {
       }
 
       &.rating-box {
-        height: 100%;
-        border: 1px solid $grey;
         background-color: $black-bg;
         backdrop-filter: blur(50px);
         display: flex;
@@ -506,7 +506,7 @@ main {
         }
 
         span {
-          font-size: 0.6rem;
+          font-size: 0.8rem;
         }
       }
 
@@ -536,7 +536,7 @@ main {
 
       &.title-box:hover .arrow,
       &.menu-box:hover .arrow {
-        --arrow-w: 50%;
+        --arrow-w: 40%;
       }
     }
   }
@@ -578,7 +578,7 @@ main {
         text-align: left;
         @media screen and (max-width: 617px) {
           padding: 10px 0;
-          font-size: 2.5rem;
+          font-size: 2rem;
         }
       }
       p {
@@ -587,12 +587,18 @@ main {
         white-space: pre-line;
         margin: 50px 0;
         color: $text;
+        @media screen and (max-width: 617px) {
+          font-size: 1.25rem;
+        }
       }
       span {
         font-size: 1.25rem;
         white-space: pre-line;
         color: $text-grey;
         text-transform: uppercase;
+        @media screen and (max-width: 617px) {
+          font-size: 1rem;
+        }
       }
     }
   }
@@ -608,7 +614,7 @@ main {
     justify-content: space-between;
     padding: 60px;
     @media screen and (max-width: 617px) {
-      padding: 40px;
+      padding: 30px;
       aspect-ratio: 10/16;
     }
     .bg-img {
@@ -633,6 +639,15 @@ main {
       }
     }
 
+    h3 {
+      font-weight: 200;
+      text-transform: uppercase;
+      font-size: 2.5rem;
+      @media screen and (max-width: 617px) {
+        font-size: 1.25rem;
+      }
+    }
+
     .glass {
       border-radius: 27px;
       padding: 20px 50px;
@@ -643,11 +658,11 @@ main {
       width: 100%;
       @media screen and (max-width: 617px) {
         height: 50vh;
+        padding: 20px;
       }
       .reservation-form {
         display: flex;
         flex-direction: column;
-        padding: 30px 50px;
 
         &__error {
           margin-bottom: 24px;
@@ -789,8 +804,8 @@ main {
       line-height: 1.5;
       text-transform: uppercase;
       font-weight: 200;
-      @media (max-height: 617px) {
-        font-size: 0.8rem;
+      @media screen and (max-width: 617px) {
+        font-size: 1.65rem;
       }
     }
 

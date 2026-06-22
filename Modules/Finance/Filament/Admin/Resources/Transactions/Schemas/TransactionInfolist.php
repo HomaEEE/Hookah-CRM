@@ -4,6 +4,8 @@ namespace Modules\Finance\Filament\Admin\Resources\Transactions\Schemas;
 
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 
 class TransactionInfolist
@@ -12,17 +14,26 @@ class TransactionInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('added_at')->translateLabel()->dateTime('d F Y'),
-                TextEntry::make('type')->translateLabel(),
-                TextEntry::make('user.name')->translateLabel(),
-                TextEntry::make('bill.name')->translateLabel()->badge(),
-                TextEntry::make('category.name')->label(__('Category'))->badge(),
-                TextEntry::make('sum')->translateLabel()->badge()->copyable(fn ($record) => $record->added_at),
-                TextEntry::make('comment')->translateLabel()->copyable(),
-                SpatieMediaLibraryImageEntry::make('invoice')
-                    ->collection('supplies')
-                    ->lightbox()
-                    ->hiddenLabel(),
-            ])->columns(3);
+                Tabs::make('Tabs')
+                    ->tabs([
+                        Tab::make('Transaction')->label(__('Transaction'))
+                            ->schema([
+                                TextEntry::make('added_at')->translateLabel()->dateTime('d F Y')->size('md'),
+                                TextEntry::make('type')->translateLabel()->size('md'),
+                                TextEntry::make('user.name')->translateLabel()->size('md'),
+                                TextEntry::make('bill.type')->label(__('Bill'))->badge()->size('lg'),
+                                TextEntry::make('category.name')->label(__('Category'))->badge()->size('xl'),
+                                TextEntry::make('sum')->translateLabel()->color('success')->copyable(fn ($record) => $record->added_at)->size('md'),
+                                TextEntry::make('comment')->translateLabel()->copyable()->size('lg'),
+                            ])->columns(2),
+                        Tab::make(__('Photo'))
+                            ->schema([
+                                SpatieMediaLibraryImageEntry::make('invoice')
+                                    ->collection('supplies')
+                                    ->lightbox()
+                                    ->hiddenLabel(),
+                            ]),
+                    ]),
+            ]);
     }
 }

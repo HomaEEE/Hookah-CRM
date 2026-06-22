@@ -49,7 +49,8 @@ class Category extends Model
     public function products()
     {
         return $this->hasMany(Product::class, ['menu_category_id', 'place_id'], ['category_id', 'place_id'])
-            ->orderBy('price', 'asc')
+            ->orderBy('new', 'desc')
+            ->orderBy('product_name', 'asc')
             ->VisibleMenu(true);
     }
 

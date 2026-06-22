@@ -60,6 +60,7 @@ class Dashboard extends \Filament\Pages\Dashboard
 
                 CreateAction::make('add_supply')->label(__('Supply'))
                     ->model(Supply::class)
+                    ->createAnother(false)
                     ->icon('heroicon-o-inbox-arrow-down')
                     ->modalHeading(__('Add Supply'))
                     ->modalWidth('md')

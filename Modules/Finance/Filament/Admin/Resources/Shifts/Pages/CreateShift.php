@@ -9,11 +9,12 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
 use Filament\Schemas\Components\Wizard\Step;
+use Modules\Finance\Enums\BillType;
+use Modules\Finance\Enums\TransactionType;
 use Modules\Finance\Filament\Admin\Resources\Shifts\Schemas\PosterWizard;
 use Modules\Finance\Filament\Admin\Resources\Shifts\Schemas\ShiftWizard;
 use Modules\Finance\Filament\Admin\Resources\Shifts\Schemas\WagesWizard;
 use Modules\Finance\Filament\Admin\Resources\Shifts\ShiftResource;
-use Modules\Finance\Models\Bill;
 use Modules\Finance\Models\Transaction;
 
 class CreateShift extends CreateRecord
@@ -40,7 +41,7 @@ class CreateShift extends CreateRecord
 
         $wage = Place::where('id', $shift->place_id)->select('settings->wage_expense as expense')->first();
 
-        (new PosterApiController)->closeShift($shift);
+        // (new PosterApiController)->closeShift($shift);
 
         Transaction::create(
             [
@@ -48,19 +49,32 @@ class CreateShift extends CreateRecord
                 'place_id' => $shift->place_id,
                 'expense_category_id' => $wage->expense,
                 'sum' => $shift->wages,
-                'bill_id' => '0',
+                'bill_id' => BillType::CASH->value,
                 'comment' => 'Зарплаты',
             ]
         );
 
-        Bill::updateOrCreate(
-            ['id' => 0],
-            ['balance' => (int) round(($shift->shift * 0.987), 0)]
+        Transaction::create(
+            [
+                'user_id' => 0,
+                'place_id' => $shift->place_id,
+                'type' => TransactionType::Income->value,
+                'sum' => (int) $shift->terminal * 0.987,
+                'bill_id' => BillType::CARD->value,
+                'comment' => 'Терминал за '.$shift->created_at,
+            ]
         );
 
-        Bill::updateOrCreate(
-            ['id' => 1],
-        )->increment('balance', $shift->terminal);
+        Transaction::create(
+            [
+                'user_id' => 0,
+                'place_id' => $shift->place_id,
+                'type' => TransactionType::Income->value,
+                'sum' => (int) round(($shift->shift * 0.987), 0),
+                'bill_id' => BillType::CASH->value,
+                'comment' => 'Наличные за '.$shift->created_at,
+            ]
+        );
 
         Notification::make()
             ->title(__('Shift are closed'))

@@ -14,6 +14,7 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionForm;
 use Modules\Finance\Models\Transaction;
 use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyForm;
@@ -34,9 +35,9 @@ class ShiftWizard
                         ->icon('heroicon-o-queue-list')
                         ->extraAttributes(['style' => 'width: 100%'])
                         ->modalHeading(__('Expenses'))
-                        ->modalWidth('3xl')
+                        ->modalWidth('6xl')
                         ->modalContent(function () {
-                            return view('filament.tables.expenses-day');
+                            return view('finance::tables.expenses-day');
                         }),
 
                     Action::make('add_supply')->label(__('Supply'))
@@ -93,101 +94,30 @@ class ShiftWizard
                         ),
                 ]),
 
-            Fieldset::make(__('Expenses & Income'))->schema([
-                TextInput::make('income')->translateLabel()
-                    ->numeric()
-                    ->readOnly()
-                    ->live()
-                    ->default(0)
-                    ->suffixAction(
-                        Action::make('update_incomes')
-                            ->translateLabel()
-                            ->icon('heroicon-o-arrow-path')
-                            ->action(function (Set $set) {
-                                $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
-                                $set('income', (int) $posterLocalIncomes);
-
-                                Notification::make()
-                                    ->title(__('Incomes updated'))
-                                    ->send();
-                            })
-                    ),
-
-                TextInput::make('expense')->translateLabel()
-                    ->numeric()
-                    ->readOnly()
-                    ->default(0)
-                    ->suffixAction(
-                        Action::make('update_expenses')
-                            ->translateLabel()
-                            ->icon('heroicon-o-arrow-path')
-                            ->action(function (Set $set) {
-                                $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
-                                $set('expense', (int) $posterLocalExpense);
-
-                                Notification::make()
-                                    ->title(__('Expenses updated'))
-                                    ->send();
-                            })
-                    ),
-
-                TextInput::make('tips')->translateLabel()
-                    ->numeric()->default(0)
-                    ->suffixAction(
-                        Action::make('update_tips')
-                            ->translateLabel()
-                            ->icon('heroicon-o-arrow-path')
-                            ->action(function (Set $set) {
-                                $localTips = (new LocalApiController)->getLocalTips(Filament::getTenant()->id);
-                                $set('tips', (int) $localTips / 100);
-
-                                Notification::make()
-                                    ->title(__('Tips updated'))
-                                    ->send();
-                            })
-                    ),
-                TextInput::make('withdrawal')->translateLabel()
-                    ->numeric()
-                    ->readOnly()
-                    ->default(0)
-                    ->live()
-                    ->suffixAction(
-                        Action::make('update_withdrawal')
-                            ->translateLabel()
-                            ->icon('heroicon-o-arrow-path')
-                            ->action(function (Set $set) {
-                                $posterLocalWithdrawal = (new LocalApiController)->getLocalWithdrawal(Filament::getTenant()->id);
-                                $set('withdrawal', (int) $posterLocalWithdrawal);
-
-                                Notification::make()
-                                    ->title(__('Withdrawals updated'))
-                                    ->send();
-                            })
-                    ),
-            ])->columns(4),
-
             Fieldset::make('Shift')->translateLabel()->schema([
 
+                Hidden::make('tips')->default(0),
+                // ->suffixAction(
+                //     Action::make('update_tips')
+                //         ->translateLabel()
+                //         ->icon('heroicon-o-arrow-path')
+                //         ->action(function (Set $set) {
+                //             $localTips = (new LocalApiController)->getLocalTips(Filament::getTenant()->id);
+                //             $set('tips', (int) $localTips / 100);
+
+                //             Notification::make()
+                //                 ->title(__('Tips updated'))
+                //                 ->send();
+                //         })
+                // ),
+
                 TextEntry::make('total_shift')->translateLabel()
-                    ->state(function (Get $get, Set $set): string { // Changed content() to state()
-                        // Assuming self::CalcShift() calculates a value and returns a string
-                        return self::CalcShift($get, $set);
-                    }),
+                    ->size('md')
+                    ->color('success')
+                    ->state(function (Get $get, Set $set): string {
+                        $set('calc_shift', (new LocalApiController)->getCurrentCashBalance(Filament::getTenant()->id, BillType::CASH->value, $get('cash')));
 
-                TextEntry::make('different')->translateLabel()
-                    ->state(function (Get $get, Set $set) { // Changed content() to state()
-                        if ($get('shift') != null) {
-                            $different = (float) $get('shift') - (float) $get('calc_shift');
-
-                            // This line is fine if 'different' needs to be stored in the form data
-                            $set('different', $different);
-
-                            return number_format($different, 2);
-
-                        } else {
-                            // Display 'calc_shift' value if 'shift' is null
-                            return $get('calc_shift');
-                        }
+                        return (new LocalApiController)->getCurrentCashBalance(Filament::getTenant()->id, BillType::CASH->value, $get('cash'));
                     }),
 
                 Hidden::make('calc_shift')->translateLabel(),
@@ -204,9 +134,14 @@ class ShiftWizard
                             ->action(function (Set $set, Get $get) {
                                 $set('shift', $get('calc_shift'));
                             })
-                    ),
+                    )
+                    ->helperText(function (Get $get) {
+                        $debtGrid = $get('shift') - $get('calc_shift');
 
-            ])->columns(['md' => 2, 'xl' => 3]),
+                        return "Разница: {$debtGrid} ₴";
+                    }),
+
+            ])->columns(['xs' => 1, 'sm' => 2, 'md' => 2, 'xl' => 2]),
 
             Fieldset::make(__('Reports'))->schema([
                 CheckboxList::make('report')->hiddenLabel()

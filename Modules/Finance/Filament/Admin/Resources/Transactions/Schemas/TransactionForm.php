@@ -32,7 +32,7 @@ class TransactionForm
                     ->grouped()
                     ->required(),
 
-                DatePicker::make('added_at')->label(__('Date add'))->required()->native(false)->default(now())->maxDate(now()),
+                DatePicker::make('added_at')->label(__('Added at'))->required()->native(false)->default(now())->maxDate(now()),
 
                 Select::make('expense_category_id')->label(__('Category'))
                     ->options(ExpenseCategory::get()->pluck('name', 'id'))

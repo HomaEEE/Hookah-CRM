@@ -64,10 +64,10 @@
 
         <footer>
             <div class="container mx-auto px-4">
-                <div class="flex">
-                    <div class="text-left flex-1"> {{__('All rights reserved')}}</div>
-                    <div class="text-center flex-1">{{ __('Smoking is harmful to your health') }}</div>
-                    <div class="text-right flex-1 ">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="md:text-left  w-full md:flex-1"> {{__('All rights reserved')}}</div>
+                    <div class="md:text-center w-full md:flex-1">{{ __('Smoking is harmful to your health') }}</div>
+                    <div class="md:text-right w-full md:flex-1 ">
                         {{__('Created by')}}
                         <a href="https://black-design.pw" target="_blank"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
                     </div>

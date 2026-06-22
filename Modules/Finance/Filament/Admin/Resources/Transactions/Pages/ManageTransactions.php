@@ -4,6 +4,7 @@ namespace Modules\Finance\Filament\Admin\Resources\Transactions\Pages;
 
 use App\Models\User;
 use Auth;
+use Filafly\Icons\Phosphor\Enums\Phosphor;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
@@ -89,8 +90,8 @@ class ManageTransactions extends ManageRecords
 
             Action::make('Loan_funds')
                 ->label(__('Loan'))
-                ->icon('heroicon-o-banknotes')
-                ->color('info')
+                ->icon(Phosphor::ArrowElbowRightDown)
+                ->color('warning')
                 ->form([
                     ToggleButtons::make('bill_id')->label(__('Bill'))
                         ->options(BillType::class)->default(1)
@@ -123,8 +124,8 @@ class ManageTransactions extends ManageRecords
 
             Action::make('repayment_funds')
                 ->label(__('Repayment'))
-                ->icon('heroicon-o-arrow-up-on-square-stack')
-                ->color('warning')
+                ->icon(Phosphor::ArrowElbowRightUp)
+                ->color('success')
                 ->form([
                     // 1. Выбираем, кому именно возвращаем долг
                     Select::make('user_id')
@@ -141,7 +142,7 @@ class ManageTransactions extends ManageRecords
 
                             // Считаем текущий баланс долга перед этим пользователем в копейках
                             $debtKopecks = Transaction::where('user_id', $userId)
-                                ->whereIn('type', [TransactionType::Loan->value, TransactionType::LoanRepayment->value])
+                                ->whereIn('type', [TransactionType::Loan->value, TransactionType::Repayment->value])
                                 ->selectRaw('SUM(CASE WHEN type = ? THEN sum ELSE -sum END) as balance', [TransactionType::Loan->value])
                                 ->value('balance') ?? 0;
 
@@ -175,7 +176,7 @@ class ManageTransactions extends ManageRecords
                                 }
 
                                 $debtKopecks = Transaction::where('user_id', $userId)
-                                    ->whereIn('type', [TransactionType::Loan->value, TransactionType::LoanRepayment->value])
+                                    ->whereIn('type', [TransactionType::Loan->value, TransactionType::Repayment->value])
                                     ->selectRaw('SUM(CASE WHEN type = ? THEN sum ELSE -sum END) as balance', [TransactionType::Loan->value])
                                     ->value('balance') ?? 0;
 
@@ -194,7 +195,7 @@ class ManageTransactions extends ManageRecords
                 ])
                 ->action(function (array $data) {
                     Transaction::create([
-                        'type' => TransactionType::LoanRepayment->value, // Указываем тип возврата долга ('7')
+                        'type' => TransactionType::Repayment->value, // Указываем тип возврата долга ('7')
                         'sum' => $data['sum'],
                         'user_id' => $data['user_id'], // Тот, кому вернули долг
                         'bill_id' => $data['bill_id'], // Счет списания

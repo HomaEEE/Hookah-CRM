@@ -2,6 +2,7 @@
 
 namespace Modules\Finance\Filament\Admin\Resources\Shifts\Tables;
 
+use App\Filament\Components\Filters\LastMonthRecordsFilter;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -10,7 +11,6 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Modules\Finance\Models\Shift;
 
 class ShiftTable
@@ -41,10 +41,8 @@ class ShiftTable
             ])
             ->defaultSort('id', 'desc')
             ->filters([
-                DateRangeFilter::make('created_at')->translateLabel()
-                    ->defaultLast30Days(),
-            ]
-            )
+                LastMonthRecordsFilter::make('created_at'),
+            ])
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),

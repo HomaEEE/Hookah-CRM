@@ -171,6 +171,7 @@ header .menu-icon.nav-active .menu-icon__line-right {
 #full-menu {
   background: #111111;
   color: #efefef;
+  overscroll-behavior: contain;
 }
 #full-menu .nav-form .input-group {
   position: relative;
@@ -346,7 +347,7 @@ main .hero {
 }
 @media screen and (max-width: 617px) {
   main .hero {
-    min-height: 85svh;
+    min-height: 80svh;
   }
 }
 main .hero .bg {
@@ -373,7 +374,7 @@ main .hero .hero-title {
 }
 @media screen and (max-width: 617px) {
   main .hero .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     padding: 100px 0 50px 0;
   }
 }
@@ -397,6 +398,7 @@ main .hero .bento {
   padding: 25px;
   border-radius: 20px;
   box-sizing: border-box;
+  border: 1px solid #707070;
 }
 main .hero .bento.title-box {
   height: 100%;
@@ -407,6 +409,7 @@ main .hero .bento.title-box {
 @media screen and (max-width: 617px) {
   main .hero .bento.title-box {
     padding: 25px;
+    min-height: 20vh;
   }
 }
 main .hero .bento.title-box p {
@@ -440,8 +443,6 @@ main .hero .bento.menu-box span {
   font-size: 2rem;
 }
 main .hero .bento.rating-box {
-  height: 100%;
-  border: 1px solid #707070;
   background-color: rgba(17, 17, 17, 0.6);
   backdrop-filter: blur(50px);
   display: flex;
@@ -457,7 +458,7 @@ main .hero .bento.rating-box sup {
   padding-left: 5px;
 }
 main .hero .bento.rating-box span {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
 }
 main .hero .bento .arrow {
   position: absolute;
@@ -481,7 +482,7 @@ main .hero .bento .arrow::after {
   transform: translate(1px, -50%) rotate(45deg);
 }
 main .hero .bento.title-box:hover .arrow, main .hero .bento.menu-box:hover .arrow {
-  --arrow-w: 50%;
+  --arrow-w: 40%;
 }
 main .about {
   background: #201f22;
@@ -522,7 +523,7 @@ main .about .inner h3 {
 @media screen and (max-width: 617px) {
   main .about .inner h3 {
     padding: 10px 0;
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 }
 main .about .inner p {
@@ -532,11 +533,21 @@ main .about .inner p {
   margin: 50px 0;
   color: #efefef;
 }
+@media screen and (max-width: 617px) {
+  main .about .inner p {
+    font-size: 1.25rem;
+  }
+}
 main .about .inner span {
   font-size: 1.25rem;
   white-space: pre-line;
   color: #858585;
   text-transform: uppercase;
+}
+@media screen and (max-width: 617px) {
+  main .about .inner span {
+    font-size: 1rem;
+  }
 }
 main .reserve {
   overflow: hidden;
@@ -551,7 +562,7 @@ main .reserve {
 }
 @media screen and (max-width: 617px) {
   main .reserve {
-    padding: 40px;
+    padding: 30px;
     aspect-ratio: 10/16;
   }
 }
@@ -575,6 +586,16 @@ main .reserve .bg-img::after {
   left: 0;
   z-index: 1;
 }
+main .reserve h3 {
+  font-weight: 200;
+  text-transform: uppercase;
+  font-size: 2.5rem;
+}
+@media screen and (max-width: 617px) {
+  main .reserve h3 {
+    font-size: 1.25rem;
+  }
+}
 main .reserve .glass {
   border-radius: 27px;
   padding: 20px 50px;
@@ -587,12 +608,12 @@ main .reserve .glass {
 @media screen and (max-width: 617px) {
   main .reserve .glass {
     height: 50vh;
+    padding: 20px;
   }
 }
 main .reserve .glass .reservation-form {
   display: flex;
   flex-direction: column;
-  padding: 30px 50px;
 }
 main .reserve .glass .reservation-form__error {
   margin-bottom: 24px;
@@ -719,9 +740,9 @@ main .home-menu h3 {
   text-transform: uppercase;
   font-weight: 200;
 }
-@media (max-height: 617px) {
+@media screen and (max-width: 617px) {
   main .home-menu h3 {
-    font-size: 0.8rem;
+    font-size: 1.65rem;
   }
 }
 main .home-menu .item {

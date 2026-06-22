@@ -17,19 +17,18 @@ class LocalApiController extends Controller
     public function getLocalWithdrawal($place_id)
     {
         $withdrawal = Transaction::select('sum')->where(
-            ['type', TransactionType::Withdrawal],
-            // ['place_id', $place_id],
-            ['bill_id', BillType::CASH]
+            ['type' => TransactionType::Withdrawal],
+            ['bill_id' => BillType::CASH]
         )
             ->whereDate('created_at', Carbon::today());
 
-        return $withdrawal->sum('sum') / 100;
+        return $withdrawal->sum('sum');
     }
 
     public function getLocalTips($place_id)
     {
         $tips = Tip::select('tips')->where([
-            ['created_at', Carbon::today()],
+            ['created_at' => Carbon::today()],
         ])->sum('tips') / 100;
 
         return $tips;
@@ -39,23 +38,58 @@ class LocalApiController extends Controller
     {
         $cash_expense = Transaction::select('sum')->where(
             [
-                ['bill_id', BillType::CASH],
-                ['type', TransactionType::Expense],
+                ['bill_id' => BillType::CASH],
+                ['type' => TransactionType::Expense],
             ]
         )
-            ->whereDate('added_at', Carbon::today());
+            ->whereDate('added_at', Carbon::today())->sum('sum');
 
-        return $cash_expense->sum('sum');
+        return $cash_expense;
     }
 
     public function getLocalIncomes($place_id)
     {
         $cash_incomes = Transaction::select('sum')->where(
-            ['bill_id', BillType::CASH],
-            ['type', TransactionType::Income],
-            ['added_at', Carbon::today()]);
+            ['bill_id' => BillType::CASH],
+            ['type' => TransactionType::Income],
+            ['added_at' => Carbon::today()])->sum('sum');
 
-        return 0;
+        return $cash_incomes;
+    }
+
+    public function getCurrentCashBalance(int $placeId, int $cashBillId, $posterCash = null): float
+    {
+        // 1. Находим последнюю закрытую смену
+        $lastClosedShift = Shift::where('place_id', $placeId)
+            ->whereNotNull('created_at')
+            ->latest('created_at')
+            ->select('shift')
+            ->first();
+
+        $initialBalance = $lastClosedShift ? $lastClosedShift->shift : 0;
+
+        $netCashflowKopecks = Transaction::where('place_id', $placeId)
+            ->where('bill_id', $cashBillId)
+            ->whereDate('added_at', Carbon::today())
+            ->selectRaw('SUM(
+            CASE
+                WHEN type IN (?, ?) THEN sum
+                WHEN type IN (?, ?, ?) THEN -sum
+                WHEN type = ? THEN sum
+                ELSE 0
+            END
+        ) as net_balance', [
+                TransactionType::Income->value,
+                TransactionType::Loan->value,
+
+                TransactionType::Expense->value,
+                TransactionType::Withdrawal->value,
+                TransactionType::Repayment->value,
+                TransactionType::Transfer->value,
+            ])
+            ->value('net_balance') ?? 0;
+
+        return $initialBalance + $posterCash + $netCashflowKopecks;
     }
 
     public function openShift($data)

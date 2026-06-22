@@ -5,6 +5,7 @@ namespace Modules\Finance\Livewire;
 use Carbon\Carbon;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -21,8 +22,9 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Support\Htmlable;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Enums\TransactionType;
-use Modules\Finance\Models\Bill;
+use Modules\Finance\Models\ExpenseCategory;
 use Modules\Finance\Models\Transaction;
 
 class ExpensesDay extends BaseWidget implements HasTable
@@ -88,16 +90,20 @@ class ExpensesDay extends BaseWidget implements HasTable
             ->recordActions([
                 EditAction::make()->label('')
                     ->modalWidth('sm')
+                    ->modalHeading(fn (Transaction $record): string => $record->category->name.' - '.$record->added_at->format('d/m/Y'))
                     ->schema([
                         Tabs::make('Tabs')
                             ->contained(false)
                             ->tabs([
                                 Tab::make(__('Expense'))
                                     ->schema([
+                                        Select::make('expense_category_id')->label(__('Category'))
+                                            ->options(ExpenseCategory::query()->get()->pluck('name', 'id'))
+                                            ->native(false)
+                                            ->required(),
                                         TextInput::make('sum')->translateLabel(),
-                                        ToggleButtons::make('bill_id')->label(__('Type pay'))
-                                            ->options(Bill::get()->pluck('name', 'id'))
-                                            ->default(0)
+                                        ToggleButtons::make('bill_id')->label(__('Bill'))
+                                            ->options(BillType::class)->default(1)
                                             ->required()
                                             ->inline()
                                             ->grouped()
@@ -106,19 +112,21 @@ class ExpensesDay extends BaseWidget implements HasTable
                                                 0 => 'info',
                                                 1 => 'success',
                                             ])
-                                            ->reactive(),
+                                            ->live(),
 
                                     ]),
                                 Tab::make(__('Photo'))
                                     ->schema([
+
                                         SpatieMediaLibraryFileUpload::make('invoice')
-                                            ->label(__('Photo'))
-                                            ->collection('supplies')
+                                            ->label(__('Invoice'))
+                                            ->collection('expenses')
                                             ->multiple()
-                                            ->imageResizeMode('cover')
-                                            ->imagePreviewHeight(250)
-                                            ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
-                                            ->openable(),
+                                            ->imagePreviewHeight(350)
+                                            ->imageEditor()
+                                            ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 80])
+                                            ->downloadable()
+                                            ->deletable(),
                                         Textarea::make('comment')->label(__('Comment'))
                                             ->rows(3),
                                     ]),

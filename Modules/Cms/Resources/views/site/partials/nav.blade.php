@@ -19,7 +19,7 @@
     </div>
 </header>
 
-<div id="full-menu" class="fixed inset-0 z-50 font-sans hidden opacity-0">
+<div id="full-menu" class="fixed inset-0 z-50 hidden opacity-0">
 
     <div class="lines hidden md:block">
         <div class="line-vertical  hidden md:block"></div>
@@ -51,7 +51,7 @@
 
         <div class="flex flex-col md:h-full">
             <div class="h-[75vh] px-10 sm:px-24 sm:py-18 flex items-center hidden sm:block">
-                <div class="h2 md:py-4 md:px-0 content-fade">{{ __('Reserve a table') }}</div>
+                <div class="h2 md:py-4 md:px-0 content-fade">{{ __('Reserve table') }}</div>
 
                 <form class="nav-form space-y-4 pt-12 pr-24 max-w-md w-full content-fade">
                    <div class="input-group">

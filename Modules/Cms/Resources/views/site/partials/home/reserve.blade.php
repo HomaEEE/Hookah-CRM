@@ -1,4 +1,4 @@
-<section class=" mx-auto p-4 md:p-8 mb-24" id="reserve-section">
+<section class=" mx-auto p-4 md:p-8 mb-24" id="reserve">
 <div class="reserve relative fade-up"
          x-data="reservationForm">
          <div class="bg-img ">
@@ -8,14 +8,14 @@
         <div class="container flex flex-col justify-between">
 
             <div class="flex items-center gap-6 w-full">
-                <h2 class="text-2xl md:text-3xl text-white font-light uppercase tracking-wide whitespace-nowrap">
-                    {{ __('Reserve a table') }}
-                </h2>
+                <h3 class="whitespace-nowrap">
+                    {{ __('Reserve table') }}
+                </h3>
                 <div class="flex-grow h-[1px] bg-white/30"></div>
             </div>
 
             <div x-show="success" x-transition x-cloak class="glass w-full">
-                <div class="flex items-center gap-4">
+                <div class="flex flex-col md:flex-row gap-10 items-left">
                     <div class="text-4xl mb-4">🥂</div>
                     <p class="text-xl font-light text-white uppercase tracking-wide">Стіл успішно заброньовано!</p>
                     <p class="text-sm text-gray-400 mt-2">Очікуйте дзвінка для підтвердження.</p>
@@ -79,7 +79,7 @@
             <input type="tel" x-model="formData.phone" x-mask="+380 (99) 999-99-99" required placeholder="+380 (__) ___-__-__">
         </div>
 
-        <div class="reservation-form__actions">
+        <div class="reservation-form__actions flex-col md:flex-row gap-10">
             <button type="button" @click="step = 1" :disabled="loading" class="reservation-form__btn">
                 {{ __('Back') }}
             </button>

@@ -1,12 +1,12 @@
-<section class="home-footer p-4">
-    <div class="container mx-auto px-4">
+<section class="home-footer p-z">
+    <div class="container mx-auto px-2">
 
-        <div class="logo p-8 flex items-top gap-10">
-        <div class="flex-1">
-            <img src="{{ asset('assets/imgs/new-logo.svg') }}" alt="{{ __('Logo') }}">
+        <div class="logo p-8 flex flex-col md:flex-row gap-10 items-top">
+        <div class="w-full md:flex-1 justify-left md:justify-start">
+            <img class="h-[5vh]" src="{{ asset('assets/imgs/new-logo.svg') }}" alt="{{ __('Logo') }}">
         </div>
 
-        <div class="flex-1">
+        <div class="w-full md:flex-1">
             <p>Noire Lounge Bar — це не просто кальян, це простір, де висока якість зустрічається з бездоганним сервісом.
                 Ми звели приготування кальяну в ранг мистецтва: у нашій колекції зібрано найкращі бренди тютюну та авторські мікси.
                 Доповніть ваш вечір авторськими коктейлями від нашого бармена та вишуканими стравами.

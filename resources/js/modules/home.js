@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     track,
     { x: ["0%", "-50%"] }, // Move from start to half-way (the end of the first clone)
     {
-        duration: 20,     // Speed of the marquee (lower is faster)
+        duration: 15,     // Speed of the marquee (lower is faster)
         repeat: Infinity, // Loop forever
         ease: "linear",   // Maintain constant velocity
     }
@@ -93,32 +93,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { amount: 0.15 });
 
     /* ==========================================================================
-       7. ПОЯВЛЕНИЕ ТЕКСТА ПО СЛОВАМ (Универсально)
-       HTML: <h2 class="text-reveal">Ваш текст</h2>
+       <h2 class="text-reveal">Text</h2>
        ========================================================================== */
+function initTextReveal() {
     const textElements = document.querySelectorAll(".text-reveal");
 
     textElements.forEach(textElement => {
-        // Разбиваем текст на слова (учитывая лишние пробелы)
+        // 1. Разбиваем текст на слова, удаляя лишние пробелы
         const words = textElement.textContent.trim().split(/\s+/);
 
-        // Оборачиваем каждое слово
-        textElement.innerHTML = words
-            .map(word => `<span style="display: inline-block; opacity: 0; transform: translateY(20px); will-change: transform, opacity;">${word}</span>`)
-            .join(" ");
+        // 2. Очищаем родительский контейнер
+        textElement.innerHTML = "";
 
-        // Вешаем триггер на этот конкретный текстовый блок
+        // 3. Оборачиваем каждое слово для эффекта маски
+        words.forEach(word => {
+            // Внешний span (работает как маска/рамка, скрывающая слово до анимации)
+            const wrapper = document.createElement("span");
+            wrapper.style.display = "inline-block";
+            wrapper.style.overflow = "hidden"; // Вырезает все, что выходит за границы
+            wrapper.style.marginRight = "0.25em"; // Сохраняем пробелы между словами
+            wrapper.style.verticalAlign = "bottom";
+
+            // Внутренний span (само слово, которое будет двигаться)
+            const inner = document.createElement("span");
+            inner.textContent = word;
+            inner.className = "reveal-word"; // Класс для таргетинга анимацией
+            inner.style.display = "inline-block";
+            inner.style.willChange = "transform, opacity, filter";
+
+            // Задаем строгие стартовые стили, чтобы избежать мерцания
+            inner.style.opacity = "0";
+            inner.style.transform = "translateY(100%) rotate(3deg)";
+            inner.style.filter = "blur(4px)";
+
+            wrapper.appendChild(inner);
+            textElement.appendChild(wrapper);
+        });
+
+        // 4. Запускаем анимацию при скролле
         inView(textElement, () => {
+            const targets = textElement.querySelectorAll(".reveal-word");
+
             animate(
-                textElement.querySelectorAll("span"),
-                { opacity: 1, y: 0 },
+                targets,
                 {
-                    delay: stagger(0.04), // Для текста задержку лучше делать меньше (0.04-0.08)
-                    duration: 0.6,
-                    ease: [0.17, 0.55, 0.55, 1] // Та же премиальная кривая
+                    // Жестко передаем массивы [От, До], чтобы Motion точно знал состояния
+                    opacity: [0, 1],
+                    y: ["100%", "0%"],
+                    rotate: [3, 0], // Легкое выравнивание в процессе появления
+                    filter: ["blur(4px)", "blur(0px)"]
+                },
+                {
+                    delay: stagger(0.06), // Идеальный тайминг для заголовков
+                    duration: 0.8,
+                    ease: [0.16, 1, 0.3, 1] // Премиальная кривая (custom spring/out)
                 }
             );
-        }, { amount: 0.2 });
+        }, {
+            // Триггер сработает, когда блок покажется хотя бы на 10%
+            margin: "-10% 0px -10% 0px"
+        });
     });
+}
 
+// Запуск (если вы не используете фреймворки, просто вызовите функцию)
+document.addEventListener('DOMContentLoaded', initTextReveal);
 });
