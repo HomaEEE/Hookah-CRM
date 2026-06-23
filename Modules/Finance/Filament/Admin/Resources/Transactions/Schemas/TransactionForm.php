@@ -30,6 +30,7 @@ class TransactionForm
                     ->inline()
                     ->live()
                     ->grouped()
+                    ->extraAttributes(['style' => 'width: 100%'])
                     ->required(),
 
                 DatePicker::make('added_at')->label(__('Added at'))->required()->native(false)->default(now())->maxDate(now()),
@@ -51,10 +52,7 @@ class TransactionForm
                     ->inline()
                     ->grouped()
                     ->extraAttributes(['style' => 'width: 100%'])
-                    ->colors([
-                        0 => 'info',
-                        1 => 'success',
-                    ])
+
                     ->live(),
 
                 SpatieMediaLibraryFileUpload::make('invoice')

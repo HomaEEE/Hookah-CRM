@@ -6,9 +6,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -20,9 +18,9 @@ class Expenses extends ManageRelatedRecords
 {
     protected static string $resource = ShiftResource::class;
 
-    protected static string $relationship = 'expenses';
+    protected static string $relationship = 'transactions';
 
-    protected static ?string $recordTitleAttribute = 'date'; // или 'shift_date'
+    // protected static ?string $recordTitleAttribute = 'added_at'; // или 'shift_date'
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -42,22 +40,13 @@ class Expenses extends ManageRelatedRecords
         return __('Expenses');
     }
 
-    public function form(Schema $schema): Schema
-    {
-        return $schema
-            ->components([
-                TextInput::make('Expenses')
-                    ->required()
-                    ->maxLength(255),
-
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
-            ->defaultGroup('bill.name')
-            ->recordTitleAttribute('Expenses')
+            ->recordTitleAttribute('Transactions')
+            ->defaultGroup('bill_id')
+
+            ->groupingSettingsInDropdownOnDesktop()
             ->modifyQueryUsing(fn (Builder $query) => $query->whereDate('added_at', $this->getOwnerRecord()->created_at))
             ->columns([
                 TextColumn::make('added_at')->label(__('Date Added'))->dateTime('d/m/Y')
@@ -68,7 +57,7 @@ class Expenses extends ManageRelatedRecords
                     ->description(fn ($record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')
                     ->summarize(Sum::make()->money('uah', 100)->label(__('Total'))),
-                IconColumn::make('bill.type')->label(__('Bill')),
+                IconColumn::make('bill_id')->label(__('Bill')),
             ])
             ->filters([
                 //

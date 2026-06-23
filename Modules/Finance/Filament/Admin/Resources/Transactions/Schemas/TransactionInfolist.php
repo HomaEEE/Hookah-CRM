@@ -21,7 +21,7 @@ class TransactionInfolist
                                 TextEntry::make('added_at')->translateLabel()->dateTime('d F Y')->size('md'),
                                 TextEntry::make('type')->translateLabel()->size('md'),
                                 TextEntry::make('user.name')->translateLabel()->size('md'),
-                                TextEntry::make('bill.type')->label(__('Bill'))->badge()->size('lg'),
+                                TextEntry::make('bill_id')->label(__('Bill'))->badge()->size('lg'),
                                 TextEntry::make('category.name')->label(__('Category'))->badge()->size('xl'),
                                 TextEntry::make('sum')->translateLabel()->color('success')->copyable(fn ($record) => $record->added_at)->size('md'),
                                 TextEntry::make('comment')->translateLabel()->copyable()->size('lg'),

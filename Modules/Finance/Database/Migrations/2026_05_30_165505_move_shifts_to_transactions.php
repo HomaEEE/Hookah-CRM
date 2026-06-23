@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Enums\TransactionType;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 return new class extends Migration
 {
@@ -11,13 +13,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // ВНИМАНИЕ: Укажи здесь реальные ID твоих счетов из таблицы bills
-        $cashBillId = 1;      // ID счета для наличных
-        $terminalBillId = 2;  // ID счета для безнала
+
+        $output = new ConsoleOutput;
+
+        $cashBillId = BillType::CASH->value;      // ID счета для наличных
+        $terminalBillId = BillType::CARD->value;  // ID счета для безнала
+
+        $output->writeln('<info>Shifts begin migration...</info>');
 
         DB::table('shifts')->orderBy('id')->chunk(500, function ($shifts) use ($cashBillId, $terminalBillId) {
             $transactions = [];
-
             foreach ($shifts as $shift) {
                 // Если смена еще не закрыта или пустая - пропускаем
                 if ($shift->cash == 0 && $shift->terminal == 0) {
@@ -35,7 +40,7 @@ return new class extends Migration
                         'user_id' => $shift->user_id,
                         'place_id' => $shift->place_id,
                         'bill_id' => $cashBillId,
-                        'comment' => 'Выручка наличными #'.$shift->id,
+                        'comment' => 'Выручка наличными #'.$shift->id.' за '.$transactionDate->format('d/m/Y'),
                         'added_at' => $transactionDate,
                         'created_at' => $transactionDate,
                         'updated_at' => $transactionDate,
@@ -50,7 +55,7 @@ return new class extends Migration
                         'user_id' => $shift->user_id,
                         'place_id' => $shift->place_id,
                         'bill_id' => $terminalBillId,
-                        'comment' => 'Выручка по терминалу #'.$shift->id,
+                        'comment' => 'Выручка по терминалу #'.$shift->id.' за '.$transactionDate->format('d/m/Y'),
                         'added_at' => $transactionDate,
                         'created_at' => $transactionDate,
                         'updated_at' => $transactionDate,
@@ -63,6 +68,7 @@ return new class extends Migration
                 DB::table('transactions')->insert($transactions);
             }
         });
+        $output->writeln('<info>Shifts end migration...</info>');
     }
 
     public function down(): void

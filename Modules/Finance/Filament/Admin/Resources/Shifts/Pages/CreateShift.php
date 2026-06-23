@@ -50,29 +50,32 @@ class CreateShift extends CreateRecord
                 'expense_category_id' => $wage->expense,
                 'sum' => $shift->wages,
                 'bill_id' => BillType::CASH->value,
-                'comment' => 'Зарплаты',
+                'added_at' => $shift->created_at,
+                'comment' => 'Зарплаты #'.$shift->id.' за '.$shift->created_at->format('d/m/Y'),
             ]
         );
 
         Transaction::create(
             [
-                'user_id' => 0,
+                'user_id' => Auth::user()->id,
                 'place_id' => $shift->place_id,
                 'type' => TransactionType::Income->value,
                 'sum' => (int) $shift->terminal * 0.987,
                 'bill_id' => BillType::CARD->value,
-                'comment' => 'Терминал за '.$shift->created_at,
+                'added_at' => $shift->created_at,
+                'comment' => 'Выручка по терминалу #'.$shift->id.' за '.$shift->created_at->format('d/m/Y'),
             ]
         );
 
         Transaction::create(
             [
-                'user_id' => 0,
+                'user_id' => Auth::user()->id,
                 'place_id' => $shift->place_id,
                 'type' => TransactionType::Income->value,
-                'sum' => (int) round(($shift->shift * 0.987), 0),
+                'sum' => $shift->cash,
                 'bill_id' => BillType::CASH->value,
-                'comment' => 'Наличные за '.$shift->created_at,
+                'added_at' => $shift->created_at,
+                'comment' => 'Выручка наличными #'.$shift->id.' за '.$shift->created_at->format('d/m/Y'),
             ]
         );
 

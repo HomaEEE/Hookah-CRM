@@ -32,6 +32,7 @@ class PosterWizard
                     ->maxDate(now())
                     ->required()->columns(1)
                     ->hiddenLabel()
+                    ->dehydrated(false)
                     ->native(false),
 
                 Actions::make([
@@ -51,15 +52,6 @@ class PosterWizard
                             $set('cash', $posterTodayShift['payed_cash_sum'] / 100);
 
                             $set('terminal', $posterTodayShift['payed_card_sum'] / 100);
-
-                            $posterLocalExpense = (new LocalApiController)->getLocalExpenses(Filament::getTenant()->id);
-                            $set('expense', (int) $posterLocalExpense);
-
-                            $posterLocalIncomes = (new LocalApiController)->getLocalIncomes(Filament::getTenant()->id);
-                            $set('income', (int) $posterLocalIncomes);
-
-                            $LocalWithdrawal = (new LocalApiController)->getLocalWithdrawal(Filament::getTenant()->id);
-                            $set('withdrawal', $LocalWithdrawal);
 
                             $localTips = (new LocalApiController)->getLocalTips(Filament::getTenant()->id);
                             $set('tips', $localTips);

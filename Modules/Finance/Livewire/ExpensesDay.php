@@ -51,9 +51,9 @@ class ExpensesDay extends BaseWidget implements HasTable
     {
 
         return $table
-            ->defaultGroup('bill.name')
+            ->defaultGroup('bill_id')
             ->groups([
-                Group::make('bill.name')->label(__('Bill'))
+                Group::make('bill_id')->label(__('Bill'))
                     ->titlePrefixedWithLabel(false),
                 Group::make('category.name')->label(__('Category'))
                     ->titlePrefixedWithLabel(false),
@@ -66,7 +66,7 @@ class ExpensesDay extends BaseWidget implements HasTable
                 TextColumn::make('category.name')->label(__('Category'))->badge()
                     ->description(fn (Transaction $record): string => $record->supply->supplier->company ?? $record->comment ?? ''),
                 TextColumn::make('sum')->label(__('Sum'))->money('UAH')->summarize(Sum::make()->money('UAH', 100)->label(__('Total'))),
-                IconColumn::make('bill.type')->label(__('Bill'))
+                IconColumn::make('bill_id')->label(__('Bill'))
                     ->action(function ($record) {
                         $record->update([
                             'bill_id' => ! $record->bill_id,

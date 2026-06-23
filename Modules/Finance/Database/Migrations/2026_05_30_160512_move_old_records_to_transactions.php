@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Enums\TransactionType;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -20,6 +21,13 @@ return new class extends Migration
             DB::table('expenses')->orderBy('id')->chunk(500, function ($expenses) {
                 $transactions = [];
                 foreach ($expenses as $expense) {
+
+                    $newBillId = match ((string) $expense->bill_id) {
+                        '0' => 1, // Или лучше BillType::CASH->value
+                        '1' => 2, // Или лучше BillType::CARD->value
+                        default => null, // Если был null или мусор - оставляем null
+                    };
+
                     $transactions[] = [
                         'type' => TransactionType::Expense->value, // '1'
                         'sum' => $expense->sum ?? '0',
@@ -27,7 +35,7 @@ return new class extends Migration
                         'place_id' => $expense->place_id,
                         'expense_category_id' => $expense->category_id ?? null,
                         'supply_id' => $expense->supply_id ?? null,
-                        'bill_id' => $expense->bill_id,
+                        'bill_id' => $newBillId, // Используем безопасное значение
                         'poster' => $expense->poster ?? null,
                         'comment' => $expense->comment ?? null,
                         'added_at' => $expense->added_at ?? $expense->created_at ?? now(),
@@ -55,7 +63,7 @@ return new class extends Migration
                         'sum' => $income->sum,
                         'user_id' => $income->user_id,
                         'place_id' => $income->place_id,
-                        'bill_id' => 0,
+                        'bill_id' => BillType::CASH->value,
                         'added_at' => $income->added_at ?? $income->created_at ?? now(), // У incomes нет поля added_at
                         'created_at' => $income->created_at ?? now(),
                         'updated_at' => $income->updated_at ?? now(),
@@ -77,7 +85,7 @@ return new class extends Migration
                     $transactions[] = [
                         'type' => TransactionType::Withdrawal->value, // '4'
                         'sum' => $withdrawal->sum,
-                        'bill_id' => $withdrawal->bill_id,
+                        'bill_id' => $withdrawal->bill_id + 1,
                         'user_id' => $withdrawal->user_id,
                         'place_id' => $withdrawal->place_id,
                         'added_at' => $withdrawal->added_at ?? $withdrawal->created_at ?? now(),

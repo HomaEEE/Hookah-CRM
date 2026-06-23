@@ -14,7 +14,7 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Modules\Finance\Enums\BillType;
+use Modules\Finance\app\Services\CashBalanceService;
 use Modules\Finance\Filament\Admin\Resources\Transactions\Schemas\TransactionForm;
 use Modules\Finance\Models\Transaction;
 use Modules\Manage\Filament\Admin\Resources\Supplies\Schemas\SupplyForm;
@@ -115,9 +115,15 @@ class ShiftWizard
                     ->size('md')
                     ->color('success')
                     ->state(function (Get $get, Set $set): string {
-                        $set('calc_shift', (new LocalApiController)->getCurrentCashBalance(Filament::getTenant()->id, BillType::CASH->value, $get('cash')));
+                        $final_balance = app(CashBalanceService::class)->getCurrentBalance(
+                            Filament::getTenant()->id,
+                            $get('cash'),
+                            $get('wages')
+                        );
 
-                        return (new LocalApiController)->getCurrentCashBalance(Filament::getTenant()->id, BillType::CASH->value, $get('cash'));
+                        $set('calc_shift', $final_balance);
+
+                        return (string) $final_balance;
                     }),
 
                 Hidden::make('calc_shift')->translateLabel(),
@@ -141,7 +147,7 @@ class ShiftWizard
                         return "Разница: {$debtGrid} ₴";
                     }),
 
-            ])->columns(['xs' => 1, 'sm' => 2, 'md' => 2, 'xl' => 2]),
+            ])->columns(['xs' => 2, 'md' => 2, 'xl' => 2]),
 
             Fieldset::make(__('Reports'))->schema([
                 CheckboxList::make('report')->hiddenLabel()
@@ -157,16 +163,5 @@ class ShiftWizard
                     ->gridDirection('row'),
             ]),
         ];
-    }
-
-    private static function CalcShift(Get $get, Set $set)
-    {
-        $totalCash =
-            (float) $get('old_shift') + (float) $get('cash') + (float) $get('income') -
-            (float) $get('wages') - (float) $get('expense') - (float) $get('withdrawal');
-
-        $set('calc_shift', $totalCash);
-
-        return $totalCash;
     }
 }

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Enums\TransactionType;
 use Modules\Manage\Models\Supply;
 use Spatie\MediaLibrary\HasMedia;
@@ -33,6 +34,7 @@ class Transaction extends Model implements HasMedia
     protected function casts(): array
     {
         return [
+            'bill_id' => BillType::class,
             'type' => TransactionType::class,
             'sum' => MoneyCast::class,
             'added_at' => 'datetime',

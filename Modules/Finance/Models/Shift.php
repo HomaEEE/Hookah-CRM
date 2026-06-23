@@ -4,6 +4,7 @@ namespace Modules\Finance\Models;
 
 use App\Casts\MoneyCast;
 use App\Models\Place;
+use App\Models\Workshop;
 use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,9 +59,9 @@ class Shift extends Model
         return $this->belongsTo(Wage::class);
     }
 
-    public function expenses()
+    public function transactions()
     {
-        return $this->hasMany(Expense::class, 'place_id', 'place_id');
+        return $this->hasMany(Transaction::class, 'place_id');
     }
 
     public function workshop()
