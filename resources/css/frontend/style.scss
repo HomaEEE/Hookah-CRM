@@ -1323,8 +1323,8 @@ main {
   &.razor {
     &:before,
     &:after {
-      box-shadow: 0 0.5px 0 $grey; // Chrome
-      border-bottom: 0.5px solid $grey; // Safari
+      box-shadow: 0 0.5px 0 $grey;
+      border-bottom: 0.5px solid $grey;
     }
   }
 
