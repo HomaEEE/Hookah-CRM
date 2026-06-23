@@ -5,7 +5,6 @@
   --container-padding: 1rem;
 }
 
-$red: #760000;
 $grey: #707070;
 $black: #201f22;
 $black-bg: rgba(17, 17, 17, 0.6);
@@ -46,10 +45,6 @@ body {
   min-height: 100svh;
   background: $black;
   justify-content: space-between;
-
-  @include screen(md) {
-    min-height: 100vh;
-  }
 }
 
 @media (min-width: 48rem) {
@@ -482,7 +477,7 @@ main {
           align-items: center;
           margin: auto 0;
           gap: 16px;
-          position: relative; // ВАЖНО: запирает .arrow внутри абзаца
+          position: relative;
           width: 100%;
           font-size: 2rem;
         }
@@ -826,12 +821,12 @@ main {
 
       .title {
         position: absolute;
-        top: 35px; // Отступ текста от верхнего края картинки
+        top: 35px;
         left: 0;
         width: 100%;
         font-size: 1.25rem;
         font-weight: 300;
-        letter-spacing: 0.05em; // Небольшая разрядка для премиальности
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         text-align: center;
         color: #ffffff;
