@@ -32,11 +32,6 @@ body {
   background: #201f22;
   justify-content: space-between;
 }
-@media (min-width: 768px) {
-  body {
-    min-height: 100vh;
-  }
-}
 
 @media (min-width: 48rem) {
   :root {
@@ -347,7 +342,7 @@ main .hero {
 }
 @media screen and (max-width: 617px) {
   main .hero {
-    min-height: 80svh;
+    min-height: 90svh;
   }
 }
 main .hero .bg {
@@ -374,7 +369,7 @@ main .hero .hero-title {
 }
 @media screen and (max-width: 617px) {
   main .hero .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     padding: 100px 0 50px 0;
   }
 }
@@ -409,7 +404,7 @@ main .hero .bento.title-box {
 @media screen and (max-width: 617px) {
   main .hero .bento.title-box {
     padding: 25px;
-    min-height: 20vh;
+    min-height: 22vh;
   }
 }
 main .hero .bento.title-box p {
@@ -812,8 +807,8 @@ main .h4 {
   .tabs .menu-toggle {
     display: block;
     width: 100%;
-    background: #858585;
-    color: #707070;
+    background: #707070;
+    color: #efefef;
     padding: 15px 20px;
     border-radius: 6px;
     margin-bottom: 5px;

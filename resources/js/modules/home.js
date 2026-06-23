@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 easing: [0.17, 0.55, 0.55, 1],
             }
         );
-    }, { amount: 0.01 });
+    }, { amount: 0.005 });
 
     inView(".fade-right", (element) => {
         animate(

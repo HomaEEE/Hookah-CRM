@@ -5,6 +5,7 @@
   --container-padding: 1rem;
 }
 
+$red: #760000;
 $grey: #707070;
 $black: #201f22;
 $black-bg: rgba(17, 17, 17, 0.6);
@@ -386,7 +387,7 @@ main {
     position: relative;
 
     @media screen and (max-width: 617px) {
-      min-height: 80svh;
+      min-height: 90svh;
     }
 
     .bg {
@@ -412,7 +413,7 @@ main {
       font-size: 2.25rem;
       padding: 50px 0;
       @media screen and (max-width: 617px) {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         padding: 100px 0 50px 0;
       }
       @media screen and (min-width: 1920px) {
@@ -444,7 +445,7 @@ main {
 
         @media screen and (max-width: 617px) {
           padding: 25px;
-          min-height: 20vh;
+          min-height: 22vh;
         }
 
         p {
@@ -878,8 +879,8 @@ main {
     @media (max-width: 768px) {
       display: block;
       width: 100%;
-      background: $text-grey;
-      color: $grey;
+      background: $grey;
+      color: $text;
       padding: 15px 20px;
       border-radius: 6px;
       margin-bottom: 5px;
