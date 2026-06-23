@@ -387,7 +387,7 @@ main {
     position: relative;
 
     @media screen and (max-width: 617px) {
-      min-height: 90svh;
+      min-height: 90vh;
     }
 
     .bg {
@@ -413,7 +413,7 @@ main {
       font-size: 2.25rem;
       padding: 50px 0;
       @media screen and (max-width: 617px) {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         padding: 100px 0 50px 0;
       }
       @media screen and (min-width: 1920px) {
@@ -445,11 +445,11 @@ main {
 
         @media screen and (max-width: 617px) {
           padding: 25px;
-          min-height: 22vh;
+          min-height: 24vh;
         }
 
         p {
-          font-size: 2.5rem;
+          font-size: 2.25rem;
         }
 
         span {
@@ -653,8 +653,7 @@ main {
       margin-top: auto;
       width: 100%;
       @media screen and (max-width: 617px) {
-        height: 50vh;
-        padding: 20px;
+        padding: 25px;
       }
       .reservation-form {
         display: flex;
@@ -709,9 +708,11 @@ main {
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 8px;
             cursor: pointer;
-
             option {
               color: black;
+            }
+            @media screen and (max-width: 617px) {
+              font-size: 14px;
             }
           }
         }

@@ -342,7 +342,7 @@ main .hero {
 }
 @media screen and (max-width: 617px) {
   main .hero {
-    min-height: 90svh;
+    min-height: 90vh;
   }
 }
 main .hero .bg {
@@ -369,7 +369,7 @@ main .hero .hero-title {
 }
 @media screen and (max-width: 617px) {
   main .hero .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     padding: 100px 0 50px 0;
   }
 }
@@ -404,11 +404,11 @@ main .hero .bento.title-box {
 @media screen and (max-width: 617px) {
   main .hero .bento.title-box {
     padding: 25px;
-    min-height: 22vh;
+    min-height: 24vh;
   }
 }
 main .hero .bento.title-box p {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
 }
 main .hero .bento.title-box span {
   font-size: 1.5rem;
@@ -602,8 +602,7 @@ main .reserve .glass {
 }
 @media screen and (max-width: 617px) {
   main .reserve .glass {
-    height: 50vh;
-    padding: 20px;
+    padding: 25px;
   }
 }
 main .reserve .glass .reservation-form {
@@ -663,6 +662,12 @@ main .reserve .glass .reservation-form__field select {
 main .reserve .glass .reservation-form__field input option,
 main .reserve .glass .reservation-form__field select option {
   color: black;
+}
+@media screen and (max-width: 617px) {
+  main .reserve .glass .reservation-form__field input,
+  main .reserve .glass .reservation-form__field select {
+    font-size: 14px;
+  }
 }
 main .reserve .glass .reservation-form__custom-date {
   display: flex;

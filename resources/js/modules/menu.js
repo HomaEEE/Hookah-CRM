@@ -1,6 +1,5 @@
 import { animate, stagger } from "motion";
 
-
 $(document).ready(function () {
   $('.menu-toggle').click(function () {
     $('.menu-toggle').toggleClass('nav-active');
