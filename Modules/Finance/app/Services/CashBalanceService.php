@@ -45,8 +45,6 @@ class CashBalanceService
             ])
             ->value('net_balance') / 100 ?? 0;
 
-        var_dump($initialBalance, $posterCash, $netCashflow, $wages);
-
         return $initialBalance + $posterCash + $netCashflow - $wages;
 
     }

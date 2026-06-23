@@ -37,7 +37,7 @@ class ShiftWizard
                         ->modalHeading(__('Expenses'))
                         ->modalWidth('6xl')
                         ->modalContent(function () {
-                            return view('finance::tables.expenses-day');
+                            return view('Finance::tables.expenses-day');
                         }),
 
                     Action::make('add_supply')->label(__('Supply'))
