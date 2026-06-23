@@ -122,37 +122,39 @@
 
                 // Стартовые значения
                 this.formData.guests = 2;
-                this.formData.time = '19:00';
+                this.formData.time = '12:00';
             },
 
             generateDates() {
-                const dates = [];
-                const today = new Date();
+    const dates = [];
+    const today = new Date();
 
-                for (let i = 0; i <= 6; i++) {
-                    const d = new Date(today);
-                    d.setDate(today.getDate() + i);
+    for (let i = 0; i <= 6; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
 
-                    let label = '';
-                    if (i === 0) {
-                        label = 'Сьогодні';
-                    } else if (i === 1) {
-                        label = 'Завтра';
-                    } else {
-                        // Генерирует как раз вид 11.10.2026
-                        label = d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    }
+        let label = '';
+        if (i === 0) {
+            label = 'Сьогодні';
+        } else if (i === 1) {
+            label = 'Завтра';
+        } else {
+            label = d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
 
-                    // Value остается 2026-10-11 (нужно для базы данных)
-                    const value = d.toISOString().split('T')[0];
-                    dates.push({ label, value });
-                }
+        // Берем год, месяц и день строго в локальном часовом поясе пользователя
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const value = `${year}-${month}-${day}`;
 
-                this.availableDates = dates;
-                this.dateMode = dates[0].value;
-                this.formData.date = dates[0].value;
-            },
+        dates.push({ label, value });
+    }
 
+    this.availableDates = dates;
+    this.dateMode = dates[0].value;
+    this.formData.date = dates[0].value;
+},
             generateTimes() {
                 const times = [];
                 for (let h = 12; h <= 20; h++) {
