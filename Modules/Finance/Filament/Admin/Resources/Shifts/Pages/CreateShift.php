@@ -41,7 +41,7 @@ class CreateShift extends CreateRecord
 
         $wage = Place::where('id', $shift->place_id)->select('settings->wage_expense as expense')->first();
 
-        // (new PosterApiController)->closeShift($shift);
+        (new PosterApiController)->closeShift($shift);
 
         Transaction::create(
             [

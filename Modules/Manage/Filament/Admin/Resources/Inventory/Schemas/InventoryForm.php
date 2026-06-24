@@ -46,10 +46,7 @@ class InventoryForm
                         ->afterStateUpdated(function (Get $get, Set $set, $state) {
                             if (! empty($state)) {
                                 $snCount = is_array($state) ? count($state) : count(explode(',', $state));
-
                                 $set('quantity', $snCount);
-
-                                // Сразу пересчитываем общую сумму
                                 $price = (float) $get('price_per_unit');
                                 $set('total_price', $price * $snCount);
                             }

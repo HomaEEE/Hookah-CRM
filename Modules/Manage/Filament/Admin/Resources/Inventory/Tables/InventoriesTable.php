@@ -11,6 +11,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
+use Modules\Manage\Models\InventoryItem;
 
 class InventoriesTable
 {
@@ -21,6 +22,8 @@ class InventoriesTable
                 TextColumn::make('name')
                     ->label(_('Name'))
                     ->searchable()
+                    ->description(fn (InventoryItem $record): string => $record->comment ?? '')
+                    ->wrap()
                     ->sortable(),
 
                 TextColumn::make('serial_number')
