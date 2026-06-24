@@ -20,6 +20,7 @@ use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Modules\Finance\Enums\BillType;
 use Modules\Manage\Models\Supply;
 use Modules\Place\Models\Supplier;
 
