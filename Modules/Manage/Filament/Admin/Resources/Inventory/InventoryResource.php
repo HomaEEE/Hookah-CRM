@@ -8,6 +8,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Modules\Manage\Filament\Admin\Resources\Inventory\Pages\ManageInventory;
 use Modules\Manage\Filament\Admin\Resources\Inventory\Schemas\InventoryForm;
+use Modules\Manage\Filament\Admin\Resources\Inventory\Schemas\InventoryInfolist;
 use Modules\Manage\Filament\Admin\Resources\Inventory\Tables\InventoriesTable;
 use Modules\Manage\Models\InventoryItem;
 use UnitEnum;
@@ -38,6 +39,11 @@ class InventoryResource extends Resource
     public static function table(Table $table): Table
     {
         return InventoriesTable::configure($table);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return InventoryInfolist::configure($schema);
     }
 
     public static function getPages(): array

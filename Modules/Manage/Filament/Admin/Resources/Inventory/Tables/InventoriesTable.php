@@ -20,14 +20,14 @@ class InventoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(_('Name'))
+                    ->label(__('Name'))
                     ->searchable()
                     ->description(fn (InventoryItem $record): string => $record->comment ?? '')
                     ->wrap()
                     ->sortable(),
 
                 TextColumn::make('serial_number')
-                    ->label(_('SN'))
+                    ->label(__('SN'))
                     ->searchable()
                     ->badge()
                     ->separator(',')
@@ -36,32 +36,26 @@ class InventoriesTable
                     ->copyable(),
 
                 TextColumn::make('warehouse.name')
-                    ->label(_('Storage'))
+                    ->label(__('Storage'))
                     ->badge()
                     ->color('info')
                     ->sortable(),
 
                 TextColumn::make('quantity')
-                    ->label('Кол-во')
+                    ->label(__('qty'))
                     ->sortable(),
 
                 TextColumn::make('price')
-                    ->label('Цена за шт.')
-                    ->money('UAH') // Форматирование в гривны
+                    ->label(__('price'))
+                    ->money('UAH')
                     ->sortable(),
 
-                TextColumn::make('total') // <-- Изменили системное имя!
-                    ->label('Общая сумма')
+                TextColumn::make('total')
+                    ->label(__('total'))
                     ->money('UAH')
-
-    // 1. Указываем, откуда брать данные для отображения (из Аксессора модели)
                     ->state(fn ($record) => $record->totalPrice)
-
-    // 2. Учим сортировать через сырой SQL
                     ->sortable(query: fn ($query, string $direction) => $query->orderByRaw('(quantity * price_per_unit) '.$direction)
                     )
-
-    // 3. Кастомный подсчет суммы в подвале таблицы
                     ->summarize(
                         Summarizer::make()
                             ->label('Итого активов:')
@@ -69,14 +63,10 @@ class InventoriesTable
                             ->using(fn ($query) => $query->sum(DB::raw('quantity * price')) / 100)
                     ),
 
-                TextColumn::make('comment')
-                    ->label('Комментарий')
-                    ->limit(30)
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('warehouse_id')
-                    ->label(_('Storage'))
+                    ->label(__('storage'))
                     ->relationship('warehouse', 'name'),
             ])
             ->actions([

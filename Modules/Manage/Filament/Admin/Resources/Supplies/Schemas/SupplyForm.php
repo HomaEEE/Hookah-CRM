@@ -52,10 +52,6 @@ class SupplyForm
                     ->inline()
                     ->grouped()
                     ->extraAttributes(['style' => 'width: 100%'])
-                    ->colors([
-                        0 => 'info',
-                        1 => 'success',
-                    ])
                     ->live(),
 
                 ToggleButtons::make('pay')->label(__('Pay'))
@@ -83,6 +79,7 @@ class SupplyForm
                     ->searchDebounce(500)
                     ->native(false)
                     ->required()
+                    ->live()
                     ->options(Supplier::where('place_id', Filament::getTenant()->id)->visible()->pluck('company', 'id'))
                     ->createOptionForm([
                         Section::make()
@@ -185,9 +182,10 @@ class SupplyForm
                                     ->label(__('Photo'))
                                     ->collection('supplies')
                                     ->multiple()
+                                    ->required()
                                     ->automaticallyResizeImagesMode('cover')
                                     ->imagePreviewHeight(350)
-                                    ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 50])
+                                    ->customProperties(['format' => 'webp', 'width' => 1800, 'quality' => 65])
                                     ->openable()
                                     ->preserveFilenames()
                                     ->live()
