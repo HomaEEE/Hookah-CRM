@@ -8,10 +8,13 @@ use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRecords;
+use Kisame76\FilamentTreeTable\Concerns\InteractsWithExpandableRows;
 use Modules\Menu\Filament\Admin\Resources\Categories\CategoryResource;
 
 class ManageCategories extends ManageRecords
 {
+    use InteractsWithExpandableRows;
+
     protected static string $resource = CategoryResource::class;
 
     protected function getHeaderActions(): array
