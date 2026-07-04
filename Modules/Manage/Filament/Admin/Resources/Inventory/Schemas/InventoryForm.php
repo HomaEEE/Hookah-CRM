@@ -2,6 +2,7 @@
 
 namespace Modules\Manage\Filament\Admin\Resources\Inventory\Schemas;
 
+use Bjanczak\FilamentFlexFields\Filament\Forms\Components\BarcodeScannerField;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
@@ -37,19 +38,56 @@ class InventoryForm
                                 ])->columns(1),
                         ]),
 
+                    BarcodeScannerField::make('sku')
+                        ->label('Product barcode')
+                        ->dehydrated(false)
+                        ->placeholder('Scan or type barcode…')
+                        ->live()
+                        ->beepOnScan()
+                        ->allowCameraSwitch()
+                        ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
+                            if (blank($state)) {
+                                return;
+                            }
+
+                            // 1. Получаем текущие серийные номера (TagsInput хранит их как массив)
+                            $serialNumbers = $get('serial_number') ?? [];
+                            if (! is_array($serialNumbers)) {
+                                $serialNumbers = [];
+                            }
+
+                            // 2. Добавляем новый код, если защита от дублей не помешает
+                            if (! in_array($state, $serialNumbers)) {
+                                $serialNumbers[] = $state;
+
+                                // Обновляем поле TagsInput
+                                $set('serial_number', $serialNumbers);
+
+                                // 3. Сразу пересчитываем количество и общую сумму
+                                $snCount = count($serialNumbers);
+                                $set('quantity', $snCount);
+
+                                $price = (float) $get('price_per_unit');
+                                $set('total_price', $price * $snCount);
+                            }
+
+                            // 4. Очищаем поле сканера, подготавливая его к следующему пику
+                            $set('sku', null);
+                        }),
+
                     TagsInput::make('serial_number')
                         ->label(__('Serial numbers'))
                         ->placeholder(__('Enter SN and press Enter or comma'))
                         ->separator(',')
                         ->splitKeys(['Enter', ',', ' ', 'Tab'])
-                        ->live(onBlur: true)
+                        ->live()
                         ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                            if (! empty($state)) {
-                                $snCount = is_array($state) ? count($state) : count(explode(',', $state));
-                                $set('quantity', $snCount);
-                                $price = (float) $get('price_per_unit');
-                                $set('total_price', $price * $snCount);
-                            }
+                            $state = $state ?? [];
+                            $snCount = is_array($state) ? count($state) : count(explode(',', $state));
+
+                            $set('quantity', $snCount);
+                            $price = (float) $get('price_per_unit');
+                            $set('total_price', $price * $snCount);
                         })
                         ->columnSpanFull(),
                 ])->columns(1),
