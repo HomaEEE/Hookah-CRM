@@ -96,6 +96,7 @@ class SubscriptionTable
                         $record->update(
                             [
                                 'next_date' => Carbon::today()->addMonth(),
+                                'added_at' => Carbon::today(),
                                 'price' => $data['sum'],
                             ]
                         );

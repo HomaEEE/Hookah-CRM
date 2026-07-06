@@ -2,6 +2,7 @@
 
 namespace Modules\Finance\Filament\Admin\Resources\Transactions\Schemas;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -36,7 +37,7 @@ class TransactionForm
                 DatePicker::make('added_at')->label(__('Added at'))->required()->native(false)->default(now())->maxDate(now()),
 
                 Select::make('expense_category_id')->label(__('Category'))
-                    ->options(ExpenseCategory::get()->pluck('name', 'id'))
+                    ->options(ExpenseCategory::get()->where('place_id', Filament::getTenant()->id)->pluck('name', 'id'))
                     ->native(false)
                     ->searchable()
                     ->hidden(fn (Get $get): bool => $get('type') != TransactionType::Expense),
