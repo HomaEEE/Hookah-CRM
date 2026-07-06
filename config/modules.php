@@ -20,7 +20,7 @@ return [
     AssetType::Migrations->value => [
         'active' => true,
         'patterns' => [
-            '*/Database/Migrations',
+            '*/database/migrations',
         ],
     ],
     AssetType::Helpers->value => [
@@ -38,38 +38,38 @@ return [
     AssetType::Seeders->value => [
         'active' => true,
         'patterns' => [
-            '*/Database/Seeders',
+            '*/database/seeders',
         ],
     ],
     AssetType::Translations->value => [
         'active' => true,
         'patterns' => [
-            '*/Lang',
+            '*/lang',
         ],
     ],
     AssetType::Configs->value => [
         'active' => true,
         'patterns' => [
-            '*/Config/*.php',
+            '*/config/*.php',
         ],
         'priority' => true,
     ],
     AssetType::Views->value => [
         'active' => true,
         'patterns' => [
-            '*/Resources/views',
+            '*/resources/views',
         ],
     ],
     AssetType::BladeComponents->value => [
         'active' => true,
         'patterns' => [
-            '*/View/Components',
+            '*/view/components',
         ],
     ],
     AssetType::Routes->value => [
         'active' => true,
         'patterns' => [
-            '*/Routes/*.php',
+            '*/routes/*.php',
         ],
         'commands_filenames' => [
             'console',
