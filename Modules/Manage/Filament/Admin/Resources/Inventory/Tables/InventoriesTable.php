@@ -15,6 +15,8 @@ use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
 use Modules\Manage\Enums\OwnEnum;
 use Modules\Manage\Enums\StateEnum;
+use Modules\Manage\Filament\Actions\UpdateOwnBulkAction;
+use Modules\Manage\Filament\Actions\UpdateStateBulkAction;
 use Modules\Manage\Models\InventoryItem;
 
 class InventoriesTable
@@ -96,6 +98,8 @@ class InventoriesTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
+                UpdateOwnBulkAction::make(),
+                UpdateStateBulkAction::make(),
             ]);
     }
 }
