@@ -2,15 +2,19 @@
 
 namespace Modules\Manage\Filament\Admin\Resources\Inventory\Tables;
 
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
+use Modules\Manage\Enums\OwnEnum;
+use Modules\Manage\Enums\StateEnum;
 use Modules\Manage\Models\InventoryItem;
 
 class InventoriesTable
@@ -19,6 +23,11 @@ class InventoriesTable
     {
         return $table
             ->columns([
+                TextColumn::make('state')
+                    ->label(__('State'))
+                    ->badge()
+
+                    ->sortable(),
                 TextColumn::make('name')
                     ->label(__('Name'))
                     ->searchable()
@@ -51,7 +60,7 @@ class InventoriesTable
                     ->sortable(),
 
                 TextColumn::make('total')
-                    ->label(__('total'))
+                    ->label(__('Total'))
                     ->money('UAH')
                     ->state(fn ($record) => $record->totalPrice)
                     ->sortable(query: fn ($query, string $direction) => $query->orderByRaw('(quantity * price_per_unit) '.$direction)
@@ -65,14 +74,22 @@ class InventoriesTable
 
             ])
             ->filters([
-                SelectFilter::make('warehouse_id')
-                    ->label(__('storage'))
-                    ->relationship('warehouse', 'name'),
+                SelectFilter::make('own')
+                    ->label(__('Owner'))
+                    ->native(false)
+                    ->options(OwnEnum::class),
+                SelectFilter::make('state')
+                    ->label(__('State'))
+                    ->native(false)
+                    ->options(StateEnum::class),
             ])
             ->actions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
 
-                EditAction::make(),
-                DeleteAction::make(),
+                ]),
 
             ])
             ->bulkActions([

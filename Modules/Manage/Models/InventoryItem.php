@@ -6,6 +6,8 @@ use App\Casts\MoneyCast;
 use App\Models\Place;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Manage\Enums\OwnEnum;
+use Modules\Manage\Enums\StateEnum;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -23,6 +25,8 @@ class InventoryItem extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'own' => OwnEnum::class,
+        'state' => StateEnum::class,
         'quantity' => 'integer',
         'price' => MoneyCast::class,
         'serial_number' => 'array',

@@ -2,16 +2,18 @@
 
 namespace Modules\Manage\Filament\Admin\Resources\Inventory\Schemas;
 
-use Bjanczak\FilamentFlexFields\Filament\Forms\Components\BarcodeScannerField;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Modules\Manage\Enums\OwnEnum;
+use Modules\Manage\Enums\StateEnum;
 
 class InventoryForm
 {
@@ -20,6 +22,11 @@ class InventoryForm
         return $schema
             ->components([
                 Section::make('Основная информация')->schema([
+                    ToggleButtons::make('own')
+                        ->grouped()
+                        ->options(OwnEnum::class)
+                        ->extraAttributes(['style' => 'width: 100%'])
+                        ->required(),
                     TextInput::make('name')
                         ->label(__('Name'))
                         ->required()
@@ -38,45 +45,8 @@ class InventoryForm
                                 ])->columns(1),
                         ]),
 
-                    BarcodeScannerField::make('sku')
-                        ->label('Product barcode')
-                        ->dehydrated(false)
-                        ->placeholder('Scan or type barcode…')
-                        ->live()
-                        ->beepOnScan()
-                        ->allowCameraSwitch()
-                        ->afterStateUpdated(function (Get $get, Set $set, ?string $state) {
-                            if (blank($state)) {
-                                return;
-                            }
-
-                            // 1. Получаем текущие серийные номера (TagsInput хранит их как массив)
-                            $serialNumbers = $get('serial_number') ?? [];
-                            if (! is_array($serialNumbers)) {
-                                $serialNumbers = [];
-                            }
-
-                            // 2. Добавляем новый код, если защита от дублей не помешает
-                            if (! in_array($state, $serialNumbers)) {
-                                $serialNumbers[] = $state;
-
-                                // Обновляем поле TagsInput
-                                $set('serial_number', $serialNumbers);
-
-                                // 3. Сразу пересчитываем количество и общую сумму
-                                $snCount = count($serialNumbers);
-                                $set('quantity', $snCount);
-
-                                $price = (float) $get('price_per_unit');
-                                $set('total_price', $price * $snCount);
-                            }
-
-                            // 4. Очищаем поле сканера, подготавливая его к следующему пику
-                            $set('sku', null);
-                        }),
-
                     TagsInput::make('serial_number')
-                        ->label(__('Serial numbers'))
+                        ->label(__('SN'))
                         ->placeholder(__('Enter SN and press Enter or comma'))
                         ->separator(',')
                         ->splitKeys(['Enter', ',', ' ', 'Tab'])
@@ -90,9 +60,15 @@ class InventoryForm
                             $set('total_price', $price * $snCount);
                         })
                         ->columnSpanFull(),
-                ])->columns(1),
+                ])->columns(1)
+                    ->compact(),
 
                 Section::make('Финансы и учет')->schema([
+                    Select::make('state')
+                        ->native(false)
+                        ->options(StateEnum::class)
+                        ->default(1)
+                        ->required(),
                     TextInput::make('quantity')
                         ->label('Количество')
                         ->numeric()
@@ -121,9 +97,9 @@ class InventoryForm
                         ->dehydrated(false)
                         ->readOnly()
                         ->extraInputAttributes(['style' => 'font-weight: bold; background-color: #f3f4f6;']),
-                ])->columns(1),
+                ])->columns(1)->compact(),
 
-                Section::make('photo')->schema([
+                Section::make('photo')->compact()->schema([
                     SpatieMediaLibraryFileUpload::make('photos')
                         ->collection('inventory')
                         ->label(__('Photo'))
@@ -135,7 +111,7 @@ class InventoryForm
                         ->preserveFilenames(),
 
                 ]),
-                Section::make('Дополнительно')->schema([
+                Section::make('Дополнительно')->compact()->schema([
                     Textarea::make('comment')
                         ->label('Комментарий')
                         ->columnSpanFull(),
