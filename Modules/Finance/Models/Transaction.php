@@ -54,12 +54,12 @@ class Transaction extends Model implements HasMedia
 
     public function categories()
     {
-        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id');
+        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id', 'id');
     }
 
     public function category()
     {
-        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id');
+        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id', 'id');
     }
 
     public function supply()

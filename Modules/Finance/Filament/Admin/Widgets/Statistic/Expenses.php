@@ -2,6 +2,7 @@
 
 namespace Modules\Finance\Filament\Admin\Widgets\Statistic;
 
+use Filament\Facades\Filament;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -27,15 +28,14 @@ class Expenses extends TableWidget
     {
         return $table
             ->query(
-                Transaction::query()->where('type', TransactionType::Expense)
+                Transaction::query()
+                    ->where('place_id', Filament::getTenant()->id)
+                    ->where('type', TransactionType::Expense)
+                    ->whereNotNull('expense_category_id')
             )
             ->columns([
-
                 TextColumn::make('category.name')
-                    ->translateLabel()
-                    ->sortable(),
-                TextColumn::make('count')
-                    ->translateLabel()
+                    ->label('Категория')
                     ->sortable(),
                 TextColumn::make('total')
                     ->label(__('Sum'))
@@ -45,7 +45,7 @@ class Expenses extends TableWidget
             ])
 
             ->filters([
-                SelectFilter::make('expense_category_id')
+                SelectFilter::make('category_id')
                     ->label('Категория')
                     ->native(false)
                     ->options(
@@ -54,15 +54,17 @@ class Expenses extends TableWidget
                             ->toArray()
                     ),
                 DateRangeFilter::make('created_at')
-                    ->translateLabel()
+                    ->label(__('Date'))
                     ->defaultThisMonth()
                     ->showDropdowns()->opens(OpenDirection::LEFT),
 
             ])
+
             ->modifyQueryUsing(function ($query) {
-                $query->selectRaw('expense_category_id as id, expense_category_id, sum(sum) as total, count(*) as count')
+
+                $query->selectRaw('expense_category_id as id, expense_category_id, sum(sum) as total')
                     ->groupBy('expense_category_id')
-                    ->orderBy('sum', 'desc');
+                    ->orderBy('total', 'desc');
             });
     }
 }
