@@ -105,6 +105,7 @@ class SubscriptionTable
                             [
                                 'place_id' => $record->place_id,
                                 'user_id' => Auth::user()->id,
+                                'added_at' => Carbon::today(),
                                 'expense_category_id' => $record->category_id,
                                 'sum' => $data['sum'],
                                 'bill_id' => $data['bill_id'],

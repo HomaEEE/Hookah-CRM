@@ -37,6 +37,7 @@ class SubscriptionForm
                 Select::make('period')
                     ->label(__('Payment period'))
                     ->native(false)
+                    ->extraAttributes(['style' => 'width: 100%'])
                     ->options(EnumsPeriod::class),
                 DatePicker::make('next_date')->label(__('next date'))->default(now())->native(false),
                 TextInput::make('notes')->label(__('Notes')),
