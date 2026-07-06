@@ -96,7 +96,6 @@ class SubscriptionTable
                         $record->update(
                             [
                                 'next_date' => Carbon::today()->addMonth(),
-                                'added_at' => Carbon::today(),
                                 'price' => $data['sum'],
                             ]
                         );
@@ -115,7 +114,7 @@ class SubscriptionTable
                     }),
                 ActionGroup::make([
                     ViewAction::make(),
-                    EditAction::make()->slideOver(),
+                    EditAction::make(),
                     DeleteAction::make(),
                 ]),
             ])
