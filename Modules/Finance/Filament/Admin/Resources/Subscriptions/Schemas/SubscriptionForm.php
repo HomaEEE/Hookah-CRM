@@ -3,6 +3,7 @@
 namespace Modules\Finance\Filament\Admin\Resources\Subscriptions\Schemas;
 
 use Auth;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -19,13 +20,9 @@ class SubscriptionForm
                 Select::make('category_id')->label(__('Category'))
                     ->searchable()
                     ->preload()
-                    ->options(function (callable $get) {
-                        if (null == ($get('place_id'))) {
-                            return null;
-                        } else {
-                            return ExpenseCategory::where('place_id', $get('place_id'))->pluck('name', 'id');
-                        }
-                    })
+                    ->options([
+                        ExpenseCategory::where('place_id', Filament::getTenant()->id)->pluck('name', 'id'),
+                    ])
                     ->createOptionForm([
                         Select::make('place_id')->translateLabel()
                             ->options(

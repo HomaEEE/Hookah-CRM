@@ -18,6 +18,7 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Modules\Finance\Enums\BillType;
 use Modules\Finance\Models\Subscription;
 use Modules\Finance\Models\Transaction;
 
@@ -82,7 +83,7 @@ class SubscriptionTable
                             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
                             ->default(fn (Subscription $record): int => $record->price),
                         ToggleButtons::make('bill_id')->label(__('Type pay'))
-                            ->options(BillType::class)->default(0)
+                            ->options(BillType::class)->default(1)
                             ->required()
                             ->inline()
                             ->grouped()

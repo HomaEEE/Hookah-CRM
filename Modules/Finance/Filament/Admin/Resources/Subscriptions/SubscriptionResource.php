@@ -14,8 +14,6 @@ use UnitEnum;
 
 class SubscriptionResource extends Resource
 {
-    // TODO: fix view and edit forms
-
     protected static ?string $model = Subscription::class;
 
     protected static ?string $recordTitleAttribute = 'name';

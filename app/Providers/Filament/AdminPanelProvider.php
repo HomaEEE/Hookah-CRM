@@ -11,7 +11,6 @@ use App\Http\Middleware\SetLocale;
 use App\Models\Place;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use Bjanczak\FilamentFlexFields\FilamentFlexFieldsPlugin;
 use Daikazu\FilamentLightbox\LightBoxPlugin;
 use Filafly\Icons\Phosphor\PhosphorIcons;
 use Filament\Http\Middleware\Authenticate;
@@ -86,7 +85,6 @@ class AdminPanelProvider extends PanelProvider
                     ->defaultPage('view')
                     ->confirmClose()
                     ->lazyLoad(),
-                FilamentFlexFieldsPlugin::make(),
             ])
             ->tenantMiddleware([
                 SyncShieldTenant::class,
