@@ -69,7 +69,7 @@ return [
     AssetType::Routes->value => [
         'active' => true,
         'patterns' => [
-            '*/routes/*.php',
+            '*/Routes/*.php',
         ],
         'commands_filenames' => [
             'console',
