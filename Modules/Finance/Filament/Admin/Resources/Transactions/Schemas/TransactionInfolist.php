@@ -29,7 +29,7 @@ class TransactionInfolist
                         Tab::make(__('Photo'))
                             ->schema([
                                 SpatieMediaLibraryImageEntry::make('invoice')
-                                    ->collection('supplies')
+                                    ->collection('expenses')
                                     ->lightbox()
                                     ->hiddenLabel(),
                             ]),
