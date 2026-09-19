@@ -40,6 +40,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+COPY --from=vendor /app/vendor /app/vendor
 RUN npm run build
 
 # -----------------------------------------------------------
