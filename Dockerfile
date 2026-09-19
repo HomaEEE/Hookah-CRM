@@ -54,16 +54,16 @@ COPY . /app
 COPY --from=vendor /app/vendor /app/vendor
 COPY --from=frontend /app/public/build /app/public/build
 
-# Настройки PHP 8.4
-RUN echo "memory_limit = 256M" > /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "upload_max_filesize = 64M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "post_max_size = 64M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "max_execution_time = 120" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+# Настройки PHP 8.4 (оптимизировано под легковесный проект)
+RUN echo "memory_limit = 128M" > /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "upload_max_filesize = 32M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "post_max_size = 32M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "max_execution_time = 60" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "expose_php = Off" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.enable = 1" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.enable_cli = 1" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "opcache.memory_consumption = 256" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "opcache.max_accelerated_files = 30000" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "opcache.memory_consumption = 64" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "opcache.max_accelerated_files = 10000" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.validate_timestamps = 0" >> /usr/local/etc/php/conf.d/99-custom.ini
 
 # Конфигурация Caddy для FrankenPHP

@@ -27,6 +27,10 @@ services:
       CACHE_STORE: ${CACHE_STORE:-redis}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
       SESSION_DRIVER: ${SESSION_DRIVER:-redis}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     volumes:
       - app_storage:/app/storage
     depends_on:
@@ -40,7 +44,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600"]
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600", "--memory=64"]
     environment:
       CONTAINER_ROLE: worker
       APP_ENV: ${APP_ENV:-production}
@@ -58,6 +62,10 @@ services:
       REDIS_PORT: ${REDIS_PORT:-6379}
       CACHE_STORE: ${CACHE_STORE:-redis}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
+    deploy:
+      resources:
+        limits:
+          memory: 128M
     volumes:
       - app_storage:/app/storage
     depends_on:
@@ -90,6 +98,10 @@ services:
       REDIS_PORT: ${REDIS_PORT:-6379}
       CACHE_STORE: ${CACHE_STORE:-redis}
       QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
+    deploy:
+      resources:
+        limits:
+          memory: 64M
     volumes:
       - app_storage:/app/storage
     depends_on:
@@ -102,11 +114,24 @@ services:
   mariadb:
     image: mariadb:11.4
     restart: unless-stopped
+    command: [
+      "mariadbd",
+      "--innodb-buffer-pool-size=64M",
+      "--innodb-log-buffer-size=8M",
+      "--max-connections=30",
+      "--key-buffer-size=16M",
+      "--query-cache-size=0",
+      "--table-open-cache=200"
+    ]
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-noire_root_pass}
       MYSQL_DATABASE: ${DB_DATABASE:-noire}
       MYSQL_USER: ${DB_USERNAME:-noire_user}
       MYSQL_PASSWORD: ${DB_PASSWORD:-noire_secret_pass}
+    deploy:
+      resources:
+        limits:
+          memory: 192M
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
@@ -115,7 +140,11 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--appendonly", "no", "--maxmemory", "32mb", "--maxmemory-policy", "allkeys-lru", "--save", ""]
+    deploy:
+      resources:
+        limits:
+          memory: 48M
     volumes:
       - redis_data:/data
     networks:
