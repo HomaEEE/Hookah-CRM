@@ -1,9 +1,75 @@
 {
   "$schema": "https://openship.io/openship.schema.json",
-  "framework": "docker",
-  "composePath": "deploy/docker-compose.yml",
-  "port": 80,
-  "volumes": [
-    "app_storage:/app/storage"
+  "services": [
+    {
+      "name": "web",
+      "build": ".",
+      "dockerfile": "Dockerfile",
+      "ports": ["80"],
+      "exposed": true,
+      "volumes": [
+        "app_storage:/app/storage"
+      ],
+      "env": {
+        "CONTAINER_ROLE": "app",
+        "APP_ENV": "production",
+        "APP_DEBUG": "false",
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": "mariadb",
+        "DB_PORT": "3306",
+        "DB_DATABASE": "noire",
+        "DB_USERNAME": "noire_user",
+        "REDIS_HOST": "redis",
+        "REDIS_PORT": "6379",
+        "CACHE_STORE": "redis",
+        "QUEUE_CONNECTION": "redis",
+        "SESSION_DRIVER": "redis"
+      },
+      "restart": "unless-stopped"
+    },
+    {
+      "name": "worker",
+      "build": ".",
+      "dockerfile": "Dockerfile",
+      "command": "php artisan queue:work --sleep=3 --tries=3 --max-time=3600",
+      "volumes": [
+        "app_storage:/app/storage"
+      ],
+      "env": {
+        "CONTAINER_ROLE": "worker",
+        "APP_ENV": "production",
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": "mariadb",
+        "REDIS_HOST": "redis",
+        "CACHE_STORE": "redis",
+        "QUEUE_CONNECTION": "redis"
+      },
+      "dependsOn": [
+        "web"
+      ],
+      "restart": "unless-stopped"
+    },
+    {
+      "name": "scheduler",
+      "build": ".",
+      "dockerfile": "Dockerfile",
+      "command": "php artisan schedule:work",
+      "volumes": [
+        "app_storage:/app/storage"
+      ],
+      "env": {
+        "CONTAINER_ROLE": "scheduler",
+        "APP_ENV": "production",
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": "mariadb",
+        "REDIS_HOST": "redis",
+        "CACHE_STORE": "redis",
+        "QUEUE_CONNECTION": "redis"
+      },
+      "dependsOn": [
+        "web"
+      ],
+      "restart": "unless-stopped"
+    }
   ]
 }
