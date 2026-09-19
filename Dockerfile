@@ -1,23 +1,8 @@
 # -----------------------------------------------------------
-# Stage 1: FrankenPHP Base (индивидуален для проекта)
+# Stage 1: FrankenPHP Base (автоматически собирается в GHCR)
 # -----------------------------------------------------------
-FROM dunglas/frankenphp:1-php8.4-alpine AS base
-
-# Установка mariadb-client для автоматической инициализации базы данных при первом запуске
-RUN apk add --no-cache mariadb-client
-
-RUN install-php-extensions \
-    pdo_mysql \
-    mysqli \
-    redis \
-    bcmath \
-    intl \
-    gd \
-    zip \
-    pcntl \
-    opcache \
-    excimer \
-    sodium
+ARG BASE_IMAGE=ghcr.io/homaeee/frankenphp-base:8.4
+FROM ${BASE_IMAGE} AS base
 
 # -----------------------------------------------------------
 # Stage 2: Composer Dependencies

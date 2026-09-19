@@ -1,0 +1,75 @@
+#AI
+/.ai
+# Laravel
+/node_modules
+/public/storage
+/storage/*.key
+.env
+.env.*
+Homestead.yaml
+Homestead.json
+/.*
+!/.github/
+!/.github/**
+!/.gitignore
+.phpunit.result.cache
+.phpstorm.meta.php
+
+# Laravel Telescope
+storage/telescope
+
+# Laravel Horizon
+storage/horizon
+
+# Laravel Octane
+storage/octane
+
+
+# Laravel ClockWorks
+/storage/clockwork
+# Laravel Valet
+.valet
+
+# Ignored system files
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+.env.docker
+
+# Redis dump
+dump.rdb
+
+# PHPUnit coverage
+coverage/
+
+# Build/Assets
+/public/hot
+/public/build
+/public/mix-manifest.json
+/public/css/filament/
+/public/js/filament/
+/vendor/
+/stubs
+# Custom storage subfolders
+/storage/debugbar
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/pulbic/buld
+/bootstrap/cache/*
+#Filament php
+/app/Policies
+/config/insights.php
+CLAUDE.md
+GEMINI.md
+boost.json
+
+**/caddy
+frankenphp
+frankenphp-worker.php
