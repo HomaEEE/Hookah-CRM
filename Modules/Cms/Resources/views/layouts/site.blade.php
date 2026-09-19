@@ -13,6 +13,8 @@
 
         <meta name="keywords" content="@yield('keywords', __('They don\'t chase the air here for nothing'))">
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
         @vite(['resources/js/app.js', 'resources/css/frontend/app.css'])
 

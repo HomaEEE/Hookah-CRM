@@ -76,7 +76,12 @@ RUN cat <<'EOF' > /etc/caddy/Caddyfile
 
 :80 {
     root * /app/public
-    encode zstd gzip
+    encode zstd br gzip
+
+    @static {
+        path /build/* /assets/* *.ico *.css *.js *.gif *.jpg *.jpeg *.png *.svg *.woff *.woff2 *.webp
+    }
+    header @static Cache-Control "public, max-age=31536000, immutable"
 
     php_server
 
