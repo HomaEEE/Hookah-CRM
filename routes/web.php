@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PrintController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,5 +32,14 @@ Route::middleware(['web'])
             ->name('cashflow.report.pdf');
     });
 
-// Route::get('/reports/cashflow', [\App\Http\Controllers\PrintController::class, 'PreviewCashflow'])
-//     ->name('cashflow.report.preview');
+Route::get('/manifest-admin.json', function () {
+    $manifestPath = public_path('manifest-admin.json');
+    if (! file_exists($manifestPath)) {
+        Artisan::call('pwa:manifest');
+    }
+
+    return response()->file($manifestPath, [
+        'Content-Type' => 'application/manifest+json',
+        'Cache-Control' => 'no-cache, private',
+    ]);
+})->name('manifest.admin');

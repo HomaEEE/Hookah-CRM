@@ -78,9 +78,7 @@ RUN cat <<'EOF' > /etc/caddy/Caddyfile
     root * /app/public
     encode zstd gzip
 
-    php_server {
-        index index.php
-    }
+    php_server
 
     file_server
 
@@ -145,10 +143,25 @@ chmod -R 775 /app/storage /app/bootstrap/cache 2>/dev/null || true
 if [ "$CONTAINER_ROLE" = "app" ]; then
     echo "==> Running deployment automation..."
     php artisan storage:link --force || true
+
+    if [ -n "$DB_HOST" ]; then
+        echo "==> Checking database connection ($DB_HOST)..."
+        for i in $(seq 1 30); do
+            if php -r "try { new PDO('mysql:host='.getenv('DB_HOST').';port='.(getenv('DB_PORT')?:3306), getenv('DB_USERNAME'), getenv('DB_PASSWORD')); exit(0); } catch (\Exception \$e) { exit(1); }"; then
+                echo "==> Database is ready!"
+                break
+            fi
+            echo "==> Waiting for database... ($i/30)"
+            sleep 2
+        done
+    fi
+
     echo "==> Running database migrations..."
-    php artisan migrate --force
+    php artisan migrate --force || echo "==> Warning: Migration failed, continuing..."
     echo "==> Upgrading Filament..."
     php artisan filament:upgrade || true
+    echo "==> Generating PWA manifest..."
+    php artisan pwa:manifest || true
     echo "==> Caching application configurations..."
     php artisan optimize || true
     php artisan icons:cache || true

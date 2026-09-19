@@ -4,6 +4,8 @@
   "composePath": "docker-compose.yml",
   "port": 80,
   "volumes": [
-    "app_storage:/app/storage"
+    "app_storage:/app/storage",
+    "mariadb_data:/var/lib/mysql",
+    "redis_data:/data"
   ]
 }
