@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # Stage 1: FrankenPHP Base (индивидуален для проекта)
 # -----------------------------------------------------------
-FROM dunglas/frankenphp:latest-php8.4-alpine AS base
+FROM dunglas/frankenphp:1-php8.4-alpine AS base
 
 # Установка mariadb-client для автоматической инициализации базы данных при первом запуске
 RUN apk add --no-cache mariadb-client
