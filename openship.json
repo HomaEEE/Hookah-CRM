@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openship.io/openship.schema.json",
+  "framework": "docker",
+  "composePath": "deploy/docker-compose.yml",
+  "port": 80,
+  "volumes": [
+    "app_storage:/app/storage"
+  ]
+}

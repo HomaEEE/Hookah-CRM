@@ -12,19 +12,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ingredient_aliases', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Ingredient::class)->cascadeOnDelete();
-            $table->string('alias')->unique()->index();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('ingredient_aliases')) {
+            Schema::create('ingredient_aliases', function (Blueprint $table) {
+                $table->id();
+                $table->foreignIdFor(Ingredient::class)->cascadeOnDelete();
+                $table->string('alias')->unique()->index();
+                $table->timestamps();
+            });
+        }
 
-        Schema::create('ingredient_history', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Ingredient::class);
-            $table->integer('price');
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('ingredient_history')) {
+            Schema::create('ingredient_history', function (Blueprint $table) {
+                $table->id();
+                $table->foreignIdFor(Ingredient::class);
+                $table->integer('price');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

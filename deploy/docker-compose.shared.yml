@@ -1,0 +1,34 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${SHARED_MARIADB_ROOT_PASSWORD:-root_password}
+      MARIADB_DATABASE: ${DB_DATABASE:-noire}
+      MARIADB_USER: ${DB_USERNAME:-noire_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-noire_password}
+    volumes:
+      - shared_mariadb_data:/var/lib/mysql
+    networks:
+      - shared_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - shared_redis_data:/data
+    networks:
+      - shared_network
+
+volumes:
+  shared_mariadb_data:
+    name: shared_mariadb_data
+  shared_redis_data:
+    name: shared_redis_data
+
+networks:
+  shared_network:
+    name: ${SHARED_NETWORK_NAME:-shared_network}

@@ -6,6 +6,7 @@ use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Modules\Manage\Filament\Admin\Resources\Inventory\InventoryResource;
+use Modules\Manage\Filament\Admin\Resources\Inventory\Widgets\InventoryStatsWidget;
 use Modules\Manage\Models\Warehouse;
 
 class ManageInventory extends ManageRecords
@@ -16,6 +17,13 @@ class ManageInventory extends ManageRecords
     {
         return [
             CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            InventoryStatsWidget::class,
         ];
     }
 

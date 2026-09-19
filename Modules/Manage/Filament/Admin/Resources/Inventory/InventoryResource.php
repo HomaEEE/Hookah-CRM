@@ -10,6 +10,7 @@ use Modules\Manage\Filament\Admin\Resources\Inventory\Pages\ManageInventory;
 use Modules\Manage\Filament\Admin\Resources\Inventory\Schemas\InventoryForm;
 use Modules\Manage\Filament\Admin\Resources\Inventory\Schemas\InventoryInfolist;
 use Modules\Manage\Filament\Admin\Resources\Inventory\Tables\InventoriesTable;
+use Modules\Manage\Filament\Admin\Resources\Inventory\Widgets\InventoryStatsWidget;
 use Modules\Manage\Models\InventoryItem;
 use UnitEnum;
 
@@ -50,6 +51,13 @@ class InventoryResource extends Resource
     {
         return [
             'index' => ManageInventory::route('/'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            InventoryStatsWidget::class,
         ];
     }
 }

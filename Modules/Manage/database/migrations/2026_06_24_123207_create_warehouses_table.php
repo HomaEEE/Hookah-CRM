@@ -13,26 +13,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Миграция для складов (например, "Бар", "Склад 1", "Кухня", "Зал")
-        Schema::create('warehouses', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('warehouses')) {
+            Schema::create('warehouses', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('description')->nullable();
+                $table->timestamps();
+            });
+        }
 
-        // 2. Миграция для инвентаря
-        Schema::create('inventory_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Warehouse::class);
-            $table->foreignIdFor(Place::class);
-            $table->string('name'); // Наименование
-            $table->text('serial_number')->nullable();
-            $table->integer('quantity')->default(1); // Количество
-            $table->integer('price')->default(0); // Цена за штуку
-            $table->text('comment')->nullable(); // Комментарий
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('inventory_items')) {
+            Schema::create('inventory_items', function (Blueprint $table) {
+                $table->id();
+                $table->foreignIdFor(Warehouse::class);
+                $table->foreignIdFor(Place::class);
+                $table->string('name'); // Наименование
+                $table->text('serial_number')->nullable();
+                $table->integer('quantity')->default(1); // Количество
+                $table->integer('price')->default(0); // Цена за штуку
+                $table->text('comment')->nullable(); // Комментарий
+                $table->timestamps();
+            });
+        }
     }
 
     /**

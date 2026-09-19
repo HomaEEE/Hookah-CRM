@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-
         Schema::table('inventory_items', function (Blueprint $table) {
-            $table->string('own')->nullable();
-            $table->string('state')->nullable();
+            $table->integer('sold_quantity')->nullable()->after('quantity');
+            $table->integer('sold_price')->nullable()->after('sold_quantity');
         });
-
     }
 
     /**
@@ -25,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('inventory_items', function (Blueprint $table) {
-            $table->dropColumn('creditcard');
+            $table->dropColumn(['sold_quantity', 'sold_price']);
         });
     }
 };

@@ -30,6 +30,7 @@ class TransactionTable
                             ->pluck('name', 'id')
                             ->toArray()
                     ),
+
             ])
             ->columns([
                 TextColumn::make('added_at')->label(__('Date'))->dateTime('d-m-Y')

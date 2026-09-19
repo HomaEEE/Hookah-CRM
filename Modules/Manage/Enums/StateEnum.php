@@ -53,12 +53,12 @@ enum StateEnum: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::ToTakeOut => 'success',
             self::ToSell => 'info',
-            self::ToReturn => 'heroicon-m-credit-card',
-            self::Sold => 'heroicon-m-credit-card',
-            self::WrittenOff => 'heroicon-m-credit-card',
-            self::Damaged => 'heroicon-m-credit-card',
-            self::Lost => 'heroicon-m-credit-card',
-            self::InRepair => 'heroicon-m-credit-card',
+            self::ToReturn => 'warning',
+            self::Sold => 'success',
+            self::WrittenOff => 'gray',
+            self::Damaged => 'danger',
+            self::Lost => 'danger',
+            self::InRepair => 'warning',
         };
     }
 }

@@ -6,6 +6,7 @@ use AbdulmajeedJamaan\FilamentTranslatableTabs\TranslatableTabs;
 use App\Models\Permission;
 use App\Models\Role;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
@@ -35,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        app(\Spatie\Permission\PermissionRegistrar::class)
+        app(PermissionRegistrar::class)
             ->setPermissionClass(Permission::class)
             ->setRoleClass(Role::class);
 
@@ -70,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale(config('app.locale')); // 'uk' или 'ru'
 
         // Дополнительно: для макросов и isoFormat
-        \Carbon\CarbonImmutable::setLocale(config('app.locale'));
+        CarbonImmutable::setLocale(config('app.locale'));
 
         TranslatableTabs::configureUsing(function (TranslatableTabs $component) {
             $component
