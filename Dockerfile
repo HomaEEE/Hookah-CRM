@@ -24,13 +24,14 @@ RUN install-php-extensions \
 # -----------------------------------------------------------
 FROM composer:2 AS vendor
 WORKDIR /app
-COPY composer*.json ./
+COPY composer.json composer.lock ./
 RUN composer install \
     --no-dev \
     --no-interaction \
     --prefer-dist \
     --optimize-autoloader \
-    --no-scripts
+    --no-scripts \
+    --ignore-platform-reqs
 
 # -----------------------------------------------------------
 # Stage 3: Node Frontend Assets (Vite & Tailwind CSS v4)
