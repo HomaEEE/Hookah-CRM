@@ -10,7 +10,11 @@ RUN apk add --no-cache \
     freetype \
     libzip
 
-# Keep the production image aligned with composer.lock platform requirements.\n# xml provides DOM/SimpleXML/XMLReader/XMLWriter; curl and mbstring are required by\n# Laravel/Filament dependencies. fileinfo/ctype/filter/hash/iconv/json/libxml/openssl/\n# pcre/session/tokenizer/zlib are provided by PHP core or the base image.\nENV REQUIRED_EXTENSIONS="pdo_mysql mysqli redis bcmath curl dom exif intl mbstring xml gd zip pcntl opcache excimer sodium"
+# Keep the production image aligned with composer.lock platform requirements.
+# xml provides DOM/SimpleXML/XMLReader/XMLWriter; curl and mbstring are required by
+# Laravel/Filament dependencies. fileinfo/ctype/filter/hash/iconv/json/libxml/openssl/
+# pcre/session/tokenizer/zlib are provided by PHP core or the base image.
+ENV REQUIRED_EXTENSIONS="pdo_mysql mysqli redis bcmath curl dom exif intl mbstring xml gd zip pcntl opcache excimer sodium"
 RUN install-php-extensions ${REQUIRED_EXTENSIONS}
 
 FROM base AS vendor
