@@ -24,7 +24,9 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      - app_network
+      app_network:
+        aliases:
+          - mariadb
 
   redis:
     image: redis:7-alpine
@@ -38,7 +40,9 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - app_network
+      app_network:
+        aliases:
+          - redis
 
 volumes:
   mariadb_data:
@@ -49,4 +53,3 @@ volumes:
 networks:
   app_network:
     name: ${SHARED_NETWORK:-openship_shared}
-    external: true

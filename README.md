@@ -12,7 +12,7 @@ The project is designed for the user's OpenShip deployment-node architecture:
 - persistent application storage per project
 - OpenShip Edge owns public routing
 - application containers do not provision infrastructure credentials
-- migrations run as a dedicated one-shot deployment service
+- migrations run with atomic isolation during container startup
 
 ## Deployment architecture
 
@@ -234,12 +234,12 @@ For production, configure the public domain on the `web` service through OpenShi
 .
 ├── Dockerfile
 ├── docker-compose.yml
+├── docker-compose.shared.yml
 ├── openship.json
 ├── .dockerignore
 └── docker/
     ├── Caddyfile
-    ├── entrypoint.sh
-    └── migrate.sh
+    └── entrypoint.sh
 ```
 
 ## Validate before deployment

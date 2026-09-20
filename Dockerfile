@@ -60,7 +60,7 @@ COPY --from=vendor /app/vendor /app/vendor
 COPY --from=frontend /app/public/build /app/public/build
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY docker/migrate.sh /usr/local/bin/migrate.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Ensure storage and bootstrap/cache directories exist with proper permissions
 RUN mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
@@ -86,11 +86,7 @@ RUN echo "memory_limit = 128M" > /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.enable_cli = 1" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.memory_consumption = 64" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.max_accelerated_files = 10000" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "opcache.validate_timestamps = 0" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
-    chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
-    chmod -R 775 /app/storage /app/bootstrap/cache && \
-    chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/migrate.sh
+    echo "opcache.validate_timestamps = 0" >> /usr/local/etc/php/conf.d/99-custom.ini
 
 EXPOSE 80
 

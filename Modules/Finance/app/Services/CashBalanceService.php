@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Finance\App\Services;
+namespace Modules\Finance\app\Services;
 
 use Carbon\Carbon;
 use Modules\Finance\Enums\BillType;
