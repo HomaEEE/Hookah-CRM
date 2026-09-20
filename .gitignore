@@ -6,12 +6,14 @@
 /storage/*.key
 .env
 .env.*
+!.env.example
 Homestead.yaml
 Homestead.json
 /.*
 !/.github/
 !/.github/**
 !/.gitignore
+!/.env.example
 .phpunit.result.cache
 .phpstorm.meta.php
 
