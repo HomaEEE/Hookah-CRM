@@ -14,7 +14,7 @@
                     <span>{{ __('Kitchen') }}</span>
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-transparent z-0 pointer-events-none"></div>
-                <img src="{{ asset('assets/imgs/hero/kitchen.webp') }}" alt="{{ __('Kitchen') }}" class="w-full h-auto object-cover relative -z-10" /></a>
+                <img src="{{ asset('assets/imgs/hero/kitchen.webp') }}" alt="{{ __('Kitchen') }}" loading="lazy" decoding="async" width="600" height="800" class="w-full h-auto object-cover relative -z-10" /></a>
 
             </div>
 
@@ -24,7 +24,7 @@
                     <span>{{ __('Bar') }}</span>
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-transparent z-0 pointer-events-none"></div>
-                <img src="{{ asset('assets/imgs/hero/bar.webp') }}" alt="{{ __('Bar') }}" class="w-full h-auto object-cover relative -z-10" />
+                <img src="{{ asset('assets/imgs/hero/bar.webp') }}" alt="{{ __('Bar') }}" loading="lazy" decoding="async" width="600" height="800" class="w-full h-auto object-cover relative -z-10" />
                 </a>
             </div>
 

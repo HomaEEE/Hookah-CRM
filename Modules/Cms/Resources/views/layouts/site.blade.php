@@ -15,7 +15,9 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap"></noscript>
+        <link rel="preload" as="image" href="{{ asset('assets/imgs/hero/bg.webp') }}" fetchpriority="high" type="image/webp">
         @vite(['resources/js/app.js', 'resources/css/frontend/app.css'])
 
         <meta name="mobile-web-app-capable" content="yes" />
@@ -42,12 +44,23 @@
 
          @stack('schema')
 
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-NRZVZTD');</script>
+        <!-- Google Tag Manager (deferred for mobile TBT optimization) -->
+        <script>
+            window.addEventListener('load', function() {
+                var initGtm = function() {
+                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer','GTM-NRZVZTD');
+                };
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(initGtm, { timeout: 3000 });
+                } else {
+                    setTimeout(initGtm, 2000);
+                }
+            });
+        </script>
         <!-- End Google Tag Manager -->
     </head>
 <body>
@@ -71,7 +84,7 @@
                     <div class="md:text-center w-full md:flex-1">{{ __('Smoking is harmful to your health') }}</div>
                     <div class="md:text-right w-full md:flex-1 ">
                         {{__('Created by')}}
-                        <a href="https://black-design.pw" target="_blank"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN"></a>
+                        <a href="https://black-design.pw" target="_blank"><img src="https://black-design.pw/assets/img/logo-white.svg?v=1.0.1" alt="Black DESIGN" loading="lazy" decoding="async" width="120" height="24"></a>
                     </div>
                 </div>
             </div>
