@@ -29,7 +29,14 @@ while [ "$i" -le 60 ]; do
         }
     '; then
         echo "==> MariaDB is ready."
-        exec php artisan migrate --force
+        echo "==> Running database migrations..."
+        php artisan migrate --force
+        echo "==> Upgrading Filament assets..."
+        php artisan filament:upgrade
+        echo "==> Generating PWA manifest..."
+        php artisan pwa:manifest || true
+        echo "==> Migration stage completed successfully."
+        exit 0
     fi
 
     echo "==> MariaDB is not ready yet (${i}/60)."
