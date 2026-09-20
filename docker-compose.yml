@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: "no"
-    command: ["php", "artisan", "migrate", "--force"]
+    command: ["/usr/local/bin/migrate.sh"]
     environment:
       CONTAINER_ROLE: migrate
       APP_ENV: ${APP_ENV:-production}
