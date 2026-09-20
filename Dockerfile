@@ -47,6 +47,7 @@ COPY --from=vendor /app/vendor /app/vendor
 COPY --from=frontend /app/public/build /app/public/build
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/migrate.sh /usr/local/bin/migrate.sh
 
 RUN echo "memory_limit = 128M" > /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "upload_max_filesize = 32M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
@@ -61,7 +62,7 @@ RUN echo "memory_limit = 128M" > /usr/local/etc/php/conf.d/99-custom.ini && \
     mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
     chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
     chmod -R 775 /app/storage /app/bootstrap/cache && \
-    chmod +x /usr/local/bin/entrypoint.sh
+    chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/migrate.sh
 
 EXPOSE 80
 
