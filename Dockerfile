@@ -1,8 +1,36 @@
 # -----------------------------------------------------------
-# Stage 1: FrankenPHP Base (автоматически собирается в GHCR)
+# Stage 1: FrankenPHP Base с кэшированием скомпилированных расширений
 # -----------------------------------------------------------
-ARG BASE_IMAGE=ghcr.io/homaeee/frankenphp-base:8.4
-FROM ${BASE_IMAGE} AS base
+FROM dunglas/frankenphp:1-php8.4-alpine AS base
+
+# Установка mariadb-client и библиотек времени выполнения для PHP расширений
+RUN apk add --no-cache \
+    mariadb-client \
+    icu-libs \
+    libpng \
+    libjpeg-turbo \
+    freetype \
+    libzip
+
+# Список необходимых расширений
+ENV REQUIRED_EXTENSIONS="pdo_mysql mysqli redis bcmath intl gd zip pcntl opcache excimer sodium"
+
+# Сборка расширений с кэшированием: при отсутствии изменений компиляция пропускается
+RUN --mount=type=cache,target=/cache/extensions \
+    EXT_DIR="$(php -r 'echo ini_get("extension_dir");')" && \
+    HASH="$(echo "$REQUIRED_EXTENSIONS" | md5sum | cut -d' ' -f1)" && \
+    if [ -f "/cache/extensions/${HASH}.done" ] && [ -d "/cache/extensions/${HASH}/ext" ]; then \
+        echo "==> [CACHE HIT] PHP extensions already compiled, restoring from cache..." && \
+        cp -a /cache/extensions/${HASH}/ext/* "${EXT_DIR}/" && \
+        cp -a /cache/extensions/${HASH}/conf.d/* /usr/local/etc/php/conf.d/ ; \
+    else \
+        echo "==> [CACHE MISS] Compiling PHP extensions..." && \
+        install-php-extensions ${REQUIRED_EXTENSIONS} && \
+        mkdir -p "/cache/extensions/${HASH}/ext" "/cache/extensions/${HASH}/conf.d" && \
+        cp -a ${EXT_DIR}/* "/cache/extensions/${HASH}/ext/" && \
+        cp -a /usr/local/etc/php/conf.d/* "/cache/extensions/${HASH}/conf.d/" && \
+        touch "/cache/extensions/${HASH}.done" ; \
+    fi
 
 # -----------------------------------------------------------
 # Stage 2: Composer Dependencies
