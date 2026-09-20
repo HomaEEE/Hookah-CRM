@@ -1,5 +1,6 @@
 services:
   web:
+    image: ${APP_IMAGE:-noire-web:${APP_VERSION:-latest}}
     build:
       context: .
       dockerfile: Dockerfile
@@ -42,6 +43,7 @@ services:
       - app_network
 
   migrate:
+    image: ${APP_IMAGE:-noire-web:${APP_VERSION:-latest}}
     build:
       context: .
       dockerfile: Dockerfile
@@ -60,6 +62,7 @@ services:
       DB_DATABASE: ${DB_DATABASE:?DB_DATABASE is required}
       DB_USERNAME: ${DB_USERNAME:?DB_USERNAME is required}
       DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       REDIS_PORT: ${REDIS_PORT:-6379}
