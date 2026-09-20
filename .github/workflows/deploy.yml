@@ -34,22 +34,9 @@ jobs:
           npm ci
           npm run build
 
-      - name: Setup SSH Key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
-
-      - name: Add Server to Known Hosts
+      - name: Trigger Openship Deploy Webhook
+        if: env.OPENSHIP_DEPLOY_WEBHOOK != ''
+        env:
+          OPENSHIP_DEPLOY_WEBHOOK: ${{ secrets.OPENSHIP_DEPLOY_WEBHOOK }}
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      - name: Rsync built assets to Server
-        # Синхронизируем ТОЛЬКО папку build. Флаг --delete удалит старые файлы с сервера.
-        run: |
-          rsync -avz --delete public/build/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.SITE_PATH }}/public/build/
-
-      - name: Trigger Server Deployment Script
-        # Отправляем POST-запрос на Webhook Vito Deploy ТОЛЬКО после успешной загрузки файлов
-        run: |
-          curl -X POST ${{ secrets.DEPLOY_WEBHOOK_URL }}
+          curl -f -X POST "$OPENSHIP_DEPLOY_WEBHOOK"
