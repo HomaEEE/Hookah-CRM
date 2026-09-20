@@ -62,12 +62,18 @@ COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY docker/migrate.sh /usr/local/bin/migrate.sh
 
-# Optimize composer classmap for production runtime
+# Ensure storage and bootstrap/cache directories exist with proper permissions
+RUN mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
+    chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
+    chmod -R 775 /app/storage /app/bootstrap/cache
+
+# Optimize composer classmap for production runtime (skip scripts during build)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer dump-autoload \
     --no-dev \
     --optimize \
-    --classmap-authoritative && \
+    --classmap-authoritative \
+    --no-scripts && \
     rm -f /usr/bin/composer
 
 # PHP 8.4 Production Configuration

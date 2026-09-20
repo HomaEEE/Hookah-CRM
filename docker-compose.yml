@@ -11,15 +11,15 @@ services:
       CONTAINER_ROLE: web
       APP_ENV: ${APP_ENV:-production}
       APP_DEBUG: ${APP_DEBUG:-false}
-      APP_KEY: ${APP_KEY:?APP_KEY is required}
-      APP_URL: ${APP_URL:?APP_URL is required}
+      APP_KEY: ${APP_KEY:-}
+      APP_URL: ${APP_URL:-}
       LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
       DB_CONNECTION: ${DB_CONNECTION:-mysql}
       DB_HOST: ${DB_HOST:-mariadb}
       DB_PORT: ${DB_PORT:-3306}
-      DB_DATABASE: ${DB_DATABASE:?DB_DATABASE is required}
-      DB_USERNAME: ${DB_USERNAME:?DB_USERNAME is required}
-      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      DB_DATABASE: ${DB_DATABASE:-noire}
+      DB_USERNAME: ${DB_USERNAME:-noire_user}
+      DB_PASSWORD: ${DB_PASSWORD:-noire_secret_pass}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       REDIS_PORT: ${REDIS_PORT:-6379}
@@ -53,15 +53,15 @@ services:
       CONTAINER_ROLE: migrate
       APP_ENV: ${APP_ENV:-production}
       APP_DEBUG: "false"
-      APP_KEY: ${APP_KEY:?APP_KEY is required}
-      APP_URL: ${APP_URL:?APP_URL is required}
+      APP_KEY: ${APP_KEY:-}
+      APP_URL: ${APP_URL:-}
       LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
       DB_CONNECTION: ${DB_CONNECTION:-mysql}
       DB_HOST: ${DB_HOST:-mariadb}
       DB_PORT: ${DB_PORT:-3306}
-      DB_DATABASE: ${DB_DATABASE:?DB_DATABASE is required}
-      DB_USERNAME: ${DB_USERNAME:?DB_USERNAME is required}
-      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      DB_DATABASE: ${DB_DATABASE:-noire}
+      DB_USERNAME: ${DB_USERNAME:-noire_user}
+      DB_PASSWORD: ${DB_PASSWORD:-noire_secret_pass}
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
