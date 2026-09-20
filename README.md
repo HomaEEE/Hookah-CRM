@@ -224,7 +224,7 @@ This keeps the production build deterministic.
 }
 ```
 
-OpenShip reads the Compose stack and manages the services. Its current Compose implementation supports multi-service stacks, BuildKit builds, healthchecks, volumes, environment variables, dependencies and service-level deployment. citeturn1search3turn1search0
+OpenShip reads the Compose stack and manages the services. Its current Compose implementation supports multi-service stacks, BuildKit builds, healthchecks, volumes, environment variables, dependencies and service-level deployment.
 
 For production, configure the public domain on the `web` service through OpenShip Edge rather than publishing MariaDB/Redis or exposing internal services.
 
@@ -257,7 +257,7 @@ For OpenShip:
 openship config validate
 ```
 
-OpenShip documents `openship.json` as a repository-level deployment declaration and supports validation before deployment. citeturn1search2
+OpenShip documents `openship.json` as a repository-level deployment declaration and supports validation before deployment.
 
 ## Important
 
