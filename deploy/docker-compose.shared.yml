@@ -18,15 +18,12 @@ services:
         required: false
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE:-noire}
-      MYSQL_USER: ${DB_USERNAME:-noire_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
     deploy:
       resources:
         limits:
           memory: 512M
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -p\"$$MYSQL_ROOT_PASSWORD\""]
+      test: ["CMD-SHELL", 'mariadb-admin ping -p"$$MYSQL_ROOT_PASSWORD"']
       interval: 5s
       timeout: 3s
       retries: 10
