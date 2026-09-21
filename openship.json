@@ -1,13 +1,12 @@
 {
   "$schema": "https://openship.io/openship.schema.json",
   "framework": "docker-compose",
-  "composePath": "docker-compose.yml",
+  "composePath": "deploy/docker-compose.yml",
   "port": 80,
   "domains": [
     "noire.od.ua"
   ],
   "volumes": [
-    "app_storage:/app/storage",
-    "mariadb_data:/var/lib/mysql"
+    "app_storage:/app/storage"
   ]
 }

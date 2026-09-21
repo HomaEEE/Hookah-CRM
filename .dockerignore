@@ -24,5 +24,6 @@ public/hot
 coverage
 
 Dockerfile*
+deploy/docker-compose*.yml
 docker-compose.override.yml
 README.md
