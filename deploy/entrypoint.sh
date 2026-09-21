@@ -58,6 +58,8 @@ fi
 
 # 5. Web service startup automation
 if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
+    rm -f /app/bootstrap/cache/config.php /app/bootstrap/cache/packages.php /app/bootstrap/cache/services.php
+    php artisan package:discover --ansi || true
     php artisan storage:link --force || true
 
     # Database connectivity & auto-provisioning
@@ -138,13 +140,18 @@ fi
 # 7. Runtime Server Dispatch: Octane vs native FrankenPHP
 SERVER_MODE="${SERVER_MODE:-frankenphp}"
 if [ "$SERVER_MODE" = "octane" ]; then
-    echo "==> Starting Laravel Octane (FrankenPHP worker)..."
-    exec php artisan octane:start \
-        --server=frankenphp \
-        --host=0.0.0.0 \
-        --port=80 \
-        --workers="${OCTANE_WORKERS:-auto}" \
-        --max-requests="${OCTANE_MAX_REQUESTS:-500}"
+    if php artisan list 2>/dev/null | grep -q 'octane:start'; then
+        echo "==> Starting Laravel Octane (FrankenPHP worker)..."
+        exec php artisan octane:start \
+            --server=frankenphp \
+            --host=0.0.0.0 \
+            --port=80 \
+            --workers="${OCTANE_WORKERS:-auto}" \
+            --max-requests="${OCTANE_MAX_REQUESTS:-500}"
+    else
+        echo "==> Notice: laravel/octane is not installed or enabled. Falling back to native FrankenPHP..."
+        exec frankenphp run --config /etc/caddy/Caddyfile
+    fi
 else
     echo "==> Starting native FrankenPHP..."
     exec frankenphp run --config /etc/caddy/Caddyfile
