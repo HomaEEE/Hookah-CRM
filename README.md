@@ -37,13 +37,13 @@ The project does **not** run MariaDB or Redis itself. Both services are expected
 Default shared network:
 
 ```text
-openship_shared
+openship
 ```
 
 Override it with:
 
 ```text
-SHARED_NETWORK=openship_shared
+SHARED_NETWORK=openship
 ```
 
 ## Build pipeline
@@ -265,7 +265,7 @@ This branch assumes the deployment node already provides:
 
 1. Docker + Docker Compose v2 / BuildKit.
 2. OpenShip Edge.
-3. Shared Docker network `openship_shared`.
+3. Shared Docker network `openship`.
 4. Shared MariaDB reachable as `mariadb`.
 5. Shared Redis reachable as `redis`.
 6. A unique `APP_PORT` for this project if host-port routing is used.

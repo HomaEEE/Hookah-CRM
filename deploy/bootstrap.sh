@@ -6,7 +6,7 @@ set -e
 # Idempotently initializes the shared network and databases on a fresh server
 # ==============================================================================
 
-NETWORK_NAME="${SHARED_NETWORK:-openship_shared}"
+NETWORK_NAME="${SHARED_NETWORK:-openship}"
 
 echo "==> [1/3] Checking Docker network: ${NETWORK_NAME}..."
 if ! docker network inspect "${NETWORK_NAME}" >/dev/null 2>&1; then

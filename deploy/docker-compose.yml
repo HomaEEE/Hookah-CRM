@@ -30,7 +30,7 @@ services:
 
   mariadb:
     image: ${MARIADB_IMAGE:-mariadb:11.4}
-    container_name: mariadb
+    container_name: openship-mariadb
     restart: unless-stopped
     command:
       [
@@ -63,10 +63,11 @@ services:
       app_network:
         aliases:
           - mariadb
+          - openship-mariadb
 
   redis:
     image: ${REDIS_IMAGE:-redis:7-alpine}
-    container_name: redis
+    container_name: openship-redis
     restart: unless-stopped
     command:
       [
@@ -88,6 +89,7 @@ services:
       app_network:
         aliases:
           - redis
+          - openship-redis
 
 volumes:
   app_storage:
@@ -99,4 +101,4 @@ volumes:
 
 networks:
   app_network:
-    name: ${SHARED_NETWORK:-openship_shared}
+    name: ${SHARED_NETWORK:-openship}
