@@ -17,7 +17,10 @@ services:
       - path: .env
         required: false
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-noire_root_pass}
+      MYSQL_DATABASE: ${DB_DATABASE:-noire}
+      MYSQL_USER: ${DB_USERNAME:-noire_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-noire_secret_pass}
     deploy:
       resources:
         limits:

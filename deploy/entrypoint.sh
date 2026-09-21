@@ -67,9 +67,22 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
         echo "==> Checking database connection at ${DB_HOST}:${DB_PORT}..."
         i=1
         while [ "$i" -le 30 ]; do
-            # Auto-provision database & grant permissions if root password is provided
+            # 1. Quick TCP socket probe (2s timeout) to avoid blocking on startup
+            TCP_OK=$(php -r "
+                \$s = @fsockopen(getenv('DB_HOST'), getenv('DB_PORT') ?: 3306, \$err, \$errstr, 2);
+                if (\$s) { fclose(\$s); exit(0); }
+                exit(1);
+            " 2>&1)
+            if [ $? -ne 0 ]; then
+                echo "==> Waiting for database host ${DB_HOST}:${DB_PORT} to accept connections (${i}/30)..."
+                i=$((i + 1))
+                sleep 2
+                continue
+            fi
+
+            # 2. Auto-provision database & grant permissions if root password is provided
             if [ -n "${DB_ROOT_PASSWORD:-}" ]; then
-                mariadb -h "$DB_HOST" -P "$DB_PORT" -u root -p"$DB_ROOT_PASSWORD" 2>/dev/null <<EOSQL || true
+                mariadb --connect-timeout=3 -h "$DB_HOST" -P "$DB_PORT" -u root -p"$DB_ROOT_PASSWORD" 2>/dev/null <<EOSQL || true
 CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
 CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 ALTER USER '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
@@ -78,6 +91,7 @@ FLUSH PRIVILEGES;
 EOSQL
             fi
 
+            # 3. Verify PDO connection
             DB_ERROR=$(php -r "
                 \$host = getenv('DB_HOST');
                 \$port = getenv('DB_PORT') ?: 3306;
@@ -102,7 +116,7 @@ EOSQL
 
             echo "==> Waiting for database (${i}/30): ${DB_ERROR}"
             i=$((i + 1))
-            sleep 3
+            sleep 2
         done
     fi
 
