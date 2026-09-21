@@ -44,6 +44,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # Copy only files required for Vite and Tailwind bundle scanning
 COPY vite.config.js ./
 COPY resources ./resources
+COPY app ./app
 COPY Modules ./Modules
 COPY --from=vendor /app/vendor ./vendor
 
@@ -63,10 +64,12 @@ COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Optimize composer classmap for production runtime
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-RUN composer dump-autoload \
+RUN rm -f /app/bootstrap/cache/*.php && \
+    composer dump-autoload \
     --no-dev \
     --optimize \
-    --classmap-authoritative && \
+    --classmap-authoritative \
+    --no-scripts && \
     rm -f /usr/bin/composer
 
 # PHP 8.4 Production Configuration

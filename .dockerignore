@@ -15,6 +15,10 @@ storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 storage/app/public/*
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+public/storage
+public/hot
 
 .phpunit.result.cache
 coverage

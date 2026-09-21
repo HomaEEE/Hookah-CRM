@@ -7,31 +7,11 @@ services:
     restart: unless-stopped
     ports:
       - "${APP_PORT:-80}:80"
+    env_file:
+      - path: .env
+        required: false
     environment:
       CONTAINER_ROLE: web
-      APP_ENV: ${APP_ENV:-production}
-      APP_DEBUG: ${APP_DEBUG:-false}
-      APP_KEY: ${APP_KEY:-}
-      APP_URL: ${APP_URL:-${OPENSHIP_URL:-${APP_ENDPOINT:-https://${DOMAIN:-localhost}}}}
-      LOG_CHANNEL: ${LOG_CHANNEL:-stderr}
-      AUTO_MIGRATE: ${AUTO_MIGRATE:-true}
-      DB_CONNECTION: ${DB_CONNECTION:-mysql}
-      DB_HOST: ${DB_HOST:-mariadb}
-      DB_PORT: ${DB_PORT:-3306}
-      DB_DATABASE: ${DB_DATABASE:-noire}
-      DB_USERNAME: ${DB_USERNAME:-noire_user}
-      DB_PASSWORD: ${DB_PASSWORD:-}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-noire_root_pass}
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      CACHE_STORE: ${CACHE_STORE:-redis}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-redis}
-      SESSION_DRIVER: ${SESSION_DRIVER:-redis}
-      BROADCAST_CONNECTION: ${BROADCAST_CONNECTION:-reverb}
-      REVERB_HOST: ${REVERB_HOST:-reverb}
-      REVERB_PORT: ${REVERB_PORT:-8080}
-      REVERB_SCHEME: ${REVERB_SCHEME:-http}
     deploy:
       resources:
         limits:
@@ -54,6 +34,9 @@ services:
       "--max-connections=30",
       "--key-buffer-size=16M"
     ]
+    env_file:
+      - path: .env
+        required: false
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-noire_root_pass}
       MYSQL_DATABASE: ${DB_DATABASE:-noire}
