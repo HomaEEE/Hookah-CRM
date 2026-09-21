@@ -60,20 +60,13 @@ COPY --from=vendor /app/vendor /app/vendor
 COPY --from=frontend /app/public/build /app/public/build
 COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Ensure storage and bootstrap/cache directories exist with proper permissions
-RUN mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
-    chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
-    chmod -R 775 /app/storage /app/bootstrap/cache
-
-# Optimize composer classmap for production runtime (skip scripts during build)
+# Optimize composer classmap for production runtime
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer dump-autoload \
     --no-dev \
     --optimize \
-    --classmap-authoritative \
-    --no-scripts && \
+    --classmap-authoritative && \
     rm -f /usr/bin/composer
 
 # PHP 8.4 Production Configuration
@@ -86,7 +79,11 @@ RUN echo "memory_limit = 128M" > /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.enable_cli = 1" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.memory_consumption = 64" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.max_accelerated_files = 10000" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "opcache.validate_timestamps = 0" >> /usr/local/etc/php/conf.d/99-custom.ini
+    echo "opcache.validate_timestamps = 0" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
+    chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
+    chmod -R 775 /app/storage /app/bootstrap/cache && \
+    chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 

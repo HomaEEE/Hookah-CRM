@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# 1. Directories & Permissions
+# 1. Ensure storage directories exist
 mkdir -p \
     /app/storage/framework/cache \
     /app/storage/framework/sessions \
@@ -13,108 +13,102 @@ mkdir -p \
 chown -R www-data:www-data /app/storage /app/bootstrap/cache 2>/dev/null || true
 chmod -R 775 /app/storage /app/bootstrap/cache 2>/dev/null || true
 
-# 2. Application Encryption Key
+
+# 3. APP_URL endpoint resolution
+if [ -z "${APP_URL:-}" ] || [ "${APP_URL}" = "http://localhost" ]; then
+    if [ -n "${OPENSHIP_URL:-}" ]; then
+        export APP_URL="${OPENSHIP_URL}"
+    elif [ -n "${OPENSHIP_ENDPOINT:-}" ]; then
+        export APP_URL="${OPENSHIP_ENDPOINT}"
+    elif [ -n "${APP_ENDPOINT:-}" ]; then
+        export APP_URL="${APP_ENDPOINT}"
+    elif [ -n "${DOMAIN:-}" ]; then
+        export APP_URL="https://${DOMAIN}"
+    fi
+fi
+
+case "${APP_URL:-}" in
+    http://*|https://*) ;;
+    "") export APP_URL="http://localhost" ;;
+    *) export APP_URL="https://${APP_URL}" ;;
+esac
+
+# 3. APP_KEY generation & persistence
 if [ -z "${APP_KEY:-}" ]; then
-    if [ ! -f /app/storage/.app_key ]; then
-        echo "==> Generating new APP_KEY..."
+    if [ ! -s /app/storage/.app_key ]; then
+        echo "==> First deploy: Generating persistent APP_KEY..."
         php -r 'echo "base64:".base64_encode(random_bytes(32));' > /app/storage/.app_key
     fi
     export APP_KEY="$(cat /app/storage/.app_key)"
 fi
 
-# 3. Database Readiness & Auto-Provisioning
+# 3. Database credentials generation & persistence
 DB_HOST="${DB_HOST:-mariadb}"
 DB_PORT="${DB_PORT:-3306}"
 DB_DATABASE="${DB_DATABASE:-noire}"
 DB_USERNAME="${DB_USERNAME:-noire_user}"
-DB_PASSWORD="${DB_PASSWORD:-noire_secret_pass}"
-DB_ROOT_PASSWORD="${DB_ROOT_PASSWORD:-}"
 
-if [ "${DB_CONNECTION:-mysql}" = "mysql" ] || [ "${DB_CONNECTION:-mysql}" = "mariadb" ]; then
-    echo "==> Checking database connection at ${DB_HOST}:${DB_PORT}..."
-    i=1
-    while [ "$i" -le 30 ]; do
-        if php -r '
-            $host     = getenv("DB_HOST") ?: "mariadb";
-            $port     = getenv("DB_PORT") ?: "3306";
-            $db       = getenv("DB_DATABASE") ?: "noire";
-            $user     = getenv("DB_USERNAME") ?: "noire_user";
-            $pass     = getenv("DB_PASSWORD") ?: "noire_secret_pass";
-            $rootPass = getenv("DB_ROOT_PASSWORD");
+if [ -z "${DB_PASSWORD:-}" ]; then
+    if [ ! -s /app/storage/.db_password ]; then
+        echo "==> First deploy: Generating persistent DB_PASSWORD..."
+        php -r 'echo bin2hex(random_bytes(16));' > /app/storage/.db_password
+    fi
+    export DB_PASSWORD="$(cat /app/storage/.db_password)"
+fi
 
-            // If root password provided, ensure DB and user exist
-            if (!empty($rootPass)) {
-                try {
-                    $rootPdo = new PDO("mysql:host={$host};port={$port}", "root", $rootPass, [
-                        PDO::ATTR_TIMEOUT => 2,
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    ]);
-                    $rootPdo->exec("CREATE DATABASE IF NOT EXISTS `{$db}`;");
-                    $rootPdo->exec("CREATE USER IF NOT EXISTS '\''{$user}'\''@'\''%'\'' IDENTIFIED BY '\''{$pass}'\'';");
-                    $rootPdo->exec("ALTER USER '\''{$user}'\''@'\''%'\'' IDENTIFIED BY '\''{$pass}'\'';");
-                    $rootPdo->exec("GRANT ALL PRIVILEGES ON `{$db}`.* TO '\''{$user}'\''@'\''%'\'';");
-                    $rootPdo->exec("FLUSH PRIVILEGES;");
-                } catch (Throwable $e) {
-                    // Ignore and try user credentials directly
-                }
-            }
+# 4. Web service startup automation
+if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
+    php artisan storage:link --force || true
 
-            try {
-                new PDO("mysql:host={$host};port={$port};dbname={$db}", $user, $pass, [
-                    PDO::ATTR_TIMEOUT => 2,
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                ]);
-                exit(0);
-            } catch (Throwable $e) {
-                exit(1);
-            }
-        '; then
-            echo "==> Database '${DB_DATABASE}' is ready."
-            break
+    # Wait for database readiness & optional auto-provisioning
+    if [ -n "$DB_HOST" ]; then
+        echo "==> Checking database connection at ${DB_HOST}:${DB_PORT}..."
+        i=1
+        while [ "$i" -le 30 ]; do
+            if [ -n "${DB_ROOT_PASSWORD:-}" ]; then
+                mariadb -h "$DB_HOST" -P "$DB_PORT" -u root -p"$DB_ROOT_PASSWORD" 2>/dev/null <<EOSQL || true
+CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
+CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+ALTER USER '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${DB_DATABASE}\`.* TO '${DB_USERNAME}'@'%';
+FLUSH PRIVILEGES;
+EOSQL
+            fi
+
+            if php -r "try { new PDO('mysql:host='.getenv('DB_HOST').';port='.(getenv('DB_PORT')?:3306).';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD')); exit(0); } catch (\Throwable \$e) { exit(1); }"; then
+                echo "==> Database is ready."
+                break
+            fi
+
+            echo "==> Waiting for database (${i}/30)..."
+            i=$((i + 1))
+            sleep 2
+        done
+    fi
+
+    # Run migrations if enabled
+    if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
+        if [ -n "$DB_HOST" ] && command -v mariadb-dump >/dev/null 2>&1; then
+            echo "==> Creating pre-deploy database backup..."
+            mkdir -p /app/storage/backups
+            mariadb-dump -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -p"$DB_PASSWORD" \
+                --single-transaction --quick "$DB_DATABASE" 2>/dev/null \
+                | gzip > "/app/storage/backups/backup_$(date +%Y%m%d_%H%M%S).sql.gz" || true
         fi
-        echo "==> Waiting for database (${i}/30)..."
-        i=$((i + 1))
-        sleep 2
-    done
-fi
 
-# 4. Atomic Database Migrations & Asset Upgrades
-if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
-    echo "==> Running isolated database migrations..."
-    php artisan migrate --force --isolated || true
-fi
+        echo "==> Running database migrations..."
+        php artisan migrate --force
+        echo "==> Upgrading Filament assets..."
+        php artisan filament:upgrade || true
+        echo "==> Generating PWA manifest..."
+        php artisan pwa:manifest || true
+    fi
 
-echo "==> Upgrading Filament and assets..."
-php artisan filament:upgrade || true
-php artisan pwa:manifest || true
-php artisan storage:link --force || true
-
-# 5. Production Cache Optimization
-if [ "${APP_ENV:-production}" = "production" ]; then
-    echo "==> Caching application configuration..."
-    php artisan config:cache || true
+    # Cache application configurations for production
+    php artisan config:cache
     php artisan route:cache || true
     php artisan view:cache || true
     php artisan icons:cache || true
 fi
 
-# 6. Runtime Server Dispatch
-SERVER_MODE="${SERVER_MODE:-frankenphp}"
-
-# Pass through custom shell commands (e.g. docker run ... bash / tinker)
-if [ "$#" -gt 0 ] && [ "$1" != "frankenphp" ] && [ "$1" != "octane" ]; then
-    exec "$@"
-fi
-
-if [ "$SERVER_MODE" = "octane" ]; then
-    echo "==> Starting Laravel Octane (FrankenPHP worker)..."
-    exec php artisan octane:start \
-        --server=frankenphp \
-        --host=0.0.0.0 \
-        --port=80 \
-        --workers="${OCTANE_WORKERS:-auto}" \
-        --max-requests="${OCTANE_MAX_REQUESTS:-500}"
-else
-    echo "==> Starting native FrankenPHP..."
-    exec frankenphp run --config /etc/caddy/Caddyfile
-fi
+exec "$@"
