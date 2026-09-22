@@ -1,0 +1,28 @@
+services:
+  web:
+    image: ${APP_IMAGE:-noire-web}:${APP_VERSION:-latest}
+    build: .
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      CONTAINER_ROLE: web
+      SERVER_MODE: ${SERVER_MODE:-frankenphp}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    volumes:
+      - app_storage:/app/storage
+    networks:
+      - default
+
+volumes:
+  app_storage:
+    driver: local
+
+networks:
+  default:
+    name: openship-network
+    external: true
