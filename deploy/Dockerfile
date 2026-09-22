@@ -3,17 +3,10 @@ ARG PHP_VERSION=8.4
 ARG NODE_VERSION=22
 
 # ==============================================================================
-# 1. Base Runtime Image (Debian Bookworm + FrankenPHP 1)
+# 1. Base Runtime Image (Pre-compiled FrankenPHP from GHCR)
 # ==============================================================================
-FROM dunglas/frankenphp:1-php${PHP_VERSION}-bookworm AS base
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    mariadb-client \
-    && rm -rf /var/lib/apt/lists/*
-
-# Precompiled binary extensions for high-performance Laravel & Octane
-ENV REQUIRED_EXTENSIONS="pdo_mysql mysqli redis bcmath curl dom exif intl mbstring xml gd zip pcntl opcache excimer sodium"
-RUN install-php-extensions ${REQUIRED_EXTENSIONS}
+ARG BASE_IMAGE=ghcr.io/homaeee/frankenphp-base:8.4
+FROM ${BASE_IMAGE} AS base
 
 # ==============================================================================
 # 2. Composer Dependencies

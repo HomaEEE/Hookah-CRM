@@ -48,19 +48,21 @@ SHARED_NETWORK=openship-network
 
 ## Build pipeline
 
-The production image is built in **GitHub Actions CI/CD** with layer caching and pushed to GitHub Container Registry (`ghcr.io`). The deployment server only pulls the ready-made image without compiling from source.
+The base FrankenPHP runtime with pre-compiled extensions is built in **GitHub Actions** via `.github/workflows/docker-base.yml` and hosted on GHCR (`ghcr.io/homaeee/frankenphp-base:8.4`). The OpenShip server uses this base image, avoiding any on-server PHP extension compilation.
 
 ```text
-GitHub Actions CI/CD (v4 / main)
+GitHub Actions (on Dockerfile.base change)
         │
-        ├── Build & Compile PHP 8.4 + FrankenPHP + Extensions
-        ├── Composer & Node/Vite Assets
-        └── Push to GHCR (ghcr.io/homaeee/hookah-crm:latest)
+        └── Builds and pushes ghcr.io/homaeee/frankenphp-base:8.4
                 │
-                ▼ (Webhook trigger)
-OpenShip Deployment Node
+                ▼
+OpenShip Deployment Node (on push to v4)
         │
-        └── docker compose pull && docker compose up -d
+        └── Docker BuildKit
+              ├── FROM ghcr.io/homaeee/frankenphp-base:8.4 (instant pull, no compilation)
+              ├── Composer install (cached via /tmp/composer-cache)
+              ├── npm run build (cached via /root/.npm)
+              └── Produces local production image
 ```
 
 ## Runtime services

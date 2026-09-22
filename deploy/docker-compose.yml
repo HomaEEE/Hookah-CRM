@@ -1,6 +1,9 @@
 services:
   web:
-    image: ${APP_IMAGE:-ghcr.io/homaeee/hookah-crm}:${APP_VERSION:-latest}
+    image: ${APP_IMAGE:-noire-web}:${APP_VERSION:-latest}
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
     restart: unless-stopped
     ports:
       - "${APP_PORT:-80}:80"
