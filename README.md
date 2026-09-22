@@ -48,35 +48,20 @@ SHARED_NETWORK=openship-network
 
 ## Build pipeline
 
-The image is built on the **deployment server**, not on the OpenShip control plane and not by GitHub Actions.
+The production image is built in **GitHub Actions CI/CD** with layer caching and pushed to GitHub Container Registry (`ghcr.io`). The deployment server only pulls the ready-made image without compiling from source.
 
 ```text
-GitHub / branch v4
+GitHub Actions CI/CD (v4 / main)
         │
-        ▼
-OpenShip deployment node
+        ├── Build & Compile PHP 8.4 + FrankenPHP + Extensions
+        ├── Composer & Node/Vite Assets
+        └── Push to GHCR (ghcr.io/homaeee/hookah-crm:latest)
+                │
+                ▼ (Webhook trigger)
+OpenShip Deployment Node
         │
-        └── Docker BuildKit
-              │
-              ├── PHP 8.4 + FrankenPHP
-              │
-              ├── Composer
-              │     └── composer install --no-dev
-              │
-              ├── Node 22
-              │     └── npm ci
-              │         npm run build
-              │
-              └── production image
+        └── docker compose pull && docker compose up -d
 ```
-
-BuildKit caches:
-
-- Composer downloads: `/tmp/composer-cache`
-- npm downloads: `/root/.npm`
-- Docker layers are reused when `composer.lock` / `package-lock.json` are unchanged.
-
-The build no longer uses `composer --ignore-platform-reqs`. Composer runs against the same PHP 8.4 runtime family used by the production image.
 
 ## Runtime services
 
