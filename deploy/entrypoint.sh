@@ -90,6 +90,18 @@ set_env_var "DB_DATABASE" "${DB_DATABASE}"
 set_env_var "DB_USERNAME" "${DB_USERNAME}"
 set_env_var "DB_PASSWORD" "${DB_PASSWORD}"
 
+# Redis configuration and sync to .env
+export REDIS_HOST="${REDIS_HOST:-redis}"
+export REDIS_PORT="${REDIS_PORT:-6379}"
+if [ -z "${REDIS_PASSWORD:-}" ]; then
+    REDIS_PASSWORD=$(grep -E "^REDIS_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2-)
+fi
+export REDIS_PASSWORD="${REDIS_PASSWORD:-r00t_red!s_db}"
+
+set_env_var "REDIS_HOST" "${REDIS_HOST}"
+set_env_var "REDIS_PORT" "${REDIS_PORT}"
+set_env_var "REDIS_PASSWORD" "${REDIS_PASSWORD}"
+
 # Capture root password if passed, but DO NOT write it to .env
 ROOT_PW="${DB_ROOT_PASSWORD:-${MARIADB_ROOT_PASSWORD:-}}"
 
@@ -170,19 +182,23 @@ EOSQL
 
     # Redis connectivity check
     if [ -n "${REDIS_HOST:-}" ]; then
-        export REDIS_HOST="${REDIS_HOST}"
-        export REDIS_PORT="${REDIS_PORT:-6379}"
         echo "==> Checking Redis connection at ${REDIS_HOST}:${REDIS_PORT}..."
         if php -r "
-            \$host = getenv('REDIS_HOST');
-            \$port = (int)(getenv('REDIS_PORT') ?: 6379);
-            \$s = @fsockopen(\$host, \$port, \$errno, \$errstr, 2);
-            if (\$s) { fclose(\$s); exit(0); }
-            exit(1);
+            \$redis = new Redis();
+            try {
+                \$redis->connect(getenv('REDIS_HOST'), (int)(getenv('REDIS_PORT') ?: 6379), 2);
+                if (getenv('REDIS_PASSWORD')) {
+                    \$redis->auth(getenv('REDIS_PASSWORD'));
+                }
+                \$redis->ping();
+                exit(0);
+            } catch (\Throwable \$e) {
+                exit(1);
+            }
         " >/dev/null 2>&1; then
-            echo "==> Redis host is reachable."
+            echo "==> Redis host is reachable and authenticated."
         else
-            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT} is not reachable."
+            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT} is not reachable or authentication failed."
         fi
     fi
 
