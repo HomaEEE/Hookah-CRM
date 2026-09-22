@@ -33,31 +33,67 @@ case "${APP_URL:-}" in
     *) export APP_URL="https://${APP_URL}" ;;
 esac
 
-# 3. Persistent APP_KEY fallback
+# Helper to update or set key=value in /app/.env
+set_env_var() {
+    local key="$1"
+    local val="$2"
+    if grep -q "^${key}=" /app/.env 2>/dev/null; then
+        sed -i "s|^${key}=.*|${key}=${val}|" /app/.env
+    else
+        echo "${key}=${val}" >> /app/.env
+    fi
+}
+
+# 3. Initialize /app/.env
+if [ ! -f /app/.env ]; then
+    if [ -f /app/.env.example ]; then
+        cp /app/.env.example /app/.env
+    else
+        touch /app/.env
+    fi
+fi
+
+# 4. APP_KEY resolution and sync to .env
 if [ -z "${APP_KEY:-}" ]; then
-    if [ ! -s /app/storage/.app_key ]; then
-        echo "==> First deploy: Generating persistent APP_KEY..."
-        php -r 'echo "base64:".base64_encode(random_bytes(32));' > /app/storage/.app_key
+    APP_KEY=$(grep -E "^APP_KEY=" /app/.env 2>/dev/null | cut -d '=' -f2-)
+    if [ -z "${APP_KEY:-}" ]; then
+        echo "==> Generating persistent APP_KEY in .env..."
+        APP_KEY="base64:$(php -r 'echo base64_encode(random_bytes(32));')"
     fi
-    export APP_KEY="$(cat /app/storage/.app_key)"
 fi
+export APP_KEY
+set_env_var "APP_KEY" "${APP_KEY}"
+set_env_var "APP_URL" "${APP_URL}"
 
-# 4. Database configuration and persistence
-DB_HOST="${DB_HOST:-mariadb}"
-DB_PORT="${DB_PORT:-3306}"
-DB_DATABASE="${DB_DATABASE:-noire}"
-DB_USERNAME="${DB_USERNAME:-noire_user}"
-DB_ROOT_USER="${DB_ROOT_USER:-root}"
+# 5. Database configuration and sync to .env
+export DB_CONNECTION="${DB_CONNECTION:-mysql}"
+export DB_HOST="${DB_HOST:-mariadb}"
+export DB_PORT="${DB_PORT:-3306}"
+export DB_DATABASE="${DB_DATABASE:-noire}"
+export DB_USERNAME="${DB_USERNAME:-noire_user}"
+export DB_ROOT_USER="${DB_ROOT_USER:-root}"
 
+# DB_PASSWORD: env -> .env -> auto-generate
 if [ -z "${DB_PASSWORD:-}" ]; then
-    if [ ! -s /app/storage/.db_password ]; then
-        echo "==> First deploy: Generating persistent DB_PASSWORD..."
-        php -r 'echo bin2hex(random_bytes(16));' > /app/storage/.db_password
+    DB_PASSWORD=$(grep -E "^DB_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2-)
+    if [ -z "${DB_PASSWORD:-}" ]; then
+        echo "==> Generating persistent DB_PASSWORD in .env..."
+        DB_PASSWORD=$(php -r 'echo bin2hex(random_bytes(16));')
     fi
-    export DB_PASSWORD="$(cat /app/storage/.db_password)"
 fi
+export DB_PASSWORD
 
-# 5. Web service startup automation
+set_env_var "DB_CONNECTION" "${DB_CONNECTION}"
+set_env_var "DB_HOST" "${DB_HOST}"
+set_env_var "DB_PORT" "${DB_PORT}"
+set_env_var "DB_DATABASE" "${DB_DATABASE}"
+set_env_var "DB_USERNAME" "${DB_USERNAME}"
+set_env_var "DB_PASSWORD" "${DB_PASSWORD}"
+
+# Capture root password if passed, but DO NOT write it to .env
+ROOT_PW="${DB_ROOT_PASSWORD:-${MARIADB_ROOT_PASSWORD:-}}"
+
+# 6. Web service startup automation
 if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
     rm -f /app/bootstrap/cache/config.php /app/bootstrap/cache/packages.php /app/bootstrap/cache/services.php
     php artisan package:discover --ansi || true
@@ -69,34 +105,38 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
         i=1
         while [ "$i" -le 30 ]; do
             # 1. Quick TCP socket probe (2s timeout) to avoid blocking on startup
-            TCP_OK=$(php -r "
-                \$s = @fsockopen(getenv('DB_HOST'), getenv('DB_PORT') ?: 3306, \$err, \$errstr, 2);
+            if ! php -r "
+                \$host = getenv('DB_HOST');
+                \$port = (int)(getenv('DB_PORT') ?: 3306);
+                \$s = @fsockopen(\$host, \$port, \$errno, \$errstr, 2);
                 if (\$s) { fclose(\$s); exit(0); }
                 exit(1);
-            " 2>&1)
-            if [ $? -ne 0 ]; then
+            " >/dev/null 2>&1; then
                 echo "==> Waiting for database host ${DB_HOST}:${DB_PORT} to accept connections (${i}/30)..."
                 i=$((i + 1))
                 sleep 2
                 continue
             fi
 
-            # 2. Auto-provision database & grant permissions if root password is provided
-            if [ -n "${DB_ROOT_PASSWORD:-}" ]; then
+            # 2. Auto-provision database & user if root password is provided
+            if [ -n "${ROOT_PW:-}" ]; then
                 echo "==> Auto-provisioning database '${DB_DATABASE}' and user '${DB_USERNAME}'..."
-                PROVISION_OUTPUT=$(mariadb --connect-timeout=5 -h "$DB_HOST" -P "$DB_PORT" -u "$DB_ROOT_USER" -p"$DB_ROOT_PASSWORD" 2>&1 <<EOSQL
+                PROVISION_OUTPUT=$(mariadb --connect-timeout=5 -h "$DB_HOST" -P "$DB_PORT" -u "$DB_ROOT_USER" -p"$ROOT_PW" 2>&1 <<EOSQL
 CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
 CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 ALTER USER '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${DB_DATABASE}\`.* TO '${DB_USERNAME}'@'%';
 FLUSH PRIVILEGES;
 EOSQL
-)
+) || true
                 if [ $? -eq 0 ]; then
                     echo "==> Database '${DB_DATABASE}' and user '${DB_USERNAME}' provisioned successfully."
                 else
                     echo "==> Warning: Database auto-provisioning encountered an error: ${PROVISION_OUTPUT}"
                 fi
+
+                # Immediately wipe root password from environment
+                unset DB_ROOT_PASSWORD MARIADB_ROOT_PASSWORD ROOT_PW
             fi
 
             # 3. Verify PDO connection
@@ -116,8 +156,8 @@ EOSQL
                     echo \$e->getMessage();
                     exit(1);
                 }
-            " 2>&1)
-            if [ $? -eq 0 ]; then
+            " 2>&1) || true
+            if [ -z "$DB_ERROR" ]; then
                 echo "==> Database is ready."
                 break
             fi
@@ -130,16 +170,19 @@ EOSQL
 
     # Redis connectivity check
     if [ -n "${REDIS_HOST:-}" ]; then
-        echo "==> Checking Redis connection at ${REDIS_HOST}:${REDIS_PORT:-6379}..."
-        REDIS_OK=$(php -r "
-            \$s = @fsockopen(getenv('REDIS_HOST'), getenv('REDIS_PORT') ?: 6379, \$err, \$errstr, 2);
+        export REDIS_HOST="${REDIS_HOST}"
+        export REDIS_PORT="${REDIS_PORT:-6379}"
+        echo "==> Checking Redis connection at ${REDIS_HOST}:${REDIS_PORT}..."
+        if php -r "
+            \$host = getenv('REDIS_HOST');
+            \$port = (int)(getenv('REDIS_PORT') ?: 6379);
+            \$s = @fsockopen(\$host, \$port, \$errno, \$errstr, 2);
             if (\$s) { fclose(\$s); exit(0); }
             exit(1);
-        " 2>&1)
-        if [ $? -eq 0 ]; then
+        " >/dev/null 2>&1; then
             echo "==> Redis host is reachable."
         else
-            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT:-6379} is not reachable (${REDIS_OK})."
+            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT} is not reachable."
         fi
     fi
 

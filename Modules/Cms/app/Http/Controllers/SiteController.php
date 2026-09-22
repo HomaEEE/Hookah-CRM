@@ -26,18 +26,31 @@ class SiteController extends Controller
         return Redirect::back();
     }
 
+    protected function getPlace(?string $slug = 'od'): ?Place
+    {
+        return Place::where('slug', $slug)->first()
+            ?? Place::where('sufix', $slug)->first()
+            ?? Place::first()
+            ?? new Place([
+                'name' => 'Noire Lounge Bar',
+                'slug' => 'od',
+                'city' => 'Одеса',
+                'address' => 'вул. Ніни Строкатої, 27',
+                'phone' => '+380684442454',
+            ]);
+    }
+
     public function index($slug = 'od')
     {
-        $place = Place::where('slug', $slug)->first();
-        $feedbacks = Feedback::where('place_id', $place->id)->Approve(1)->get();
+        $place = $this->getPlace($slug);
+        $feedbacks = $place->id ? Feedback::where('place_id', $place->id)->Approve(1)->get() : collect();
 
         return view('cms::site.home', compact('place', 'feedbacks'));
     }
 
     public function seet(?int $table_number = null)
     {
-        $slug = 'od';
-        $place = Place::where('slug', $slug)->first();
+        $place = $this->getPlace('od');
 
         if (is_null($table_number)) {
             $table_number = Session::get('table', null);
@@ -51,15 +64,14 @@ class SiteController extends Controller
 
     public function menu(?int $table_number = null)
     {
-        $slug = 'od';
-        $place = Place::where('slug', $slug)->first();
+        $place = $this->getPlace('od');
 
-        $categories = Category::where('place_id', $place->id)
+        $categories = $place->id ? Category::where('place_id', $place->id)
             ->where('parent_category', 0)
             ->VisibleMenu(true)
             ->orderBy('sort_order', 'asc')
             ->with('childs', 'products')
-            ->get();
+            ->get() : collect();
 
         if (is_null($table_number)) {
             $table_number = Session::get('table', null);
@@ -105,39 +117,37 @@ class SiteController extends Controller
 
     public function booking($slug = 'od')
     {
-        $place = Place::where('slug', $slug)->first();
+        $place = $this->getPlace($slug);
 
         return view('cms::site.booking', compact('place'));
     }
 
     public function feedbacks($slug = 'od')
     {
-
-        $place = Place::where('slug', $slug)->first();
-        $feedbacks = Feedback::where('place_id', $place->id)->Approve(1)->get();
+        $place = $this->getPlace($slug);
+        $feedbacks = $place->id ? Feedback::where('place_id', $place->id)->Approve(1)->get() : collect();
 
         return view('cms::site.feedbacks', compact('place', 'feedbacks'));
     }
 
     public function vacancy($slug = 'od')
     {
-
-        $place = Place::where('slug', $slug)->first();
-        $vacancies = Feedback::where('place_id', $place->id)->Approve(1)->get();
+        $place = $this->getPlace($slug);
+        $vacancies = $place->id ? Feedback::where('place_id', $place->id)->Approve(1)->get() : collect();
 
         return view('cms::site.vacancy', compact('place', 'vacancies'));
     }
 
     public function rules($slug = 'od')
     {
-        $place = Place::where('slug', $slug)->first();
+        $place = $this->getPlace($slug);
 
         return view('cms::site.rules', compact('place'));
     }
 
     public function contacts($slug = 'od')
     {
-        $place = Place::where('slug', $slug)->first();
+        $place = $this->getPlace($slug);
 
         return view('cms::site.contacts', compact('place'));
     }

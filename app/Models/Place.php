@@ -37,7 +37,7 @@ class Place extends Model implements HasAvatar, HasCurrentTenantLabel
 {
     use HasFactory,  HasTranslations;
 
-    protected $fillable = ['name', 'city', 'address', 'phone', 'opened', 'instagram', 'sufix', 'time', 'settings', 'properties', 'pays'];
+    protected $fillable = ['name', 'slug', 'city', 'address', 'phone', 'opened', 'instagram', 'sufix', 'time', 'settings', 'properties', 'pays'];
 
     public $translatable = ['name', 'city', 'address'];
 

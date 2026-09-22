@@ -1,5 +1,6 @@
 {
-    {$CADDY_GLOBAL_OPTIONS}
+    admin off
+    auto_https off
     frankenphp
     order php_server before file_server
 }
