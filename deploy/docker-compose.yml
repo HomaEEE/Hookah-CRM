@@ -1,9 +1,15 @@
 services:
   web:
     image: ${APP_IMAGE:-noire-web}:${APP_VERSION:-latest}
-    build: .
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
     restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
     env_file:
+      - path: ../.env
+        required: false
       - path: .env
         required: false
     environment:
