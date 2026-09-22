@@ -30,14 +30,10 @@ services:
           memory: 256M
     volumes:
       - app_storage:/app/storage
-    networks:
-      - app_network
-
+    extra_hosts:
+      - "mariadb:host-gateway"
+      - "redis:host-gateway"
+      - "host.docker.internal:host-gateway"
 volumes:
   app_storage:
     driver: local
-
-networks:
-  app_network:
-    name: ${SHARED_NETWORK:-openship}
-    external: true
