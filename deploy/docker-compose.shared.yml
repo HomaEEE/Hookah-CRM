@@ -72,5 +72,5 @@ volumes:
 
 networks:
   app_network:
-    name: ${SHARED_NETWORK:-openship}
+    name: ${SHARED_NETWORK:-openship-network}
     external: true
