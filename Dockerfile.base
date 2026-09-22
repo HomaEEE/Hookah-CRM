@@ -1,9 +1,0 @@
-ARG PHP_VERSION=8.4
-FROM dunglas/frankenphp:1-php${PHP_VERSION}-bookworm
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    mariadb-client \
-    && rm -rf /var/lib/apt/lists/*
-
-ENV REQUIRED_EXTENSIONS="pdo_mysql mysqli redis bcmath curl dom exif intl mbstring xml gd zip pcntl opcache excimer sodium"
-RUN install-php-extensions ${REQUIRED_EXTENSIONS}

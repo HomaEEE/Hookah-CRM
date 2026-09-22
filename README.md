@@ -28,13 +28,14 @@ Hookah CRM :80
    ├── shared MariaDB  → DB_HOST=mariadb
    └── shared Redis    → REDIS_HOST=redis
 
-Project volume:
-   app_storage → /app/storage
+Project volumes:
+   app_storage  → /app/storage
+   mariadb_data → /var/lib/mysql
 ```
 
-The project does **not** run MariaDB or Redis itself. Both services are expected to exist on the deployment node and be attached to the shared Docker network.
+The web service depends directly on the `mariadb` container service defined in `deploy/docker-compose.yml`, running on `openship-network`.
 
-Default shared database network:
+Default shared network:
 
 ```text
 openship-network
@@ -46,24 +47,38 @@ Override it with:
 SHARED_NETWORK=openship-network
 ```
 
-## Build pipeline
+## Build pipeline & Caching
 
-The base FrankenPHP runtime with pre-compiled extensions is built in **GitHub Actions** via `.github/workflows/docker-base.yml` and hosted on GHCR (`ghcr.io/homaeee/frankenphp-base:8.4`). The OpenShip server uses this base image, avoiding any on-server PHP extension compilation.
+The production image uses **pre-compiled `serversideup/php:8.4-frankenphp`** as its base, eliminating all source compilation of FrankenPHP and PHP extensions.
 
 ```text
-GitHub Actions (on Dockerfile.base change)
+Docker BuildKit (Layer Caching)
         │
-        └── Builds and pushes ghcr.io/homaeee/frankenphp-base:8.4
-                │
-                ▼
-OpenShip Deployment Node (on push to v4)
+        ├── 1. Pre-compiled Base: serversideup/php:8.4-frankenphp + mariadb-client
         │
-        └── Docker BuildKit
-              ├── FROM ghcr.io/homaeee/frankenphp-base:8.4 (instant pull, no compilation)
-              ├── Composer install (cached via /tmp/composer-cache)
-              ├── npm run build (cached via /root/.npm)
-              └── Produces local production image
+        ├── 2. Composer Dependencies (Cached via composer.lock & /tmp/composer-cache)
+        │      └── composer install --no-dev
+        │
+        ├── 3. Frontend Assets (Cached via package-lock.json & /root/.npm)
+        │      └── npm ci && npm run build
+        │
+        └── 4. Production Runtime (Application code copy < 1s)
 ```
+
+BuildKit caches:
+- Composer cache: `/tmp/composer-cache` (skipped if `composer.lock` is unchanged).
+- NPM cache: `/root/.npm` (skipped if `package-lock.json` is unchanged).
+- Code updates: only copy modified application files in the final stage.
+
+## Migrations on Deploy
+
+Database migrations are executed automatically during container startup in [deploy/entrypoint.sh](file:///Users/arthurboyko/Sites/Noire/deploy/entrypoint.sh):
+1. Verifies database connectivity and readiness.
+2. Auto-provisions the database and dedicated user if `DB_ROOT_PASSWORD` is supplied.
+3. Creates a pre-deploy gzip backup: `/app/storage/backups/backup_<timestamp>.sql.gz`.
+4. Executes `php artisan migrate --force`.
+5. Executes `php artisan filament:upgrade`.
+6. Optimizes production caches (`config:cache`, `route:cache`, `view:cache`, `icons:cache`).
 
 ## Runtime services
 

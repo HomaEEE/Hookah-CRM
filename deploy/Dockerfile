@@ -3,13 +3,21 @@ ARG PHP_VERSION=8.4
 ARG NODE_VERSION=22
 
 # ==============================================================================
-# 1. Base Runtime Image (Pre-compiled FrankenPHP from GHCR)
+# 1. Base Runtime Image (Pre-compiled ServerSideUp FrankenPHP)
 # ==============================================================================
-ARG BASE_IMAGE=ghcr.io/homaeee/frankenphp-base:8.4
-FROM ${BASE_IMAGE} AS base
+FROM serversideup/php:${PHP_VERSION}-frankenphp AS base
+
+USER root
+
+# Pre-compiled MariaDB client for instant backups and CLI connection tests
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    mariadb-client \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
 
 # ==============================================================================
-# 2. Composer Dependencies
+# 2. Composer Dependencies (Cached Layer)
 # ==============================================================================
 FROM base AS vendor
 WORKDIR /app
@@ -27,7 +35,7 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
         --no-scripts
 
 # ==============================================================================
-# 3. Frontend Assets (Vite & Tailwind CSS)
+# 3. Frontend Assets (Vite & Tailwind CSS Cached Layer)
 # ==============================================================================
 FROM node:${NODE_VERSION}-bookworm-slim AS frontend
 WORKDIR /app
