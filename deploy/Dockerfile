@@ -9,10 +9,11 @@ FROM serversideup/php:${PHP_VERSION}-frankenphp AS base
 
 USER root
 
-# Pre-compiled MariaDB client for instant backups and CLI connection tests
+# Pre-compiled MariaDB client and required Laravel PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
     mariadb-client \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && install-php-extensions intl bcmath exif gd
 
 WORKDIR /app
 

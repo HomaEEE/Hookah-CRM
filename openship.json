@@ -7,7 +7,6 @@
     "noire.od.ua"
   ],
   "volumes": [
-    "app_storage:/app/storage",
-    "mariadb_data:/var/lib/mysql"
+    "app_storage:/app/storage"
   ]
 }

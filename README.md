@@ -28,12 +28,11 @@ Hookah CRM :80
    ├── shared MariaDB  → DB_HOST=mariadb
    └── shared Redis    → REDIS_HOST=redis
 
-Project volumes:
-   app_storage  → /app/storage
-   mariadb_data → /var/lib/mysql
+Project volume:
+   app_storage → /app/storage
 ```
 
-The web service depends directly on the `mariadb` container service defined in `deploy/docker-compose.yml`, running on `openship-network`.
+The project connects to the shared MariaDB container running in the neighboring stack on `openship-network` (`DB_HOST=mariadb`). No duplicate database container is created.
 
 Default shared network:
 
