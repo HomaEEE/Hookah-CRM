@@ -136,10 +136,11 @@ DB_PORT=3306
 DB_DATABASE=hookah_crm
 DB_USERNAME=hookah_crm
 DB_PASSWORD=...
+DB_ROOT_PASSWORD=... # Optional: if set, auto-creates DB and user on startup
 
 REDIS_HOST=redis
 REDIS_PORT=6379
-REDIS_PASSWORD=
+REDIS_PASSWORD=...
 
 CACHE_STORE=redis
 QUEUE_CONNECTION=redis
@@ -148,25 +149,21 @@ SESSION_DRIVER=redis
 
 Secrets should be configured in OpenShip rather than committed to Git.
 
-The application container intentionally does **not** generate `APP_KEY`, database users, or database passwords.
+If `DB_ROOT_PASSWORD` is provided, the web container will automatically create the database and dedicated user on first boot if they do not already exist.
 
 ## Laravel startup
 
-The web container only performs lightweight, idempotent runtime tasks:
+The web container performs lightweight, idempotent runtime tasks:
 
 - creates required Laravel storage directories;
 - fixes storage/cache permissions;
+- auto-provisions database and dedicated user if `DB_ROOT_PASSWORD` is set;
 - creates the storage symlink;
-- caches configuration;
-- caches routes where possible;
-- caches Blade views;
-- caches Filament icons.
-
-Critical infrastructure provisioning is intentionally excluded from the application image.
+- caches configuration, routes, Blade views, and Filament icons.
 
 ## MariaDB / Redis
 
-Do not add these services back to this project's Compose file.
+MariaDB and Redis are hosted externally or pre-installed on the host machine. Do not add these services back to this project's Compose file.
 
 The target deployment-node model is:
 

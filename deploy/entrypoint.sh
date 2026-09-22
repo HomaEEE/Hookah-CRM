@@ -47,6 +47,7 @@ DB_HOST="${DB_HOST:-mariadb}"
 DB_PORT="${DB_PORT:-3306}"
 DB_DATABASE="${DB_DATABASE:-noire}"
 DB_USERNAME="${DB_USERNAME:-noire_user}"
+DB_ROOT_USER="${DB_ROOT_USER:-root}"
 
 if [ -z "${DB_PASSWORD:-}" ]; then
     if [ ! -s /app/storage/.db_password ]; then
@@ -82,13 +83,20 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
 
             # 2. Auto-provision database & grant permissions if root password is provided
             if [ -n "${DB_ROOT_PASSWORD:-}" ]; then
-                mariadb --connect-timeout=3 -h "$DB_HOST" -P "$DB_PORT" -u root -p"$DB_ROOT_PASSWORD" 2>/dev/null <<EOSQL || true
+                echo "==> Auto-provisioning database '${DB_DATABASE}' and user '${DB_USERNAME}'..."
+                PROVISION_OUTPUT=$(mariadb --connect-timeout=5 -h "$DB_HOST" -P "$DB_PORT" -u "$DB_ROOT_USER" -p"$DB_ROOT_PASSWORD" 2>&1 <<EOSQL
 CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
 CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 ALTER USER '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${DB_DATABASE}\`.* TO '${DB_USERNAME}'@'%';
 FLUSH PRIVILEGES;
 EOSQL
+)
+                if [ $? -eq 0 ]; then
+                    echo "==> Database '${DB_DATABASE}' and user '${DB_USERNAME}' provisioned successfully."
+                else
+                    echo "==> Warning: Database auto-provisioning encountered an error: ${PROVISION_OUTPUT}"
+                fi
             fi
 
             # 3. Verify PDO connection
@@ -118,6 +126,21 @@ EOSQL
             i=$((i + 1))
             sleep 2
         done
+    fi
+
+    # Redis connectivity check
+    if [ -n "${REDIS_HOST:-}" ]; then
+        echo "==> Checking Redis connection at ${REDIS_HOST}:${REDIS_PORT:-6379}..."
+        REDIS_OK=$(php -r "
+            \$s = @fsockopen(getenv('REDIS_HOST'), getenv('REDIS_PORT') ?: 6379, \$err, \$errstr, 2);
+            if (\$s) { fclose(\$s); exit(0); }
+            exit(1);
+        " 2>&1)
+        if [ $? -eq 0 ]; then
+            echo "==> Redis host is reachable."
+        else
+            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT:-6379} is not reachable (${REDIS_OK})."
+        fi
     fi
 
     # Pre-deploy backup & migrations
