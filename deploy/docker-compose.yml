@@ -15,6 +15,8 @@ services:
     environment:
       CONTAINER_ROLE: web
       SERVER_MODE: ${SERVER_MODE:-frankenphp}
+      DB_HOST: mariadb
+      REDIS_HOST: redis
     deploy:
       resources:
         limits:
@@ -22,13 +24,12 @@ services:
     volumes:
       - app_storage:/app/storage
     networks:
-      - default
+      - openship-mariadb
 
 volumes:
   app_storage:
     driver: local
 
 networks:
-  default:
-    name: openship-network
+  openship-mariadb:
     external: true
