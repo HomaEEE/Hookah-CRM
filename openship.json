@@ -1,11 +1,9 @@
 {
   "$schema": "https://openship.io/openship.schema.json",
   "framework": "laravel",
+  "composePath": "deploy/docker-compose.yml",
   "port": 80,
   "domains": [
     "noire.od.ua"
-  ],
-  "volumes": [
-    "app_storage:/app/storage"
   ]
 }
