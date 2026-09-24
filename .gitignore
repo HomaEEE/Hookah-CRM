@@ -50,7 +50,6 @@ coverage/
 
 # Build/Assets
 /public/hot
-/public/build
 /public/mix-manifest.json
 /public/css/filament/
 /public/js/filament/
