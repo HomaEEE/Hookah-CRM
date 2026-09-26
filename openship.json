@@ -2,11 +2,6 @@
   "$schema": "https://openship.io/openship.schema.json",
   "framework": "laravel",
   "composePath": "deploy/docker-compose.yml",
-  "buildContext": ".",
-  "buildArgs": {
-    "PHP_VERSION": "8.4",
-    "NODE_VERSION": "22"
-  },
   "port": 80,
   "domains": [
     "noire.od.ua"
