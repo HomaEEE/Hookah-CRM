@@ -3,7 +3,7 @@
     {
       "name": "web",
       "build": ".",
-      "dockerfile": "deploy/Dockerfile",
+      "dockerfile": "Dockerfile",
       "ports": [
         "80"
       ],
