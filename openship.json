@@ -1,9 +1,15 @@
 {
-  "$schema": "https://openship.io/openship.schema.json",
-  "framework": "laravel",
-  "composePath": "deploy/docker-compose.yml",
-  "port": 80,
-  "domains": [
-    "noire.od.ua"
+  "services": [
+    {
+      "name": "web",
+      "build": ".",
+      "dockerfile": "deploy/Dockerfile",
+      "ports": [
+        "80"
+      ],
+      "domain": "noire.od.ua",
+      "restart": "unless-stopped",
+      "exposed": true
+    }
   ]
 }
