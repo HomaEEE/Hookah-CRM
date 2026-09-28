@@ -15,6 +15,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -78,6 +79,7 @@ class UserResource extends Resource
                      JS)),
                         DatePicker::make('birth')->translateLabel()
                             ->native(false),
+                        Toggle::make('is_active'),
 
                     ])->columns(3),
 

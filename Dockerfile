@@ -3,17 +3,16 @@ ARG PHP_VERSION=8.4
 ARG NODE_VERSION=22
 
 # ==============================================================================
-# 1. Base Runtime Image (Pre-compiled ServerSideUp FrankenPHP)
+# 1. Base Runtime Image (FrankenPHP)
 # ==============================================================================
 FROM serversideup/php:${PHP_VERSION}-frankenphp AS base
 
 USER root
 
-# Pre-compiled MariaDB client and required Laravel PHP extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
     mariadb-client \
     && rm -rf /var/lib/apt/lists/* \
-    && install-php-extensions intl bcmath exif gd
+    && install-php-extensions intl bcmath exif gd redis pdo_mysql pcntl zip
 
 WORKDIR /app
 
@@ -36,7 +35,7 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
         --no-scripts
 
 # ==============================================================================
-# 3. Frontend Assets (Vite, Tailwind CSS & Filament Theme Cached Layer)
+# 3. Frontend Assets (Vite, Tailwind CSS & Filament Theme)
 # ==============================================================================
 FROM node:${NODE_VERSION}-bookworm-slim AS frontend
 WORKDIR /app
@@ -66,7 +65,7 @@ COPY --from=frontend /app/public/build /app/public/build
 COPY deploy/Caddyfile /etc/caddy/Caddyfile
 COPY deploy/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Optimize composer classmap for production runtime (skip scripts during build)
+# Optimize composer classmap for production runtime
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN rm -f /app/bootstrap/cache/*.php && \
     composer dump-autoload \
@@ -77,15 +76,15 @@ RUN rm -f /app/bootstrap/cache/*.php && \
     rm -f /usr/bin/composer
 
 # PHP Production Configuration
-RUN echo "memory_limit = 256M" > /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "upload_max_filesize = 32M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "post_max_size = 32M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "max_execution_time = 60" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+RUN echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "upload_max_filesize = 64M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "post_max_size = 64M" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "max_execution_time = 120" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "expose_php = Off" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.enable = 1" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.enable_cli = 1" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "opcache.memory_consumption = 64" >> /usr/local/etc/php/conf.d/99-custom.ini && \
-    echo "opcache.max_accelerated_files = 10000" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "opcache.memory_consumption = 128" >> /usr/local/etc/php/conf.d/99-custom.ini && \
+    echo "opcache.max_accelerated_files = 20000" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     echo "opcache.validate_timestamps = 0" >> /usr/local/etc/php/conf.d/99-custom.ini && \
     mkdir -p /app/storage/framework/cache /app/storage/framework/sessions /app/storage/framework/views /app/storage/app/public /app/storage/logs /app/bootstrap/cache && \
     chown -R www-data:www-data /app/storage /app/bootstrap/cache && \

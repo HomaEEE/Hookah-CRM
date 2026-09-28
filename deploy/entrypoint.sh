@@ -1,50 +1,41 @@
 #!/bin/sh
 set -e
 
-# 1. Ensure storage and cache directories exist with correct permissions
-mkdir -p \
-    /app/storage/framework/cache \
-    /app/storage/framework/sessions \
-    /app/storage/framework/views \
-    /app/storage/app/public \
-    /app/storage/logs \
-    /app/storage/backups \
-    /app/bootstrap/cache
-
-chown -R www-data:www-data /app/storage /app/bootstrap/cache 2>/dev/null || true
-chmod -R 775 /app/storage /app/bootstrap/cache 2>/dev/null || true
-
-# 2. Dynamic APP_URL resolution
-if [ -z "${APP_URL:-}" ] || [ "${APP_URL}" = "http://localhost" ]; then
-    if [ -n "${OPENSHIP_URL:-}" ]; then
-        export APP_URL="${OPENSHIP_URL}"
-    elif [ -n "${OPENSHIP_ENDPOINT:-}" ]; then
-        export APP_URL="${OPENSHIP_ENDPOINT}"
-    elif [ -n "${APP_ENDPOINT:-}" ]; then
-        export APP_URL="${APP_ENDPOINT}"
-    elif [ -n "${DOMAIN:-}" ]; then
-        export APP_URL="https://${DOMAIN}"
-    fi
-fi
-
-case "${APP_URL:-}" in
-    http://*|https://*) ;;
-    "") export APP_URL="http://localhost" ;;
-    *) export APP_URL="https://${APP_URL}" ;;
-esac
-
-# Helper to update or set key=value in /app/.env
+# ==============================================================================
+# Helper functions
+# ==============================================================================
 set_env_var() {
-    local key="$1"
-    local val="$2"
-    if grep -q "^${key}=" /app/.env 2>/dev/null; then
-        sed -i "s|^${key}=.*|${key}=${val}|" /app/.env
+    key="$1"
+    value="$2"
+    file="/app/.env"
+
+    if [ -z "$value" ]; then
+        return 0
+    fi
+
+    if [ ! -f "$file" ]; then
+        touch "$file"
+    fi
+
+    if grep -qE "^${key}=" "$file"; then
+        escaped_val=$(printf '%s\n' "$value" | sed -e 's/[\/&]/\\&/g')
+        sed -i "s/^${key}=.*/${key}=\"${escaped_val}\"/" "$file"
     else
-        echo "${key}=${val}" >> /app/.env
+        printf '%s="%s"\n' "$key" "$value" >> "$file"
     fi
 }
 
-# 3. Initialize /app/.env
+echo "==> Bootstrapping application environment..."
+
+# Ensure storage directories exist with correct permissions
+mkdir -p /app/storage/framework/cache/data \
+         /app/storage/framework/sessions \
+         /app/storage/framework/views \
+         /app/storage/app/public \
+         /app/storage/logs \
+         /app/bootstrap/cache
+
+# 1. Ensure .env exists
 if [ ! -f /app/.env ]; then
     if [ -f /app/.env.example ]; then
         cp /app/.env.example /app/.env
@@ -53,19 +44,22 @@ if [ ! -f /app/.env ]; then
     fi
 fi
 
-# 4. APP_KEY resolution and sync to .env
-if [ -z "${APP_KEY:-}" ]; then
-    APP_KEY=$(grep -E "^APP_KEY=" /app/.env 2>/dev/null | cut -d '=' -f2-)
-    if [ -z "${APP_KEY:-}" ]; then
-        echo "==> Generating persistent APP_KEY in .env..."
-        APP_KEY="base64:$(php -r 'echo base64_encode(random_bytes(32));')"
-    fi
-fi
-export APP_KEY
-set_env_var "APP_KEY" "${APP_KEY}"
-set_env_var "APP_URL" "${APP_URL}"
+# 2. Sync Core Environment Variables to .env
+set_env_var "APP_NAME" "${APP_NAME:-Noire}"
+set_env_var "APP_ENV" "${APP_ENV:-production}"
+set_env_var "APP_DEBUG" "${APP_DEBUG:-false}"
+set_env_var "APP_URL" "${APP_URL:-http://localhost}"
 
-# 5. Database configuration and sync to .env
+# Ensure APP_KEY exists
+if [ -z "${APP_KEY:-}" ]; then
+    APP_KEY=$(grep -E "^APP_KEY=" /app/.env 2>/dev/null | cut -d '=' -f2- | tr -d '"')
+fi
+if [ -z "$APP_KEY" ]; then
+    echo "==> Generating application key (APP_KEY)..."
+    php artisan key:generate --force
+fi
+
+# 3. Database configuration
 export DB_CONNECTION="${DB_CONNECTION:-mysql}"
 export DB_HOST="${DB_HOST:-mariadb}"
 export DB_PORT="${DB_PORT:-3306}"
@@ -73,11 +67,10 @@ export DB_DATABASE="${DB_DATABASE:-noire}"
 export DB_USERNAME="${DB_USERNAME:-noire_user}"
 export DB_ROOT_USER="${DB_ROOT_USER:-root}"
 
-# DB_PASSWORD: env -> .env -> auto-generate
 if [ -z "${DB_PASSWORD:-}" ]; then
-    DB_PASSWORD=$(grep -E "^DB_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2-)
+    DB_PASSWORD=$(grep -E "^DB_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2- | tr -d '"')
     if [ -z "${DB_PASSWORD:-}" ]; then
-        echo "==> Generating persistent DB_PASSWORD in .env..."
+        echo "==> Generating persistent DB_PASSWORD..."
         DB_PASSWORD=$(php -r 'echo bin2hex(random_bytes(16));')
     fi
 fi
@@ -90,22 +83,26 @@ set_env_var "DB_DATABASE" "${DB_DATABASE}"
 set_env_var "DB_USERNAME" "${DB_USERNAME}"
 set_env_var "DB_PASSWORD" "${DB_PASSWORD}"
 
-# Redis configuration and sync to .env
+# 4. Redis configuration
 export REDIS_HOST="${REDIS_HOST:-redis}"
 export REDIS_PORT="${REDIS_PORT:-6379}"
 if [ -z "${REDIS_PASSWORD:-}" ]; then
-    REDIS_PASSWORD=$(grep -E "^REDIS_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2-)
+    REDIS_PASSWORD=$(grep -E "^REDIS_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2- | tr -d '"')
 fi
-export REDIS_PASSWORD="${REDIS_PASSWORD:-r00t_red!s_db}"
+export REDIS_PASSWORD="${REDIS_PASSWORD:-}"
 
 set_env_var "REDIS_HOST" "${REDIS_HOST}"
 set_env_var "REDIS_PORT" "${REDIS_PORT}"
 set_env_var "REDIS_PASSWORD" "${REDIS_PASSWORD}"
 
-# Capture root password if passed, but DO NOT write it to .env
+set_env_var "CACHE_STORE" "${CACHE_STORE:-redis}"
+set_env_var "SESSION_DRIVER" "${SESSION_DRIVER:-redis}"
+set_env_var "QUEUE_CONNECTION" "${QUEUE_CONNECTION:-redis}"
+
+# Root password for MariaDB auto-creation
 ROOT_PW="${DB_ROOT_PASSWORD:-${MARIADB_ROOT_PASSWORD:-}}"
 
-# 6. Web service startup automation
+# 5. Web service startup automation
 if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
     rm -f /app/bootstrap/cache/config.php /app/bootstrap/cache/packages.php /app/bootstrap/cache/services.php
     php artisan package:discover --ansi || true
@@ -116,7 +113,7 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
         echo "==> Checking database connection at ${DB_HOST}:${DB_PORT}..."
         i=1
         while [ "$i" -le 30 ]; do
-            # 1. Quick TCP socket probe (2s timeout) to avoid blocking on startup
+            # 1. Quick TCP socket probe
             if ! php -r "
                 \$host = getenv('DB_HOST');
                 \$port = (int)(getenv('DB_PORT') ?: 3306);
@@ -144,10 +141,10 @@ EOSQL
                 if [ $? -eq 0 ]; then
                     echo "==> Database '${DB_DATABASE}' and user '${DB_USERNAME}' provisioned successfully."
                 else
-                    echo "==> Warning: Database auto-provisioning encountered an error: ${PROVISION_OUTPUT}"
+                    echo "==> Notice: MariaDB provisioning command output: ${PROVISION_OUTPUT}"
                 fi
 
-                # Immediately wipe root password from environment
+                # Immediately wipe root password from environment memory
                 unset DB_ROOT_PASSWORD MARIADB_ROOT_PASSWORD ROOT_PW
             fi
 
@@ -169,8 +166,9 @@ EOSQL
                     exit(1);
                 }
             " 2>&1) || true
+
             if [ -z "$DB_ERROR" ]; then
-                echo "==> Database is ready."
+                echo "==> Database is ready and verified."
                 break
             fi
 
@@ -198,59 +196,38 @@ EOSQL
         " >/dev/null 2>&1; then
             echo "==> Redis host is reachable and authenticated."
         else
-            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT} is not reachable or authentication failed."
+            echo "==> Notice: Redis host ${REDIS_HOST}:${REDIS_PORT} is not yet reachable or password unauthenticated."
         fi
     fi
 
-    # Pre-deploy backup & migrations
+    # Run database migrations
     if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
-        if [ -n "$DB_HOST" ] && command -v mariadb-dump >/dev/null 2>&1; then
-            echo "==> Creating pre-deploy database backup..."
-            mariadb-dump -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -p"$DB_PASSWORD" \
-                --single-transaction --quick "$DB_DATABASE" 2>/dev/null \
-                | gzip > "/app/storage/backups/backup_$(date +%Y%m%d_%H%M%S).sql.gz" || true
-        fi
-
         echo "==> Running database migrations..."
         php artisan migrate --force
         echo "==> Upgrading Filament assets..."
-        php artisan filament:upgrade || true
-        echo "==> Generating PWA manifest..."
-        php artisan pwa:manifest || true
+        php artisan filament:upgrade --ansi || true
+        echo "==> Optimizing Filament..."
+        php artisan filament:optimize || true
     fi
 
     # Production cache optimization
     if [ "${APP_ENV:-production}" = "production" ]; then
-        echo "==> Caching Laravel & Filament configuration for production..."
+        echo "==> Caching Laravel configuration for production..."
         php artisan config:cache
         php artisan route:cache || true
         php artisan view:cache || true
         php artisan icons:cache || true
-        php artisan filament:optimize || true
     fi
 fi
 
-# Pass through custom commands
-if [ "$#" -gt 0 ] && [ "$1" != "frankenphp" ] && [ "$1" != "octane" ]; then
+# Ensure storage permissions for www-data
+chown -R www-data:www-data /app/storage /app/bootstrap/cache 2>/dev/null || true
+
+# Pass through custom command if provided
+if [ "$#" -gt 0 ] && [ "$1" != "frankenphp" ]; then
     exec "$@"
 fi
 
-# Runtime Server Dispatch
-SERVER_MODE="${SERVER_MODE:-frankenphp}"
-if [ "$SERVER_MODE" = "octane" ]; then
-    if php artisan list 2>/dev/null | grep -q 'octane:start'; then
-        echo "==> Starting Laravel Octane (FrankenPHP worker)..."
-        exec php artisan octane:start \
-            --server=frankenphp \
-            --host=0.0.0.0 \
-            --port=80 \
-            --workers="${OCTANE_WORKERS:-auto}" \
-            --max-requests="${OCTANE_MAX_REQUESTS:-500}"
-    else
-        echo "==> Notice: laravel/octane is not installed. Falling back to native FrankenPHP..."
-        exec frankenphp run --config /etc/caddy/Caddyfile
-    fi
-else
-    echo "==> Starting native FrankenPHP..."
-    exec frankenphp run --config /etc/caddy/Caddyfile
-fi
+# Start native FrankenPHP server
+echo "==> Starting FrankenPHP via Caddyfile on port 80..."
+exec frankenphp run --config /etc/caddy/Caddyfile

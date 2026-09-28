@@ -1,15 +1,9 @@
 {
-  "services": [
-    {
-      "name": "web",
-      "build": ".",
-      "dockerfile": "Dockerfile",
-      "ports": [
-        "80"
-      ],
-      "domain": "noire.od.ua",
-      "restart": "unless-stopped",
-      "exposed": true
-    }
+  "$schema": "https://openship.io/openship.schema.json",
+  "framework": "docker-compose",
+  "composePath": "deploy/docker-compose.yml",
+  "port": 80,
+  "domains": [
+    "noire.od.ua"
   ]
 }

@@ -11,13 +11,12 @@ services:
         required: false
     environment:
       CONTAINER_ROLE: web
-      SERVER_MODE: ${SERVER_MODE:-frankenphp}
-      DB_HOST: mariadb
-      REDIS_HOST: redis
-    deploy:
-      resources:
-        limits:
-          memory: 256M
+      DB_HOST: ${DB_HOST:-mariadb}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-noire}
+      DB_USERNAME: ${DB_USERNAME:-noire_user}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
     volumes:
       - app_storage:/app/storage
     networks:
