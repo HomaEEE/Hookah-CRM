@@ -3,29 +3,46 @@ services:
     image: ${APP_IMAGE:-ghcr.io/homaeee/hookah-crm}:${APP_VERSION:-latest}
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8080}:80"
-    env_file:
-      - path: ../.env
-        required: false
-      - path: .env
-        required: false
+      - "80"
     environment:
       CONTAINER_ROLE: web
-      DB_CONNECTION: ${DB_CONNECTION:-mysql}
-      DB_HOST: ${DB_HOST:-mariadb}
-      DB_PORT: ${DB_PORT:-3306}
-      DB_DATABASE: ${DB_DATABASE:-noire}
-      DB_USERNAME: ${DB_USERNAME:-noire}
-      DB_PASSWORD: ${DB_PASSWORD:-}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      CACHE_PREFIX: ${CACHE_PREFIX:-noire_}
+      APP_NAME: "${APP_NAME:-Noire}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_URL: "${APP_URL:-https://noire.od.ua}"
+      APP_KEY: "${APP_KEY:-}"
+
+      # Database
+      DB_CONNECTION: "${DB_CONNECTION:-mysql}"
+      DB_HOST: "${DB_HOST:-mariadb}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_DATABASE: "${DB_DATABASE:-noire}"
+      DB_USERNAME: "${DB_USERNAME:-noire}"
+      DB_PASSWORD: "${DB_PASSWORD:-}"
+      DB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-openship_root_secret}"
+
+      # Redis
+      REDIS_HOST: "${REDIS_HOST:-redis}"
+      REDIS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+      CACHE_PREFIX: "${CACHE_PREFIX:-noire_}"
+      REDIS_PREFIX: "${REDIS_PREFIX:-noire_database_}"
+      SESSION_COOKIE: "${SESSION_COOKIE:-noire_session}"
+
+      # Drivers
+      CACHE_STORE: "${CACHE_STORE:-redis}"
+      QUEUE_CONNECTION: "${QUEUE_CONNECTION:-redis}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-redis}"
     volumes:
       - app_storage:/app/storage
     networks:
       - openship-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:80/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 volumes:
   app_storage:
