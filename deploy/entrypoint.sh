@@ -21,7 +21,7 @@ if probe_db "$INITIAL_DB_HOST" "$TARGET_DB_PORT"; then
     RESOLVED_DB_HOST="$INITIAL_DB_HOST"
 else
     echo "==> Notice: '$INITIAL_DB_HOST:$TARGET_DB_PORT' unreachable. Probing fallback hosts..."
-    for candidate in mariadb openship-openship-deploy-mariadb openship-deploy-mariadb mariadb-redis-mariadb; do
+    for candidate in mariadb openship-deploy-mariadb-1 openship-deploy-mariadb openship-openship-deploy-mariadb openship-openship-deploy-mariadb-1 openship-deploy_mariadb_1 mariadb-redis-mariadb mariadb-redis-mariadb-1 mariadb-1 host.docker.internal 172.17.0.1; do
         if probe_db "$candidate" "$TARGET_DB_PORT"; then
             RESOLVED_DB_HOST="$candidate"
             echo "==> Discovered MariaDB at '$RESOLVED_DB_HOST'"
@@ -50,7 +50,7 @@ if probe_redis "$INITIAL_REDIS_HOST" "$TARGET_REDIS_PORT"; then
     RESOLVED_REDIS_HOST="$INITIAL_REDIS_HOST"
 else
     echo "==> Notice: '$INITIAL_REDIS_HOST:$TARGET_REDIS_PORT' unreachable. Probing fallback hosts..."
-    for candidate in redis openship-openship-deploy-redis openship-deploy-redis mariadb-redis-redis; do
+    for candidate in redis openship-deploy-redis-1 openship-deploy-redis openship-openship-deploy-redis openship-openship-deploy-redis-1 openship-deploy_redis_1 mariadb-redis-redis mariadb-redis-redis-1 redis-1 host.docker.internal 172.17.0.1; do
         if probe_redis "$candidate" "$TARGET_REDIS_PORT"; then
             RESOLVED_REDIS_HOST="$candidate"
             echo "==> Discovered Redis at '$RESOLVED_REDIS_HOST'"
