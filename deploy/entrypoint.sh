@@ -112,6 +112,33 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
     php artisan package:discover --ansi || true
     php artisan storage:link --force || true
 
+    # Auto-detect OpenShip container names if default hostname is unreachable
+    if [ "${DB_HOST}" = "mariadb" ]; then
+        if ! php -r "\$s = @fsockopen('mariadb', (int)(getenv('DB_PORT') ?: 3306), \$e, \$m, 1); exit(\$s ? 0 : 1);" 2>/dev/null; then
+            for candidate in "openship-openship-deploy-mariadb" "openship-mariadb"; do
+                if php -r "\$s = @fsockopen('$candidate', (int)(getenv('DB_PORT') ?: 3306), \$e, \$m, 1); exit(\$s ? 0 : 1);" 2>/dev/null; then
+                    echo "==> Auto-detected MariaDB container name: ${candidate}"
+                    export DB_HOST="${candidate}"
+                    set_env_var "DB_HOST" "${candidate}"
+                    break
+                fi
+            done
+        fi
+    fi
+
+    if [ "${REDIS_HOST}" = "redis" ]; then
+        if ! php -r "\$s = @fsockopen('redis', (int)(getenv('REDIS_PORT') ?: 6379), \$e, \$m, 1); exit(\$s ? 0 : 1);" 2>/dev/null; then
+            for candidate in "openship-openship-deploy-redis" "openship-redis"; do
+                if php -r "\$s = @fsockopen('$candidate', (int)(getenv('REDIS_PORT') ?: 6379), \$e, \$m, 1); exit(\$s ? 0 : 1);" 2>/dev/null; then
+                    echo "==> Auto-detected Redis container name: ${candidate}"
+                    export REDIS_HOST="${candidate}"
+                    set_env_var "REDIS_HOST" "${candidate}"
+                    break
+                fi
+            done
+        fi
+    fi
+
     # Database connectivity & auto-provisioning
     if [ -n "$DB_HOST" ]; then
         echo "==> Checking database connection at ${DB_HOST}:${DB_PORT}..."
