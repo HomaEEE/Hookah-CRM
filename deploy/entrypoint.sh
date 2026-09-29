@@ -118,14 +118,16 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
         i=1
         while [ "$i" -le 30 ]; do
             # 1. Quick TCP socket probe
-            if ! php -r "
-                \$host = getenv('DB_HOST');
-                \$port = (int)(getenv('DB_PORT') ?: 3306);
-                \$s = @fsockopen(\$host, \$port, \$errno, \$errstr, 2);
-                if (\$s) { fclose(\$s); exit(0); }
+            SOCKET_ERR=$(php -r '
+                $host = getenv("DB_HOST");
+                $port = (int)(getenv("DB_PORT") ?: 3306);
+                $s = @fsockopen($host, $port, $errno, $errstr, 2);
+                if ($s) { fclose($s); exit(0); }
+                echo "$errstr ($errno)";
                 exit(1);
-            " >/dev/null 2>&1; then
-                echo "==> Waiting for database host ${DB_HOST}:${DB_PORT} to accept connections (${i}/30)..."
+            ' 2>&1)
+            if [ $? -ne 0 ]; then
+                echo "==> Waiting for database host ${DB_HOST}:${DB_PORT} (${i}/30): ${SOCKET_ERR}"
                 i=$((i + 1))
                 sleep 2
                 continue
