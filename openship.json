@@ -1,9 +1,10 @@
 {
-  "$schema": "https://openship.io/openship.schema.json",
-  "framework": "docker-compose",
-  "composePath": "deploy/docker-compose.yml",
-  "port": 80,
+  "name": "noire",
+  "compose_file": "deploy/docker-compose.yml",
   "domains": [
-    "noire.od.ua"
+    {
+      "service": "web",
+      "port": 80
+    }
   ]
 }
