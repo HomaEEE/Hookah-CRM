@@ -5,7 +5,8 @@
 - **Среда выполнения**: PHP 8.4 + FrankenPHP (Caddyfile `php_server` на порту 80).
 - **База данных**: MariaDB (авто-провизионинг базы и прав пользователя через `DB_ROOT_PASSWORD` в `entrypoint.sh`).
 - **Кэш/Очереди/Сессии**: Redis (`REDIS_HOST=redis`, порт `6379`).
-- **Внешний прокси**: OpenResty / Caddy в OpenShip (SSL через Let's Encrypt, перенаправление на порт контейнера 80).
+- **Внешний прокси & SSL**: Cloudflare (SSL/TLS терминируется на Cloudflare, маршрутизация проксирована на IP сервера/OpenShip).
+- **Веб-сервер контейнера**: FrankenPHP (Caddyfile на порту 80 с доверием к Cloudflare IP для заголовков `CF-Connecting-IP` и `X-Forwarded-Proto`).
 
 ---
 
@@ -40,6 +41,11 @@ CACHE_STORE=redis
 SESSION_DRIVER=redis
 QUEUE_CONNECTION=redis
 ```
+
+> **Настройка Cloudflare SSL:**
+> - В панели Cloudflare (раздел **SSL/TLS**) установите режим **Flexible** (трафик до сервера идёт на порт 80 HTTP, а клиенту отдаётся по HTTPS).
+> - Если на самом OpenShip для домена настроен SSL-сертификат origin, можно использовать режим **Full**.
+> - Laravel уже настроен на доверие ко всем прокси (`TrustProxies::$proxies = '*'`) и принудительно генерирует `https://` ссылки в production (`URL::forceScheme('https')`).
 
 ---
 

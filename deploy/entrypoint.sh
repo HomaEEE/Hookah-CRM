@@ -64,7 +64,7 @@ export DB_CONNECTION="${DB_CONNECTION:-mysql}"
 export DB_HOST="${DB_HOST:-mariadb}"
 export DB_PORT="${DB_PORT:-3306}"
 export DB_DATABASE="${DB_DATABASE:-noire}"
-export DB_USERNAME="${DB_USERNAME:-noire_user}"
+export DB_USERNAME="${DB_USERNAME:-noire}"
 export DB_ROOT_USER="${DB_ROOT_USER:-root}"
 
 if [ -z "${DB_PASSWORD:-}" ]; then
@@ -90,6 +90,8 @@ if [ -z "${REDIS_PASSWORD:-}" ]; then
     REDIS_PASSWORD=$(grep -E "^REDIS_PASSWORD=" /app/.env 2>/dev/null | cut -d '=' -f2- | tr -d '"')
 fi
 export REDIS_PASSWORD="${REDIS_PASSWORD:-}"
+export CACHE_PREFIX="${CACHE_PREFIX:-noire_}"
+export REDIS_PREFIX="${REDIS_PREFIX:-noire_database_}"
 
 set_env_var "REDIS_HOST" "${REDIS_HOST}"
 set_env_var "REDIS_PORT" "${REDIS_PORT}"
@@ -98,6 +100,8 @@ set_env_var "REDIS_PASSWORD" "${REDIS_PASSWORD}"
 set_env_var "CACHE_STORE" "${CACHE_STORE:-redis}"
 set_env_var "SESSION_DRIVER" "${SESSION_DRIVER:-redis}"
 set_env_var "QUEUE_CONNECTION" "${QUEUE_CONNECTION:-redis}"
+set_env_var "CACHE_PREFIX" "${CACHE_PREFIX}"
+set_env_var "REDIS_PREFIX" "${REDIS_PREFIX}"
 
 # Root password for MariaDB auto-creation
 ROOT_PW="${DB_ROOT_PASSWORD:-${MARIADB_ROOT_PASSWORD:-}}"
@@ -130,19 +134,32 @@ if [ "${CONTAINER_ROLE:-web}" = "web" ]; then
             # 2. Auto-provision database & user if root password is provided
             if [ -n "${ROOT_PW:-}" ]; then
                 echo "==> Auto-provisioning database '${DB_DATABASE}' and user '${DB_USERNAME}'..."
-                PROVISION_OUTPUT=$(mariadb --connect-timeout=5 -h "$DB_HOST" -P "$DB_PORT" -u "$DB_ROOT_USER" -p"$ROOT_PW" 2>&1 <<EOSQL
-CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
-CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
-ALTER USER '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
-GRANT ALL PRIVILEGES ON \`${DB_DATABASE}\`.* TO '${DB_USERNAME}'@'%';
-FLUSH PRIVILEGES;
-EOSQL
-) || true
-                if [ $? -eq 0 ]; then
-                    echo "==> Database '${DB_DATABASE}' and user '${DB_USERNAME}' provisioned successfully."
-                else
-                    echo "==> Notice: MariaDB provisioning command output: ${PROVISION_OUTPUT}"
-                fi
+                php -r '
+                    $host = getenv("DB_HOST");
+                    $port = (int)(getenv("DB_PORT") ?: 3306);
+                    $root = getenv("DB_ROOT_USER") ?: "root";
+                    $rootPw = getenv("ROOT_PW");
+                    $db = getenv("DB_DATABASE");
+                    $user = getenv("DB_USERNAME");
+                    $pass = getenv("DB_PASSWORD");
+
+                    try {
+                        $pdo = new PDO("mysql:host={$host};port={$port}", $root, $rootPw, [
+                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                            PDO::ATTR_TIMEOUT => 5
+                        ]);
+                        $pdo->exec("CREATE DATABASE IF NOT EXISTS \`{$db}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+                        if ($user && $user !== "root") {
+                            $pdo->exec("CREATE USER IF NOT EXISTS \x27{$user}\x27@\x27%\x27 IDENTIFIED BY \x27{$pass}\x27");
+                            $pdo->exec("ALTER USER \x27{$user}\x27@\x27%\x27 IDENTIFIED BY \x27{$pass}\x27");
+                            $pdo->exec("GRANT ALL PRIVILEGES ON \`{$db}\`.* TO \x27{$user}\x27@\x27%\x27");
+                            $pdo->exec("FLUSH PRIVILEGES");
+                        }
+                        echo "==> Database and user provisioned successfully.\n";
+                    } catch (\Throwable $e) {
+                        fwrite(STDERR, "==> DB Provisioning notice: " . $e->getMessage() . "\n");
+                    }
+                '
 
                 # Immediately wipe root password from environment memory
                 unset DB_ROOT_PASSWORD MARIADB_ROOT_PASSWORD ROOT_PW

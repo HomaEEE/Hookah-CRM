@@ -11,21 +11,26 @@ services:
         required: false
     environment:
       CONTAINER_ROLE: web
+      DB_CONNECTION: ${DB_CONNECTION:-mysql}
       DB_HOST: ${DB_HOST:-mariadb}
       DB_PORT: ${DB_PORT:-3306}
       DB_DATABASE: ${DB_DATABASE:-noire}
-      DB_USERNAME: ${DB_USERNAME:-noire_user}
+      DB_USERNAME: ${DB_USERNAME:-noire}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      CACHE_PREFIX: ${CACHE_PREFIX:-noire_}
     volumes:
       - app_storage:/app/storage
     networks:
-      - openship-mariadb
+      - openship-network
 
 volumes:
   app_storage:
     driver: local
 
 networks:
-  openship-mariadb:
+  openship-network:
     external: true
