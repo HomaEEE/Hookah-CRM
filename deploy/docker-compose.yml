@@ -39,9 +39,6 @@ services:
       FRANKENPHP_CONFIG: "worker ./public/frankenphp-worker.php"
     volumes:
       - app_storage:/app/storage
-    networks:
-      - default
-      - openship-deploy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://127.0.0.1:80/ || exit 1"]
       interval: 10s
@@ -52,9 +49,3 @@ services:
 volumes:
   app_storage:
     name: ${APP_SLUG:-noire}_storage
-
-networks:
-  default:
-  openship-deploy:
-    name: openship-openship-deploy
-    external: true
