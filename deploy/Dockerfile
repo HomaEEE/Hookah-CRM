@@ -43,6 +43,11 @@ RUN php -d memory_limit=-1 artisan filament:assets || true \
  && chmod -R 775 storage bootstrap/cache \
  && chmod +x /usr/local/bin/entrypoint.sh
 
+# Enable OPcache preloading strictly for the runtime environment.
+# Preload is kept runtime-only so that Composer install, dump-autoload,
+# and build-time artisan commands never fail attempting to load missing files.
+COPY deploy/php-runtime.ini /usr/local/etc/php/conf.d/zz-runtime-preload.ini
+
 EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

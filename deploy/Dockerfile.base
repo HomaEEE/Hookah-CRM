@@ -27,6 +27,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       opcache \
  && rm -rf /var/lib/apt/lists/*
 
+# Base PHP configuration (build-safe: opcache enabled, but NO preloading)
+COPY deploy/php.ini /usr/local/etc/php/conf.d/99-custom.ini
+
 WORKDIR /app
 EXPOSE 80
 
