@@ -1,10 +1,21 @@
 <?php
-/**
+
+namespace Modules\Finance\app\Services;
+
+use Illuminate\Support\Facades\Http;
+
+class MonobankWebhook
+{
+    public function __construct(protected ?string $token = null)
+    {
+    }
+
+    /**
      * Устанавливает URL для получения вебхуков от Monobank
      */
     public function setWebhook(string $url): bool
     {
-        $response = \Illuminate\Support\Facades\Http::withHeaders([
+        $response = Http::withHeaders([
             'X-Token' => $this->token,
         ])
         ->timeout(10)
@@ -12,6 +23,6 @@
             'webHookUrl' => $url,
         ]);
 
-        // Возвращает true, если ответ 200 OK
         return $response->successful();
     }
+}

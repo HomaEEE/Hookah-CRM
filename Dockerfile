@@ -13,7 +13,7 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 COPY . .
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --no-scripts
 
 # ── Stage 2: Front-end assets (Vite + Filament theme) ────────────────────────
 FROM node:22-slim AS assets
