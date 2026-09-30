@@ -3,7 +3,7 @@
 
         <div class="logo p-8 flex flex-col md:flex-row gap-10 items-top">
         <div class="w-full md:flex-1 justify-left md:justify-start">
-            <img class="h-[5vh]" src="{{ asset('assets/imgs/new-logo.svg') }}" alt="{{ __('Logo') }}">
+            <img class="h-[5vh] w-auto" src="{{ asset('assets/imgs/new-logo.svg') }}" alt="{{ __('Logo') }}" width="128" height="43" loading="lazy" decoding="async">
         </div>
 
         <div class="w-full md:flex-1">

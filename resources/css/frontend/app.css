@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "fonts";
 @import "style";
 
 @source "../../views";

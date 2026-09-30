@@ -2,7 +2,7 @@
 <div class="reserve relative fade-up"
          x-data="reservationForm">
          <div class="bg-img ">
-            <img src="{{ asset('assets/imgs/about/reserve/bg.webp') }}" alt="Резерв стола Noire" class="w-full h-full object-cover" />
+            <img src="{{ asset('assets/imgs/about/reserve/bg.webp') }}" alt="Резерв стола Noire" width="1393" height="749" loading="lazy" decoding="async" class="w-full h-full object-cover" />
          </div>
 
         <div class="container flex flex-col justify-between">

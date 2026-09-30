@@ -1,6 +1,9 @@
 <div class="hero relative  md:p-16">
 	<div class="bg">
-		<img src="{{ asset('assets/imgs/hero/bg.webp') }}" alt="Noire Lounge Bar" fetchpriority="high" decoding="async" width="1920" height="1080">
+		<picture>
+			<source media="(max-width: 768px)" srcset="{{ asset('assets/imgs/hero/bg-mobile.webp') }}" type="image/webp" width="720" height="438">
+			<img src="{{ asset('assets/imgs/hero/bg.webp') }}" alt="Noire Lounge Bar" fetchpriority="high" decoding="async" width="1440" height="876">
+		</picture>
 	</div>
     <div class="container mx-auto px-4">
 		<div class="hero-title gradient-title text-reveal" >{{ __('Home Hero title') }}

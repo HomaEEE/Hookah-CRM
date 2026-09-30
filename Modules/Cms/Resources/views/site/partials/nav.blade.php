@@ -4,7 +4,7 @@
         <div class="flex-1 logo">
                 <h1>
                 <a href="/">
-                    <img class="w-32" src="{{asset ('assets/imgs/new-logo.svg')}}" alt="{{ config('app.site') }}">
+                    <img class="w-32 h-auto" src="{{asset ('assets/imgs/new-logo.svg')}}" alt="{{ config('app.site') }}" width="128" height="43">
                 </a>
             </h1>
         </div>

@@ -51,6 +51,8 @@
                 <img src="{{ asset('assets/imgs/about/coal-1.webp') }}"
                     alt="Уголь"
                     id="coal-1"
+                    width="465"
+                    height="471"
                     loading="lazy"
                     decoding="async"
                     class="absolute w-[27vw] md:w-[12vw] top-[20%] left-[30%] drop-shadow-[0_0_15px_rgba(255,85,0,0.4)]">
@@ -58,6 +60,8 @@
                 <img src="{{ asset('assets/imgs/about/coal-2.webp') }}"
                     alt="Уголь"
                     id="coal-2"
+                    width="383"
+                    height="338"
                     loading="lazy"
                     decoding="async"
                     class="absolute w-[30vw] md:w-[30%] bottom-[25%] left-[20%] drop-shadow-[0_0_20px_rgba(255,60,0,0.5)]">
@@ -65,6 +69,8 @@
                 <img src="{{ asset('assets/imgs/about/coal-3.webp') }}"
                     alt="Уголь"
                     id="coal-3"
+                    width="405"
+                    height="347"
                     loading="lazy"
                     decoding="async"
                     class="absolute w-[25vw] md:w-[30%] top-[40%] right-[20%] drop-shadow-[0_0_10px_rgba(255,100,0,0.3)]">
