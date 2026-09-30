@@ -64,7 +64,7 @@ export REDIS_HOST="${RESOLVED_REDIS_HOST:-$INITIAL_REDIS_HOST}"
 # ------------------------------------------------------------------------------
 # 3. Auto-Provision Database and User via PDO
 # ------------------------------------------------------------------------------
-export DB_ROOT_PASSWORD="${DB_ROOT_PASSWORD:-openship_root_secret}"
+export DB_ROOT_PASSWORD="${DB_ROOT_PASSWORD:-DbRoot_Secr3t_9x7vK2m}"
 
 php -r '
 $host = getenv("DB_HOST");
@@ -144,6 +144,8 @@ echo "==> Database connected successfully."
 # ------------------------------------------------------------------------------
 php artisan storage:link --quiet || true
 php artisan optimize:clear
+php artisan filament:assets --quiet || true
+chown -R www-data:www-data public/js public/css public/fonts 2>/dev/null || true
 
 echo "==> Running database migrations..."
 php artisan migrate --force
@@ -166,11 +168,15 @@ if [ "${APP_ENV:-production}" = "production" ]; then
     php artisan route:cache
     php artisan view:cache
     php artisan icons:cache 2>/dev/null || true
-    php artisan filament:cache-components 2>/dev/null || true
+    php artisan filament:optimize 2>/dev/null || true
 fi
 
 # ------------------------------------------------------------------------------
 # 7. Start FrankenPHP
 # ------------------------------------------------------------------------------
-echo "==> Starting FrankenPHP on port 80..."
+if [ "$#" -gt 0 ] && [ "$1" != "frankenphp" ]; then
+    exec "$@"
+fi
+
+echo "==> Starting FrankenPHP on port ${PORT:-80}..."
 exec frankenphp run --config /etc/caddy/Caddyfile

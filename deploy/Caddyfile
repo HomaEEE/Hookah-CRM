@@ -1,31 +1,91 @@
 {
     admin off
     auto_https off
-    frankenphp
+
+    frankenphp {
+        num_threads 2
+    }
+
     order php_server before file_server
 
     servers {
         trusted_proxies static private_ranges 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22
         client_ip_headers CF-Connecting-IP X-Forwarded-For
+        timeouts {
+            read_body 60s
+            read_header 10s
+            write 60s
+            idle 120s
+        }
+        max_header_size 16kb
     }
 }
 
-:80 {
+:{$PORT:80} {
     root * /app/public
-    encode zstd br gzip
 
-    @static {
-        path /build/* /assets/* *.ico *.css *.js *.gif *.jpg *.jpeg *.png *.svg *.woff *.woff2 *.webp
+    # Selective compression
+    encode zstd br gzip {
+        match {
+            header Content-Type text/*
+            header Content-Type application/json*
+            header Content-Type application/javascript*
+            header Content-Type application/xhtml+xml*
+            header Content-Type application/atom+xml*
+            header Content-Type image/svg+xml*
+        }
     }
 
-    header @static Cache-Control "public, max-age=31536000, immutable"
+    # Deny access to hidden dotfiles & dependency manifests
+    @forbidden {
+        path /.git/*
+        path /.env*
+        path /composer.*
+        path /package.*
+        path */.*
+    }
+    respond @forbidden 404
 
-    php_server
-    file_server
+    # 1. Base cache for general static files (favicon, non-hashed images) -> 7 days
+    @generalStatic {
+        path *.ico
+        path *.png
+        path *.jpg
+        path *.jpeg
+        path *.gif
+        path *.svg
+        path *.webp
+        path *.css
+        path *.js
+    }
+    header @generalStatic Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
 
+    # 2. Uploaded user assets from /storage/ -> 30 days with stale-while-revalidate
+    @userStorage {
+        path /storage/*
+    }
+    header @userStorage Cache-Control "public, max-age=2592000, stale-while-revalidate=604800"
+
+    # 3. Hashed and versioned static assets (Vite / Filament / fonts) -> 1 year immutable
+    @immutable {
+        path /build/*
+        path /fonts/*
+        path /js/filament/*
+        path /css/filament/*
+        path *.woff
+        path *.woff2
+    }
+    header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+    # Security & header cleanup
     header {
+        -Server
+        -X-Powered-By
         X-Content-Type-Options "nosniff"
         X-Frame-Options "SAMEORIGIN"
         Referrer-Policy "strict-origin-when-cross-origin"
     }
+
+    php_server
+    file_server
 }

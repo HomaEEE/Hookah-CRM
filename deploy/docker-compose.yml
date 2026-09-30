@@ -18,13 +18,13 @@ services:
       DB_DATABASE: "${DB_DATABASE:-noire}"
       DB_USERNAME: "${DB_USERNAME:-noire}"
       DB_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required}"
-      DB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-openship_root_secret}"
+      DB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-DbRoot_Secr3t_9x7vK2m}"
 
       # Redis
       REDIS_CLIENT: phpredis
       REDIS_HOST: "${REDIS_HOST:-redis}"
       REDIS_PORT: "${REDIS_PORT:-6379}"
-      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-Redis_Secr3t_7n2pL9y}"
 
       # Laravel Drivers
       CACHE_STORE: redis

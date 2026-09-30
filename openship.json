@@ -21,18 +21,18 @@
     "DB_DATABASE": "noire",
     "DB_USERNAME": "noire",
     "DB_PASSWORD": {
-      "value": "",
+      "value": "Noire_Db_Pass_4m8qW1z",
       "secret": true
     },
     "DB_ROOT_PASSWORD": {
-      "value": "openship_root_secret",
+      "value": "DbRoot_Secr3t_9x7vK2m",
       "secret": true
     },
     "REDIS_CLIENT": "phpredis",
     "REDIS_HOST": "redis",
     "REDIS_PORT": "6379",
     "REDIS_PASSWORD": {
-      "value": "",
+      "value": "Redis_Secr3t_7n2pL9y",
       "secret": true
     },
     "CACHE_STORE": "redis",
