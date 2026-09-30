@@ -35,8 +35,6 @@ jobs:
           filters: |
             base:
               - 'deploy/Dockerfile.base'
-              - 'deploy/php.ini'
-              - 'deploy/Caddyfile'
 
   build-base:
     needs: check-changes

@@ -27,10 +27,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       opcache \
  && rm -rf /var/lib/apt/lists/*
 
-# Copy base configuration
-COPY deploy/php.ini /usr/local/etc/php/conf.d/99-custom.ini
-COPY deploy/Caddyfile /etc/caddy/Caddyfile
-
 WORKDIR /app
 EXPOSE 80
 

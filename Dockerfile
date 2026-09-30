@@ -33,6 +33,8 @@ WORKDIR /app
 
 COPY --from=vendor /app /app
 COPY --from=assets /app/public/build /app/public/build
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+COPY deploy/php.ini /usr/local/etc/php/conf.d/99-custom.ini
 COPY deploy/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN php -d memory_limit=-1 artisan filament:assets || true \
