@@ -13,6 +13,7 @@ Homestead.json
 !/.github/
 !/.github/**
 !/.gitignore
+!/.dockerignore
 .phpunit.result.cache
 .phpstorm.meta.php
 

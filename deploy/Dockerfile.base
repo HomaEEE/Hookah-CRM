@@ -1,0 +1,37 @@
+# syntax=docker/dockerfile:1.7
+# ==============================================================================
+# Base Image for Noire / Hookah-CRM (FrankenPHP 1 + PHP 8.4 + Extensions)
+# Rebuilt ONLY when PHP version, extensions, or system packages change.
+# ==============================================================================
+FROM dunglas/frankenphp:1-php8.4-bookworm
+
+# Install extension installer and Composer
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Install system dependencies and compiled PHP extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      mariadb-client \
+      unzip \
+      git \
+      curl \
+ && install-php-extensions \
+      zip \
+      intl \
+      bcmath \
+      pcntl \
+      pdo_mysql \
+      gd \
+      exif \
+      redis \
+      opcache \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy base configuration
+COPY deploy/php.ini /usr/local/etc/php/conf.d/99-custom.ini
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+
+WORKDIR /app
+EXPOSE 80
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
