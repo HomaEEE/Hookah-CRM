@@ -18,7 +18,7 @@ services:
       DB_DATABASE: "${DB_DATABASE:-noire}"
       DB_USERNAME: "${DB_USERNAME:-noire}"
       DB_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD is required}"
-      DB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-DbRoot_Secr3t_9x7vK2m}"
+      DB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD is required}"
 
       # Redis
       REDIS_CLIENT: phpredis
@@ -39,6 +39,9 @@ services:
       FRANKENPHP_CONFIG: "worker ./public/frankenphp-worker.php"
     volumes:
       - app_storage:/app/storage
+    networks:
+      - default
+      - infra
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://127.0.0.1:80/ || exit 1"]
       interval: 10s
@@ -49,3 +52,9 @@ services:
 volumes:
   app_storage:
     name: ${APP_SLUG:-noire}_storage
+
+networks:
+  default: {}
+  infra:
+    name: infra-network
+    external: true

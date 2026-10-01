@@ -64,7 +64,10 @@ export REDIS_HOST="${RESOLVED_REDIS_HOST:-$INITIAL_REDIS_HOST}"
 # ------------------------------------------------------------------------------
 # 3. Auto-Provision Database and User via PDO
 # ------------------------------------------------------------------------------
-export DB_ROOT_PASSWORD="${DB_ROOT_PASSWORD:-DbRoot_Secr3t_9x7vK2m}"
+if [ -z "${DB_ROOT_PASSWORD:-}" ]; then
+    echo "==> ERROR: DB_ROOT_PASSWORD is required for database auto-provisioning."
+    exit 1
+fi
 
 php -r '
 $host = getenv("DB_HOST");
@@ -74,9 +77,9 @@ $dbName = preg_replace("/[^a-zA-Z0-9_]/", "", getenv("DB_DATABASE"));
 $dbUser = preg_replace("/[^a-zA-Z0-9_]/", "", getenv("DB_USERNAME"));
 $dbPass = getenv("DB_PASSWORD");
 
-if (empty($dbName) || empty($dbUser)) {
-    echo "==> DB_DATABASE or DB_USERNAME not set. Skipping auto-provisioning.\n";
-    exit(0);
+if (empty($dbName) || empty($dbUser) || empty($dbPass)) {
+    echo "==> ERROR: DB_DATABASE, DB_USERNAME, or DB_PASSWORD not set.\n";
+    exit(1);
 }
 
 try {
