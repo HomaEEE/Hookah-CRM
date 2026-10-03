@@ -49,6 +49,17 @@ fi
 TARGET_DB_PORT="${DB_PORT:-3306}"
 INITIAL_DB_HOST="${DB_HOST:-mariadb}"
 
+# Default gateway IP (docker host) from /proc/net/route, hex little-endian -> dotted
+GATEWAY_IP="$(awk '$2=="00000000"{h=$3; printf "%d.%d.%d.%d", strtonum("0x" substr(h,7,2)), strtonum("0x" substr(h,5,2)), strtonum("0x" substr(h,3,2)), strtonum("0x" substr(h,1,2)); exit}' /proc/net/route 2>/dev/null || true)"
+if [ -z "$GATEWAY_IP" ]; then
+    GATEWAY_IP="$(php -r '
+        foreach (@file("/proc/net/route") ?: [] as $l) {
+            $f = preg_split("/\s+/", trim($l));
+            if (($f[1] ?? "") === "00000000") { echo long2ip(unpack("V", pack("H*", $f[2]))[1]); break; }
+        }
+    ' 2>/dev/null || true)"
+fi
+
 probe_db() {
     php -r "
         \$fp = @fsockopen('$1', (int)'$2', \$errno, \$errstr, 2);
@@ -61,7 +72,7 @@ if probe_db "$INITIAL_DB_HOST" "$TARGET_DB_PORT"; then
     RESOLVED_DB_HOST="$INITIAL_DB_HOST"
 else
     echo "==> Notice: '$INITIAL_DB_HOST:$TARGET_DB_PORT' unreachable. Probing fallback hosts..."
-    for candidate in mariadb openship-deploy-mariadb-1 openship-deploy-mariadb openship-openship-deploy-mariadb openship-openship-deploy-mariadb-1 openship-deploy_mariadb_1 mariadb-redis-mariadb mariadb-redis-mariadb-1 mariadb-1 host.docker.internal 172.17.0.1; do
+    for candidate in mariadb openship-deploy-mariadb-1 openship-deploy-mariadb openship-openship-deploy-mariadb openship-openship-deploy-mariadb-1 openship-deploy_mariadb_1 mariadb-redis-mariadb mariadb-redis-mariadb-1 mariadb-1 host.docker.internal 172.17.0.1 $GATEWAY_IP; do
         if probe_db "$candidate" "$TARGET_DB_PORT"; then
             RESOLVED_DB_HOST="$candidate"
             echo "==> Discovered MariaDB at '$RESOLVED_DB_HOST'"
@@ -70,7 +81,11 @@ else
     done
 fi
 
-export DB_HOST="${RESOLVED_DB_HOST:-$INITIAL_DB_HOST}"
+if [ -z "$RESOLVED_DB_HOST" ]; then
+    echo "==> ERROR: MariaDB not reachable from this container. Attach it to the same docker network as 'mariadb' (set INFRA_NETWORK to its real name: docker inspect <mariadb> --format '{{json .NetworkSettings.Networks}}'), or set DB_HOST to a reachable host/IP."
+    exit 1
+fi
+export DB_HOST="$RESOLVED_DB_HOST"
 
 # ------------------------------------------------------------------------------
 # 2. Resolve Redis Host
@@ -90,7 +105,7 @@ if probe_redis "$INITIAL_REDIS_HOST" "$TARGET_REDIS_PORT"; then
     RESOLVED_REDIS_HOST="$INITIAL_REDIS_HOST"
 else
     echo "==> Notice: '$INITIAL_REDIS_HOST:$TARGET_REDIS_PORT' unreachable. Probing fallback hosts..."
-    for candidate in redis openship-deploy-redis-1 openship-deploy-redis openship-openship-deploy-redis openship-openship-deploy-redis-1 openship-deploy_redis_1 mariadb-redis-redis mariadb-redis-redis-1 redis-1 host.docker.internal 172.17.0.1; do
+    for candidate in redis openship-deploy-redis-1 openship-deploy-redis openship-openship-deploy-redis openship-openship-deploy-redis-1 openship-deploy_redis_1 mariadb-redis-redis mariadb-redis-redis-1 redis-1 host.docker.internal 172.17.0.1 $GATEWAY_IP; do
         if probe_redis "$candidate" "$TARGET_REDIS_PORT"; then
             RESOLVED_REDIS_HOST="$candidate"
             echo "==> Discovered Redis at '$RESOLVED_REDIS_HOST'"

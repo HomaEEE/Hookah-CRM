@@ -40,7 +40,6 @@ services:
     volumes:
       - app_storage:/app/storage
     networks:
-      - default
       - infra
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://127.0.0.1:80/ || exit 1"]
@@ -54,7 +53,6 @@ volumes:
     name: ${APP_SLUG:-noire}_storage
 
 networks:
-  default: {}
   infra:
     name: ${INFRA_NETWORK:-openship-openship-deploy}
     external: true

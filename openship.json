@@ -1,6 +1,6 @@
 {
   "$schema": "https://openship.io/openship.schema.json",
-  "framework": "docker-compose",
+  "framework": "laravel",
   "composePath": "deploy/docker-compose.yml",
   "port": 80,
   "domains": [
