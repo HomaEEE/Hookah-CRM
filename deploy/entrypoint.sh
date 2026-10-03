@@ -44,6 +44,19 @@ if [ -f "openship.json" ]; then
 fi
 
 # ------------------------------------------------------------------------------
+# 0.1 APP_KEY: use provided, else reuse/generate one persisted in storage volume
+# ------------------------------------------------------------------------------
+KEY_FILE="storage/app/.app_key"
+if [ -z "${APP_KEY:-}" ]; then
+    if [ ! -s "$KEY_FILE" ]; then
+        echo "==> APP_KEY not set. Generating and persisting to $KEY_FILE..."
+        mkdir -p "$(dirname "$KEY_FILE")"
+        (umask 077; php artisan key:generate --show --no-interaction > "$KEY_FILE")
+    fi
+    export APP_KEY="$(cat "$KEY_FILE")"
+fi
+
+# ------------------------------------------------------------------------------
 # 1. Resolve MariaDB Host
 # ------------------------------------------------------------------------------
 TARGET_DB_PORT="${DB_PORT:-3306}"
@@ -178,7 +191,7 @@ export DB_ROOT_PASSWORD=""
 # 4. Wait for Database Readiness with Project Credentials
 # ------------------------------------------------------------------------------
 echo "==> Checking database connection at ${DB_HOST}:${DB_PORT}..."
-MAX_TRIES=30
+MAX_TRIES=5
 COUNT=0
 
 until php -r '

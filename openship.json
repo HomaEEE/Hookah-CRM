@@ -9,7 +9,7 @@
   "env": {
     "APP_NAME": "Noire",
     "APP_ENV": "production",
-    "APP_DEBUG": "true",
+    "APP_DEBUG": "false",
     "APP_URL": "https://noire.od.ua",
     "APP_KEY": {
       "value": "",
@@ -21,7 +21,7 @@
     "DB_DATABASE": "noire",
     "DB_USERNAME": "noire",
     "DB_PASSWORD": {
-      "value": "Noire_Db_Pass_4m8qW1z",
+      "value": "",
       "secret": true
     },
     "DB_ROOT_PASSWORD": {

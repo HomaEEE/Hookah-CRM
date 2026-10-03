@@ -9,7 +9,7 @@ services:
       APP_ENV: "${APP_ENV:-production}"
       APP_DEBUG: "${APP_DEBUG:-false}"
       APP_URL: "${APP_URL:-https://noire.od.ua}"
-      APP_KEY: "${APP_KEY:?APP_KEY is required}"
+      APP_KEY: "${APP_KEY:-}"
 
       # Database
       DB_CONNECTION: mysql
@@ -24,7 +24,7 @@ services:
       REDIS_CLIENT: phpredis
       REDIS_HOST: "${REDIS_HOST:-redis}"
       REDIS_PORT: "${REDIS_PORT:-6379}"
-      REDIS_PASSWORD: "${REDIS_PASSWORD:-Redis_Secr3t_7n2pL9y}"
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
 
       # Laravel Drivers
       CACHE_STORE: redis
