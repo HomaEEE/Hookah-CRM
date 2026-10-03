@@ -4,6 +4,46 @@ set -e
 echo "==> Bootstrapping application environment..."
 
 # ------------------------------------------------------------------------------
+# 0. Sync and Export Environment from openship.json
+# ------------------------------------------------------------------------------
+if [ -f "openship.json" ]; then
+    # Export missing variables from openship.json into shell environment
+    eval "$(php -r '
+        $json = @json_decode(file_get_contents("openship.json"), true);
+        if (!empty($json["env"]) && is_array($json["env"])) {
+            foreach ($json["env"] as $k => $v) {
+                if (getenv($k) === false || getenv($k) === "") {
+                    $val = is_array($v) ? ($v["value"] ?? "") : (string)$v;
+                    if ($val !== "") {
+                        echo "export {$k}=" . escapeshellarg($val) . "\n";
+                    }
+                }
+            }
+        }
+    ')"
+
+    # Create .env if it does not exist
+    if [ ! -f ".env" ]; then
+        echo "==> Generating .env from openship.json..."
+        php -r '
+            $json = @json_decode(file_get_contents("openship.json"), true);
+            if (!empty($json["env"]) && is_array($json["env"])) {
+                $lines = [];
+                foreach ($json["env"] as $k => $v) {
+                    $val = is_array($v) ? ($v["value"] ?? "") : (string)$v;
+                    if (preg_match("/\s/", $val)) {
+                        $val = "\"" . addcslashes($val, "\"\\$") . "\"";
+                    }
+                    $lines[] = "{$k}={$val}";
+                }
+                file_put_contents(".env", implode("\n", $lines) . "\n");
+                echo "==> Generated .env with " . count($lines) . " variables.\n";
+            }
+        '
+    fi
+fi
+
+# ------------------------------------------------------------------------------
 # 1. Resolve MariaDB Host
 # ------------------------------------------------------------------------------
 TARGET_DB_PORT="${DB_PORT:-3306}"
@@ -64,28 +104,41 @@ export REDIS_HOST="${RESOLVED_REDIS_HOST:-$INITIAL_REDIS_HOST}"
 # ------------------------------------------------------------------------------
 # 3. Auto-Provision Database and User via PDO
 # ------------------------------------------------------------------------------
-if [ -z "${DB_ROOT_PASSWORD:-}" ]; then
-    echo "==> ERROR: DB_ROOT_PASSWORD is required for database auto-provisioning."
-    exit 1
-fi
-
 php -r '
-$host = getenv("DB_HOST");
+$host = getenv("DB_HOST") ?: "mariadb";
 $port = (int)(getenv("DB_PORT") ?: 3306);
-$rootPass = getenv("DB_ROOT_PASSWORD");
 $dbName = preg_replace("/[^a-zA-Z0-9_]/", "", getenv("DB_DATABASE"));
 $dbUser = preg_replace("/[^a-zA-Z0-9_]/", "", getenv("DB_USERNAME"));
-$dbPass = getenv("DB_PASSWORD");
+$dbPass = getenv("DB_PASSWORD") ?: "";
+$rootPass = getenv("DB_ROOT_PASSWORD") ?: "";
 
-if (empty($dbName) || empty($dbUser) || empty($dbPass)) {
-    echo "==> ERROR: DB_DATABASE, DB_USERNAME, or DB_PASSWORD not set.\n";
+if (empty($dbName) || empty($dbUser)) {
+    echo "==> ERROR: DB_DATABASE or DB_USERNAME is not configured.\n";
+    exit(1);
+}
+
+// 1. Проверяем: возможно база и пользователь уже созданы и доступны
+try {
+    $testPdo = new PDO("mysql:host={$host};port={$port};dbname={$dbName}", $dbUser, $dbPass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_TIMEOUT => 2,
+    ]);
+    echo "==> MariaDB: Database [{$dbName}] already accessible with user [{$dbUser}]. Skipping root provisioning.\n";
+    exit(0);
+} catch (\Throwable $e) {
+    // База или пользователь пока недоступны — требуется создание через root
+}
+
+// 2. Если требуется создание, но root-пароль не задан — фатальная ошибка
+if ($rootPass === "") {
+    echo "==> ERROR: Database [{$dbName}] not accessible with [{$dbUser}] and DB_ROOT_PASSWORD is not provided.\n";
     exit(1);
 }
 
 try {
     $pdo = new PDO("mysql:host={$host};port={$port}", "root", $rootPass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_TIMEOUT => 3,
+        PDO::ATTR_TIMEOUT => 5,
     ]);
     
     $quotedPass = $pdo->quote($dbPass);
@@ -95,9 +148,10 @@ try {
     $pdo->exec("GRANT ALL PRIVILEGES ON `{$dbName}`.* TO \"{$dbUser}\"@\"%\"");
     $pdo->exec("FLUSH PRIVILEGES");
 
-    echo "==> MariaDB: Database [{$dbName}] and user [{$dbUser}] ready.\n";
+    echo "==> MariaDB: Database [{$dbName}] and user [{$dbUser}] provisioned successfully.\n";
 } catch (\Throwable $e) {
-    echo "==> MariaDB auto-provision notice: " . $e->getMessage() . "\n";
+    echo "==> ERROR provisioning MariaDB: " . $e->getMessage() . "\n";
+    exit(1);
 }
 '
 

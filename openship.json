@@ -9,7 +9,7 @@
   "env": {
     "APP_NAME": "Noire",
     "APP_ENV": "production",
-    "APP_DEBUG": "false",
+    "APP_DEBUG": "true",
     "APP_URL": "https://noire.od.ua",
     "APP_KEY": {
       "value": "",
@@ -25,14 +25,14 @@
       "secret": true
     },
     "DB_ROOT_PASSWORD": {
-      "value": "DbRoot_Secr3t_9x7vK2m",
+      "value": "",
       "secret": true
     },
     "REDIS_CLIENT": "phpredis",
     "REDIS_HOST": "redis",
     "REDIS_PORT": "6379",
     "REDIS_PASSWORD": {
-      "value": "Redis_Secr3t_7n2pL9y",
+      "value": "",
       "secret": true
     },
     "CACHE_STORE": "redis",

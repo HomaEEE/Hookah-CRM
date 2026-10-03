@@ -10,7 +10,7 @@
 - **Воркспейс**: `Local User's workspace` (`org_2530a76f-d95a-4a78-ba53-4deb0cbb4b69`)
 - **Сервер**: `1f974c1c-7d92-496e-99ae-d0495fda6fa8`
 - **Единая сеть Docker**: `openship-openship-deploy` (подсеть `172.18.0.0/16`).
-  - *Важно*: Новых Docker-сетей не создавалось. Все сервисы инфраструктуры запущены в общей сети проекта и доступны друг другу напрямую по именам хостов (`mariadb`, `redis`, `phpmyadmin`).
+  - _Важно_: Новых Docker-сетей не создавалось. Все сервисы инфраструктуры запущены в общей сети проекта и доступны друг другу напрямую по именам хостов (`mariadb`, `redis`, `phpmyadmin`).
 
 ---
 
@@ -19,6 +19,7 @@
 Проект в OpenShip: `OpenShip-deploy` (`proj_7vDG4KJtN-wVAotZ`)
 
 ### 2.1. MariaDB (СУБД)
+
 - **Имя сервиса / хост**: `mariadb`
 - **Образ**: `mariadb:11.4`
 - **Порт**: `3306` (внутренний)
@@ -41,6 +42,7 @@
   - `Пароль пользователя`: `Noire_Db_Pass_4m8qW1z`
 
 ### 2.2. Redis (Кэш, Очереди, Сессии)
+
 - **Имя сервиса / хост**: `redis`
 - **Образ**: `redis:7.4-alpine`
 - **Порт**: `6379` (внутренний)
@@ -53,6 +55,7 @@
 - **Пароль**: `Redis_Secr3t_7n2pL9y`
 
 ### 2.3. phpMyAdmin (Управление и восстановление БД)
+
 - **Имя сервиса / хост**: `phpmyadmin`
 - **Образ**: `phpmyadmin/phpmyadmin:latest`
 - **Внутренний порт**: `80` (IP: `172.18.0.4`)
@@ -70,8 +73,7 @@
 1. Откройте в браузере: **`https://pma.blackcore.dev`**
 2. Авторизуйтесь:
    - **Пользователь**: `root`
-   - **Пароль**: `DbRoot_Secr3t_9x7vK2m`
-   *(Сервер `mariadb:3306` подключён автоматически).*
+   - **Пароль**: ``*(Сервер`mariadb:3306` подключён автоматически).\*
 3. В левой колонке выберите базу данных **`noire`** (если база пустая, она уже создана).
 4. Перейдите на вкладку **Импорт (Import)** в верхнем меню.
 5. Нажмите **Выберите файл** и укажите дамп базы данных (`.sql` или `.sql.gz`).
@@ -83,6 +85,7 @@
 ## 4. Почему перезапускался контейнер приложения Laravel (`Hookah-CRM`)
 
 В логах развертывания `web` было зафиксировано:
+
 ```text
 ==> Running database migrations...
 2026_08_19_000741_add_sold_fields_to_inventory_items_table ..... FAIL
@@ -90,7 +93,7 @@ SQLSTATE[42S02]: Base table or view not found: 1146 Table 'noire.inventory_items
 alter table `inventory_items` add `sold_quantity` int null after `quantity`
 ```
 
-**Причина**: В пустой базе данных миграция `2026_08_19_000741_add_sold_fields_to_inventory_items_table` запускалась раньше создания базовой таблицы `inventory_items` (которая создаётся модулем `Modules/Manage`). 
+**Причина**: В пустой базе данных миграция `2026_08_19_000741_add_sold_fields_to_inventory_items_table` запускалась раньше создания базовой таблицы `inventory_items` (которая создаётся модулем `Modules/Manage`).
 После восстановления оригинального дампа базы через phpMyAdmin все базовые таблицы будут на месте, и миграции завершатся успешно.
 
 ---
@@ -98,6 +101,7 @@ alter table `inventory_items` add `sold_quantity` int null after `quantity`
 ## 5. Запуск приложения Noire (`Hookah-CRM`)
 
 После восстановления дампа базы:
+
 1. Контейнер `Hookah-CRM` в OpenShip перезапустится (или запустите вручную в панели).
 2. [deploy/entrypoint.sh](file:///Users/arthurboyko/Sites/Noire/deploy/entrypoint.sh) выполнит:
    - Проверку сокета MariaDB (`mariadb:3306`) и Redis (`redis:6379`).
@@ -145,5 +149,3 @@ alter table `inventory_items` add `sold_quantity` int null after `quantity`
   - Селективное сжатие: `encode zstd br gzip` только для текстовых/json/js/css/svg ответов.
   - Раздельный кэш: `/build/*` и Filament ассеты — `max-age=31536000, immutable`; `/storage/*` — `max-age=2592000, stale-while-revalidate`.
   - Безопасность: блокировка `/.git/*`, `/.env*`, `/composer.*`, удаление `Server` и `X-Powered-By`.
-
-
