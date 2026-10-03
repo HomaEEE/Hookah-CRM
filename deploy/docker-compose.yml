@@ -54,5 +54,5 @@ volumes:
 
 networks:
   infra:
-    name: ${INFRA_NETWORK:-openship-openship-deploy}
+    name: ${INFRA_NETWORK:-shared-backend}
     external: true
