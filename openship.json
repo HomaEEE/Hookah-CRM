@@ -37,7 +37,6 @@
     "CACHE_STORE": "redis",
     "SESSION_DRIVER": "redis",
     "QUEUE_CONNECTION": "redis",
-    "SERVER_NAME": ":80",
     "FRANKENPHP_CONFIG": "worker ./public/frankenphp-worker.php",
     "INFRA_NETWORK": "openship-mariadb",
     "APP_SLUG": "noire"
