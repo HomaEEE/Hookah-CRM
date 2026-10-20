@@ -1,6 +1,7 @@
 services:
   web:
     image: ${IMAGE_NAME:-ghcr.io/homaeee/hookah-crm}:${IMAGE_TAG:-latest}
+    container_name: ${CONTAINER_NAME:-${APP_SLUG:-noire}}
     restart: unless-stopped
     ports:
       - "80"
@@ -40,6 +41,7 @@ services:
     volumes:
       - app_storage:/app/storage
     networks:
+      - default
       - infra
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://127.0.0.1:80/ || exit 1"]
@@ -53,6 +55,7 @@ volumes:
     name: ${APP_SLUG:-noire}_storage
 
 networks:
+  default:
   infra:
-    name: ${INFRA_NETWORK:-shared-backend}
+    name: ${INFRA_NETWORK:-mariadb}
     external: true
