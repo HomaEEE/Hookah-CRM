@@ -35,9 +35,8 @@ services:
       REDIS_PREFIX: "${APP_SLUG:-noire}_database_"
       SESSION_COOKIE: "${APP_SLUG:-noire}_session"
 
-      # FrankenPHP / Caddy
-      SERVER_NAME: ":80"
-      FRANKENPHP_CONFIG: "worker ./public/frankenphp-worker.php"
+      # FrankenPHP / Caddy (http:// disables internal TLS and infinite redirects)
+      SERVER_NAME: "${SERVER_NAME:-http://:80}"
     volumes:
       - app_storage:/app/storage
     networks:
@@ -57,5 +56,5 @@ volumes:
 networks:
   default:
   infra:
-    name: ${INFRA_NETWORK:-mariadb}
+    name: ${INFRA_NETWORK:-openship-mariadb}
     external: true

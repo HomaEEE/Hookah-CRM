@@ -34,6 +34,7 @@
     "SESSION_DRIVER": "redis",
     "QUEUE_CONNECTION": "redis",
     "INFRA_NETWORK": "openship-mariadb",
-    "APP_SLUG": "noire"
+    "APP_SLUG": "noire",
+    "SERVER_NAME": "http://:80"
   }
 }
