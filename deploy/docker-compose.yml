@@ -28,9 +28,13 @@ services:
       REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
 
       # Laravel Drivers
-      CACHE_STORE: redis
-      QUEUE_CONNECTION: redis
-      SESSION_DRIVER: redis
+      CACHE_STORE: "${CACHE_STORE:-file}"
+      CACHE_DRIVER: "${CACHE_DRIVER:-file}"
+      QUEUE_CONNECTION: "${QUEUE_CONNECTION:-sync}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-file}"
+      SESSION_LIFETIME: "${SESSION_LIFETIME:-14400}"
+      FILESYSTEM_DISK: "${FILESYSTEM_DISK:-local}"
+      BROADCAST_DRIVER: "${BROADCAST_DRIVER:-pusher}"
       CACHE_PREFIX: "${APP_SLUG:-noire}_cache_"
       REDIS_PREFIX: "${APP_SLUG:-noire}_database_"
       SESSION_COOKIE: "${APP_SLUG:-noire}_session"
