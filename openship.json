@@ -30,14 +30,9 @@
     "REDIS_CLIENT": "phpredis",
     "REDIS_HOST": "redis",
     "REDIS_PORT": "6379",
-    "REDIS_PASSWORD": {
-      "value": "",
-      "secret": true
-    },
     "CACHE_STORE": "redis",
     "SESSION_DRIVER": "redis",
     "QUEUE_CONNECTION": "redis",
-    "FRANKENPHP_CONFIG": "worker ./public/frankenphp-worker.php",
     "INFRA_NETWORK": "openship-mariadb",
     "APP_SLUG": "noire"
   }
