@@ -1,8 +1,8 @@
 {
     "name": "HOOKAH CRM",
     "short_name": "HOOKAH CRM",
-    "start_url": "https://noire.test/admin/",
-    "scope": "https://noire.test/admin/",
+    "start_url": "/admin/",
+    "scope": "/admin/",
     "display": "standalone",
     "description": "Учет финансов HOOKAH CRM",
     "lang": "uk",
@@ -75,7 +75,7 @@
     "related_applications": [
         {
             "platform": "windows",
-            "url": "https://noire.test/admin"
+            "url": "/admin"
         }
     ],
     "prefer_related_applications": false,

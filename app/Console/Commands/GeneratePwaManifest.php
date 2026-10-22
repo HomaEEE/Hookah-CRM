@@ -30,8 +30,8 @@ class GeneratePwaManifest extends Command
         $appUrl = rtrim(config('app.url', 'https://noire.ee'), '/');
         $shortName = env('PWA_SHORT_NAME') ?: $appName;
         $description = env('PWA_DESCRIPTION') ?: ('Учет финансов '.$appName);
-        $startUrl = env('PWA_START_URL') ?: ($appUrl.'/admin/');
-        $scope = env('PWA_SCOPE') ?: ($appUrl.'/admin/');
+        $startUrl = env('PWA_START_URL') ?: '/admin/';
+        $scope = env('PWA_SCOPE') ?: '/admin/';
 
         $pwaDir = public_path('assets/imgs/pwa');
         $iconsDir = $pwaDir.'/icons';
@@ -147,7 +147,7 @@ class GeneratePwaManifest extends Command
             'related_applications' => [
                 [
                     'platform' => 'windows',
-                    'url' => $appUrl.'/admin',
+                    'url' => '/admin',
                 ],
             ],
             'prefer_related_applications' => false,
